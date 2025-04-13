@@ -1,0 +1,11 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.DetailsCard {
+	@include fill_container;
+
+	&_inner {
+		@include fill_container;
+	}
+}

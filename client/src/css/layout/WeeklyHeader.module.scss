@@ -1,0 +1,38 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.WeeklyHeader {
+	width: 100%;
+
+	&_week {
+		width: 100%;
+		padding: 0 2rem;
+		@include flex_row(space-between, center);
+	}
+}
+
+.WeekDay {
+	width: 5rem;
+	height: 5rem;
+	border: $borderLight;
+	border: none;
+	outline: none;
+	border-radius: 1.5rem;
+	@include colCenter();
+	background-color: transparent;
+
+	&_day {
+		font-size: 1.4rem;
+		color: $text3;
+	}
+	&_date {
+		font-size: 1.7rem;
+		color: $text1;
+	}
+}
+
+.isSelected {
+	border: 1px solid $accentBlue;
+	color: $accentBlue;
+}

@@ -1,0 +1,63 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.PageHeader {
+	width: 100%;
+	height: 12rem;
+	font-family: "Noto Sans";
+	@include rowCenter();
+
+	&_main {
+		width: 100%;
+		padding: 1rem 0;
+		@include flex_row(space-between, center);
+
+		&_right {
+			width: max-content;
+			margin-left: auto;
+		}
+	}
+}
+
+.Titles {
+	width: max-content;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+
+	&_today {
+		font-size: 1.8rem;
+		margin-right: auto;
+	}
+	&_label {
+		font-size: 3rem;
+		margin-right: auto;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.PageHeader {
+		width: 100%;
+
+		&_main {
+			width: 100%;
+			padding: 0 0;
+		}
+	}
+
+	.Titles {
+		width: 100%;
+
+		&_today {
+			font-size: 1.4rem;
+			color: $text3;
+		}
+
+		&_label {
+			font-size: 3.5rem;
+			color: $text1;
+		}
+	}
+}

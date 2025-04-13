@@ -1,0 +1,22 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.NotFoundPage {
+	@include fill_container;
+	@include colCenter();
+	padding: 4rem;
+
+	&_goBack {
+		padding: 0.6rem 1.8rem;
+		border-radius: 5rem;
+		font-size: 1.6rem;
+		color: $foreground;
+		color: #fff;
+		border: $borderLight;
+		outline: none;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

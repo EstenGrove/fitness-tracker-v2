@@ -1,0 +1,34 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+@mixin navBtn() {
+	width: max-content;
+	height: 3rem;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	color: $accentBlue;
+	@include flex_row(flex-start, center);
+	cursor: pointer;
+
+	&_icon {
+		width: 2rem;
+		height: 2rem;
+		fill: $accentBlue;
+	}
+}
+
+.NavArrows {
+	width: 100%;
+	height: 4rem;
+	@include flex_row(space-between, flex-start);
+
+	&_back {
+		@include navBtn();
+	}
+
+	&_forward {
+		@include navBtn();
+	}
+}

@@ -1,0 +1,48 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.DetailsBlock {
+	width: 15rem;
+	height: auto;
+	border-radius: 1rem;
+	padding: 0.5rem 0.5rem;
+	background-color: $background;
+	@include flex_row(flex-start, center);
+
+	&_left {
+		width: 5rem;
+		height: 100%;
+		border-radius: 0.5rem;
+
+		&_square {
+			width: 3.5rem;
+			height: 3.5rem;
+			border-radius: 1rem;
+			background-color: var(--blueGrey800);
+			@include rowCenter();
+			&_icon {
+				width: 2.5rem;
+				height: 2.5rem;
+				fill: $text3;
+				fill: $accentGreen;
+			}
+		}
+	}
+
+	&_main {
+		width: 100%;
+		display: block;
+
+		&_value {
+			font-size: 2rem;
+			margin-left: 0.5rem;
+			font-weight: 700;
+		}
+		&_title {
+			font-size: 1.4rem;
+			color: $text2;
+			margin-left: 0.5rem;
+		}
+	}
+}

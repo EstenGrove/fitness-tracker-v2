@@ -1,0 +1,123 @@
+@mixin scrollbar($color: var(--blueGrey400)) {
+	&::-webkit-scrollbar {
+		display: inline;
+		display: none;
+		border-radius: 5rem;
+		width: 0.8rem;
+		// display: none;
+	}
+	&::-webkit-scrollbar-thumb {
+		width: 0.8rem;
+		border-radius: 5rem;
+		background-color: $color;
+	}
+}
+
+@mixin cardBase() {
+	width: 100%;
+	height: max-content;
+	border-radius: 1rem;
+	border: $borderLight;
+	padding: 1rem;
+}
+/* From https://css.glass */
+@mixin glassy($color: rgba(12, 15, 19, 0.75)) {
+	background-color: $color;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(5px);
+	-webkit-backdrop-filter: blur(5px);
+}
+
+@mixin blueGradient() {
+	background-image: var(--blueGradient);
+}
+@mixin redGradient() {
+	background-image: var(--redGradient);
+}
+@mixin greenGradient() {
+	background-image: var(--greenGradient);
+}
+@mixin yellowGradient() {
+	background-image: var(--yellowGradient);
+}
+@mixin purpleGradient() {
+	background-image: var(--purpleGradient);
+}
+@mixin pinkGradient() {
+	background-image: var(--pinkGradient);
+}
+
+// Modal Mixins
+
+@mixin dialog() {
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	transform: translate(-0%, -0%);
+	width: 100dvw;
+	height: 65dvh;
+	border-radius: 2rem 2rem 0 0;
+	border: $borderLight;
+	background-color: $foreground;
+	z-index: 9999;
+
+	&_top {
+		width: 100%;
+		height: 4rem;
+	}
+
+	&_main {
+		position: relative;
+		@include fill_container;
+		padding: 1rem;
+	}
+}
+@mixin modal() {
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	transform: translate(-0%, -0%);
+	width: 100dvw;
+	height: 60dvh;
+	border-radius: 2rem 2rem 0 0;
+	border: $borderLight;
+	background-color: $foreground;
+	z-index: 9999;
+
+	&_top {
+		width: 100%;
+		height: 4rem;
+	}
+
+	&_main {
+		position: relative;
+		@include fill_container;
+		padding: 1rem;
+	}
+}
+@mixin modalLG() {
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	transform: translate(-0%, -0%);
+	width: 100dvw;
+	height: 90dvh;
+	border-radius: 2rem 2rem 0 0;
+	border: $borderLight;
+	background-color: $foreground;
+	z-index: 9999;
+
+	&_top {
+		width: 100%;
+		height: 4rem;
+	}
+
+	&_main {
+		position: relative;
+		@include fill_container;
+		padding: 1rem;
+	}
+}

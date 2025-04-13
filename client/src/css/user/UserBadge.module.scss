@@ -1,0 +1,36 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+$badgeSize: 7.8rem;
+
+@mixin badge($size: 7.8rem) {
+	$fontSize: calc($size / 2.5);
+	width: $size;
+	height: $size;
+	border-radius: 50%;
+	background-color: rgba(105, 25, 255, 0.1);
+	color: #fff;
+	font-size: $fontSize;
+	font-weight: 500;
+	@include rowCenter();
+}
+
+.UserBadgeXSM {
+	@include badge(3rem);
+}
+.UserBadgeSM {
+	@include badge(3.8rem);
+}
+.UserBadgeMD {
+	@include badge(5rem);
+}
+.UserBadgeLG {
+	@include badge(6rem);
+}
+.UserBadgeXLG {
+	@include badge(8rem);
+}
+.UserBadge {
+	@include badge(3rem);
+}

@@ -1,0 +1,45 @@
+@mixin fill_container {
+	width: 100%;
+	height: 100%;
+}
+
+// base flex - display: flex;
+@mixin base_flex {
+	display: -webkit-box;
+	display: flex;
+}
+
+// handles flex rows
+@mixin flex_row($rowType, $colType, $wrapType: nowrap) {
+	@include base_flex;
+	flex-direction: row;
+	justify-content: $rowType;
+	align-items: $colType;
+	flex-wrap: $wrapType;
+}
+
+// handles flex columns
+@mixin flex_col($rowType, $colType, $wrapType: nowrap) {
+	@include base_flex;
+	flex-direction: column;
+	justify-content: $rowType;
+	align-items: $colType;
+	flex-wrap: $wrapType;
+}
+
+@mixin rowCenter($wrapType: nowrap) {
+	@include flex_row(center, center, $wrapType);
+}
+@mixin colCenter($wrapType: nowrap) {
+	@include flex_col(center, center, $wrapType);
+}
+
+@mixin historyStyles() {
+	width: 100%;
+	height: 10rem;
+	padding: 0.5rem 1rem;
+	color: $text3;
+	border-radius: 0 1rem 1rem 0;
+	border: $borderLight;
+	border-left: 5px solid var(--blueGrey800);
+}
