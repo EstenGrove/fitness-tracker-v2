@@ -1,12 +1,10 @@
-import sprite from "../../assets/icons/main2.svg";
+import sprite from "../../assets/icons/main.svg";
 import sprite2 from "../../assets/icons/dashboard.svg";
 import styles from "../../css/layout/TopNav.module.scss";
-import { CurrentUser } from "../../features/user/types";
 import { RefObject, useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 type Props = {
-	currentUser: CurrentUser;
 	onLogout: () => void;
 };
 
@@ -37,7 +35,7 @@ const SidePanel = ({ closePanel }: SidePanelProps) => {
 	);
 };
 
-const TopNav = ({ currentUser, onLogout }: Props) => {
+const TopNav = ({ onLogout }: Props) => {
 	const [showSidePanel, setShowSidePanel] = useState<boolean>(false);
 
 	const openPanel = () => setShowSidePanel(true);

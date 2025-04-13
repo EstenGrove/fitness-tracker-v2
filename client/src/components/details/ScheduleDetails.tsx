@@ -1,4 +1,4 @@
-import sprite from "../../assets/icons/main2.svg";
+import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/details/ScheduleDetails.module.scss";
 import { WorkoutSchedule } from "../../features/workouts/types";
 import DetailsItem from "./DetailsItem";

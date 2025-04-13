@@ -302,6 +302,8 @@
 	/* Summary Diff */
 	--mainCardHeight: 35rem;
 	--mainCardMobileHeight: 45rem;
+
+	--glassy: rgba(12, 15, 19, 0.75);
 }
 
 *,
@@ -329,11 +331,19 @@ body {
 	overflow-x: hidden;
 }
 
+/* $text1: var(--text1); // primary color
+$text2: var(--text2); // secondary color
+$text3: var(--text1_5); // secondary color */
+
 :root[data-theme="light"] {
 	--bg-body: #eaecef;
 	--bg-foreground: var(--bg-foreground-light);
 	color: var(--blueGrey800);
 	--border-color: var(--blueGrey300);
+	--glassy: rgba(12, 15, 19, 0.95);
+	--text1: var(--blueGrey800);
+	--text2: var(--blueGrey400);
+	--text1_5: var(--blueGrey600);
 }
 
 :root[data-theme="dark"] {
@@ -341,6 +351,10 @@ body {
 	--bg-foreground: var(--bg-foreground-dark);
 	color: var(--blueGrey300);
 	--border-color: var(--blueGrey600);
+	--glassy: rgba(12, 15, 19, 0.75);
+	--text1: var(--blueGrey200);
+	--text2: var(--blueGrey600);
+	--text1_5: var(--blueGrey400);
 }
 
 input {

@@ -1,0 +1,20 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.ModalSM {
+	@include modal();
+	box-shadow: -4px 5px 100px -19px rgba(0, 0, 0, 1);
+}
+
+.DragHandle {
+	position: absolute;
+	display: block;
+	top: 1rem;
+	left: 50%;
+	transform: translate(-50%, -0.5rem);
+	width: 6rem;
+	height: 0.3rem;
+	border-radius: 5rem;
+	background-color: var(--blueGrey800);
+}

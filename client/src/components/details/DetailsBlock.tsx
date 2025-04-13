@@ -1,4 +1,4 @@
-import sprite from "../../assets/icons/main2.svg";
+import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/details/DetailsBlock.module.scss";
 
 type Props = {

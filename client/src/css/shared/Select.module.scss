@@ -1,0 +1,28 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.Select {
+	width: 15rem;
+	border-radius: 0.5rem;
+	height: 3.5rem;
+
+	&_select {
+		@include fill_container;
+		color-scheme: dark;
+		border: $border;
+		background-color: $foreground;
+		outline: none;
+		border-radius: 0.5rem;
+		font-family: var(--font-primary);
+		font-size: 1.6rem;
+		padding: 0 0.5rem;
+		&:hover {
+			cursor: pointer;
+			border-color: $accent;
+		}
+	}
+	& option {
+		cursor: pointer;
+	}
+}
