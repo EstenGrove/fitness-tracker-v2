@@ -38,3 +38,21 @@ export interface OtherHistory extends WorkoutHistory {
 	reps: number;
 	exercise: string;
 }
+
+export interface AllHistory {
+	all: WorkoutHistory[];
+	strength: StrengthHistory[];
+	walk: WalkHistory[];
+	stretch: StretchHistory[];
+	cardio: CardioHistory[];
+	timed: TimedHistory[];
+	other: OtherHistory[];
+}
+
+export type HistoryOfType =
+	| StrengthHistory
+	| WalkHistory
+	| CardioHistory
+	| StretchHistory
+	| TimedHistory
+	| OtherHistory;

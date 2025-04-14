@@ -7,6 +7,7 @@ import {
 	startOfMonth,
 	startOfWeek,
 	startOfYear,
+	subMonths,
 } from "date-fns";
 import { RepeatType } from "../features/shared/types";
 
@@ -291,6 +292,17 @@ const getYearStartAndEnd = (base: Date | string = new Date()) => {
 	return { startDate, endDate };
 };
 
+const getLastXMonthsRange = (last: number = 3) => {
+	const now = new Date();
+	const start = subMonths(now, last);
+	const startDate = formatDate(start, "db");
+	const endDate = formatDate(now, "db");
+	return {
+		startDate,
+		endDate,
+	};
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -313,4 +325,5 @@ export {
 	getWeekStartAndEnd,
 	getMonthStartAndEnd,
 	getYearStartAndEnd,
+	getLastXMonthsRange,
 };

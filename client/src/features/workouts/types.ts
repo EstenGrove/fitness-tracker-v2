@@ -3,6 +3,20 @@ import { Activity, RepeatType } from "../shared/types";
 
 export type WorkoutStatus = "COMPLETE" | "IN-PROGRESS" | "NOT-COMPLETE";
 
+export interface Workout {
+	userID: string;
+	workoutID: number;
+	workoutName: string;
+	activityType: Activity;
+	workoutDesc: string;
+	duration: number;
+	tagColor: string | null;
+	startTime: string;
+	endTime: string;
+	isRecurring: boolean;
+	status: WorkoutStatus;
+}
+
 export interface TodaysWorkout {
 	userID: string;
 	workoutID: number;

@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, useRef } from "react";
-import sprite from "../../assets/icons/calendar2.svg";
+import sprite from "../../assets/icons/calendar.svg";
 import styles from "../../css/shared/MenuDropdown.module.scss";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 

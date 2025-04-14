@@ -6,6 +6,12 @@ import styles from "../css/pages/WorkoutsPage.module.scss";
 import { ReactNode, RefObject, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import ModalLG from "../components/shared/ModalLG";
+import { useGetTodaysWorkoutsQuery } from "../features/workouts/todaysWorkoutsApi";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../features/user/userSlice";
+import { formatDate } from "../utils/utils_dates";
+import { TodaysWorkout } from "../features/workouts/types";
+import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -144,9 +150,18 @@ const WorkoutHeader = ({
 };
 
 const WorkoutsPage = () => {
+	const targetDate = formatDate(new Date(), "db");
+	const currentUser = useSelector(selectCurrentUser);
+	const { data, isLoading } = useGetTodaysWorkoutsQuery({
+		userID: currentUser.userID,
+		targetDate: targetDate,
+	});
+	const todaysWorkouts = data as TodaysWorkout[];
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
+
+	console.log("data", data);
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -187,7 +202,7 @@ const WorkoutsPage = () => {
 					<ActionsPanel onAction={selectPanelAction} />
 				</div>
 				<div className={styles.WorkoutsPage_main_list}>
-					{/* TODAYS WORKOUTS */}
+					<TodaysWorkouts workouts={todaysWorkouts} isLoading={isLoading} />
 				</div>
 			</div>
 

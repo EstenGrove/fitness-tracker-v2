@@ -1,4 +1,4 @@
-import { Activity } from "./activity/types";
+import { Activity } from "./shared/types";
 
 export type TStatus = "IDLE" | "PENDING" | "FULFILLED" | "REJECTED";
 
@@ -39,4 +39,9 @@ export enum EMenuAction {
 	COMPLETE = "COMPLETE",
 	CANCEL = "CANCEL",
 	DELETE = "DELETE",
+}
+
+export interface UserDateParams {
+	userID: string;
+	targetDate: string;
 }

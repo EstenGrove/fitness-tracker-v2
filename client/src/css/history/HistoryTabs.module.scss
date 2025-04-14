@@ -1,0 +1,34 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.HistoryTabs {
+	width: 100%;
+	height: auto;
+
+	&_inner {
+		width: 100%;
+		padding: 1rem 0;
+		overflow-x: scroll;
+		@include flex_row(flex-start, center);
+		gap: 0 0.8rem;
+	}
+}
+
+.PageTabButton {
+	width: max-content;
+	min-width: max-content;
+	padding: 0.4rem 1.1rem;
+	border-radius: 5rem;
+	font-size: 1.4rem;
+	color: $text3;
+	text-decoration: none;
+	border: 1px solid $borderColor;
+}
+
+.isActive {
+	background-color: var(--tabBtns);
+	// color: $accentBlue;
+	color: var(--tabText);
+	border-color: $accentBlue;
+}

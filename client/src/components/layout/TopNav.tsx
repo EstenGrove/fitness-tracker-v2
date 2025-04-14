@@ -3,6 +3,23 @@ import sprite2 from "../../assets/icons/dashboard.svg";
 import styles from "../../css/layout/TopNav.module.scss";
 import { RefObject, useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { LocalStorage } from "../../utils/utils_storage";
+
+const THEME_KEY = "APP_THEME";
+const storage = new LocalStorage();
+
+const toggleTheme = () => {
+	const cacheTheme = storage.get(THEME_KEY);
+	const isDark =
+		cacheTheme === "dark" || document.documentElement.dataset.theme === "dark";
+	if (isDark) {
+		document.documentElement.dataset.theme = "light";
+		storage.set(THEME_KEY, "light");
+	} else {
+		document.documentElement.dataset.theme = "dark";
+		storage.set(THEME_KEY, "dark");
+	}
+};
 
 type Props = {
 	onLogout: () => void;
@@ -49,10 +66,10 @@ const TopNav = ({ onLogout }: Props) => {
 						<use xlinkHref={`${sprite2}#icon-sidebar`}></use>
 					</svg>
 				</li>
-				<li className={styles.TopNav_list_item}>
-					{/* <svg className={styles.TopNav_list_item_icon}>
-						<use xlinkHref={`${sprite2}#icon-more_vert`}></use>
-					</svg> */}
+				<li className={styles.TopNav_list_item} onClick={toggleTheme}>
+					<svg className={styles.TopNav_list_item_icon}>
+						<use xlinkHref={`${sprite2}#icon-brightness_4`}></use>
+					</svg>
 				</li>
 				<li className={styles.TopNav_list_item}>
 					<LogoutButton onLogout={onLogout} />

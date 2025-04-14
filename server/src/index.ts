@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
+import { allRoutes } from "./routes/index.ts";
 dotenv.config();
 
 const SERVER = {
@@ -18,6 +19,8 @@ app.use(cors());
 app.get("/", (c) => {
 	return c.text("Hello Hono!");
 });
+
+app.route("workouts", allRoutes.workouts);
 
 serve({
 	fetch: app.fetch,
