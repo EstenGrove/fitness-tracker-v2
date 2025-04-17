@@ -1,0 +1,29 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.MinutesSummary {
+	width: 100%;
+	height: auto;
+
+	&_header {
+		width: 100%;
+		font-size: 1.8rem;
+		color: $text3;
+		margin-bottom: 1rem;
+		padding-left: 0.5rem;
+		@include flex_row(space-between, baseline);
+
+		&_btn {
+			background-color: transparent;
+			border: none;
+			outline: none;
+			color: $accentBlue;
+			font-size: 1.4rem;
+			text-decoration: none;
+			& > a {
+				text-decoration: none;
+			}
+		}
+	}
+}

@@ -3,32 +3,86 @@ import NoData from "../components/ui/NoData";
 import styles from "../css/views/CardioHistory.module.scss";
 import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
 import { selectCurrentUser } from "../features/user/userSlice";
-import { getLastXMonthsRange } from "../utils/utils_dates";
-import { CardioHistory as CardioLog } from "../features/history/types";
+import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
+import {
+	CardioHistory as CardioLog,
+	HistoryOfType,
+} from "../features/history/types";
+import HistoryEntry from "../components/history/HistoryEntry";
+import { MenuAction } from "../components/shared/MenuDropdown";
+import { useState } from "react";
+import ModalLG from "../components/shared/ModalLG";
+import { EMenuAction } from "../features/types";
+import { isEmptyArray } from "../utils/utils_misc";
+import { getTotalMins } from "../utils/utils_history";
 
 const CardioHistory = () => {
-	const range = getLastXMonthsRange(3);
+	const { startDate, endDate } = getWeekStartAndEnd();
 	const currentUser = useSelector(selectCurrentUser);
+	const [modalType, setModalType] = useState<MenuAction | null>(null);
+	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
+		null
+	);
 	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
 		userID: currentUser.userID,
 		activityType: "Cardio",
-		...range,
+		startDate: formatDate(startDate, "db"),
+		endDate: formatDate(endDate, "db"),
 	});
 	const history = data as CardioLog[];
+	const hasHistory = !isEmptyArray(history);
+	const totalMins = getTotalMins(history);
+
+	const onMenuAction = (action: MenuAction, entry: HistoryOfType) => {
+		setModalType(action);
+		setSelectedEntry(entry);
+	};
+
+	const closeActionModal = () => {
+		setModalType(null);
+		setSelectedEntry(null);
+	};
+
 	return (
 		<div className={styles.CardioHistory}>
-			<h2>Cardio History</h2>
-			{data && (
+			<div className={styles.CardioHistory_header}>
+				<h2 className={styles.CardioHistory_header_title}>Strength History</h2>
+				<div className={styles.CardioHistory_header_total}>
+					Total: {totalMins} mins.
+				</div>
+			</div>
+			{hasHistory && (
 				<div className={styles.CardioHistory_list}>
-					{/*  */}
-					{/*  */}
-					{/*  */}
+					{history &&
+						history.map((entry) => {
+							return (
+								<HistoryEntry
+									key={entry.historyID}
+									entry={entry}
+									onMenuAction={onMenuAction}
+								/>
+							);
+						})}
 				</div>
 			)}
-			{!history && (
+			{!hasHistory && (
 				<div className={styles.CardioHistory_empty}>
 					<NoData icon="noData2" msg="No cardio history found." />
 				</div>
+			)}
+
+			{/* MODALS */}
+			{modalType === EMenuAction.VIEW && (
+				<ModalLG onClose={closeActionModal}>
+					{/*  */}
+					{/*  */}
+				</ModalLG>
+			)}
+			{modalType === EMenuAction.EDIT && (
+				<ModalLG onClose={closeActionModal}>
+					{/*  */}
+					{/*  */}
+				</ModalLG>
 			)}
 		</div>
 	);

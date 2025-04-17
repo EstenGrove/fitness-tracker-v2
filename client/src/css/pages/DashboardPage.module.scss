@@ -1,0 +1,16 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.DashboardPage {
+	width: 100%;
+
+	&_header {
+		width: 100%;
+	}
+
+	&_body {
+		width: 100%;
+		padding: 2rem 1rem;
+	}
+}

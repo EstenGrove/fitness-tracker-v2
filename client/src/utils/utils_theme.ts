@@ -15,7 +15,6 @@ const getTheme = () => {
 };
 
 const setInitialTheme = () => {
-	console.log("was called");
 	const theme = storage.get(themeKey);
 	if (theme) {
 		setTheme(theme);

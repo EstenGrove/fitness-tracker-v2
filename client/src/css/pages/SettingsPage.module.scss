@@ -1,0 +1,13 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.SettingsPage {
+	width: 100%;
+
+	&_header {
+		width: 100%;
+		@include rowCenter();
+		font-size: 1.8rem;
+	}
+}

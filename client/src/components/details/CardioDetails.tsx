@@ -1,8 +1,8 @@
 import styles from "../../css/details/CardioDetails.module.scss";
 import { CardioWorkout } from "../../features/workouts/types";
 import { CardioHistory } from "../../features/history/types";
-import DetailsBlock from "./DetailsBlock";
 import { getKcals } from "../../utils/utils_history";
+import DetailsBlock from "./DetailsBlock";
 
 type Props = { entry: CardioWorkout | CardioHistory };
 

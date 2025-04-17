@@ -8,15 +8,23 @@ import { formatTime, parseAnyTime } from "../../utils/utils_dates";
 import { TodaysWorkout as ITodaysWorkout } from "../../features/workouts/types";
 import MenuDropdown from "../shared/MenuDropdown";
 import ModalLG from "../shared/ModalLG";
+import { useAppDispatch } from "../../store/store";
+import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
 
 type Props = {
 	workout: ITodaysWorkout;
 };
 
-const getDuration = (duration: number) => {
-	if (!duration || duration <= 0) return "Open";
-
-	return duration + " min.";
+const getDurationDesc = (info: {
+	duration: number;
+	recorded: number | null;
+}) => {
+	const { duration, recorded } = info;
+	if (!recorded) {
+		return duration + "min.";
+	} else {
+		return recorded + " of " + duration + "min.";
+	}
 };
 
 const getIsCompleted = (workout: ITodaysWorkout) => {
@@ -33,7 +41,7 @@ const getBorderStyles = (workout: ITodaysWorkout) => {
 			borderLeft: `5px solid rgba(0, 226, 189, 1)`,
 		};
 	} else {
-		const tag = workout?.tagColor ?? "var(--blueGrey700)";
+		const tag = workout?.tagColor ?? "var(--todaysBorder)";
 		return {
 			borderLeft: `5px solid ${tag}`,
 		};
@@ -69,8 +77,18 @@ type ItemsProps = {
 const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
 	return (
 		<>
-			<li onClick={() => onAction(EModalType.VIEW)}>View</li>
-			<li onClick={() => onAction(EModalType.EDIT)}>Edit</li>
+			<li
+				onClick={() => onAction(EModalType.VIEW)}
+				style={{ color: "var(--todaysMenuText)" }}
+			>
+				View
+			</li>
+			<li
+				onClick={() => onAction(EModalType.EDIT)}
+				style={{ color: "var(--todaysMenuText)" }}
+			>
+				Edit
+			</li>
 			{isDone ? (
 				<li
 					onClick={() => onAction(EModalType.CANCEL)}
@@ -115,13 +133,17 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 
 const TodaysWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
-	const { workoutName, activityType, duration } = workout;
+	const dispatch = useAppDispatch();
+	const { workoutName, activityType, duration, recordedDuration } = workout;
 	const times = getWorkoutTimes(workout);
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
-	const durationMins: string = getDuration(duration);
 	const isCompleted: boolean = getIsCompleted(workout);
 	const borderStyles = getBorderStyles(workout);
+	const durationMins: string = getDurationDesc({
+		duration,
+		recorded: recordedDuration,
+	});
 
 	const openMenu = () => setShowMenu(true);
 	const closeMenu = () => setShowMenu(false);
@@ -129,6 +151,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const goToStartWorkout = () => {
 		const id = workout.workoutID;
 		const type = workout.activityType;
+		dispatch(setActiveWorkout(workout));
 		navigate(`/active/${id}?type=${type}`);
 	};
 

@@ -20,6 +20,7 @@ app.get("/", (c) => {
 	return c.text("Hello Hono!");
 });
 
+app.route("history", allRoutes.history);
 app.route("workouts", allRoutes.workouts);
 
 serve({

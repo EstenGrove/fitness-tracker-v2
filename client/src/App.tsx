@@ -16,6 +16,8 @@ const Medications = lazy(() => import("./pages/MedicationsPage"));
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
 );
+// Active Workout
+const ActiveWorkout = lazy(() => import("./pages/ActiveWorkoutPage"));
 // History Views
 const AllHistory = lazy(() => import("./views/AllHistory"));
 const WalkHistory = lazy(() => import("./views/WalkHistory"));
@@ -51,6 +53,15 @@ function App() {
 								}
 							>
 								<Route index element={<Dashboard />} />
+
+								<Route
+									path="active/:id"
+									element={
+										<Suspense fallback={<Loader />}>
+											<ActiveWorkout />
+										</Suspense>
+									}
+								/>
 
 								<Route
 									path="workouts"

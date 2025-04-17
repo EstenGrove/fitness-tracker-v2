@@ -1,0 +1,40 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.WeightBadge {
+	$color: var(--blueGrey700);
+	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+	color: $color;
+	font-size: 1.2rem;
+	@include rowCenter();
+	gap: 0 0.2rem;
+
+	&_icon {
+		width: 1.3rem;
+		height: 1.3rem;
+		fill: $color;
+	}
+}
+.SetBadge {
+	$color: $accentBlue;
+	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+	color: $color;
+	font-size: 1.2rem;
+	@include rowCenter();
+	gap: 0 0.2rem;
+
+	&_icon {
+		width: 1.3rem;
+		height: 1.3rem;
+		fill: $color;
+	}
+}

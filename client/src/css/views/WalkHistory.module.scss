@@ -5,9 +5,24 @@
 .WalkHistory {
 	width: 100%;
 
+	&_header {
+		width: 100%;
+		@include flex_row(space-between, center);
+
+		&_title {
+			margin-bottom: 1rem;
+		}
+		&_total {
+			color: $accentBlue;
+			font-size: 1.3rem;
+		}
+	}
+
 	&_list {
 		width: 100%;
 		height: auto;
+		@include colCenter();
+		gap: 1rem 0;
 	}
 
 	&_empty {

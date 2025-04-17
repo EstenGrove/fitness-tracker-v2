@@ -1,10 +1,11 @@
-import { Effort } from "../shared/types";
+import { Activity, Effort } from "../shared/types";
 import { StrengthSet } from "../workouts/types";
 
 export interface WorkoutHistory {
 	userID: string;
 	historyID: number;
 	workoutID: number;
+	activityType: Activity;
 	workoutName: string;
 	workoutDate: string;
 	startTime: string;

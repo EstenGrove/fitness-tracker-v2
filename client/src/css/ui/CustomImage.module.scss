@@ -1,0 +1,14 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.Image {
+	width: 100%;
+	height: 100%;
+
+	&_img {
+		@include fill_container;
+		object-fit: contain;
+		background-color: none;
+	}
+}

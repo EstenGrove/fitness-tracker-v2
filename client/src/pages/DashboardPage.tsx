@@ -6,11 +6,36 @@ import styles from "../css/pages/DashboardPage.module.scss";
 import { selectCurrentUser } from "../features/user/userSlice";
 import WeeklyHeader from "../components/layout/WeeklyHeader";
 import { useWeekHeader } from "../hooks/useWeekHeader";
+import { useState } from "react";
+import { DateRange } from "../features/types";
+import { formatDate } from "../utils/utils_dates";
+import { startOfWeek } from "date-fns";
+import { useGetDashboardSummaryQuery } from "../features/dashboard/summaryApi";
+import MinutesSummary from "../components/summary/MinutesSummary";
+
+const getWeekToDate = (base: Date = new Date()) => {
+	const now = base;
+	const weekStart = startOfWeek(now);
+	return {
+		startDate: formatDate(weekStart, "db"),
+		endDate: formatDate(now, "db"),
+	};
+};
 
 const DashboardPage = () => {
 	const baseDate = new Date();
 	const header = useWeekHeader(baseDate.toString());
+	const weekRange = getWeekToDate(new Date(header.selectedDate));
 	const currentUser = useSelector(selectCurrentUser);
+	const [dateRange, setDateRange] = useState<DateRange>({
+		startDate: weekRange.startDate,
+		endDate: weekRange.endDate,
+	});
+	// const { data, isLoading } = useGetDashboardSummaryQuery({
+	// 	userID: currentUser.userID,
+	// 	startDate: dateRange.startDate,
+	// 	endDate: dateRange.endDate,
+	// });
 
 	return (
 		<PageContainer padding="1rem 2rem">
@@ -24,6 +49,12 @@ const DashboardPage = () => {
 						baseDate={baseDate.toString()}
 						selectedDate={header.selectedDate}
 					/>
+				</div>
+				<div className={styles.DashboardPage_body}>
+					<MinutesSummary minsSummary={[]} />
+					{/*  */}
+					{/*  */}
+					{/*  */}
 				</div>
 			</div>
 		</PageContainer>

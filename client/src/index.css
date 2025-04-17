@@ -309,6 +309,8 @@
 	--glassy: rgba(12, 15, 19, 0.75);
 
 	--todayStyles: var(--bg-foreground);
+	--todaysBorder: var(--blueGrey400);
+	--todaysMenuText: var(--blueGrey800);
 }
 
 *,
@@ -349,6 +351,8 @@ body {
 	--tabBtns: var(--accent-blue);
 	--tabText: #fff;
 	--todayStyles: var(--blueGrey200);
+	--todaysBorder: var(--blueGrey400);
+	--todaysMenuText: var(--blueGrey800);
 }
 
 :root[data-theme="dark"] {
@@ -363,6 +367,8 @@ body {
 	--tabBtns: var(--bg-foreground);
 	--tabText: var(--accent-blue);
 	--todayStyles: var(--bg-foreground);
+	--todaysBorder: var(--blueGrey700);
+	--todaysMenuText: var(--blueGrey400);
 }
 
 input {

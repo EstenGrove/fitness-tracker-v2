@@ -27,6 +27,7 @@ export interface TodaysWorkout {
 	endTime: string;
 	isRecurring: boolean;
 	workoutStatus: WorkoutStatus;
+	recordedDuration: number | null;
 	tagColor?: string | null;
 }
 
@@ -59,4 +60,36 @@ export interface ExerciseSet {
 	id: number;
 	reps: number;
 	exercise: string;
+}
+
+export interface StrengthWorkout extends Workout {
+	reps: number;
+	sets: number;
+	weight: number;
+	equipment: string | null;
+}
+export interface StretchWorkout extends Workout {
+	reps: number;
+	exercise: string | null;
+	equipment: string | null;
+}
+export interface WalkWorkout extends Workout {
+	steos: number;
+	miles: string;
+	pace: string;
+}
+export interface CardioWorkout extends Workout {
+	reps: number;
+	exercise: string | null;
+	equipment: string | null;
+}
+export interface TimedWorkout extends Workout {
+	reps: number;
+	exercise: string | null;
+	equipment: string | null;
+}
+export interface OtherWorkout extends Workout {
+	reps: number;
+	exercise: string | null;
+	equipment: string | null;
 }

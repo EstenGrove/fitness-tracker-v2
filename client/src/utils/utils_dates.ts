@@ -207,6 +207,17 @@ const formatCustomDate = (
 	return formatted;
 };
 
+// Converts a date (eg '2024-12-18T03:42:000') to the day of week (eg. 'Monday' etc)
+const formatDateAsWeekDay = (
+	date: Date | string,
+	weekdayToken: keyof DateFormats["weekday"] = "full"
+): string => {
+	const token: string = WEEKDAY_TOKENS[weekdayToken as keyof object];
+	const weekday = format(date, token);
+
+	return weekday;
+};
+
 const parseDate = (
 	dateStr: string,
 	formatToken: keyof DateFormats["date"] = "db"
@@ -218,7 +229,10 @@ const parseDate = (
 };
 
 const parseAnyDate = (dateStr: string) => {
-	const tokens = Object.keys(DATE_TOKENS);
+	// Remove invalid chars like spaces & commas
+	const tokens = Object.keys(DATE_TOKENS).filter(
+		(x) => x.includes(" ") || x.includes(",")
+	);
 
 	for (const token of tokens) {
 		const cleanToken = token.replace(",", "");
@@ -315,6 +329,7 @@ export {
 	formatTime,
 	formatDateTime,
 	formatCustomDate,
+	formatDateAsWeekDay,
 	// PARSING STRINGS AS DATE/TIME/DATETIME
 	parseDate,
 	parseAnyDate,

@@ -1,4 +1,4 @@
-import sprite from "../../assets/icons/calendar2.svg";
+import sprite from "../../assets/icons/calendar.svg";
 import styles from "../../css/layout/NavArrows.module.scss";
 import { useNavigate } from "react-router";
 

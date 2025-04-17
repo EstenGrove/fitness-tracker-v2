@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { Outlet } from "react-router";
 import sprite from "../assets/icons/calendar.svg";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import styles from "../css/pages/HistoryPage.module.scss";
 import ModalLG from "../components/shared/ModalLG";
 import HistoryTabs from "../components/history/HistoryTabs";
-import { Outlet } from "react-router";
 
 const CalendarIcon = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -28,7 +28,7 @@ const HistoryPage = () => {
 	};
 
 	return (
-		<PageContainer>
+		<PageContainer padding="1rem 2.5rem">
 			<div className={styles.HistoryPage}>
 				<div className={styles.HistoryPage_header}>
 					<PageHeader title="History">

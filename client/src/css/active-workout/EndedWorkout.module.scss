@@ -1,0 +1,32 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.EndedWorkout {
+	width: 100%;
+	@include colCenter();
+	margin-top: 2rem;
+
+	&_wrapper {
+		width: 100%;
+		@include colCenter();
+
+		&_icon {
+			width: 10rem;
+			height: 10rem;
+			fill: $accentGreen;
+		}
+		&_title {
+			font-size: 2.5rem;
+			font-weight: 800;
+			color: $accentBlue;
+		}
+	}
+	&_about {
+		width: 100%;
+		@include colCenter();
+		font-size: 1.6rem;
+		gap: 1rem 0;
+		margin-top: 2rem;
+	}
+}
