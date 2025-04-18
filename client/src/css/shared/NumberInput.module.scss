@@ -1,0 +1,25 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.NumberInput {
+	min-width: 5rem;
+	width: max-content;
+	height: 3.5rem;
+	border-radius: 0.5rem;
+
+	&_input {
+		@include fill_container;
+		border: $border;
+		outline: none;
+		border-radius: 0.5rem;
+		color-scheme: dark;
+		background-color: $foreground;
+		padding: 0 0.5rem;
+		font-size: 1.6rem;
+		&:hover {
+			cursor: pointer;
+			border-color: $accent;
+		}
+	}
+}

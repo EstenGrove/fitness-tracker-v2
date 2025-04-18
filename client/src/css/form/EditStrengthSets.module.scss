@@ -1,0 +1,84 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.EditStrengthSets {
+	width: 100%;
+	padding: 1rem 3rem;
+}
+
+.SetEntry {
+	width: 100%;
+	@include flex_row(center, center);
+	margin-bottom: 1rem;
+
+	&_title {
+		width: 2ch;
+		height: 2ch;
+		font-size: 1.5rem;
+		border-radius: 50%;
+		border: $borderLight;
+		color: $text2;
+		@include rowCenter();
+	}
+	&_fields {
+		width: auto;
+		@include flex_row(flex-start, center);
+		gap: 0 0.5rem;
+		border-radius: 5rem;
+	}
+	&_item {
+		width: max-content;
+		height: auto;
+		@include flex_row(flex-start, center);
+		font-size: 1.4rem;
+
+		&_input {
+			width: 5ch;
+			height: 3rem;
+			color: #fff;
+			// padding-left: 0.5rem;
+			border-radius: 0.5rem;
+			background-color: $foreground;
+			outline: none;
+			border: $borderLight;
+			border: none;
+			font-size: 1.6rem;
+			user-select: none;
+			text-align: center;
+			&:focus-within {
+				border: $borderLight;
+			}
+		}
+		&_delete {
+			width: 2.5rem;
+			height: 2.5rem;
+			border: none;
+			outline: none;
+			background-color: transparent;
+			margin-left: auto;
+
+			&_icon {
+				width: 1.8rem;
+				height: 1.8rem;
+				fill: $accentRed;
+				align-self: baseline;
+			}
+		}
+	}
+}
+
+.divider {
+	font-size: 1.6rem;
+	color: $text3;
+}
+
+.AddSet {
+	padding: 0.7rem 1.5rem;
+	border-radius: 0.5rem;
+	background-color: $accentBlue;
+	color: #fff;
+	border: none;
+	outline: none;
+	font-size: 1.6rem;
+}

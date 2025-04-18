@@ -70,6 +70,7 @@ export interface StrengthWorkout extends Workout {
 	equipment: string | null;
 }
 export interface StretchWorkout extends Workout {
+	sets: number;
 	reps: number;
 	exercise: string | null;
 	equipment: string | null;
@@ -80,16 +81,19 @@ export interface WalkWorkout extends Workout {
 	pace: string;
 }
 export interface CardioWorkout extends Workout {
+	sets: number;
 	reps: number;
 	exercise: string | null;
 	equipment: string | null;
 }
 export interface TimedWorkout extends Workout {
+	sets: number;
 	reps: number;
 	exercise: string | null;
 	equipment: string | null;
 }
 export interface OtherWorkout extends Workout {
+	sets: number;
 	reps: number;
 	exercise: string | null;
 	equipment: string | null;

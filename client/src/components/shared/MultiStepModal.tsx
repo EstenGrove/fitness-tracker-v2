@@ -56,6 +56,7 @@ const SaveButton = ({ onClick }: NavButtonProps) => {
 };
 
 const isFinalStep = (currentStep: StepItem, steps: StepItem[]): boolean => {
+	if (!steps || !steps.length) return false;
 	const lastID = steps[steps.length - 1].id;
 	const currentID = currentStep.id;
 

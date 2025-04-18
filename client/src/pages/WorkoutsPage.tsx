@@ -12,6 +12,8 @@ import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
 import { TodaysWorkout } from "../features/workouts/types";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
+import MultiStepModal from "../components/shared/MultiStepModal";
+import CreateWorkout from "../components/workouts/CreateWorkout";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -225,9 +227,7 @@ const WorkoutsPage = () => {
 
 			{/* QUICK ACTIONS */}
 			{quickAction === "CreateWorkout" && (
-				<ModalLG onClose={closeQuickAction}>
-					<div>Create Workout</div>
-				</ModalLG>
+				<CreateWorkout onClose={closeQuickAction} />
 			)}
 			{quickAction === "LogWorkout" && (
 				<ModalLG onClose={closeQuickAction}>
