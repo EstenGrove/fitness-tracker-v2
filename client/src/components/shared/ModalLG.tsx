@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useRef } from "react";
+import { ReactNode, useRef } from "react";
 import styles from "../../css/shared/ModalLG.module.scss";
 import { useSwipeDown } from "../../hooks/useSwipeDown";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
@@ -14,7 +14,7 @@ const threshold = 100;
 
 const ModalLG = ({ onClose, children }: Props) => {
 	const modalRef = useRef<HTMLDivElement>(null);
-	useOutsideClick(modalRef as RefObject<HTMLDivElement>, onClose);
+	useOutsideClick(modalRef, onClose);
 	useLockBodyScroll();
 	useBackgroundBlur();
 	// closes on swipe down after threshold is reached

@@ -22,6 +22,7 @@ app.get("/", (c) => {
 
 app.route("history", allRoutes.history);
 app.route("workouts", allRoutes.workouts);
+app.route("dashboard", allRoutes.dashboard);
 
 serve({
 	fetch: app.fetch,

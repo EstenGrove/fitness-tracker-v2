@@ -9,11 +9,11 @@ import { useWeekHeader } from "../hooks/useWeekHeader";
 import { useState } from "react";
 import { DateRange } from "../features/types";
 import { formatDate } from "../utils/utils_dates";
-import { startOfWeek } from "date-fns";
+import { parseISO, startOfWeek } from "date-fns";
 import { useGetDashboardSummaryQuery } from "../features/dashboard/summaryApi";
 import MinutesSummary from "../components/summary/MinutesSummary";
 
-const getWeekToDate = (base: Date = new Date()) => {
+const getWeekToDate = (base: Date | string = new Date()) => {
 	const now = base;
 	const weekStart = startOfWeek(now);
 	return {
@@ -25,7 +25,7 @@ const getWeekToDate = (base: Date = new Date()) => {
 const DashboardPage = () => {
 	const baseDate = new Date();
 	const header = useWeekHeader(baseDate.toString());
-	const weekRange = getWeekToDate(new Date(header.selectedDate));
+	const weekRange = getWeekToDate();
 	const currentUser = useSelector(selectCurrentUser);
 	const [dateRange, setDateRange] = useState<DateRange>({
 		startDate: weekRange.startDate,
@@ -36,6 +36,8 @@ const DashboardPage = () => {
 	// 	startDate: dateRange.startDate,
 	// 	endDate: dateRange.endDate,
 	// });
+
+	// console.log("data", data);
 
 	return (
 		<PageContainer padding="1rem 2rem">

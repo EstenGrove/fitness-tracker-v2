@@ -1,7 +1,7 @@
 import sprite from "../../assets/icons/main.svg";
 import sprite2 from "../../assets/icons/dashboard.svg";
 import styles from "../../css/layout/TopNav.module.scss";
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { LocalStorage } from "../../utils/utils_storage";
 
@@ -41,7 +41,7 @@ type SidePanelProps = {
 
 const SidePanel = ({ closePanel }: SidePanelProps) => {
 	const panelRef = useRef<HTMLDivElement>(null);
-	useOutsideClick(panelRef as RefObject<HTMLDivElement>, closePanel);
+	useOutsideClick(panelRef, closePanel);
 
 	return (
 		<div className={`${styles.SidePanel} ${styles.slideIn}`} ref={panelRef}>

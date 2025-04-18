@@ -1,4 +1,5 @@
-import type { Activity } from "../types.ts";
+import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
+import type { Activity, RepeatType, WeekDayToken } from "../types.ts";
 
 export type WorkoutStatus = "COMPLETE" | "NOT-COMPLETE";
 
@@ -25,4 +26,50 @@ export interface TodaysWorkoutClient {
 	isRecurring: boolean;
 	workoutStatus: WorkoutStatus;
 	recordedDuration: number | null;
+}
+
+export interface WorkoutSchedule {
+	userID: string;
+	scheduleID: number;
+	activityType: Activity;
+	workoutID: number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+	interval: number;
+	frequency: RepeatType;
+	byDay: WeekDayToken[];
+	byMonth: number;
+	byMonthDay: number;
+	isActive: boolean;
+	createdDate: string;
+}
+export interface WorkoutScheduleDB {
+	user_id: string;
+	schedule_id: number;
+	activity_type: Activity;
+	workout_id: number;
+	start_date: string;
+	end_date: string;
+	start_time: string;
+	end_time: string;
+	interval: number;
+	frequency: RepeatType;
+	by_day: WeekDayToken[];
+	by_month: number;
+	by_month_day: number;
+	is_active: boolean;
+	created_date: string;
+}
+
+export interface WorkoutDetailsDB {
+	workout: TodaysWorkoutDB;
+	schedule: WorkoutScheduleDB | null;
+	history: HistoryOfTypeDB[];
+}
+export interface WorkoutDetails {
+	workout: TodaysWorkoutClient;
+	schedule: WorkoutSchedule | null;
+	history: HistoryOfType[];
 }

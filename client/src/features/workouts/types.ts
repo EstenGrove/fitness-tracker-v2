@@ -1,4 +1,5 @@
 import { WeekDayToken } from "../../utils/utils_dates";
+import { HistoryOfType } from "../history/types";
 import { Activity, RepeatType } from "../shared/types";
 
 export type WorkoutStatus = "COMPLETE" | "IN-PROGRESS" | "NOT-COMPLETE";
@@ -92,4 +93,18 @@ export interface OtherWorkout extends Workout {
 	reps: number;
 	exercise: string | null;
 	equipment: string | null;
+}
+
+export type WorkoutByType =
+	| StrengthWorkout
+	| StretchWorkout
+	| WalkWorkout
+	| CardioWorkout
+	| TimedWorkout
+	| OtherWorkout;
+
+export interface WorkoutDetails {
+	workout: WorkoutByType;
+	schedule: WorkoutSchedule;
+	history: HistoryOfType[];
 }

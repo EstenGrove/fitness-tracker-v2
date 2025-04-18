@@ -311,6 +311,8 @@
 	--todayStyles: var(--bg-foreground);
 	--todaysBorder: var(--blueGrey400);
 	--todaysMenuText: var(--blueGrey800);
+
+	--blockBG: var(--blueGrey200);
 }
 
 *,
@@ -353,6 +355,7 @@ body {
 	--todayStyles: var(--blueGrey200);
 	--todaysBorder: var(--blueGrey400);
 	--todaysMenuText: var(--blueGrey800);
+	--blockBG: var(--blueGrey200);
 }
 
 :root[data-theme="dark"] {
@@ -369,6 +372,7 @@ body {
 	--todayStyles: var(--bg-foreground);
 	--todaysBorder: var(--blueGrey700);
 	--todaysMenuText: var(--blueGrey400);
+	--blockBG: var(--blueGrey800);
 }
 
 input {

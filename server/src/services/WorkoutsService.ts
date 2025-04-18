@@ -20,6 +20,30 @@ class WorkoutsService {
 			return error;
 		}
 	}
+
+	async getWorkoutDetails(
+		userID: string,
+		workoutID: number,
+		activityType: string
+	) {
+		try {
+			const query = `SELECT * FROM get_workout_details(
+				$1,
+				$2,
+				$3
+			) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+			]);
+			console.log("results", results);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
 }
 
 export { WorkoutsService };

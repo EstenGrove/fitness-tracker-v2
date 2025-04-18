@@ -7,15 +7,18 @@ export interface DailyMins {
 export interface DailySteps {
 	date: string;
 	steps: number;
+	weekDay: string;
 }
 export interface DailyCalories {
 	date: string;
 	calories: number;
+	weekDay: string;
 }
 
 export interface DailyWorkouts {
 	date: string;
 	workouts: number;
+	weekDay: string;
 }
 
 export type DailyMinsSummary = DailyMins[];

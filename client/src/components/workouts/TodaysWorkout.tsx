@@ -10,6 +10,7 @@ import MenuDropdown from "../shared/MenuDropdown";
 import ModalLG from "../shared/ModalLG";
 import { useAppDispatch } from "../../store/store";
 import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
+import ViewWorkout from "./ViewWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -205,8 +206,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 
 			{modalType === EModalType.VIEW && (
 				<ModalLG onClose={closeModal}>
-					{/*  */}
-					{/*  */}
+					<ViewWorkout workout={workout} />
 				</ModalLG>
 			)}
 			{modalType === EModalType.EDIT && (

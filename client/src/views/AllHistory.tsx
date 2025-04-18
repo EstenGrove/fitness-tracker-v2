@@ -14,15 +14,14 @@ import {
 	formatCustomDate,
 	formatDate,
 	getWeekStartAndEnd,
-	parseAnyDate,
 } from "../utils/utils_dates";
 import { groupByFn, TRecord } from "../utils/utils_misc";
+import { EMenuAction } from "../features/types";
+import { parseISO } from "date-fns";
 import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
-import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
-import { parseISO } from "date-fns";
 
 const groupHistoryByDate = (
 	allLogs: WorkoutHistory[]

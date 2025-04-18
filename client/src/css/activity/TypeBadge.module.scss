@@ -1,0 +1,24 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+$size: 4rem;
+$icon: calc($size - 30%);
+
+.TypeBadge {
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+	border-radius: 50%;
+	border: $borderLight;
+	@include rowCenter();
+
+	&_icon {
+		width: $icon;
+		height: $icon;
+		fill: #fff;
+	}
+}

@@ -18,3 +18,7 @@ export type Effort =
 	| "Strenuous"
 	| "All Out"
 	| "None";
+
+export type RepeatType = "Daily" | "Weekly" | "Monthly" | "Yearly" | "None";
+
+export type WeekDayToken = "Su" | "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa";

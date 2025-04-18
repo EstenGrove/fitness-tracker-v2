@@ -1,0 +1,97 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.MultiStepModal {
+	position: fixed;
+	display: block;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 80rem;
+	width: 80dvw;
+	height: 70dvh;
+	border-radius: 1rem;
+	border: $border;
+	background-color: rgb(13, 17, 21);
+	background-color: $background;
+	z-index: 9999;
+
+	&_top {
+		width: 100%;
+		height: 4rem;
+		padding: 1rem;
+		@include flex_row(flex-end, center);
+
+		&_close {
+			width: 2rem;
+			height: 2rem;
+			fill: $accentRed;
+		}
+	}
+
+	&_main {
+		width: 100%;
+		height: 36rem;
+		// height: 48rem;
+		padding: 2rem;
+		@include scrollbar();
+		overflow-y: auto;
+	}
+
+	&_footer {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 6rem;
+		padding: 1rem 2rem;
+		@include flex_row(space-between, center);
+		background-color: $foreground;
+		border-radius: 0 0 1rem 1rem;
+	}
+}
+
+@mixin navBtn() {
+	padding: 0.8rem 1.7rem;
+	border-radius: 1rem;
+	font-size: 1.6rem;
+	background-color: $foreground;
+	color: #fff;
+	border: $borderLight;
+	outline: none;
+
+	&:disabled {
+		opacity: 0.3;
+	}
+}
+
+.PrevButton {
+	@include navBtn();
+	margin-right: auto;
+}
+.NextButton {
+	@include navBtn();
+	margin-left: auto;
+}
+.SaveButton {
+	@include navBtn();
+	margin-left: auto;
+	border: none;
+	background-color: $accentBlue;
+}
+
+@media only screen and (max-width: 600px) {
+	.MultiStepModal {
+		max-width: 100%;
+		width: 100vh;
+		width: 100dvh;
+		height: 70vh;
+		height: 70dvh;
+		top: unset;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, -0);
+	}
+}

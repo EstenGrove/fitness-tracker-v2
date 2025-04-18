@@ -3,7 +3,7 @@ import sprite from "../assets/icons/main.svg";
 import sprite2 from "../assets/icons/calendar.svg";
 import sprite3 from "../assets/icons/dashboard.svg";
 import styles from "../css/pages/WorkoutsPage.module.scss";
-import { ReactNode, RefObject, useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import ModalLG from "../components/shared/ModalLG";
 import { useGetTodaysWorkoutsQuery } from "../features/workouts/todaysWorkoutsApi";
@@ -107,7 +107,7 @@ type HeaderActionProps = {
 
 const HeaderActions = ({ selectAction, onClose }: HeaderActionProps) => {
 	const headerRef = useRef<HTMLDivElement>(null);
-	useOutsideClick(headerRef as RefObject<HTMLDivElement>, onClose);
+	useOutsideClick(headerRef, onClose);
 	return (
 		<div ref={headerRef} className={styles.HeaderActions}>
 			<div className={styles.HeaderActions_item}>

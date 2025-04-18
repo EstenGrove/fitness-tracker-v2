@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useRef } from "react";
+import { ReactNode, useRef } from "react";
 import sprite from "../../assets/icons/calendar.svg";
 import styles from "../../css/shared/MenuDropdown.module.scss";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
@@ -25,7 +25,7 @@ const MenuIcon = ({ openMenu }: IconProps) => {
 
 const MenuDropdown = ({ closeMenu, children }: Props) => {
 	const menuRef = useRef<HTMLDivElement>(null);
-	useOutsideClick(menuRef as RefObject<HTMLInputElement>, closeMenu);
+	useOutsideClick(menuRef, closeMenu);
 	return (
 		<div ref={menuRef} className={styles.MenuDropdown}>
 			<ul className={styles.MenuDropdown_list}>{children}</ul>
