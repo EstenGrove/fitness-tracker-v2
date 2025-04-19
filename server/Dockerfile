@@ -1,12 +1,6 @@
-FROM node:23.6.0
-
+FROM node:23-alpine
 WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
 COPY . .
-
+RUN npm install
 EXPOSE 3002
-
-CMD ["node", "server.js"]  # Adjust as needed
+CMD ["node", "dist/index.js"]

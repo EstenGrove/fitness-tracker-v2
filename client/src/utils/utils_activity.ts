@@ -53,4 +53,27 @@ const getActivityStyles = (activityType: Activity) => {
 	}
 };
 
-export { ACTIVITIES, ACTIVITY_STYLES, getActivityStyles };
+const isWalkType = (type: Activity | string) => {
+	return type === "Walk";
+};
+
+const isStrengthType = (type: Activity | string) => {
+	return type === "Strength";
+};
+const isExerciseType = (type: Activity | string) => {
+	return (
+		type === "Strength" ||
+		type === "Cardio" ||
+		type === "Timed" ||
+		type === "Other"
+	);
+};
+
+export {
+	ACTIVITIES,
+	ACTIVITY_STYLES,
+	getActivityStyles,
+	isWalkType,
+	isStrengthType,
+	isExerciseType,
+};

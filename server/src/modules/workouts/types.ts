@@ -3,6 +3,25 @@ import type { Activity, RepeatType, WeekDayToken } from "../types.ts";
 
 export type WorkoutStatus = "COMPLETE" | "NOT-COMPLETE";
 
+export interface Workout {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutName: string;
+	duration: number;
+	equipment: string | null;
+	tagColor: string | null;
+}
+export interface WorkoutDB {
+	user_id: string;
+	workout_id: number;
+	activity_type: Activity;
+	workout_name: string;
+	duration: number;
+	equipment: string | null;
+	tag_color: string | null;
+}
+
 export interface TodaysWorkoutDB {
 	user_id: string;
 	workout_id: number;
@@ -73,3 +92,17 @@ export interface WorkoutDetails {
 	schedule: WorkoutSchedule | null;
 	history: HistoryOfType[];
 }
+
+export interface StrengthSet {
+	id: number;
+	weight: number;
+	reps: number;
+	sets: number;
+}
+export interface ExerciseSet {
+	id: number;
+	reps: number;
+	exercise: string;
+}
+
+export type WorkoutSet = StrengthSet | ExerciseSet;

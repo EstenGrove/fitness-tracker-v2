@@ -124,12 +124,14 @@ const MultiStepModal = ({ steps, onClose, onNext, onPrev, onSave }: Props) => {
 		<div
 			ref={modalRef}
 			className={styles.MultiStepModal}
-			onTouchStart={onTouchStart}
-			onTouchMove={onTouchMove}
-			onTouchEnd={onTouchEnd}
 			style={{ transform: `translateY(${translateY}px)` }}
 		>
-			<div className={styles.MultiStepModal_top}>
+			<div
+				onTouchStart={onTouchStart}
+				onTouchMove={onTouchMove}
+				onTouchEnd={onTouchEnd}
+				className={styles.MultiStepModal_top}
+			>
 				<svg className={styles.MultiStepModal_top_close}>
 					<use xlinkHref={`${sprite}#icon-clear`}></use>
 				</svg>

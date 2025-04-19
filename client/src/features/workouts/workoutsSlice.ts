@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TStatus } from "../types";
+import { ETStatus, TStatus } from "../types";
 import {
 	TodaysWorkout,
 	Workout,
@@ -8,8 +8,8 @@ import {
 	WorkoutSchedule,
 } from "./types";
 import { RootState } from "../../store/store";
-import { getWorkoutDetails } from "./operations";
 import { HistoryOfType } from "../history/types";
+import { getWorkoutDetails } from "./operations";
 
 export interface WorkoutsSlice {
 	status: TStatus;
@@ -25,7 +25,7 @@ interface SelectedWorkoutDetails {
 }
 
 const initialState: WorkoutsSlice = {
-	status: "IDLE",
+	status: ETStatus.IDLE,
 	workouts: [],
 	selected: null,
 	active: null,
@@ -44,12 +44,12 @@ const workoutsSlice = createSlice({
 	},
 	extraReducers(builder) {
 		builder.addCase(getWorkoutDetails.pending, (state) => {
-			state.status = "PENDING";
+			state.status = ETStatus.PENDING;
 		});
 		builder.addCase(
 			getWorkoutDetails.fulfilled,
 			(state, action: PayloadAction<WorkoutDetails>) => {
-				state.status = "FULFILLED";
+				state.status = ETStatus.FULFILLED;
 				state.selected = action.payload;
 			}
 		);
@@ -59,7 +59,7 @@ const workoutsSlice = createSlice({
 export const { setActiveWorkout } = workoutsSlice.actions;
 
 export const selectIsLoadingWorkout = (state: RootState) => {
-	return state.workouts.status === "PENDING";
+	return state.workouts.status === ETStatus.PENDING;
 };
 export const selectActiveWorkout = (state: RootState) => {
 	return state.workouts.active as TodaysWorkout;

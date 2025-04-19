@@ -1,0 +1,26 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.EditWalkInfo {
+	width: 100%;
+	height: auto;
+	margin-top: 2rem;
+	padding: 0 1rem;
+	@include colCenter();
+	margin-bottom: 5rem;
+
+	& label {
+		font-size: 1.4rem;
+		color: $text2;
+	}
+
+	&_miles {
+		width: 100%;
+	}
+	&_pace {
+		display: block;
+		font-size: 1.5rem;
+		margin: 1rem 0;
+	}
+}

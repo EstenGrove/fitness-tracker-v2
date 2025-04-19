@@ -18,15 +18,7 @@ interface SelectProps {
 // @ts-expect-error: this is fine
 interface Props extends SelectProps, ComponentPropsWithoutRef<"div"> {}
 
-const Select = ({
-	name,
-	id,
-	value,
-	defaultValue = "",
-	options,
-	onChange,
-	...rest
-}: Props) => {
+const Select = ({ name, id, value, options, onChange, ...rest }: Props) => {
 	const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		return onChange && onChange(name, value);
@@ -40,7 +32,6 @@ const Select = ({
 				className={styles.Select_select}
 				onChange={handleChange}
 				onSelect={handleChange}
-				defaultValue={defaultValue}
 				value={value}
 			>
 				{options &&

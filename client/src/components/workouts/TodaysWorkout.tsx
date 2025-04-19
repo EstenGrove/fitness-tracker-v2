@@ -4,13 +4,24 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
-import { formatTime, parseAnyTime } from "../../utils/utils_dates";
+import { formatDate, formatTime, parseAnyTime } from "../../utils/utils_dates";
 import { TodaysWorkout as ITodaysWorkout } from "../../features/workouts/types";
-import MenuDropdown from "../shared/MenuDropdown";
-import ModalLG from "../shared/ModalLG";
 import { useAppDispatch } from "../../store/store";
 import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
+import {
+	MarkAsDoneValues,
+	useMarkAsDoneMutation,
+} from "../../features/workouts/todaysWorkoutsApi";
+import {
+	MarkAsDoneBody,
+	prepareMarkAsDoneBody,
+} from "../../utils/utils_workouts";
+import { MarkAsDoneParams } from "../../features/types";
+import MenuDropdown from "../shared/MenuDropdown";
 import ViewWorkout from "./ViewWorkout";
+import ModalLG from "../shared/ModalLG";
+import MarkAsDone from "./MarkAsDone";
+import { isValid } from "date-fns";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -136,11 +147,12 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { workoutName, activityType, duration, recordedDuration } = workout;
-	const times = getWorkoutTimes(workout);
+	const [updateWorkout] = useMarkAsDoneMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
 	const isCompleted: boolean = getIsCompleted(workout);
 	const borderStyles = getBorderStyles(workout);
+	const times = getWorkoutTimes(workout);
 	const durationMins: string = getDurationDesc({
 		duration,
 		recorded: recordedDuration,
@@ -167,6 +179,34 @@ const TodaysWorkout = ({ workout }: Props) => {
 	};
 	const closeModal = () => {
 		setModalType(null);
+	};
+
+	const confirmMarkAsDone = async (values: MarkAsDoneValues) => {
+		const date = formatDate(values.workoutDate, "db");
+		const altDate = formatDate(new Date(), "db");
+		const workoutDate = isValid(date) ? date : altDate;
+		const body: MarkAsDoneBody = {
+			userID: workout.userID,
+			workoutID: workout.workoutID,
+			activityType: workout.activityType,
+			startTime: values.startTime,
+			endTime: values.endTime,
+			workoutDate: workoutDate,
+			effort: values.effort || "None",
+			workoutLength: values.duration || workout.duration,
+			sets: values.sets || [],
+			steps: values.steps || 0,
+			miles: values.miles || 0,
+			pace: values.pace || 0,
+			exercise: values.exercise || "",
+		};
+		const newBody = prepareMarkAsDoneBody(body.userID, body);
+		const payload: MarkAsDoneParams = {
+			userID: workout.userID,
+			details: newBody,
+		};
+		await updateWorkout(payload);
+		closeModal();
 	};
 
 	return (
@@ -206,7 +246,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 
 			{modalType === EModalType.VIEW && (
 				<ModalLG onClose={closeModal}>
-					<ViewWorkout workout={workout} />
+					<ViewWorkout workout={workout} onClose={closeModal} />
 				</ModalLG>
 			)}
 			{modalType === EModalType.EDIT && (
@@ -217,8 +257,11 @@ const TodaysWorkout = ({ workout }: Props) => {
 			)}
 			{modalType === EModalType.COMPLETE && (
 				<ModalLG onClose={closeModal}>
-					{/*  */}
-					{/*  */}
+					<MarkAsDone
+						workout={workout}
+						onClose={closeModal}
+						onConfirm={confirmMarkAsDone}
+					/>
 				</ModalLG>
 			)}
 		</div>

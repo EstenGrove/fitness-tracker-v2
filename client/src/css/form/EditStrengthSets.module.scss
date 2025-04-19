@@ -5,6 +5,11 @@
 .EditStrengthSets {
 	width: 100%;
 	padding: 1rem 3rem;
+
+	&_action {
+		width: 100%;
+		@include rowCenter();
+	}
 }
 
 .SetEntry {
@@ -75,10 +80,11 @@
 
 .AddSet {
 	padding: 0.7rem 1.5rem;
-	border-radius: 0.5rem;
-	background-color: $accentBlue;
+	border-radius: 1rem;
+	background-color: $foreground;
 	color: #fff;
-	border: none;
+	border: $borderLight;
 	outline: none;
 	font-size: 1.6rem;
+	@include rowCenter();
 }

@@ -5,15 +5,18 @@ import sprite3 from "../assets/icons/dashboard.svg";
 import styles from "../css/pages/WorkoutsPage.module.scss";
 import { ReactNode, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-import ModalLG from "../components/shared/ModalLG";
-import { useGetTodaysWorkoutsQuery } from "../features/workouts/todaysWorkoutsApi";
+import {
+	useGetAllWorkoutsQuery,
+	useGetTodaysWorkoutsQuery,
+} from "../features/workouts/todaysWorkoutsApi";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
-import { TodaysWorkout } from "../features/workouts/types";
+import { TodaysWorkout, Workout } from "../features/workouts/types";
+import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
-import MultiStepModal from "../components/shared/MultiStepModal";
 import CreateWorkout from "../components/workouts/CreateWorkout";
+import LogWorkout from "../components/history/LogWorkout";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -154,16 +157,18 @@ const WorkoutHeader = ({
 const WorkoutsPage = () => {
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
+	const { data: workoutsList } = useGetAllWorkoutsQuery({
+		userID: currentUser.userID,
+	});
 	const { data, isLoading } = useGetTodaysWorkoutsQuery({
 		userID: currentUser.userID,
 		targetDate: targetDate,
 	});
+	const allWorkouts = workoutsList as Workout[];
 	const todaysWorkouts = data as TodaysWorkout[];
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
-
-	console.log("data", data);
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -230,9 +235,11 @@ const WorkoutsPage = () => {
 				<CreateWorkout onClose={closeQuickAction} />
 			)}
 			{quickAction === "LogWorkout" && (
-				<ModalLG onClose={closeQuickAction}>
-					<div>Log Workout</div>
-				</ModalLG>
+				<LogWorkout
+					currentUser={currentUser}
+					onClose={closeQuickAction}
+					allWorkouts={allWorkouts as Workout[]}
+				/>
 			)}
 		</div>
 	);

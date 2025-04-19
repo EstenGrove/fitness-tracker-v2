@@ -313,6 +313,9 @@
 	--todaysMenuText: var(--blueGrey800);
 
 	--blockBG: var(--blueGrey200);
+
+	--inputBG: var(--bgShade900);
+	--textColor: var(--blueGrey800);
 }
 
 *,
@@ -356,6 +359,9 @@ body {
 	--todaysBorder: var(--blueGrey400);
 	--todaysMenuText: var(--blueGrey800);
 	--blockBG: var(--blueGrey200);
+
+	--inputBG: var(--bgShade900);
+	--textColor: var(--blueGrey100);
 }
 
 :root[data-theme="dark"] {
@@ -373,6 +379,8 @@ body {
 	--todaysBorder: var(--blueGrey700);
 	--todaysMenuText: var(--blueGrey400);
 	--blockBG: var(--blueGrey800);
+	--inputBG: var(--bg200);
+	--textColor: var(--blueGrey100);
 }
 
 input {

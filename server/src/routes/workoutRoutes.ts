@@ -4,24 +4,45 @@ import { workoutsService } from "../services/index.ts";
 import type {
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
+	Workout,
+	WorkoutDB,
 	WorkoutDetailsDB,
 } from "../modules/workouts/types.ts";
 import { normalizeTodaysWorkout } from "../modules/workouts/todaysWorkouts.ts";
 import { normalizeWorkoutDetails } from "../modules/workouts/workoutDetails.ts";
+import { normalizeWorkouts } from "../modules/workouts/workouts.ts";
 
 const app = new Hono();
 
+app.get("/getAllWorkouts", async (ctx: Context) => {
+	const { userID } = ctx.req.query();
+	console.log("userID", userID);
+
+	const workouts = (await workoutsService.getAllWorkouts(
+		userID
+	)) as WorkoutDB[];
+
+	if (workouts instanceof Error) {
+		const errResp = getResponseError(workouts, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+	const allWorkouts: Workout[] = normalizeWorkouts(workouts);
+
+	const resp = getResponseOk({
+		workouts: allWorkouts,
+	});
+	return ctx.json(resp);
+});
+
 app.get("/getTodaysWorkouts", async (ctx: Context) => {
 	const { userID, targetDate } = ctx.req.query();
-
-	console.log("userID", userID);
 
 	const workouts = (await workoutsService.getTodaysWorkouts(
 		userID,
 		targetDate
 	)) as TodaysWorkoutDB[];
-
-	console.log("workouts", workouts);
 
 	if (workouts instanceof Error) {
 		const errResp = getResponseError(workouts, {
@@ -66,6 +87,32 @@ app.get("/getWorkoutDetails", async (ctx: Context) => {
 		schedule: workoutDetails.schedule,
 		history: workoutDetails.history,
 	});
+	return ctx.json(resp);
+});
+
+app.post("/markWorkoutAsDone", async (ctx: Context) => {
+	const body = await ctx.req.json();
+	const { userID, details } = body;
+	// const updatedWorkout = new Error("Not implemented yet");
+	const updatedWorkout = await workoutsService.markWorkoutAsDone(details);
+
+	console.log("updatedWorkout", updatedWorkout);
+
+	if (updatedWorkout instanceof Error) {
+		const errResp = getResponseError(updatedWorkout, {
+			updatedWorkout: null,
+			history: [],
+		});
+		return ctx.json(errResp);
+	}
+	const todaysWorkout: TodaysWorkoutClient =
+		normalizeTodaysWorkout(updatedWorkout);
+
+	const resp = getResponseOk({
+		updatedWorkout: todaysWorkout,
+		history: [],
+	});
+
 	return ctx.json(resp);
 });
 

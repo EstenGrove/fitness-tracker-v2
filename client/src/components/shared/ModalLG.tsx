@@ -27,12 +27,14 @@ const ModalLG = ({ onClose, children }: Props) => {
 		<div
 			ref={modalRef}
 			className={styles.ModalLG}
-			onTouchStart={onTouchStart}
-			onTouchMove={onTouchMove}
-			onTouchEnd={onTouchEnd}
 			style={{ transform: `translateY(${translateY}px)` }}
 		>
-			<div className={styles.ModalLG_top}>
+			<div
+				onTouchStart={onTouchStart}
+				onTouchMove={onTouchMove}
+				onTouchEnd={onTouchEnd}
+				className={styles.ModalLG_top}
+			>
 				<div className={styles.DragHandle}></div>
 			</div>
 			<div className={styles.ModalLG_main}>{children}</div>

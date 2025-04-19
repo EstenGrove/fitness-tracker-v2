@@ -152,9 +152,11 @@ const EditStrengthSets = ({ sets, reps, weight, onChange }: Props) => {
 						/>
 					);
 				})}
-			<button onClick={addNewSet} className={styles.AddSet}>
-				Add Set
-			</button>
+			<div className={styles.EditStrengthSets_action}>
+				<button type="button" onClick={addNewSet} className={styles.AddSet}>
+					Add Set
+				</button>
+			</div>
 		</div>
 	);
 };

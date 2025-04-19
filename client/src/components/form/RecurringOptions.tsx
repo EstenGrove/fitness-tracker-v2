@@ -277,13 +277,11 @@ const RecurringOptions = ({ values, onChange, onSelect }: Props) => {
 			<div className={styles.RecurringOptions_options}>
 				{frequency === "Daily" && (
 					<>
-						{false && (
-							<DailyOptions
-								values={values}
-								onChange={onChange}
-								onSelect={onSelect}
-							/>
-						)}
+						<DailyOptions
+							values={values}
+							onChange={onChange}
+							onSelect={onSelect}
+						/>
 					</>
 				)}
 				{frequency === "Weekly" && (

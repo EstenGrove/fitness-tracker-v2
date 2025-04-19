@@ -11,18 +11,23 @@
 		@include fill_container;
 		color-scheme: dark;
 		border: $border;
-		background-color: $foreground;
+		background-color: var(--inputBG);
 		outline: none;
 		border-radius: 0.5rem;
 		font-family: var(--font-primary);
 		font-size: 1.6rem;
 		padding: 0 0.5rem;
+		color: var(--textColor);
 		&:hover {
 			cursor: pointer;
 			border-color: $accent;
 		}
 	}
+	& select {
+		color: $text1;
+	}
 	& option {
+		color: var(--textColor);
 		cursor: pointer;
 	}
 }

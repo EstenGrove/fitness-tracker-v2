@@ -1,8 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchWorkoutDetails } from "../../utils/utils_workouts";
+import {
+	fetchAllWorkouts,
+	fetchWorkoutDetails,
+} from "../../utils/utils_workouts";
 import { Activity } from "../shared/types";
 import { AwaitedResponse } from "../types";
-import { WorkoutDetails } from "./types";
+import { Workout, WorkoutDetails } from "./types";
 
 export interface WorkoutDetailsParams {
 	userID: string;
@@ -26,4 +29,16 @@ const getWorkoutDetails = createAsyncThunk(
 	}
 );
 
-export { getWorkoutDetails };
+const getAllWorkouts = createAsyncThunk(
+	"workouts/getAllWorkouts",
+	async (userID: string) => {
+		// This function can be implemented to fetch all workouts for a user
+		const response = (await fetchAllWorkouts(userID)) as AwaitedResponse<{
+			workouts: Workout[];
+		}>;
+		const data = response.Data;
+		return data.workouts as Workout[];
+	}
+);
+
+export { getWorkoutDetails, getAllWorkouts };
