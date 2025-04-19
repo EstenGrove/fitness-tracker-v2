@@ -1,0 +1,19 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.WalkHistoryEntry {
+	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1.2rem;
+	@include flex_row(flex-start, center);
+	gap: 0 1rem;
+
+	&_miles {
+		color: var(--accent-orange);
+	}
+	&_steps {
+		color: $accentYellow;
+	}
+}

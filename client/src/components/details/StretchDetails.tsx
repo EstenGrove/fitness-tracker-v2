@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import sprite from "../../assets/icons/main2.svg";
+import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/details/StretchDetails.module.scss";
 import { StretchWorkout } from "../../features/workouts/types";
 import TypeBadge from "../activity/TypeBadge";

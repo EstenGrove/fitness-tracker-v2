@@ -1,0 +1,78 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.AllHistoryEntry {
+	@include historyStyles();
+
+	&_top {
+		width: 100%;
+		height: 50%;
+		@include flex_row(flex-start, flex-start);
+		gap: 0 0.7rem;
+
+		&_type {
+			width: max-content;
+		}
+
+		&_title {
+			width: max-content;
+
+			&_day {
+				color: $text2;
+				font-size: 1.2rem;
+			}
+		}
+
+		&_icon {
+			position: relative;
+			width: max-content;
+			margin-top: -0.3rem;
+			margin-left: auto;
+		}
+	}
+
+	&_bottom {
+		width: 100%;
+		height: 50%;
+		@include flex_row(flex-start, flex-end);
+	}
+}
+
+.WhenBadge,
+.TimeBadge {
+	width: max-content;
+	margin-left: auto;
+	color: $text2;
+	font-size: 1.2rem;
+}
+
+.MinsBadge {
+	width: max-content;
+	color: $accentBlue;
+	@include flex_row(center, center);
+	gap: 0 0.2rem;
+	font-size: 1.3rem;
+
+	&_icon {
+		width: 1.4rem;
+		height: 1.4rem;
+		fill: $accentBlue;
+	}
+}
+
+$size: 3rem;
+$icon: calc($size - 30%);
+
+.TypeBadge {
+	width: $size;
+	height: $size;
+	border-radius: 50%;
+	@include rowCenter();
+
+	&_icon {
+		width: $icon;
+		height: $icon;
+		fill: #fff;
+	}
+}

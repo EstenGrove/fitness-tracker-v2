@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8" />
@@ -16,6 +16,11 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script type="module">
+    import { setInitialTheme } from './src/utils//utils_theme.ts'
+
+    setInitialTheme()
+  </script>
 </body>
 
 </html>

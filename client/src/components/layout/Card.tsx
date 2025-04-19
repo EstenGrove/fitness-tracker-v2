@@ -1,9 +1,9 @@
 import { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
-import sprite from "../../assets/icons/main.svg";
-import alt from "../../assets/icons/calendar2.svg";
-import styles from "../../css/layout/Card.module.scss";
 import { NavLink } from "react-router";
 import { iconsMap } from "../../utils/utils_icons";
+import sprite from "../../assets/icons/main.svg";
+import alt from "../../assets/icons/calendar.svg";
+import styles from "../../css/layout/Card.module.scss";
 
 interface CardProps {
 	cardRef?: Ref<HTMLDivElement>;

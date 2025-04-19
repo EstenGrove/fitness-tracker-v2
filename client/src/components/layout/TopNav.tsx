@@ -1,12 +1,27 @@
-import sprite from "../../assets/icons/main2.svg";
+import sprite from "../../assets/icons/main.svg";
 import sprite2 from "../../assets/icons/dashboard.svg";
 import styles from "../../css/layout/TopNav.module.scss";
-import { CurrentUser } from "../../features/user/types";
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { LocalStorage } from "../../utils/utils_storage";
+
+const THEME_KEY = "APP_THEME";
+const storage = new LocalStorage();
+
+const toggleTheme = () => {
+	const cacheTheme = storage.get(THEME_KEY);
+	const isDark =
+		cacheTheme === "dark" || document.documentElement.dataset.theme === "dark";
+	if (isDark) {
+		document.documentElement.dataset.theme = "light";
+		storage.set(THEME_KEY, "light");
+	} else {
+		document.documentElement.dataset.theme = "dark";
+		storage.set(THEME_KEY, "dark");
+	}
+};
 
 type Props = {
-	currentUser: CurrentUser;
 	onLogout: () => void;
 };
 
@@ -26,7 +41,7 @@ type SidePanelProps = {
 
 const SidePanel = ({ closePanel }: SidePanelProps) => {
 	const panelRef = useRef<HTMLDivElement>(null);
-	useOutsideClick(panelRef as RefObject<HTMLDivElement>, closePanel);
+	useOutsideClick(panelRef, closePanel);
 
 	return (
 		<div className={`${styles.SidePanel} ${styles.slideIn}`} ref={panelRef}>
@@ -37,7 +52,7 @@ const SidePanel = ({ closePanel }: SidePanelProps) => {
 	);
 };
 
-const TopNav = ({ currentUser, onLogout }: Props) => {
+const TopNav = ({ onLogout }: Props) => {
 	const [showSidePanel, setShowSidePanel] = useState<boolean>(false);
 
 	const openPanel = () => setShowSidePanel(true);
@@ -51,10 +66,10 @@ const TopNav = ({ currentUser, onLogout }: Props) => {
 						<use xlinkHref={`${sprite2}#icon-sidebar`}></use>
 					</svg>
 				</li>
-				<li className={styles.TopNav_list_item}>
-					{/* <svg className={styles.TopNav_list_item_icon}>
-						<use xlinkHref={`${sprite2}#icon-more_vert`}></use>
-					</svg> */}
+				<li className={styles.TopNav_list_item} onClick={toggleTheme}>
+					<svg className={styles.TopNav_list_item_icon}>
+						<use xlinkHref={`${sprite2}#icon-brightness_4`}></use>
+					</svg>
 				</li>
 				<li className={styles.TopNav_list_item}>
 					<LogoutButton onLogout={onLogout} />

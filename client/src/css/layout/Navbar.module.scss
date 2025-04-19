@@ -11,7 +11,7 @@
 	height: 7rem;
 	border-top: $borderLight;
 	overflow-x: hidden;
-	@include glassy();
+	@include glassy(var(--glassy));
 	z-index: 500;
 
 	&_list {
@@ -24,7 +24,6 @@
 		&_item {
 			width: 5rem;
 			height: 100%;
-			// border: $borderLight;
 			@include colCenter();
 
 			&_icon {

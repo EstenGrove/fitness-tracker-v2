@@ -16,6 +16,16 @@ const Medications = lazy(() => import("./pages/MedicationsPage"));
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
 );
+// Active Workout
+const ActiveWorkout = lazy(() => import("./pages/ActiveWorkoutPage"));
+// History Views
+const AllHistory = lazy(() => import("./views/AllHistory"));
+const WalkHistory = lazy(() => import("./views/WalkHistory"));
+const TimedHistory = lazy(() => import("./views/TimedHistory"));
+const OtherHistory = lazy(() => import("./views/OtherHistory"));
+const CardioHistory = lazy(() => import("./views/CardioHistory"));
+const StretchHistory = lazy(() => import("./views/StretchHistory"));
+const StrengthHistory = lazy(() => import("./views/StrengthHistory"));
 
 function App() {
 	return (
@@ -45,6 +55,15 @@ function App() {
 								<Route index element={<Dashboard />} />
 
 								<Route
+									path="active/:id"
+									element={
+										<Suspense fallback={<Loader />}>
+											<ActiveWorkout />
+										</Suspense>
+									}
+								/>
+
+								<Route
 									path="workouts"
 									element={
 										<Suspense fallback={<Loader />}>
@@ -62,6 +81,7 @@ function App() {
 									}
 								/>
 
+								{/* MARK: HISTORY */}
 								<Route
 									path="/history"
 									element={
@@ -69,7 +89,64 @@ function App() {
 											<History />
 										</Suspense>
 									}
-								></Route>
+								>
+									<Route
+										index
+										element={
+											<Suspense fallback={<Loader />}>
+												<AllHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="strength"
+										element={
+											<Suspense fallback={<Loader />}>
+												<StrengthHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="cardio"
+										element={
+											<Suspense fallback={<Loader />}>
+												<CardioHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="walk"
+										element={
+											<Suspense fallback={<Loader />}>
+												<WalkHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="stretch"
+										element={
+											<Suspense fallback={<Loader />}>
+												<StretchHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="timed"
+										element={
+											<Suspense fallback={<Loader />}>
+												<TimedHistory />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="other"
+										element={
+											<Suspense fallback={<Loader />}>
+												<OtherHistory />
+											</Suspense>
+										}
+									/>
+								</Route>
 
 								<Route
 									path="/user"

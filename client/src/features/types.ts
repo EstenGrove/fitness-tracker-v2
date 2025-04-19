@@ -1,4 +1,5 @@
-import { Activity } from "./activity/types";
+import { MarkAsDoneBody } from "../utils/utils_workouts";
+import { Activity } from "./shared/types";
 
 export type TStatus = "IDLE" | "PENDING" | "FULFILLED" | "REJECTED";
 
@@ -10,6 +11,13 @@ export type TResponse<T> = {
 	ErrorMsg: string | null;
 	StackTrace: string | null;
 };
+
+export enum ETStatus {
+	IDLE = "IDLE",
+	PENDING = "PENDING",
+	FULFILLED = "FULFILLED",
+	REJECTED = "REJECTED",
+}
 
 // Example: AsyncResponse<{ user: CurrentUser; session: CurrentSession }>
 // - Designed to be used within an async function definition, NOT the consumer
@@ -39,4 +47,14 @@ export enum EMenuAction {
 	COMPLETE = "COMPLETE",
 	CANCEL = "CANCEL",
 	DELETE = "DELETE",
+}
+
+export interface UserDateParams {
+	userID: string;
+	targetDate: string;
+}
+
+export interface MarkAsDoneParams {
+	userID: string;
+	details: MarkAsDoneBody;
 }

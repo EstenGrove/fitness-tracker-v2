@@ -7,6 +7,7 @@ import {
 	startOfMonth,
 	startOfWeek,
 	startOfYear,
+	subMonths,
 } from "date-fns";
 import { RepeatType } from "../features/shared/types";
 
@@ -206,6 +207,17 @@ const formatCustomDate = (
 	return formatted;
 };
 
+// Converts a date (eg '2024-12-18T03:42:000') to the day of week (eg. 'Monday' etc)
+const formatDateAsWeekDay = (
+	date: Date | string,
+	weekdayToken: keyof DateFormats["weekday"] = "full"
+): string => {
+	const token: string = WEEKDAY_TOKENS[weekdayToken as keyof object];
+	const weekday = format(date, token);
+
+	return weekday;
+};
+
 const parseDate = (
 	dateStr: string,
 	formatToken: keyof DateFormats["date"] = "db"
@@ -217,7 +229,10 @@ const parseDate = (
 };
 
 const parseAnyDate = (dateStr: string) => {
-	const tokens = Object.keys(DATE_TOKENS);
+	// Remove invalid chars like spaces & commas
+	const tokens = Object.keys(DATE_TOKENS).filter(
+		(x) => x.includes(" ") || x.includes(",")
+	);
 
 	for (const token of tokens) {
 		const cleanToken = token.replace(",", "");
@@ -291,6 +306,17 @@ const getYearStartAndEnd = (base: Date | string = new Date()) => {
 	return { startDate, endDate };
 };
 
+const getLastXMonthsRange = (last: number = 3) => {
+	const now = new Date();
+	const start = subMonths(now, last);
+	const startDate = formatDate(start, "db");
+	const endDate = formatDate(now, "db");
+	return {
+		startDate,
+		endDate,
+	};
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -303,6 +329,7 @@ export {
 	formatTime,
 	formatDateTime,
 	formatCustomDate,
+	formatDateAsWeekDay,
 	// PARSING STRINGS AS DATE/TIME/DATETIME
 	parseDate,
 	parseAnyDate,
@@ -313,4 +340,5 @@ export {
 	getWeekStartAndEnd,
 	getMonthStartAndEnd,
 	getYearStartAndEnd,
+	getLastXMonthsRange,
 };

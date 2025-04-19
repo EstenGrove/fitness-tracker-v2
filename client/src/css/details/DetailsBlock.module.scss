@@ -9,6 +9,7 @@
 	padding: 0.5rem 0.5rem;
 	background-color: $background;
 	@include flex_row(flex-start, center);
+	border: 1px solid var(--blockBG);
 
 	&_left {
 		width: 5rem;
@@ -19,7 +20,7 @@
 			width: 3.5rem;
 			height: 3.5rem;
 			border-radius: 1rem;
-			background-color: var(--blueGrey800);
+			background-color: var(--blockBG);
 			@include rowCenter();
 			&_icon {
 				width: 2.5rem;

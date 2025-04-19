@@ -1,10 +1,11 @@
-import { Effort } from "../shared/types";
+import { Activity, Effort } from "../shared/types";
 import { StrengthSet } from "../workouts/types";
 
 export interface WorkoutHistory {
 	userID: string;
 	historyID: number;
 	workoutID: number;
+	activityType: Activity;
 	workoutName: string;
 	workoutDate: string;
 	startTime: string;
@@ -38,3 +39,21 @@ export interface OtherHistory extends WorkoutHistory {
 	reps: number;
 	exercise: string;
 }
+
+export interface AllHistory {
+	all: WorkoutHistory[];
+	strength: StrengthHistory[];
+	walk: WalkHistory[];
+	stretch: StretchHistory[];
+	cardio: CardioHistory[];
+	timed: TimedHistory[];
+	other: OtherHistory[];
+}
+
+export type HistoryOfType =
+	| StrengthHistory
+	| WalkHistory
+	| CardioHistory
+	| StretchHistory
+	| TimedHistory
+	| OtherHistory;

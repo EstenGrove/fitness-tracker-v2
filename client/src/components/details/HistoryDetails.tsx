@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../../css/details/HistoryDetails.module.scss";
 import { WorkoutHistory } from "../../features/history/types";
 import { addEllipsis } from "../../utils/utils_misc";

@@ -60,7 +60,7 @@ const WeekDay = ({
 			<div
 				className={styles.WeekDay_date}
 				style={{
-					color: isSelected ? "var(--accent-blue)" : "#fff",
+					color: isSelected ? "var(--accent-blue)" : "var(--text1)",
 				}}
 			>
 				{date}

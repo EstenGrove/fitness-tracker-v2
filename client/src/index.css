@@ -5,6 +5,9 @@
 	--font-secondary: "Open Sans", "Roboto", sans-serif;
 	--font-logo: "Rubik Glitch", system-ui;
 
+	--tabText: #fff;
+	--text1: var(--blueGrey700);
+
 	/* Theme/Color Variables */
 	--bg-body: rgb(234, 236, 239);
 	--main-accent: rgb(124, 58, 237);
@@ -302,6 +305,17 @@
 	/* Summary Diff */
 	--mainCardHeight: 35rem;
 	--mainCardMobileHeight: 45rem;
+
+	--glassy: rgba(12, 15, 19, 0.75);
+
+	--todayStyles: var(--bg-foreground);
+	--todaysBorder: var(--blueGrey400);
+	--todaysMenuText: var(--blueGrey800);
+
+	--blockBG: var(--blueGrey200);
+
+	--inputBG: var(--bgShade900);
+	--textColor: var(--blueGrey800);
 }
 
 *,
@@ -325,7 +339,6 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 
 	/* Prevent scrolls */
-	/* overflow-y: hidden; */
 	overflow-x: hidden;
 }
 
@@ -333,7 +346,22 @@ body {
 	--bg-body: #eaecef;
 	--bg-foreground: var(--bg-foreground-light);
 	color: var(--blueGrey800);
-	--border-color: var(--blueGrey300);
+	--border-color: var(--blueGrey400);
+	--glassy: rgba(203, 213, 225, 0.3);
+	/* --text1: var(--blueGrey800); */
+	--text1: var(--blueGrey800);
+	--text2: var(--blueGrey400);
+	--text1_5: var(--blueGrey400);
+
+	--tabBtns: var(--accent-blue);
+	--tabText: #fff;
+	--todayStyles: var(--blueGrey200);
+	--todaysBorder: var(--blueGrey400);
+	--todaysMenuText: var(--blueGrey800);
+	--blockBG: var(--blueGrey200);
+
+	--inputBG: var(--bgShade900);
+	--textColor: var(--blueGrey100);
 }
 
 :root[data-theme="dark"] {
@@ -341,6 +369,18 @@ body {
 	--bg-foreground: var(--bg-foreground-dark);
 	color: var(--blueGrey300);
 	--border-color: var(--blueGrey600);
+	--glassy: rgba(12, 15, 19, 0.75);
+	--text1: var(--blueGrey100);
+	--text2: var(--blueGrey600);
+	--text1_5: var(--blueGrey500);
+	--tabBtns: var(--bg-foreground);
+	--tabText: var(--accent-blue);
+	--todayStyles: var(--bg-foreground);
+	--todaysBorder: var(--blueGrey700);
+	--todaysMenuText: var(--blueGrey400);
+	--blockBG: var(--blueGrey800);
+	--inputBG: var(--bg200);
+	--textColor: var(--blueGrey100);
 }
 
 input {

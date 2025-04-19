@@ -16,7 +16,7 @@ import { useState, useEffect, MouseEvent, RefObject } from "react";
  * })
  */
 const useOutsideClick = (
-	nodeRef: RefObject<HTMLElement> | undefined,
+	nodeRef: RefObject<HTMLElement | null>,
 	onOutsideClick?: () => void | undefined
 ): boolean => {
 	const [isOutside, setIsOutside] = useState<boolean>(false);

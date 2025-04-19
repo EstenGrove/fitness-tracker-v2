@@ -1,0 +1,11 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.CardioHistoryEntry {
+	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+	color: $text2;
+	font-size: 1.2rem;
+}

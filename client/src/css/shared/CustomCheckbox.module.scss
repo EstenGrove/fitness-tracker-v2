@@ -1,0 +1,34 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.CustomCheckbox {
+	width: max-content;
+	height: max-content;
+	@include flex_row(flex-start, center);
+	gap: 0 0.6rem;
+	margin-bottom: 2rem;
+
+	&_input {
+		width: 2rem;
+		height: 2rem;
+		position: relative;
+		border-radius: 0.5rem;
+		border: $borderLight;
+		@include rowCenter();
+
+		&_check {
+			@include fill_container;
+			@include rowCenter();
+			font-size: 1.7rem;
+			color: $accentGreen;
+			border-radius: 0.5rem;
+			// background-color: map-get($map: $greenMap, $key: "bg");
+			background-color: var(--blueGrey900);
+		}
+	}
+
+	&_label {
+		font-size: 1.6rem;
+	}
+}
