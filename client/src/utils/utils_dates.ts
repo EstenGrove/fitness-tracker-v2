@@ -4,6 +4,7 @@ import {
 	endOfYear,
 	format,
 	parse,
+	set,
 	startOfMonth,
 	startOfWeek,
 	startOfYear,
@@ -287,6 +288,16 @@ const parseAnyTime = (timeStr: string) => {
 	return timeStr;
 };
 
+const applyTimeStrToDate = (time: string, date: Date | string): Date => {
+	const parsedTime = parseTime(time, "long");
+	const withTime = set(date, {
+		hours: parsedTime.getHours(),
+		minutes: parsedTime.getMinutes(),
+	});
+
+	return withTime;
+};
+
 const getWeekStartAndEnd = (base: Date | string = new Date()) => {
 	const startDate = startOfWeek(base);
 	const endDate = endOfWeek(base);
@@ -317,6 +328,13 @@ const getLastXMonthsRange = (last: number = 3) => {
 	};
 };
 
+// Converts date to ISO string
+const prepareTimestamp = (date: Date | string) => {
+	const base = new Date(date);
+
+	return base.toISOString();
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -341,4 +359,7 @@ export {
 	getMonthStartAndEnd,
 	getYearStartAndEnd,
 	getLastXMonthsRange,
+	// APPLY TIME TO DATE
+	applyTimeStrToDate,
+	prepareTimestamp,
 };

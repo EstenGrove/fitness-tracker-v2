@@ -1,0 +1,86 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+@mixin counterBtn() {
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	border: $border;
+	@include rowCenter();
+	background-color: transparent;
+	&:hover {
+		cursor: pointer;
+		border-color: $accent;
+	}
+	&:focus-within {
+		cursor: pointer;
+		border-color: $accent;
+	}
+	&:disabled {
+		opacity: 0.2;
+		cursor: not-allowed;
+	}
+}
+
+.CounterInput {
+	width: max-content;
+	height: auto;
+	min-height: 3rem;
+	@include flex_row(center, center);
+	gap: 0 0.3rem;
+	padding: 0.5rem 0.2rem;
+	border-radius: 5rem;
+
+	&_minus {
+		@include counterBtn();
+
+		&_icon {
+			width: 2rem;
+			height: 2rem;
+			fill: $text1;
+		}
+	}
+
+	&_value {
+		width: 5rem;
+		height: 100%;
+		@include rowCenter();
+		font-size: 2rem;
+		color: $text1;
+
+		&_input {
+			color: $text1;
+			width: 5rem;
+			height: 100%;
+			font-size: 2rem;
+			border: 1px solid $accent;
+			border-radius: 1rem;
+			outline: none;
+			text-align: center;
+			background-color: transparent;
+		}
+	}
+
+	&_add {
+		@include counterBtn();
+
+		&_icon {
+			width: 2rem;
+			height: 2rem;
+			fill: $text1;
+		}
+	}
+}
+
+.HiddenInput {
+	color: $text1;
+	width: 5rem;
+	height: 100%;
+	font-size: 2rem;
+	border: 1px solid $accent;
+	border-radius: 1rem;
+	outline: none;
+	text-align: center;
+	background-color: transparent;
+}

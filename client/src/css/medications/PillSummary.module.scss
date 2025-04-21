@@ -1,0 +1,73 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.PillSummary {
+	width: 100%;
+	height: 100%;
+
+	&_wrapper {
+		width: 100%;
+		@include flex_row(center, center);
+		margin-bottom: 1rem;
+		margin-top: 1rem;
+	}
+
+	&_total {
+		width: 100%;
+		height: 80%;
+		@include colCenter();
+
+		&_value {
+			font-size: 3.5rem;
+			color: $accentBlue;
+		}
+
+		&_label {
+			font-size: 1.3rem;
+			color: $text3;
+		}
+	}
+
+	&_bottom {
+		width: 100%;
+		height: 20%;
+		min-height: 4rem;
+		@include flex_row(space-between, flex-end);
+
+		&_taken {
+			font-size: 1.2rem;
+			color: $text2;
+		}
+		&_daysLeft {
+			font-size: 1.2rem;
+			color: $text2;
+		}
+	}
+}
+
+.MainItem {
+	width: 100%;
+	height: 80%;
+	@include colCenter();
+
+	&_value {
+		font-size: 3.5rem;
+		color: $accentBlue;
+	}
+
+	&_label {
+		font-size: 1.3rem;
+		color: $text3;
+		@include rowCenter();
+		gap: 0 2px;
+
+		&_icon {
+			width: 1.3rem;
+			height: 1.3rem;
+			fill: $text2;
+			align-self: flex-end;
+			margin-bottom: 1px;
+		}
+	}
+}
