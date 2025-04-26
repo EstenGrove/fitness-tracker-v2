@@ -5,13 +5,18 @@ import { store } from "./store/store";
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import Loader from "./components/layout/Loader";
 
+const NotFound = lazy(() => import("./pages/NotFoundPage"));
+
 const User = lazy(() => import("./pages/UserPage"));
 const Login = lazy(() => import("./pages/LoginPage"));
+const Goals = lazy(() => import("./pages/GoalsPage"));
+const Trends = lazy(() => import("./pages/TrendsPage"));
 const History = lazy(() => import("./pages/HistoryPage"));
 const Workouts = lazy(() => import("./pages/WorkoutsPage"));
 const Settings = lazy(() => import("./pages/SettingsPage"));
 const Dashboard = lazy(() => import("./pages/DashboardPage"));
 const Medications = lazy(() => import("./pages/MedicationsPage"));
+const RecentActivity = lazy(() => import("./pages/RecentActivityPage"));
 // Layout page
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
@@ -149,6 +154,32 @@ function App() {
 								</Route>
 
 								<Route
+									path="goals"
+									element={
+										<Suspense fallback={<Loader />}>
+											<Goals />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="trends"
+									element={
+										<Suspense fallback={<Loader />}>
+											<Trends />
+										</Suspense>
+									}
+								/>
+
+								<Route
+									path="activity"
+									element={
+										<Suspense fallback={<Loader />}>
+											<RecentActivity />
+										</Suspense>
+									}
+								/>
+
+								<Route
 									path="/user"
 									element={
 										<Suspense fallback={<Loader />}>
@@ -166,6 +197,15 @@ function App() {
 									}
 								/>
 							</Route>
+
+							<Route
+								path="*"
+								element={
+									<Suspense fallback={<Loader />}>
+										<NotFound />
+									</Suspense>
+								}
+							/>
 						</Routes>
 					</div>
 				</div>

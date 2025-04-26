@@ -30,21 +30,13 @@ const isNewWeek = (data: DailyMins[]) => {
 };
 
 const MinutesSummary = ({ minsSummary }: Props) => {
-	const base = new Date().toString();
 	const isWeekStart: boolean = isNewWeek(minsSummary);
-	const detailsUrl: string = getDetailsUrl("minutes", base);
 	return (
 		<div className={styles.MinutesSummary}>
-			<header className={styles.MinutesSummary_header}>
-				<h4>Recent Activity</h4>
-				<NavLink to={detailsUrl} className={styles.MinutesSummary_header_btn}>
-					Show All
-				</NavLink>
-			</header>
 			<div className={styles.MinutesSummary_card}>
 				<DetailsCard
 					to="details"
-					title="Weekly Mins."
+					title="Daily Mins."
 					icon="time"
 					color="var(--accent-blue)"
 				>

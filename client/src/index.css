@@ -316,6 +316,9 @@
 
 	--inputBG: var(--bgShade900);
 	--textColor: var(--blueGrey800);
+
+	--cardBorder: var(--blueGrey300);
+	--cardGoToIcon: var(--blueGrey500);
 }
 
 *,
@@ -362,6 +365,9 @@ body {
 
 	--inputBG: var(--bgShade900);
 	--textColor: var(--blueGrey100);
+
+	--cardBorder: var(--blueGrey300);
+	--cardGoToIcon: var(--blueGrey400);
 }
 
 :root[data-theme="dark"] {
@@ -381,6 +387,9 @@ body {
 	--blockBG: var(--blueGrey800);
 	--inputBG: var(--bg200);
 	--textColor: var(--blueGrey100);
+
+	--cardBorder: var(--blueGrey800);
+	--cardGoToIcon: var(--blueGrey800);
 }
 
 input {

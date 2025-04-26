@@ -3,6 +3,7 @@ import {
 	endOfWeek,
 	endOfYear,
 	format,
+	isValid,
 	parse,
 	set,
 	startOfMonth,
@@ -231,14 +232,41 @@ const parseDate = (
 
 const parseAnyDate = (dateStr: string) => {
 	// Remove invalid chars like spaces & commas
-	const tokens = Object.keys(DATE_TOKENS).filter(
-		(x) => x.includes(" ") || x.includes(",")
-	);
+	const tokens = [
+		"MM-dd-yyyy",
+		"yyyy-dd-MM",
+		"MM/dd/yyyy",
+		"MM/dd/yy",
+		"M/d/yyyy",
+	];
 
 	for (const token of tokens) {
 		const cleanToken = token.replace(",", "");
 		const parsed = parse(dateStr, cleanToken, new Date());
 		if (!isNaN(parsed.getDate())) {
+			return parsed;
+		}
+	}
+	return dateStr;
+};
+
+/**
+ * Attempts to parse a date string into a valid date, otherwise returns the original string
+ * @param dateStr {string} - Date string (eg, '2025-04-16')
+ * @returns Date | string
+ */
+const parseDateStr = (dateStr: string) => {
+	const tokens = [
+		"MM-dd-yyyy",
+		"yyyy-dd-MM",
+		"MM/dd/yyyy",
+		"MM/dd/yy",
+		"M/d/yyyy",
+	];
+
+	for (const token of tokens) {
+		const parsed = parse(dateStr, token, new Date());
+		if (isValid(parsed)) {
 			return parsed;
 		}
 	}
@@ -335,6 +363,15 @@ const prepareTimestamp = (date: Date | string) => {
 	return base.toISOString();
 };
 
+const getWeekToDate = (base: Date | string = new Date()) => {
+	const now = base;
+	const weekStart = startOfWeek(now);
+	return {
+		startDate: formatDate(weekStart, "db"),
+		endDate: formatDate(now, "db"),
+	};
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -354,6 +391,7 @@ export {
 	parseDateTime,
 	parseTime,
 	parseAnyTime,
+	parseDateStr,
 	// CALCULATE DATE RANGES
 	getWeekStartAndEnd,
 	getMonthStartAndEnd,
@@ -362,4 +400,5 @@ export {
 	// APPLY TIME TO DATE
 	applyTimeStrToDate,
 	prepareTimestamp,
+	getWeekToDate,
 };

@@ -1,0 +1,54 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.SegmentBreakdown {
+	width: 100%;
+	padding: 1rem 0;
+
+	&_inner {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+		gap: 0.5rem 0;
+	}
+}
+
+.ActivitySegment {
+	width: 100%;
+	height: 3.5rem;
+	@include flex_row(flex-start, center);
+	gap: 0 0.5rem;
+	font-size: 1rem;
+
+	&_prefix {
+		$width: 3.5rem;
+		width: $width;
+		max-width: $width;
+		min-width: $width;
+		@include flex_row(flex-start, center);
+		gap: 0 5px;
+
+		&_percent {
+			@include flex_row(flex-start, center);
+			font-size: 1.3rem;
+			color: $text3;
+		}
+		&_label {
+			font-size: 1.4rem;
+			color: $text3;
+		}
+	}
+
+	&_progress {
+		width: 100%;
+	}
+
+	&_duration {
+		width: 15ch;
+		@include flex_row(flex-end, center);
+		color: $text3;
+	}
+}

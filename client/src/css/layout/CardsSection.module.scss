@@ -9,7 +9,6 @@
 	&_header {
 		width: 100%;
 		padding-left: 0.5rem;
-		padding-bottom: 0.5rem;
 		@include flex_row(space-between, center);
 
 		& h4 {

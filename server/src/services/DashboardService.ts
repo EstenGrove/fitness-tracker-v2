@@ -10,10 +10,10 @@ class DashboardService {
 	}
 	async getDashboardSummary(userID: string, targetDate: string): SummaryResp {
 		try {
-			const query = `SELECT * FROM get_dashboard_summary($1, $2)`;
+			const query = `SELECT * FROM get_dashboard_summary($1, $2) as data`;
 			const values = [userID, targetDate];
 			const result = await this.#db.query(query, values);
-			const rows = result?.rows;
+			const rows = result?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {
 			return error;

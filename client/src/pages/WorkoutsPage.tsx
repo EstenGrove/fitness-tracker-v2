@@ -17,6 +17,7 @@ import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
+import { useNavigate } from "react-router";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -61,8 +62,17 @@ const GoalsButton = ({ onClick }: ActionBtnProps) => {
 		</button>
 	);
 };
+const TrendsButton = ({ onClick }: ActionBtnProps) => {
+	return (
+		<button type="button" onClick={onClick} className={styles.TrendsButton}>
+			<svg className={styles.TrendsButton_icon}>
+				<use xlinkHref={`${sprite}#icon-positive-dynamic`}></use>
+			</svg>
+		</button>
+	);
+};
 
-type PanelAction = "Goals" | "Calendar" | "Search";
+type PanelAction = "Goals" | "Calendar" | "Search" | "Trends";
 type ActionsPanelProps = {
 	onAction: (action: PanelAction) => void;
 };
@@ -72,6 +82,7 @@ const ActionsPanel = ({ onAction }: ActionsPanelProps) => {
 		<div className={styles.ActionsPanel}>
 			<GoalsButton onClick={() => onAction("Goals")} />
 			<CalendarButton onClick={() => onAction("Calendar")} />
+			<TrendsButton onClick={() => onAction("Trends")} />
 			<SearchButton onClick={() => onAction("Search")} />
 		</div>
 	);
@@ -155,6 +166,7 @@ const WorkoutHeader = ({
 };
 
 const WorkoutsPage = () => {
+	const navigate = useNavigate();
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useGetAllWorkoutsQuery({
@@ -184,7 +196,11 @@ const WorkoutsPage = () => {
 	};
 
 	const selectPanelAction = (action: PanelAction) => {
-		setPanelAction(action);
+		if (action === "Trends") {
+			navigate("/trends");
+		} else {
+			setPanelAction(action);
+		}
 	};
 	const closePanelActions = () => {
 		setPanelAction(null);

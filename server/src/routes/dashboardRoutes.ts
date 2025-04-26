@@ -16,6 +16,8 @@ app.get("/getDashboardSummary", async (ctx: Context) => {
 		targetDate
 	)) as DashboardSummaryDB;
 
+	console.log("summary", summary);
+
 	if (summary instanceof Error) {
 		const errResp = getResponseError(summary, {
 			dailyMins: [],

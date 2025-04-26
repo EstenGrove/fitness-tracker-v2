@@ -1,43 +1,34 @@
 import { useSelector } from "react-redux";
+import styles from "../css/pages/DashboardPage.module.scss";
+import { selectCurrentUser } from "../features/user/userSlice";
+import { useWeekHeader } from "../hooks/useWeekHeader";
+import { useGetDashboardSummaryQuery } from "../features/dashboard/summaryApi";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import UserBadge from "../components/user/UserBadge";
-import styles from "../css/pages/DashboardPage.module.scss";
-import { selectCurrentUser } from "../features/user/userSlice";
 import WeeklyHeader from "../components/layout/WeeklyHeader";
-import { useWeekHeader } from "../hooks/useWeekHeader";
-import { useState } from "react";
-import { DateRange } from "../features/types";
-import { formatDate } from "../utils/utils_dates";
-import { parseISO, startOfWeek } from "date-fns";
-import { useGetDashboardSummaryQuery } from "../features/dashboard/summaryApi";
 import MinutesSummary from "../components/summary/MinutesSummary";
-
-const getWeekToDate = (base: Date | string = new Date()) => {
-	const now = base;
-	const weekStart = startOfWeek(now);
-	return {
-		startDate: formatDate(weekStart, "db"),
-		endDate: formatDate(now, "db"),
-	};
-};
+import { DashboardSummary } from "../features/dashboard/types";
+import Loader from "../components/layout/Loader";
+import CaloriesSummary from "../components/summary/CaloriesSummary";
+import CardsCarousel from "../components/layout/CardsCarousel";
+import { useRef } from "react";
+import { NavLink } from "react-router";
+import CardsSection from "../components/layout/CardsSection";
+import StepsSummary from "../components/summary/StepsSummary";
 
 const DashboardPage = () => {
 	const baseDate = new Date();
+	const cardsRef = useRef<HTMLDivElement>(null);
 	const header = useWeekHeader(baseDate.toString());
-	const weekRange = getWeekToDate();
 	const currentUser = useSelector(selectCurrentUser);
-	const [dateRange, setDateRange] = useState<DateRange>({
-		startDate: weekRange.startDate,
-		endDate: weekRange.endDate,
+	const { data, isLoading } = useGetDashboardSummaryQuery({
+		userID: currentUser.userID,
+		targetDate: header.selectedDate,
 	});
-	// const { data, isLoading } = useGetDashboardSummaryQuery({
-	// 	userID: currentUser.userID,
-	// 	startDate: dateRange.startDate,
-	// 	endDate: dateRange.endDate,
-	// });
+	const summary = data as DashboardSummary;
 
-	// console.log("data", data);
+	console.log("data", data);
 
 	return (
 		<PageContainer padding="1rem 2rem">
@@ -53,10 +44,15 @@ const DashboardPage = () => {
 					/>
 				</div>
 				<div className={styles.DashboardPage_body}>
-					<MinutesSummary minsSummary={[]} />
-					{/*  */}
-					{/*  */}
-					{/*  */}
+					{!isLoading && (
+						<CardsSection title="Recent Activity" to="/activity?view=WEEK">
+							<CardsCarousel containerRef={cardsRef}>
+								<MinutesSummary minsSummary={summary.dailyMins} />
+								<CaloriesSummary caloriesSummary={summary.dailyCalories} />
+								<StepsSummary stepsSummary={summary.dailySteps} />
+							</CardsCarousel>
+						</CardsSection>
+					)}
 				</div>
 			</div>
 		</PageContainer>

@@ -4,6 +4,7 @@
 
 .HistoryEntry {
 	@include historyStyles();
+	background-color: var(--todayStyles);
 
 	&_top {
 		width: 100%;

@@ -110,6 +110,9 @@ const API_ENDPOINTS = {
 	dashboard: {
 		getSummary: "/dashboard/getDashboardSummary",
 	},
+	recentActivity: {
+		getSummary: "/recentActivity/getRecentActivitySummary",
+	},
 };
 
 export const {
@@ -120,6 +123,7 @@ export const {
 	history: historyApis,
 	meds: medicationApis,
 	dashboard: dashboardApis,
+	recentActivity: recentActivityApis,
 } = API_ENDPOINTS;
 
 export {

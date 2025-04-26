@@ -65,5 +65,5 @@ export interface SummaryForDate {
 
 export interface MedSummaryForDate {
 	pillSummary: PillSummary;
-	logs: MedLogEntry[];
+	medicationLogs: MedLogEntry[];
 }

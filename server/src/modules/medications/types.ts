@@ -58,9 +58,9 @@ export interface PillSummaryDB {
 export interface PillSummary {
 	scheduleID: number;
 	totalPills: number;
-	totalPillsTaken: number;
-	totalPillsTakenToday: number;
-	totalPillsRemaining: number;
+	pillsTaken: number;
+	pillsTakenToday: number;
+	pillsRemaining: number;
 	daysLeft: number;
 }
 
