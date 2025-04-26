@@ -1,3 +1,15 @@
+export interface LoginValues {
+	username: string;
+	password: string;
+	rememberMe: boolean;
+}
+export interface CreateAccountValues {
+	username: string;
+	password: string;
+	passwordConfirm: string;
+	rememberMe: boolean;
+}
+
 export interface CurrentUser {
 	userID: string;
 	username: string;

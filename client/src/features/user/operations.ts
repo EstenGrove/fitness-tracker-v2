@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { logout } from "../../utils/utils_user";
+import { login, logout } from "../../utils/utils_user";
 import {
 	fetchUserByID,
 	fetchUserByLogin,
@@ -7,10 +7,24 @@ import {
 } from "../../utils/utils_user";
 import { AwaitedResponse } from "../types";
 
+interface LoginParams {
+	username: string;
+	password: string;
+}
+
 const logoutUser = createAsyncThunk(
 	"user/logoutUser",
 	async (userID: string) => {
 		const logoutResp = await logout(userID);
+		const data = logoutResp.Data;
+		return data;
+	}
+);
+const loginUser = createAsyncThunk(
+	"user/loginUser",
+	async (params: LoginParams) => {
+		const { username, password } = params;
+		const logoutResp = await login(username, password);
 		const data = logoutResp.Data;
 		return data;
 	}
@@ -47,4 +61,4 @@ const getUserByID = createAsyncThunk(
 	}
 );
 
-export { logoutUser, getUserByLogin, getUserByID };
+export { loginUser, logoutUser, getUserByLogin, getUserByID };

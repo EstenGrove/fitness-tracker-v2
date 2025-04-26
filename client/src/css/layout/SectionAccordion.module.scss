@@ -4,7 +4,6 @@
 
 .SectionAccordion {
 	width: 100%;
-	height: auto;
 	padding: 1rem 0;
 	border-radius: 1rem;
 
@@ -16,6 +15,7 @@
 			font-size: 1.5rem;
 			color: $text2;
 		}
+
 		&_wrapper {
 			width: 2.2rem;
 			height: 2.2rem;
@@ -34,14 +34,21 @@
 
 	&_main {
 		width: 100%;
-		height: auto;
-		min-height: 15rem;
 		overflow: hidden;
-		transition: height 0.3s ease-in-out;
+		max-height: 0;
+		transition: max-height 0.2s ease-in;
 
 		&_content {
 			width: 100%;
-			height: min-content;
+			opacity: 0;
+			transition: opacity 0.3s ease-in-out;
+		}
+	}
+
+	&_main.isExpanded {
+		max-height: 1000px; // <-- Safe big value (hack)
+		.SectionAccordion_main_content {
+			opacity: 1;
 		}
 	}
 }

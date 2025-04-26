@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { CurrentSession, CurrentUser } from "./types";
-import { TStatus } from "../types";
+import { ETStatus, TStatus } from "../types";
 import { RootState } from "../../store/store";
+import { loginUser } from "./operations";
 
 const fakeUser: CurrentUser = {
 	userID: "e17e4fa3-bcf8-4332-819c-b5802fd070b1",
@@ -20,18 +21,35 @@ export interface UserSlice {
 	status: TStatus;
 	currentUser: CurrentUser | null;
 	currentSession: CurrentSession | null;
+	error: string | null;
 }
 
 const initialState: UserSlice = {
 	status: "IDLE",
 	currentUser: fakeUser,
 	currentSession: null,
+	error: null,
 };
 
 const userSlice = createSlice({
 	name: "user",
 	initialState: initialState,
 	reducers: {},
+	extraReducers(builder) {
+		builder
+			.addCase(loginUser.pending, (state) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(loginUser.fulfilled, (state, action) => {
+				state.status = ETStatus.FULFILLED;
+				state.currentUser = action.payload.user;
+				state.currentSession = action.payload.session;
+			})
+			.addCase(loginUser.rejected, (state) => {
+				state.status = ETStatus.REJECTED;
+				state.error = new Error("Login failed").message;
+			});
+	},
 });
 
 export const selectCurrentUser = (state: RootState) => {

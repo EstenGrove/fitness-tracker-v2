@@ -4,11 +4,14 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import Loader from "./components/layout/Loader";
+import CreateAccountPage from "./pages/CreateAccountPage";
 
 const NotFound = lazy(() => import("./pages/NotFoundPage"));
+// Signup/Login
+const Login = lazy(() => import("./pages/LoginPage"));
+const CreateAccount = lazy(() => import("./pages/CreateAccountPage"));
 
 const User = lazy(() => import("./pages/UserPage"));
-const Login = lazy(() => import("./pages/LoginPage"));
 const Goals = lazy(() => import("./pages/GoalsPage"));
 const Trends = lazy(() => import("./pages/TrendsPage"));
 const History = lazy(() => import("./pages/HistoryPage"));
@@ -45,6 +48,14 @@ function App() {
 								element={
 									<Suspense fallback={<Loader />}>
 										<Login />
+									</Suspense>
+								}
+							/>
+							<Route
+								path="/account"
+								element={
+									<Suspense fallback={<Loader />}>
+										<CreateAccountPage />
 									</Suspense>
 								}
 							/>

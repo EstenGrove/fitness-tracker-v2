@@ -8,6 +8,9 @@ import TimeCounter from "../ui/TimeCounter";
 import ActivitySegments from "./ActivitySegments";
 import RingBreakdown from "./RingBreakdown";
 import SectionAccordion from "../layout/SectionAccordion";
+import { useState } from "react";
+import NoSegments from "./NoSegments";
+import NoData from "../ui/NoData";
 
 type Props = {
 	dateRange: DateRange;
@@ -29,13 +32,17 @@ const RecentActivityBreakdown = ({
 	totalTime,
 	segments = [],
 }: Props) => {
+	// For toggling the the accordion title, based off expanded/collapsed
+	const [title, setTitle] = useState<string>("Show");
 	const minsTotals = extractHrsAndMins(totalTime.totalMins);
 	const rangeDesc = getDateRangeDesc({
 		startDate: dateRange.startDate,
 		endDate: dateRange.endDate,
 	});
 
-	console.log("dateRange", dateRange);
+	const onToggleAccordion = (isOpen: boolean) => {
+		setTitle(isOpen ? "Hide" : "Show");
+	};
 
 	return (
 		<div className={styles.RecentActivityBreakdown}>
@@ -51,11 +58,25 @@ const RecentActivityBreakdown = ({
 				/>
 			</div>
 			<div className={styles.RecentActivityBreakdown_segments}>
-				<ActivitySegments segments={segments} />
+				{!segments || !segments.length ? (
+					<NoSegments title="Time Breakdown (no data)" />
+				) : (
+					<ActivitySegments segments={segments} />
+				)}
 			</div>
 			<div className={styles.RecentActivityBreakdown_breakdown}>
-				<SectionAccordion>
-					<RingBreakdown segments={segments} />
+				<SectionAccordion
+					isOpen={true}
+					title={title + " Breakdown"}
+					onToggle={onToggleAccordion}
+				>
+					{!segments || !segments.length ? (
+						<div className={styles.RecentActivityBreakdown_breakdown_empty}>
+							<NoData msg="No workouts yet." icon="calendarHistory2" />
+						</div>
+					) : (
+						<RingBreakdown segments={segments} />
+					)}
 				</SectionAccordion>
 			</div>
 		</div>

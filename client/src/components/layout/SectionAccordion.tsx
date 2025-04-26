@@ -12,28 +12,34 @@ interface AccordionProps {
 	isOpen?: boolean;
 	elementRef?: RefObject<HTMLDivElement | null>;
 	children?: ReactNode;
+	onToggle?: (isOpen: boolean) => void;
 }
 
 // @ts-expect-error: this is fine
 interface Props extends AccordionProps, ComponentPropsWithoutRef<"div"> {}
 
-const open = "expand_less";
-const closed = "expand_more";
+const icon = "expand_more";
 
 const SectionAccordion = ({
 	title = "Summary Breakdown",
 	isOpen = false,
 	elementRef,
 	children,
+	onToggle,
 	...rest
 }: Props) => {
 	const [isExpanded, setIsExpanded] = useState<boolean>(isOpen);
 	const caretCss = {
 		transform: isExpanded ? "rotate(0)" : "rotate(-90deg)",
-		transition: "all .4s ease-in-out",
+		transition: "all .2s ease-in",
 	};
 
-	const toggleOpen = () => setIsExpanded(!isExpanded);
+	const toggleOpen = () => {
+		const isOpen = !isExpanded;
+		setIsExpanded(isOpen);
+
+		return onToggle && onToggle(isOpen);
+	};
 
 	return (
 		<div ref={elementRef} className={styles.SectionAccordion} {...rest}>
@@ -44,14 +50,17 @@ const SectionAccordion = ({
 						className={styles.SectionAccordion_top_wrapper_caret}
 						style={caretCss}
 					>
-						<use xlinkHref={`${sprite}#icon-${closed}`}></use>
+						<use xlinkHref={`${sprite}#icon-${icon}`}></use>
 					</svg>
 				</div>
 			</div>
-			<div className={styles.SectionAccordion_main}>
-				{isExpanded && (
-					<div className={styles.SectionAccordion_main_content}>{children}</div>
-				)}
+
+			<div
+				className={`${styles.SectionAccordion_main} ${
+					isExpanded ? styles.isExpanded : ""
+				}`}
+			>
+				<div className={styles.SectionAccordion_main_content}>{children}</div>
 			</div>
 		</div>
 	);
