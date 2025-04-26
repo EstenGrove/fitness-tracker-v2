@@ -35,7 +35,6 @@ const defaultOptions: OptionItem[] = [
 	{ value: "DAY", label: "D" },
 	{ value: "WEEK", label: "W" },
 	{ value: "MONTH", label: "M" },
-	{ value: "QUARTER", label: "Q" },
 	{ value: "YEAR", label: "Y" },
 ];
 

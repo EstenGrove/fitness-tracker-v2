@@ -1,0 +1,55 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.RingBreakdown {
+	width: 100%;
+	height: auto;
+	padding: 3rem 0;
+	@include flex_row(flex-start, center);
+
+	&_values {
+		width: 100%;
+		height: auto;
+		font-size: 1.8rem;
+		@include flex_col(flex-start, center);
+	}
+	&_display {
+		width: 100%;
+		height: auto;
+		@include flex_row(flex-start, flex-start);
+		margin-top: -2rem;
+	}
+}
+
+.SegmentLabel {
+	width: 20rem;
+	height: 4rem;
+	@include flex_row(flex-start, center);
+	gap: 0 0.5rem;
+
+	&_percent {
+		width: 20%;
+		min-width: max-content;
+		height: 100%;
+		font-size: 1.4rem;
+		text-align: left;
+		color: $text3;
+	}
+	&_label {
+		width: 60%;
+		min-width: max-content;
+		height: 100%;
+		font-size: 1.4rem;
+		text-align: left;
+		color: $text1;
+	}
+	&_mins {
+		width: 20%;
+		min-width: max-content;
+		height: 100%;
+		font-size: 1.4rem;
+		text-align: left;
+		color: $text1;
+	}
+}

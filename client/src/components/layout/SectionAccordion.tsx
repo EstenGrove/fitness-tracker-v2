@@ -1,0 +1,60 @@
+import {
+	ComponentPropsWithoutRef,
+	ReactNode,
+	RefObject,
+	useState,
+} from "react";
+import sprite from "../../assets/icons/calendar.svg";
+import styles from "../../css/layout/SectionAccordion.module.scss";
+
+interface AccordionProps {
+	title: string;
+	isOpen?: boolean;
+	elementRef?: RefObject<HTMLDivElement | null>;
+	children?: ReactNode;
+}
+
+// @ts-expect-error: this is fine
+interface Props extends AccordionProps, ComponentPropsWithoutRef<"div"> {}
+
+const open = "expand_less";
+const closed = "expand_more";
+
+const SectionAccordion = ({
+	title = "Summary Breakdown",
+	isOpen = false,
+	elementRef,
+	children,
+	...rest
+}: Props) => {
+	const [isExpanded, setIsExpanded] = useState<boolean>(isOpen);
+	const caretCss = {
+		transform: isExpanded ? "rotate(0)" : "rotate(-90deg)",
+		transition: "all .4s ease-in-out",
+	};
+
+	const toggleOpen = () => setIsExpanded(!isExpanded);
+
+	return (
+		<div ref={elementRef} className={styles.SectionAccordion} {...rest}>
+			<div className={styles.SectionAccordion_top} onClick={toggleOpen}>
+				<div className={styles.SectionAccordion_top_title}>{title}</div>
+				<div className={styles.SectionAccordion_top_wrapper}>
+					<svg
+						className={styles.SectionAccordion_top_wrapper_caret}
+						style={caretCss}
+					>
+						<use xlinkHref={`${sprite}#icon-${closed}`}></use>
+					</svg>
+				</div>
+			</div>
+			<div className={styles.SectionAccordion_main}>
+				{isExpanded && (
+					<div className={styles.SectionAccordion_main_content}>{children}</div>
+				)}
+			</div>
+		</div>
+	);
+};
+
+export default SectionAccordion;

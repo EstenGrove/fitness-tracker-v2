@@ -4,9 +4,10 @@ import { Segment, TotalTime } from "../../features/recent-activity/types";
 import { DateRange } from "../../features/types";
 import { formatCustomDate } from "../../utils/utils_dates";
 import { extractHrsAndMins } from "../../utils/utils_formatter";
-import RingSegments from "../ui/RingSegments";
 import TimeCounter from "../ui/TimeCounter";
 import ActivitySegments from "./ActivitySegments";
+import RingBreakdown from "./RingBreakdown";
+import SectionAccordion from "../layout/SectionAccordion";
 
 type Props = {
 	dateRange: DateRange;
@@ -53,7 +54,9 @@ const RecentActivityBreakdown = ({
 				<ActivitySegments segments={segments} />
 			</div>
 			<div className={styles.RecentActivityBreakdown_breakdown}>
-				<RingSegments data={segments} />
+				<SectionAccordion>
+					<RingBreakdown segments={segments} />
+				</SectionAccordion>
 			</div>
 		</div>
 	);

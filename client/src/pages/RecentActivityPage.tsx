@@ -1,7 +1,4 @@
 import styles from "../css/pages/RecentActivityPage.module.scss";
-import NavArrows from "../components/layout/NavArrows";
-import PageContainer from "../components/layout/PageContainer";
-import RecentActivityBreakdown from "../components/recent-activity/RecentActivityBreakdown";
 import { useState } from "react";
 import {
 	ActivityRangeType,
@@ -12,13 +9,12 @@ import { useGetActivitySummaryQuery } from "../features/recent-activity/recentAc
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
+import NavArrows from "../components/layout/NavArrows";
+import PageContainer from "../components/layout/PageContainer";
 import RangeSelector from "../components/recent-activity/RangeSelector";
-import { extractHrsAndMins } from "../utils/utils_formatter";
+import RecentActivityBreakdown from "../components/recent-activity/RecentActivityBreakdown";
 
 const defaultType = EActivityRangeType.WEEK;
-
-const total = extractHrsAndMins(737);
-console.log("total", total);
 
 const RecentActivityPage = () => {
 	const baseDate = formatDate(new Date(), "db");
