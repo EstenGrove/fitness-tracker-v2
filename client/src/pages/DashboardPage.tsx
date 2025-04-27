@@ -9,11 +9,9 @@ import UserBadge from "../components/user/UserBadge";
 import WeeklyHeader from "../components/layout/WeeklyHeader";
 import MinutesSummary from "../components/summary/MinutesSummary";
 import { DashboardSummary } from "../features/dashboard/types";
-import Loader from "../components/layout/Loader";
 import CaloriesSummary from "../components/summary/CaloriesSummary";
 import CardsCarousel from "../components/layout/CardsCarousel";
 import { useRef } from "react";
-import { NavLink } from "react-router";
 import CardsSection from "../components/layout/CardsSection";
 import StepsSummary from "../components/summary/StepsSummary";
 
@@ -23,7 +21,7 @@ const DashboardPage = () => {
 	const header = useWeekHeader(baseDate.toString());
 	const currentUser = useSelector(selectCurrentUser);
 	const { data, isLoading } = useGetDashboardSummaryQuery({
-		userID: currentUser.userID,
+		userID: currentUser?.userID,
 		targetDate: header.selectedDate,
 	});
 	const summary = data as DashboardSummary;

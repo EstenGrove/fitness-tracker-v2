@@ -9,7 +9,6 @@ import styles from "../../css/layout/SectionAccordion.module.scss";
 
 interface AccordionProps {
 	title: string;
-	isOpen?: boolean;
 	elementRef?: RefObject<HTMLDivElement | null>;
 	children?: ReactNode;
 	onToggle?: (isOpen: boolean) => void;
@@ -22,13 +21,12 @@ const icon = "expand_more";
 
 const SectionAccordion = ({
 	title = "Summary Breakdown",
-	isOpen = false,
 	elementRef,
 	children,
 	onToggle,
 	...rest
 }: Props) => {
-	const [isExpanded, setIsExpanded] = useState<boolean>(isOpen);
+	const [isExpanded, setIsExpanded] = useState<boolean>(true);
 	const caretCss = {
 		transform: isExpanded ? "rotate(0)" : "rotate(-90deg)",
 		transition: "all .2s ease-in",

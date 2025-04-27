@@ -56,9 +56,13 @@ const API_ENDPOINTS = {
 	activity: {
 		getTypes: "/activity/getActivityTypes",
 	},
+	auth: {
+		login: "/auth/login",
+		logout: "/auth/logout",
+		refresh: "/auth/refresh",
+	},
 	user: {
-		login: "/user/login",
-		logout: "/user/logout",
+		userExists: "/user/getUserExists",
 		getByLogin: "/user/getUserByLogin",
 		getByID: "/user/getUserByID",
 	},
@@ -116,6 +120,7 @@ const API_ENDPOINTS = {
 };
 
 export const {
+	auth: authApis,
 	user: userApis,
 	activity: activityApis,
 	workouts: workoutApis,

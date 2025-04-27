@@ -66,7 +66,6 @@ const RecentActivityBreakdown = ({
 			</div>
 			<div className={styles.RecentActivityBreakdown_breakdown}>
 				<SectionAccordion
-					isOpen={true}
 					title={title + " Breakdown"}
 					onToggle={onToggleAccordion}
 				>

@@ -8,6 +8,7 @@ type Props = {
 	onChange: (name: string, value: string) => void;
 	onSubmit: () => void;
 	goTo: () => void;
+	isLoading: boolean;
 };
 
 const inputCss = {
@@ -16,7 +17,30 @@ const inputCss = {
 	minWidth: "100%",
 };
 
-const LoginForm = ({ values, onChange, onSubmit, goTo }: Props) => {
+const isValidEmail = (username: string): boolean => {
+	const pattern = /^(\w{1,})(@)(\w{1,})/;
+	const hasPattern = pattern.test(username);
+
+	return hasPattern;
+};
+
+const enableLoginBtn = (values: LoginValues) => {
+	const { username, password } = values;
+	const hasPattern = isValidEmail(username);
+	const hasVals = !!username && !!password;
+	const hasLength = username.length > 5 && password.length > 5;
+
+	return hasVals && hasPattern && hasLength;
+};
+
+const LoginForm = ({
+	values,
+	onChange,
+	onSubmit,
+	goTo,
+	isLoading = false,
+}: Props) => {
+	const canSubmit = enableLoginBtn(values);
 	return (
 		<form className={styles.LoginForm}>
 			<div className={styles.LoginForm_username}>
@@ -26,7 +50,6 @@ const LoginForm = ({ values, onChange, onSubmit, goTo }: Props) => {
 					id="username"
 					value={values.username}
 					onChange={onChange}
-					// placeholder="my-email@gmail.com"
 					style={inputCss}
 				/>
 			</div>
@@ -37,7 +60,6 @@ const LoginForm = ({ values, onChange, onSubmit, goTo }: Props) => {
 					id="password"
 					value={values.password}
 					onChange={onChange}
-					// placeholder="my-email@gmail.com"
 					style={inputCss}
 				/>
 			</div>
@@ -45,11 +67,11 @@ const LoginForm = ({ values, onChange, onSubmit, goTo }: Props) => {
 				<button
 					type="button"
 					onClick={onSubmit}
+					disabled={!canSubmit}
 					className={styles.LoginForm_actions_login}
 				>
-					Login
+					{isLoading ? "Submitting..." : "Login"}
 				</button>
-				{/* <div className={styles.LoginForm_actions_or}>or</div> */}
 				<button
 					type="button"
 					onClick={goTo}

@@ -1,3 +1,5 @@
+import userRoutes from "./userRoutes.ts";
+import authRoutes from "./authRoutes.ts";
 import historyRoutes from "./historyRoutes.ts";
 import workoutRoutes from "./workoutRoutes.ts";
 import dashboardRoutes from "./dashboardRoutes.ts";
@@ -10,6 +12,8 @@ const allRoutes = {
 	dashboard: dashboardRoutes,
 	workouts: workoutRoutes,
 	history: historyRoutes,
+	auth: authRoutes,
+	user: userRoutes,
 };
 
 export { allRoutes };

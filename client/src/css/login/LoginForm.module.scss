@@ -47,6 +47,10 @@
 			color: #fff;
 			border: none;
 			outline: none;
+			&:disabled {
+				opacity: 0.4;
+				cursor: not-allowed;
+			}
 		}
 		&_account {
 			width: 100%;
