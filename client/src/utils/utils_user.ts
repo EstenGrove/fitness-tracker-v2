@@ -15,6 +15,8 @@ export interface LoginResponse {
 }
 export interface UserExistsResponse {
 	isActiveUser: boolean;
+	userNotFound: boolean;
+	invalidCreds: boolean;
 }
 
 export type LoginResp = AsyncResponse<LoginResponse>;

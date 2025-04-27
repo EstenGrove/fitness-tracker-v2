@@ -2,12 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CurrentSession, CurrentUser } from "./types";
 import { ETStatus, TStatus } from "../types";
 import { RootState } from "../../store/store";
-import {
-	getUserByLogin,
-	loginUser,
-	logoutUser,
-	userExists,
-} from "./operations";
+import { getUserByLogin, loginUser, logoutUser } from "./operations";
 import { LoginResponse, UserResponse } from "../../utils/utils_user";
 
 const fakeUser: CurrentUser = {

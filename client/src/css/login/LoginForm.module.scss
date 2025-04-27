@@ -6,7 +6,7 @@
 	width: 100%;
 	height: 40rem;
 	padding: 1rem 2rem;
-	@include colCenter();
+	// @include colCenter();
 
 	& label {
 		font-size: 1.5rem;
@@ -51,6 +51,9 @@
 				opacity: 0.4;
 				cursor: not-allowed;
 			}
+			&:focus-within {
+				box-shadow: 1px 2px 22px -1px rgba(0, 124, 255, 0.3);
+			}
 		}
 		&_account {
 			width: 100%;
@@ -63,6 +66,14 @@
 			color: $text1;
 			border: 1px solid $text2;
 			outline: none;
+			&:focus-within {
+				background-color: $foreground;
+				box-shadow: 1px 2px 22px -1px rgba(0, 124, 255, 0.3);
+			}
+			&:hover {
+				background-color: $foreground;
+				cursor: pointer;
+			}
 		}
 	}
 }

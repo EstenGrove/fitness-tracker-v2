@@ -1,7 +1,5 @@
 :root {
-	/* --font-primary: "Raleway", "Roboto", sans-serif; */
 	--font-primary: "Space Grotesk", "Lato", "Roboto", sans-serif;
-	/* --font-primary: "Lato", "Roboto", sans-serif; */
 	--font-secondary: "Open Sans", "Roboto", sans-serif;
 	--font-logo: "Rubik Glitch", system-ui;
 
@@ -9,15 +7,13 @@
 	--text1: var(--blueGrey700);
 
 	/* Theme/Color Variables */
-	--bg-body: rgb(234, 236, 239);
-	--main-accent: rgb(124, 58, 237);
-	--main-accent: #7c3aed;
+	--bg-body: rgb(234, 236, 239); /* #eaecef */
+	--main-accent: rgb(124, 58, 237); /* #7c3aed */
 	--alt-accent: #ff005b;
-	/* --main-accent: #7c3aed; */
-	--accent-green: rgb(0, 226, 189);
-	/* --accent-green: #00e2bd; */
+	--accent-green: #00e2bd; /* rgb(0, 226, 189) */
 	--accent-bright-red: rgb(255, 0, 102);
-	--accent-blue: #007cff;
+	--accent-blue: #007cff; /* rgba(0, 124, 255, 1) */
+
 	--accent-red: #ff333d;
 	--accent-red4: #ff000d;
 	--accent-red2: rgba(255, 0, 27, 0.4);

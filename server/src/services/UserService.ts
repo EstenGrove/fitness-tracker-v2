@@ -17,7 +17,7 @@ class UserService {
 				$2
 			) as data`;
 			const results = await this.#db.query(query, [username, password]);
-			const rows = results?.rows?.[0]?.is_active_user;
+			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
 			return error;

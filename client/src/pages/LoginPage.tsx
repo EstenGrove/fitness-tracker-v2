@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import LoginForm from "../components/login/LoginForm";
 import styles from "../css/pages/LoginPage.module.scss";
 import sprite from "../assets/icons/calendar.svg";
@@ -13,10 +13,16 @@ import { AwaitedResponse } from "../features/types";
 import FadeIn from "../components/ui/FadeIn";
 import SelfDestruct from "../components/ui/SelfDestruct";
 
+enum ELoginErrors {
+	INVALID_CREDENTIALS = "Invalid Credentials",
+	USER_NOT_FOUND = "Account not found",
+	SERVER_ERROR = "Server issue occurred. Please try again.",
+}
+
 const ErrorMsg = ({ msg }: { msg: string }) => {
 	return (
-		<SelfDestruct expiry={4000}>
-			<FadeIn>
+		<SelfDestruct expiry={6000}>
+			<FadeIn duration={650}>
 				<div className={styles.ErrorMsg}>
 					<svg className={styles.ErrorMsg_icon}>
 						<use xlinkHref={`${sprite}#icon-error_outline`}></use>
@@ -28,12 +34,52 @@ const ErrorMsg = ({ msg }: { msg: string }) => {
 	);
 };
 
+const getFailedLoginMsg = (data: UserExistsResponse) => {
+	const isActive = data.isActiveUser;
+	const invalidCreds = data.invalidCreds;
+	const notFound = data.userNotFound;
+
+	switch (true) {
+		case notFound: {
+			return ELoginErrors.USER_NOT_FOUND;
+		}
+		case invalidCreds: {
+			return ELoginErrors.INVALID_CREDENTIALS;
+		}
+		case !isActive: {
+			return ELoginErrors.USER_NOT_FOUND;
+		}
+		case data instanceof Error:
+		case undefined:
+		case null: {
+			return ELoginErrors.SERVER_ERROR;
+		}
+		default:
+			return null;
+	}
+};
+
+const hasError = (data: UserExistsResponse) => {
+	const isActive = data.isActiveUser;
+	const invalidCreds = data.invalidCreds;
+	const notFound = data.userNotFound;
+
+	return !isActive || invalidCreds || notFound;
+};
+
+interface ErrorInfo {
+	error: string | null | undefined;
+	key: number;
+}
+
 const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const errRef = useRef<number | null>(null);
 	const isSubmitting = useSelector(isSubmittingLogin);
-	const [error, setError] = useState<string | null | undefined>(null);
+	const [error, setError] = useState<ErrorInfo>({
+		error: null,
+		key: 0,
+	});
 	const [values, setValues] = useState<LoginValues>({
 		username: "",
 		password: "",
@@ -55,20 +101,23 @@ const LoginPage = () => {
 		});
 	};
 
-	const onSubmit = async () => {
+	const onLogin = async () => {
 		const { username, password } = values;
 		const userResp = (await fetchUserExists(
 			username,
 			password
 		)) as AwaitedResponse<UserExistsResponse>;
-		const userExists = userResp.Data.isActiveUser;
+		const data = userResp.Data as UserExistsResponse;
+		const loginFailed = hasError(data);
 
-		if (!userExists) {
+		// We use the 'error.key' to insure a re-render occurs when 2 of the same error occurs
+		if (loginFailed) {
+			const err = getFailedLoginMsg(data);
 			resetForm();
-			errRef.current = setTimeout(() => {
-				setError(null);
-			}, 4000);
-			return setError("Invalid credentials");
+			return setError({
+				error: err,
+				key: error.key + 1,
+			});
 		}
 
 		const loginData = await dispatch(loginUser(values)).unwrap();
@@ -88,12 +137,12 @@ const LoginPage = () => {
 			</div>
 			<div className={styles.LoginPage_form}>
 				<div className={styles.LoginPage_form_err}>
-					{error && <ErrorMsg msg={error} />}
+					{error.error && <ErrorMsg key={error.key} msg={error.error} />}
 				</div>
 				<LoginForm
 					values={values}
 					onChange={onChange}
-					onSubmit={onSubmit}
+					onSubmit={onLogin}
 					isLoading={isSubmitting}
 					goTo={() => navigate("/account")}
 				/>

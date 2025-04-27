@@ -18,12 +18,10 @@
 
 	&_form {
 		width: 100%;
-		height: 100%;
+		height: 70dvh;
 		padding: 2rem 2rem;
 		max-width: 50rem;
-		// display: block;
-		// margin: 0 auto;
-		// @include flex_col(flex-start, center);
+		@include flex_col(flex-start, flex-start);
 
 		&_err {
 			width: 100%;
