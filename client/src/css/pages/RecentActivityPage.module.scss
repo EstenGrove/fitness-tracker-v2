@@ -1,0 +1,33 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.RecentActivityPage {
+	width: 100%;
+	height: auto;
+
+	&_nav {
+		width: max-content;
+		margin-top: -1rem;
+	}
+
+	&_header {
+		width: 100%;
+		padding: 0 2rem;
+		font-size: 1.8rem;
+	}
+
+	&_tabs {
+		width: 100%;
+		height: 5rem;
+		@include rowCenter();
+		border-top: $borderLight;
+		margin: 2rem 0 1rem 0;
+	}
+
+	&_main {
+		width: 100%;
+		height: 100%;
+		padding: 2rem 2rem;
+	}
+}

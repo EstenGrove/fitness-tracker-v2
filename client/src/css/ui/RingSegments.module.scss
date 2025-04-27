@@ -1,0 +1,14 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.RingSegments {
+	width: 100%;
+	height: auto;
+	@include rowCenter();
+	padding: 2rem 0;
+
+	& circle {
+		transition: width 0.4s ease-in;
+	}
+}

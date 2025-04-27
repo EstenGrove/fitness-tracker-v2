@@ -1,3 +1,70 @@
+import type { Activity, Effort } from "../types.ts";
+
+export interface RecentWorkoutDB {
+	user_id: string;
+	history_id: number;
+	workout_id: number;
+	activity_type: Activity;
+	workout_name: string;
+	workout_date: string;
+	start_time: string;
+	end_time: string;
+	duration: number;
+	effort: Effort;
+}
+export interface RecentWorkout {
+	userID: string;
+	historyID: number;
+	workoutID: number;
+	activityType: Activity;
+	workoutName: string;
+	workoutDate: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+}
+
+export interface TotalCaloriesDB {
+	start_date: string;
+	end_date: string;
+	total_calories: number;
+}
+export interface TotalCalories {
+	startDate: string;
+	endDate: string;
+	totalCalories: number;
+}
+export interface TotalMilesDB {
+	start_date: string;
+	end_date: string;
+	total_miles: number;
+}
+export interface TotalMiles {
+	startDate: string;
+	endDate: string;
+	totalMiles: number;
+}
+export interface TotalStepsDB {
+	start_date: string;
+	end_date: string;
+	total_steps: number;
+}
+export interface TotalSteps {
+	startDate: string;
+	endDate: string;
+	totalSteps: number;
+}
+export interface TotalWorkoutsDB {
+	start_date: string;
+	end_date: string;
+	total_workouts: number;
+}
+export interface TotalWorkouts {
+	startDate: string;
+	endDate: string;
+	totalWorkouts: number;
+}
 export interface DailyMinsDB {
 	date: string;
 	mins: number;
@@ -49,15 +116,31 @@ export type DailyCaloriesSummary = DailyCalories[];
 export type DailyWorkoutsSummary = DailyWorkouts[];
 
 export interface DashboardSummaryDB {
+	// Totals (DB)
+	totalMiles: TotalMilesDB;
+	totalSteps: TotalStepsDB;
+	totalWorkouts: TotalWorkoutsDB;
+	totalCalories: TotalCaloriesDB;
+	// Daily
 	dailyMins: DailyMinsSummaryDB;
 	dailySteps: DailyStepsSummaryDB;
 	dailyCalories: DailyCaloriesSummaryDB;
 	dailyWorkouts: DailyWorkoutsSummaryDB;
+	// Recents
+	recentWorkouts: RecentWorkoutDB[];
 }
 
 export interface DashboardSummary {
+	// Totals (client)
+	totalMiles: TotalMiles;
+	totalSteps: TotalSteps;
+	totalWorkouts: TotalWorkouts;
+	totalCalories: TotalCalories;
+	// Daily
 	dailyMins: DailyMinsSummary;
 	dailySteps: DailyStepsSummary;
 	dailyCalories: DailyCaloriesSummary;
 	dailyWorkouts: DailyWorkoutsSummary;
+	// Recents
+	recentWorkouts: RecentWorkout[];
 }

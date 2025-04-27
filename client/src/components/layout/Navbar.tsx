@@ -46,7 +46,6 @@ const Navbar = () => {
 					<NavLink to="settings" className={isActiveRoute} viewTransition>
 						<svg className={styles.Navbar_list_item_icon}>
 							<use xlinkHref={`${sprite}#icon-settings`}></use>
-							{/* <use xlinkHref={`${sprite}#icon-dots-three-horizontal`}></use> */}
 						</svg>
 					</NavLink>
 				</li>

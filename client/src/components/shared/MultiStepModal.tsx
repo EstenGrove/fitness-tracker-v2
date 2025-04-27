@@ -132,7 +132,7 @@ const MultiStepModal = ({ steps, onClose, onNext, onPrev, onSave }: Props) => {
 				onTouchEnd={onTouchEnd}
 				className={styles.MultiStepModal_top}
 			>
-				<svg className={styles.MultiStepModal_top_close}>
+				<svg className={styles.MultiStepModal_top_close} onClick={onClose}>
 					<use xlinkHref={`${sprite}#icon-clear`}></use>
 				</svg>
 			</div>

@@ -4,7 +4,9 @@
 
 .MinutesSummary {
 	width: 100%;
+	min-width: 100%;
 	height: auto;
+	background-color: var(--todayStyles);
 
 	&_header {
 		width: 100%;

@@ -1,0 +1,16 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.ProgressCircle {
+	@include fill_container;
+	@include rowCenter;
+
+	&_text {
+		font-size: 4.5rem;
+	}
+
+	&_progress {
+		box-shadow: 10px 3px 31px 0px rgba(0, 0, 0, 0.75);
+	}
+}

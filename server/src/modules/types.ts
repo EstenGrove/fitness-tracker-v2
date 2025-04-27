@@ -10,6 +10,10 @@ export interface DateRange {
 	startDate: string;
 	endDate: string;
 }
+export interface DateRangeDB {
+	start_date: string;
+	end_date: string;
+}
 
 export type Effort =
 	| "Easy"

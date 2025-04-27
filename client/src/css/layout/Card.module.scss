@@ -68,7 +68,7 @@ $iconSize: calc($cardIcon - 20%);
 	width: 2.5rem;
 	height: 2.5rem;
 	border-radius: 50%;
-	background-color: var(--blueGrey800);
+	background-color: var(--cardGoToIcon);
 	@include rowCenter();
 	margin-left: auto;
 

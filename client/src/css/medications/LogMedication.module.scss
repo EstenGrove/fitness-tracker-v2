@@ -1,0 +1,197 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.LogMedication {
+	width: 100%;
+	min-height: auto;
+	padding: 2rem;
+	border-radius: 1rem;
+
+	&_name {
+		font-size: 2.5rem;
+		color: $text1;
+		text-align: center;
+		margin-bottom: 4rem;
+	}
+	&_takeAmount {
+		width: 100%;
+		@include colCenter();
+		margin: 1rem 0;
+		margin-top: 4rem;
+		font-size: 1.4rem;
+		color: $text3;
+	}
+	&_loggedAt {
+		width: 100%;
+		@include colCenter();
+		margin: 1rem 0;
+		margin-top: 4rem;
+		font-size: 1.4rem;
+		color: $text3;
+	}
+	&_actions {
+		width: 100%;
+		height: auto;
+		@include rowCenter();
+		gap: 0 2rem;
+		margin-top: 2rem;
+	}
+}
+
+.TakeButton {
+	padding: 1rem 1.8rem;
+	border-radius: 1rem;
+	border: $borderLight;
+	outline: none;
+	background-color: $foreground;
+	color: $accentGreen;
+	font-size: 1.6rem;
+	@include rowCenter();
+	gap: 0 3px;
+
+	&_icon {
+		width: 1.6rem;
+		height: 1.6rem;
+		fill: $accentGreen;
+	}
+}
+.SkipButton {
+	padding: 1rem 1.8rem;
+	border-radius: 1rem;
+	border: $borderLight;
+	outline: none;
+	background-color: $foreground;
+	color: $accentRed;
+	font-size: 1.6rem;
+	@include rowCenter();
+	gap: 0 3px;
+
+	&_icon {
+		width: 1.6rem;
+		height: 1.6rem;
+		fill: $accentRed;
+	}
+}
+
+.MedLogItem {
+	width: 100%;
+	height: auto;
+	border-radius: 1rem;
+	border: $borderLight;
+	font-size: 1.5rem;
+	padding: 1rem;
+	background-color: $foreground;
+
+	&_top {
+		width: 100%;
+		height: 4rem;
+		@include flex_row(flex-start, flex-start);
+		gap: 0.5rem 1rem;
+
+		&_head {
+			width: 100%;
+			height: auto;
+			@include flex_row(space-between, flex-start);
+
+			&_name {
+				font-size: 1.5rem;
+				color: $text1;
+			}
+			&_time {
+				font-size: 1.4rem;
+				color: $text3;
+			}
+		}
+	}
+	&_bottom {
+		width: 100%;
+		@include flex_row(space-between, flex-end);
+		font-size: 1.4rem;
+		color: $text2;
+		padding-left: 3.5rem;
+	}
+}
+
+.TakenBadge {
+	width: 2.5rem;
+	height: 2.5rem;
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+	max-width: 2.5rem;
+	max-height: 2.5rem;
+	border-radius: 50%;
+	background-color: rgba(0, 226, 189, 0.3);
+	@include rowCenter();
+
+	&_icon {
+		width: 1.8rem;
+		height: 1.8rem;
+		fill: $accentGreen;
+	}
+}
+.SkippedBadge {
+	width: 2.5rem;
+	height: 2.5rem;
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+	max-width: 2.5rem;
+	max-height: 2.5rem;
+	border-radius: 50%;
+	background-color: rgba(185, 0, 52, 0.3);
+	@include rowCenter();
+
+	&_icon {
+		width: 1.8rem;
+		height: 1.8rem;
+		fill: $accentRed;
+	}
+}
+
+.TodaysMedSummary {
+	width: 100%;
+
+	&_summary {
+		font-size: 1.5rem;
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	&_showMore {
+		width: 100%;
+		@include flex_row(center, flex-start);
+		margin-bottom: 2rem;
+
+		&_btn {
+			color: $accentBlue;
+			font-size: 1.4rem;
+			background-color: transparent;
+			outline: none;
+			border: none;
+		}
+	}
+
+	&_title {
+		width: 100%;
+		@include flex_row(space-between, center);
+		font-size: 1.5rem;
+		font-weight: 600;
+		padding: 0 2px;
+		margin-top: 4rem;
+		margin-bottom: 0.3rem;
+
+		&_label {
+			color: $text3;
+		}
+		&_count {
+			color: $text2;
+		}
+	}
+
+	&_logs {
+		width: 100%;
+		list-style: none;
+		@include colCenter();
+		gap: 1rem 0;
+	}
+}

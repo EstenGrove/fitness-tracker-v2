@@ -1,0 +1,34 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.MedicationsPage {
+	width: 100%;
+
+	&_main {
+		width: 100%;
+		padding: 4rem 0;
+	}
+}
+
+.LogMedButton {
+	width: max-content;
+	// height: 3rem;
+	padding: 0.5rem 0.8rem;
+	border-radius: 5rem;
+	// border-radius: 50%;
+	font-size: 1.6rem;
+	background-color: $foreground;
+	color: $accentBlue;
+	border: 1px solid $accentBlue;
+	outline: none;
+	@include rowCenter();
+	gap: 0 0.5rem;
+
+	&_icon {
+		width: 1.5rem;
+		height: 1.5rem;
+		fill: #fff;
+		fill: $accentBlue;
+	}
+}

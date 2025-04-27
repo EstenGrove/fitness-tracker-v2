@@ -1,5 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { logout } from "../../utils/utils_user";
+import {
+	fetchUserExists,
+	login,
+	LoginResponse,
+	logout,
+	UserExistsResponse,
+} from "../../utils/utils_user";
 import {
 	fetchUserByID,
 	fetchUserByLogin,
@@ -7,12 +13,34 @@ import {
 } from "../../utils/utils_user";
 import { AwaitedResponse } from "../types";
 
+interface LoginParams {
+	username: string;
+	password: string;
+}
+interface SessionParams {
+	userID: string;
+	sessionID: string;
+}
+
 const logoutUser = createAsyncThunk(
 	"user/logoutUser",
-	async (userID: string) => {
-		const logoutResp = await logout(userID);
+	async (params: SessionParams) => {
+		const { userID, sessionID } = params;
+		const logoutResp = await logout(userID, sessionID);
 		const data = logoutResp.Data;
 		return data;
+	}
+);
+const loginUser = createAsyncThunk(
+	"user/loginUser",
+	async (params: LoginParams) => {
+		const { username, password } = params;
+		const logoutResp = (await login(
+			username,
+			password
+		)) as AwaitedResponse<LoginResponse>;
+		const data = logoutResp.Data as LoginResponse;
+		return data as LoginResponse;
 	}
 );
 
@@ -47,4 +75,18 @@ const getUserByID = createAsyncThunk(
 	}
 );
 
-export { logoutUser, getUserByLogin, getUserByID };
+const userExists = createAsyncThunk(
+	"user/userExists",
+	async (params: LoginParams) => {
+		const { username, password } = params;
+		const response = (await fetchUserExists(
+			username,
+			password
+		)) as AwaitedResponse<UserExistsResponse>;
+		const data = response.Data as UserExistsResponse;
+
+		return data as UserExistsResponse;
+	}
+);
+
+export { loginUser, logoutUser, getUserByLogin, getUserByID, userExists };

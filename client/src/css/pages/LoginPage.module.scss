@@ -1,0 +1,49 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.LoginPage {
+	width: 100%;
+	height: 100%;
+
+	&_header {
+		width: 100%;
+		height: 15rem;
+		padding: 2rem;
+		font-size: 2rem;
+		font-weight: 800;
+		color: $text1;
+		@include colCenter();
+	}
+
+	&_form {
+		width: 100%;
+		height: 70dvh;
+		padding: 2rem 2rem;
+		max-width: 50rem;
+		@include flex_col(flex-start, flex-start);
+
+		&_err {
+			width: 100%;
+			height: 4rem;
+			@include rowCenter();
+		}
+	}
+}
+
+.ErrorMsg {
+	width: max-content;
+	padding: 0.5rem 1rem;
+	color: $accentRed;
+	font-size: 1.6rem;
+	@include rowCenter();
+	gap: 0 1rem;
+	border-radius: 1rem;
+	border: 1px solid $accentRed;
+
+	&_icon {
+		width: 1.8rem;
+		height: 1.8rem;
+		fill: $accentRed;
+	}
+}

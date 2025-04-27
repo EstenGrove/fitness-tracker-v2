@@ -18,6 +18,14 @@ const formatThousand = (num: number) => {
 	return num.toString();
 };
 
+const formatLargeNumber = (num: number) => {
+	const short = new Intl.NumberFormat("en-us", {
+		notation: "compact",
+		compactDisplay: "short",
+	});
+	return short.format(num);
+};
+
 export type TKey<T> = keyof T;
 export type TRecord<T> = Record<string, T[]>;
 
@@ -72,6 +80,7 @@ export {
 	addEllipsis,
 	isEmptyArray,
 	formatThousand,
+	formatLargeNumber,
 	groupBy,
 	groupByFn,
 	sortByDate,

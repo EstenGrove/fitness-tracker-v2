@@ -56,9 +56,13 @@ const API_ENDPOINTS = {
 	activity: {
 		getTypes: "/activity/getActivityTypes",
 	},
+	auth: {
+		login: "/auth/login",
+		logout: "/auth/logout",
+		refresh: "/auth/refresh",
+	},
 	user: {
-		login: "/user/login",
-		logout: "/user/logout",
+		userExists: "/user/getUserExists",
 		getByLogin: "/user/getUserByLogin",
 		getByID: "/user/getUserByID",
 	},
@@ -95,14 +99,14 @@ const API_ENDPOINTS = {
 		getOtherByRange: "/history/getOtherHistoryByRange",
 	},
 	meds: {
-		logMed: "/meds/logMedication",
-		getPillSummaryByDate: "/meds/getPillSummary",
-		getSummaryByDate: "/meds/getMedSummaryByDate",
-		getSummariesByDate: "/meds/getMedSummariesByDate",
-		getUserMeds: "/meds/getUserMeds",
-		getMedDetails: "/meds/getMedDetails",
-		getSelectedMed: "/meds/getSelectedMed",
-		getMedLogsByRange: "/meds/getMedLogsByRange",
+		logMed: "/medications/logMedication",
+		getPillSummaryByDate: "/medications/getPillSummary",
+		getSummaryByDate: "/medications/getMedSummaryByDate",
+		getSummariesByDate: "/medications/getMedSummariesByDate",
+		getUserMeds: "/medications/getUserMeds",
+		getMedDetails: "/medications/getMedDetails",
+		getSelectedMed: "/medications/getSelectedMed",
+		getMedLogsByRange: "/medications/getMedLogsByRange",
 	},
 	shared: {
 		getSharedAppData: "/shared/getSharedAppData",
@@ -110,9 +114,13 @@ const API_ENDPOINTS = {
 	dashboard: {
 		getSummary: "/dashboard/getDashboardSummary",
 	},
+	recentActivity: {
+		getSummary: "/recentActivity/getRecentActivitySummary",
+	},
 };
 
 export const {
+	auth: authApis,
 	user: userApis,
 	activity: activityApis,
 	workouts: workoutApis,
@@ -120,6 +128,7 @@ export const {
 	history: historyApis,
 	meds: medicationApis,
 	dashboard: dashboardApis,
+	recentActivity: recentActivityApis,
 } = API_ENDPOINTS;
 
 export {

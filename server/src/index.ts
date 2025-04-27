@@ -20,9 +20,13 @@ app.get("/", (c) => {
 	return c.text("Hello Hono!");
 });
 
+app.route("user", allRoutes.user);
+app.route("auth", allRoutes.auth);
 app.route("history", allRoutes.history);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);
+app.route("medications", allRoutes.medications);
+app.route("recentActivity", allRoutes.recentActivity);
 
 serve({
 	fetch: app.fetch,
