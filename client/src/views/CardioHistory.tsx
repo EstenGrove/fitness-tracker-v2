@@ -1,9 +1,6 @@
-import { useSelector } from "react-redux";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/CardioHistory.module.scss";
-import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
+import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	CardioHistory as CardioLog,
 	HistoryOfType,
@@ -15,20 +12,20 @@ import ModalLG from "../components/shared/ModalLG";
 import { EMenuAction } from "../features/types";
 import { isEmptyArray } from "../utils/utils_misc";
 import { getTotalMins } from "../utils/utils_history";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 
 const CardioHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
-		userID: currentUser.userID,
+	const { data } = useHistoryForRangeAndType<CardioLog>({
+		startDate: startDate,
+		endDate: endDate,
 		activityType: "Cardio",
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
 	});
+
 	const history = data as CardioLog[];
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);

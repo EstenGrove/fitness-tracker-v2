@@ -5,10 +5,6 @@ import sprite3 from "../assets/icons/dashboard.svg";
 import styles from "../css/pages/WorkoutsPage.module.scss";
 import { ReactNode, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-import {
-	useGetAllWorkoutsQuery,
-	useGetTodaysWorkoutsQuery,
-} from "../features/workouts/todaysWorkoutsApi";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
@@ -18,6 +14,8 @@ import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
 import { useNavigate } from "react-router";
+import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
+import { useAllWorkouts } from "../hooks/useAllWorkouts";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -169,25 +167,15 @@ const WorkoutsPage = () => {
 	const navigate = useNavigate();
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
-	const shouldRefresh = Boolean(currentUser?.userID);
-	const { data: workoutsList } = useGetAllWorkoutsQuery(
-		{
-			userID: currentUser?.userID,
-		},
-		{ skip: !shouldRefresh }
-	);
-	const { data, isLoading } = useGetTodaysWorkoutsQuery(
-		{
-			userID: currentUser?.userID,
-			targetDate: targetDate,
-		},
-		{ skip: !shouldRefresh }
-	);
-	const allWorkouts = workoutsList as Workout[];
-	const todaysWorkouts = data as TodaysWorkout[];
+	const { data: workoutsList } = useAllWorkouts();
+	const { data, isLoading } = useTodaysWorkouts(targetDate);
+
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
+
+	const allWorkouts = workoutsList as Workout[];
+	const todaysWorkouts = data as TodaysWorkout[];
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);

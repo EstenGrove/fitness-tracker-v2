@@ -9,7 +9,8 @@ import {
 	selectCurrentSession,
 	selectCurrentUser,
 } from "../../features/user/userSlice";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { AuthRefreshResponse } from "../../utils/utils_user";
 
 const AppLayout = () => {
 	const navigate = useNavigate();
@@ -33,18 +34,33 @@ const AppLayout = () => {
 		}
 	};
 
+	const checkAndRefreshAuth = useCallback(() => {
+		dispatch(refreshAuth())
+			.unwrap()
+			.then((resp: AuthRefreshResponse) => {
+				if (!resp.token) {
+					navigate("/login");
+				}
+			})
+			.catch((err) => {
+				if (err) {
+					navigate("/login");
+				}
+			});
+	}, [dispatch, navigate]);
+
 	useEffect(() => {
 		let isMounted = true;
 		if (!isMounted) return;
 
 		if (!currentUser) {
-			dispatch(refreshAuth());
+			checkAndRefreshAuth();
 		}
 
 		return () => {
 			isMounted = false;
 		};
-	}, [currentUser, dispatch]);
+	}, [checkAndRefreshAuth, currentUser]);
 
 	return (
 		<div className={styles.AppLayout}>

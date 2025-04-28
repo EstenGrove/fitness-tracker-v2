@@ -1,12 +1,5 @@
-import { useSelector } from "react-redux";
 import styles from "../css/views/AllHistory.module.scss";
-import { useGetHistoryForRangeQuery } from "../features/history/historyApi";
-import { selectCurrentUser } from "../features/user/userSlice";
-import {
-	AllHistory as AllHistoryLogs,
-	HistoryOfType,
-	WorkoutHistory,
-} from "../features/history/types";
+import { HistoryOfType, WorkoutHistory } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { useState } from "react";
 import { getTotalMins } from "../utils/utils_history";
@@ -22,6 +15,7 @@ import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
+import { useHistoryForRange } from "../hooks/useHistoryForRange";
 
 const groupHistoryByDate = (
 	allLogs: WorkoutHistory[]
@@ -84,17 +78,14 @@ const prepareDate = (date: string) => {
 
 const AllHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useGetHistoryForRangeQuery({
-		userID: currentUser.userID,
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
-	});
-	const allHistory = data as AllHistoryLogs;
+	const { data: allHistory, isLoading } = useHistoryForRange(
+		startDate,
+		endDate
+	);
 	const all = allHistory?.all || [];
 	const totalMins = getTotalMins(all as HistoryOfType[]);
 	const grouped: TRecord<WorkoutHistory> = groupHistoryByDate(all);
