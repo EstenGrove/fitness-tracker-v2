@@ -10,19 +10,6 @@ import {
 } from "./operations";
 import { LoginResponse, UserResponse } from "../../utils/utils_user";
 
-// const fakeUser: CurrentUser = {
-// 	userID: "e17e4fa3-bcf8-4332-819c-b5802fd070b1",
-// 	username: "estengrove99@gmail.com",
-// 	password: "Tripper99!",
-// 	firstName: "Steven",
-// 	lastName: "Gore",
-// 	userAvatar: null,
-// 	isActive: true,
-// 	createdDate: new Date().toString(),
-// 	lastLoginDate: new Date().toString(),
-// 	token: null,
-// };
-
 export interface UserSlice {
 	status: TStatus;
 	currentUser: CurrentUser | null;
@@ -77,6 +64,8 @@ const userSlice = createSlice({
 				state.error = msg
 					? (msg.message as string)
 					: new Error("Logout failed").message;
+				state.currentUser = null;
+				state.currentSession = null;
 			});
 
 		// REFRESH AUTH
@@ -88,6 +77,11 @@ const userSlice = createSlice({
 				state.status = ETStatus.FULFILLED;
 				state.currentUser = action.payload.currentUser;
 				state.currentSession = action.payload.currentSession;
+			})
+			.addCase(refreshAuth.rejected, (state) => {
+				state.status = ETStatus.REJECTED;
+				state.currentUser = null;
+				state.currentSession = null;
 			});
 
 		// GET USER BY LOGIN INFO

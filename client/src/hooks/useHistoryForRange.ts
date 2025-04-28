@@ -16,7 +16,7 @@ const useHistoryForRange = (
 	const shouldFetch = Boolean(currentUser?.userID);
 	const { data, isLoading } = useGetHistoryForRangeQuery(
 		{
-			userID: currentUser.userID,
+			userID: currentUser?.userID,
 			startDate: formatDate(startDate, "db"),
 			endDate: formatDate(endDate, "db"),
 		},

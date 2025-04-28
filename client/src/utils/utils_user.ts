@@ -78,7 +78,6 @@ const getRefreshAuth = async (userID?: string): AuthRefreshResp => {
 	try {
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
-		console.log("response", response);
 		return response;
 	} catch (error) {
 		return error;

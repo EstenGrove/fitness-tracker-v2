@@ -14,4 +14,12 @@ const fetchWithAuth = (url: string, options: FetchOptions = defaultOpts) => {
 	});
 };
 
-export { fetchWithAuth };
+const sleep = (ms: number = 650) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(ms);
+		}, ms);
+	});
+};
+
+export { fetchWithAuth, sleep };

@@ -6,13 +6,12 @@ import { LoginValues } from "../features/user/types";
 import { useNavigate } from "react-router";
 import { useAppDispatch } from "../store/store";
 import { loginUser } from "../features/user/operations";
-import { useSelector } from "react-redux";
-import { isSubmitting as isSubmittingLogin } from "../features/user/userSlice";
 import { fetchUserExists, UserExistsResponse } from "../utils/utils_user";
 import { AwaitedResponse } from "../features/types";
+import { setAccessTokenCookie } from "../utils/utils_cookies";
+import { sleep } from "../utils/utils_requests";
 import FadeIn from "../components/ui/FadeIn";
 import SelfDestruct from "../components/ui/SelfDestruct";
-import { setAccessTokenCookie } from "../utils/utils_cookies";
 
 enum ELoginErrors {
 	INVALID_CREDENTIALS = "Invalid Credentials",
@@ -76,7 +75,7 @@ interface ErrorInfo {
 const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const isSubmitting = useSelector(isSubmittingLogin);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<ErrorInfo>({
 		error: null,
 		key: 0,
@@ -102,17 +101,22 @@ const LoginPage = () => {
 		});
 	};
 
-	const onSubmit = async () => {
+	const onSubmit = () => {
+		setIsSubmitting(true);
+		handleLogin();
+	};
+
+	const handleLogin = async () => {
 		const { username, password } = values;
 		const userResp = (await fetchUserExists(
 			username,
 			password
 		)) as AwaitedResponse<UserExistsResponse>;
 		const data = userResp.Data as UserExistsResponse;
-		const loginFailed = hasError(data);
+		const userCheckFailed = hasError(data);
 
 		// We use the 'error.key' to insure a re-render occurs when 2 of the same error occurs
-		if (loginFailed) {
+		if (userCheckFailed) {
 			const err = getFailedLoginMsg(data);
 			resetForm();
 			return setError({
@@ -122,6 +126,7 @@ const LoginPage = () => {
 		}
 
 		const loginData = await dispatch(loginUser(values)).unwrap();
+		await sleep(500);
 
 		if (loginData) {
 			setAccessTokenCookie(loginData.token as string);
@@ -129,6 +134,7 @@ const LoginPage = () => {
 		} else {
 			setError(loginData);
 			resetForm();
+			setIsSubmitting(false);
 		}
 	};
 

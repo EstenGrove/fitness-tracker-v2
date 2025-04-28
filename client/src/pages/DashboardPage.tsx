@@ -26,8 +26,6 @@ const DashboardPage = () => {
 	});
 	const summary = data as DashboardSummary;
 
-	console.log("data", data);
-
 	return (
 		<PageContainer padding="1rem 2rem">
 			<div className={styles.DashboardPage}>

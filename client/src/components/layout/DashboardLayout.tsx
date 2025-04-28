@@ -25,8 +25,6 @@ const AppLayout = () => {
 			logoutUser({ userID, sessionID })
 		).unwrap();
 
-		console.log("logoutData", logoutData);
-
 		if (logoutData || !logoutData) {
 			navigate("/login");
 		} else {
