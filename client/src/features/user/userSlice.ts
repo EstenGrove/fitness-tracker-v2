@@ -2,21 +2,26 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CurrentSession, CurrentUser } from "./types";
 import { ETStatus, TStatus } from "../types";
 import { RootState } from "../../store/store";
-import { getUserByLogin, loginUser, logoutUser } from "./operations";
+import {
+	getUserByLogin,
+	loginUser,
+	logoutUser,
+	refreshAuth,
+} from "./operations";
 import { LoginResponse, UserResponse } from "../../utils/utils_user";
 
-const fakeUser: CurrentUser = {
-	userID: "e17e4fa3-bcf8-4332-819c-b5802fd070b1",
-	username: "estengrove99@gmail.com",
-	password: "Tripper99!",
-	firstName: "Steven",
-	lastName: "Gore",
-	userAvatar: null,
-	isActive: true,
-	createdDate: new Date().toString(),
-	lastLoginDate: new Date().toString(),
-	token: null,
-};
+// const fakeUser: CurrentUser = {
+// 	userID: "e17e4fa3-bcf8-4332-819c-b5802fd070b1",
+// 	username: "estengrove99@gmail.com",
+// 	password: "Tripper99!",
+// 	firstName: "Steven",
+// 	lastName: "Gore",
+// 	userAvatar: null,
+// 	isActive: true,
+// 	createdDate: new Date().toString(),
+// 	lastLoginDate: new Date().toString(),
+// 	token: null,
+// };
 
 export interface UserSlice {
 	status: TStatus;
@@ -27,7 +32,7 @@ export interface UserSlice {
 
 const initialState: UserSlice = {
 	status: "IDLE",
-	currentUser: fakeUser,
+	currentUser: null,
 	currentSession: null,
 	error: null,
 };
@@ -72,6 +77,17 @@ const userSlice = createSlice({
 				state.error = msg
 					? (msg.message as string)
 					: new Error("Logout failed").message;
+			});
+
+		// REFRESH AUTH
+		builder
+			.addCase(refreshAuth.pending, (state) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(refreshAuth.fulfilled, (state, action) => {
+				state.status = ETStatus.FULFILLED;
+				state.currentUser = action.payload.currentUser;
+				state.currentSession = action.payload.currentSession;
 			});
 
 		// GET USER BY LOGIN INFO

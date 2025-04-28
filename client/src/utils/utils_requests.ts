@@ -1,0 +1,17 @@
+export interface FetchOptions {
+	method?: "GET" | "POST" | "PUT" | "DELETE";
+	body?: string;
+}
+
+const defaultOpts: FetchOptions = {
+	method: "GET",
+};
+
+const fetchWithAuth = (url: string, options: FetchOptions = defaultOpts) => {
+	return fetch(url, {
+		...(options as RequestInit),
+		credentials: "include",
+	});
+};
+
+export { fetchWithAuth };

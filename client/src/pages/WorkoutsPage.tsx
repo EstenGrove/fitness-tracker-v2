@@ -169,13 +169,20 @@ const WorkoutsPage = () => {
 	const navigate = useNavigate();
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
-	const { data: workoutsList } = useGetAllWorkoutsQuery({
-		userID: currentUser.userID,
-	});
-	const { data, isLoading } = useGetTodaysWorkoutsQuery({
-		userID: currentUser.userID,
-		targetDate: targetDate,
-	});
+	const shouldRefresh = Boolean(currentUser?.userID);
+	const { data: workoutsList } = useGetAllWorkoutsQuery(
+		{
+			userID: currentUser?.userID,
+		},
+		{ skip: !shouldRefresh }
+	);
+	const { data, isLoading } = useGetTodaysWorkoutsQuery(
+		{
+			userID: currentUser?.userID,
+			targetDate: targetDate,
+		},
+		{ skip: !shouldRefresh }
+	);
 	const allWorkouts = workoutsList as Workout[];
 	const todaysWorkouts = data as TodaysWorkout[];
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);

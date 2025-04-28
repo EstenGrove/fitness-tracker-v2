@@ -12,6 +12,7 @@ import { fetchUserExists, UserExistsResponse } from "../utils/utils_user";
 import { AwaitedResponse } from "../features/types";
 import FadeIn from "../components/ui/FadeIn";
 import SelfDestruct from "../components/ui/SelfDestruct";
+import { setAccessTokenCookie } from "../utils/utils_cookies";
 
 enum ELoginErrors {
 	INVALID_CREDENTIALS = "Invalid Credentials",
@@ -101,7 +102,7 @@ const LoginPage = () => {
 		});
 	};
 
-	const onLogin = async () => {
+	const onSubmit = async () => {
 		const { username, password } = values;
 		const userResp = (await fetchUserExists(
 			username,
@@ -123,6 +124,7 @@ const LoginPage = () => {
 		const loginData = await dispatch(loginUser(values)).unwrap();
 
 		if (loginData) {
+			setAccessTokenCookie(loginData.token as string);
 			navigate("/");
 		} else {
 			setError(loginData);
@@ -142,7 +144,7 @@ const LoginPage = () => {
 				<LoginForm
 					values={values}
 					onChange={onChange}
-					onSubmit={onLogin}
+					onSubmit={onSubmit}
 					isLoading={isSubmitting}
 					goTo={() => navigate("/account")}
 				/>

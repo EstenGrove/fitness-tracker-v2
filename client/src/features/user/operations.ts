@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+	AuthRefreshResponse,
 	fetchUserExists,
+	getRefreshAuth,
 	login,
 	LoginResponse,
 	logout,
@@ -75,6 +77,17 @@ const getUserByID = createAsyncThunk(
 	}
 );
 
+const refreshAuth = createAsyncThunk(
+	"user/refreshAuth",
+	async (userID?: string) => {
+		const response = (await getRefreshAuth(
+			userID
+		)) as AwaitedResponse<AuthRefreshResponse>;
+		const data = response.Data;
+		return data as AuthRefreshResponse;
+	}
+);
+
 const userExists = createAsyncThunk(
 	"user/userExists",
 	async (params: LoginParams) => {
@@ -89,4 +102,11 @@ const userExists = createAsyncThunk(
 	}
 );
 
-export { loginUser, logoutUser, getUserByLogin, getUserByID, userExists };
+export {
+	loginUser,
+	logoutUser,
+	refreshAuth,
+	getUserByLogin,
+	getUserByID,
+	userExists,
+};

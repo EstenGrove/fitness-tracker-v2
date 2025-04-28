@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import Loader from "./components/layout/Loader";
-import CreateAccountPage from "./pages/CreateAccountPage";
 
 const NotFound = lazy(() => import("./pages/NotFoundPage"));
 // Signup/Login
@@ -55,7 +54,7 @@ function App() {
 								path="/account"
 								element={
 									<Suspense fallback={<Loader />}>
-										<CreateAccountPage />
+										<CreateAccount />
 									</Suspense>
 								}
 							/>

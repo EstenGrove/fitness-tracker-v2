@@ -45,6 +45,16 @@ const verifyRefreshToken = (token: string) => {
 	});
 };
 
+const getUserIDFromToken = async (token: string) => {
+	try {
+		const decoded = (await verifyAccessToken(token)) as { userID: string };
+		console.log("decoded", decoded);
+		return decoded.userID;
+	} catch (error) {
+		return null;
+	}
+};
+
 export {
 	ACCESS_TOKEN,
 	REFRESH_TOKEN,
@@ -52,4 +62,5 @@ export {
 	generateRefreshToken,
 	verifyAccessToken,
 	verifyRefreshToken,
+	getUserIDFromToken,
 };
