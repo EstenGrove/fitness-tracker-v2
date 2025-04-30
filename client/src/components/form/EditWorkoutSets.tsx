@@ -43,10 +43,17 @@ const generateSets = (
 type SetProps = {
 	idx: number;
 	set: ExerciseSet;
+	exercise?: string;
 	updateSet: (idx: number, updatedSet: ExerciseSet) => void;
 	deleteSet: () => void;
 };
-const SetEntry = ({ idx, set, updateSet, deleteSet }: SetProps) => {
+const SetEntry = ({
+	idx,
+	set,
+	exercise = "",
+	updateSet,
+	deleteSet,
+}: SetProps) => {
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		const values = {
@@ -73,22 +80,21 @@ const SetEntry = ({ idx, set, updateSet, deleteSet }: SetProps) => {
 						className={styles.SetEntry_item_input}
 						inputMode="numeric"
 					/>
-					<label htmlFor="reps">Reps</label>
+					<label htmlFor="reps">reps </label>
 				</div>
-				<div className={styles.divider}>x</div>
-				{/* <div className={styles.SetEntry_item}>
+				<div className={styles.divider}>:</div>
+				<div className={styles.SetEntry_item}>
 					<input
-						type="number"
+						type="text"
 						name="exercise"
 						id="exercise"
-						value={set.exercise}
+						value={set.exercise ?? exercise}
 						onChange={onChange}
 						onFocus={(ref) => ref.currentTarget.select()}
-						className={styles.SetEntry_item_input}
+						className={styles.SetEntry_item_exercise}
 						inputMode="numeric"
 					/>
-					<label htmlFor="weight">lbs.</label>
-				</div> */}
+				</div>
 				<button onClick={deleteSet} className={styles.SetEntry_item_delete}>
 					<svg className={styles.SetEntry_item_delete_icon}>
 						<use xlinkHref={`${sprite}#icon-delete`}></use>
@@ -158,7 +164,7 @@ const EditWorkoutSets = ({ sets, reps, exercise, onChange }: Props) => {
 							key={set.id}
 							idx={idx}
 							set={set || 1}
-							exercise={""}
+							exercise={exercise ?? ""}
 							updateSet={updateSet}
 							deleteSet={() => deleteSet(idx)}
 						/>

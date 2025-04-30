@@ -11,6 +11,7 @@ import {
 } from "../../features/user/userSlice";
 import { useCallback, useEffect } from "react";
 import { AuthRefreshResponse } from "../../utils/utils_user";
+import { setAccessTokenCookie } from "../../utils/utils_cookies";
 
 const AppLayout = () => {
 	const navigate = useNavigate();
@@ -33,19 +34,26 @@ const AppLayout = () => {
 	};
 
 	const checkAndRefreshAuth = useCallback(() => {
+		const userID = currentUser?.userID ?? "";
+		const sessionID = currentSession?.sessionID ?? "";
 		dispatch(refreshAuth())
 			.unwrap()
 			.then((resp: AuthRefreshResponse) => {
 				if (!resp.token) {
+					dispatch(logoutUser({ userID, sessionID }));
 					navigate("/login");
+				} else {
+					const token = resp.token as string;
+					setAccessTokenCookie(token);
 				}
 			})
 			.catch((err) => {
 				if (err) {
+					dispatch(logoutUser({ userID, sessionID }));
 					navigate("/login");
 				}
 			});
-	}, [dispatch, navigate]);
+	}, [currentSession?.sessionID, currentUser?.userID, dispatch, navigate]);
 
 	useEffect(() => {
 		let isMounted = true;

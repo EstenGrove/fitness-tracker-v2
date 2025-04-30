@@ -23,6 +23,7 @@ interface MedLogsByRange {
 export const medicationsApi = createApi({
 	reducerPath: "medicationsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
+	tagTypes: ["MedSummary", "MedLogs"],
 	endpoints: (builder) => ({
 		// Get all medications for a user
 		getMedications: builder.query({
@@ -45,6 +46,7 @@ export const medicationsApi = createApi({
 				const data = response.Data;
 				return { data: data as MedLogsByRange };
 			},
+			providesTags: () => [{ type: "MedLogs" }],
 		}),
 		// Log a new medication entry ('Taken' or 'Skipped')
 		logMedication: builder.mutation<NewMedLog, MedLogBody>({
@@ -56,6 +58,7 @@ export const medicationsApi = createApi({
 				const data = loggedMed.Data as NewMedLog;
 				return { data: data };
 			},
+			invalidatesTags: ["MedSummary", "MedLogs"],
 		}),
 		// Get medication summary by date
 		getMedSummaryByDate: builder.query<MedSummaryForDate, SummaryParams>({
@@ -68,6 +71,7 @@ export const medicationsApi = createApi({
 				const data = response.Data as MedSummaryForDate;
 				return { data };
 			},
+			providesTags: () => [{ type: "MedSummary" }],
 		}),
 	}),
 });

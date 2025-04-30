@@ -1,14 +1,12 @@
 import { useState } from "react";
 import sprite from "../../assets/icons/main.svg";
-import styles from "../../css/meds/TodaysDoses.module.scss";
-import { MedLogEntry, PillSummary } from "../../features/medications/types";
+import styles from "../../css/medications/TodaysDoses.module.scss";
+import { MedLogEntry } from "../../features/medications/types";
 import { formatTime } from "../../utils/utils_dates";
 import { addEllipsis } from "../../utils/utils_misc";
 
 type Props = {
-	medName: string;
 	logs: MedLogEntry[];
-	summary: PillSummary;
 };
 
 type MedLogProps = {

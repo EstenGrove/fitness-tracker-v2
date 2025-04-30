@@ -20,7 +20,7 @@ const useHistoryForRangeAndType = <T>(params: HookParams) => {
 	const shouldRefresh = Boolean(currentUser?.userID);
 	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery(
 		{
-			userID: currentUser.userID,
+			userID: currentUser?.userID,
 			startDate: formatDate(startDate, "db"),
 			endDate: formatDate(endDate, "db"),
 			activityType: activityType,

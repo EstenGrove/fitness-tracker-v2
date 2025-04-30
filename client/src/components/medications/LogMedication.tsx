@@ -1,19 +1,17 @@
-// import sprite from "../../assets/icons/calendar2.svg";
 import { ReactNode, useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/medications/LogMedication.module.scss";
-import { formatDate, formatTime } from "../../utils/utils_dates";
-
-import { CurrentUser } from "../../features/user/types";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/user/userSlice";
 import { useAppDispatch } from "../../store/store";
-import { logMedication } from "../../features/medications/operations";
+import { CurrentUser } from "../../features/user/types";
 import { PillSummary } from "../../features/medications/types";
+import { formatDate, formatTime } from "../../utils/utils_dates";
+import { selectCurrentUser } from "../../features/user/userSlice";
+import { MedLogBody, prepareMedLog } from "../../utils/utils_medications";
+import { useLogMedicationMutation } from "../../features/medications/medicationsApi";
 import CounterInput from "../shared/CounterInput";
 import TimePicker from "../shared/TimePicker";
 import DatePicker from "../shared/DatePicker";
-import { prepareMedLog } from "../../utils/utils_medications";
 
 type Props = {
 	medication: {
@@ -225,6 +223,7 @@ const LogMedication = ({
 	});
 	const dispatch = useAppDispatch();
 	const currentUser: CurrentUser = useSelector(selectCurrentUser);
+	const [logMed] = useLogMedicationMutation();
 
 	const handleTime = (name: string, value: string) => {
 		setValues({
@@ -250,7 +249,7 @@ const LogMedication = ({
 
 	const takeMed = async () => {
 		const { userID } = currentUser;
-		const medLog = prepareMedLog({
+		const medLog: MedLogBody = prepareMedLog({
 			userID,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
@@ -259,23 +258,25 @@ const LogMedication = ({
 			loggedDate: values.loggedDate || new Date(),
 		});
 
-		await dispatch(logMedication({ userID: userID, medLog }));
+		await logMed(medLog);
+		// await dispatch(logMedication({ userID: userID, medLog }));
 		return onSave && onSave();
 	};
 
-	const skipMed = () => {
+	const skipMed = async () => {
 		const { userID } = currentUser;
-		const medLog = prepareMedLog({
+		const medLog: MedLogBody = prepareMedLog({
 			userID,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,
-			loggedDate: values.loggedDate,
+			loggedDate: values.loggedDate || new Date(),
 			action: "Skipped",
 		});
 
 		console.log("[SKIPPED]:", medLog);
-		dispatch(logMedication({ userID: userID, medLog }));
+		await logMed(medLog);
+		// await dispatch(logMedication({ userID: userID, medLog }));
 		return onSave && onSave();
 	};
 

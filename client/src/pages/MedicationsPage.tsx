@@ -6,17 +6,19 @@ import {
 	MedLogEntry,
 	PillSummary as IPillSummary,
 } from "../features/medications/types";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../features/user/userSlice";
+import { formatDate, parseDateStr } from "../utils/utils_dates";
+import { useMedSummary } from "../hooks/useMedSummary";
 import ModalLG from "../components/shared/ModalLG";
 import PageHeader from "../components/layout/PageHeader";
 import WeeklyHeader from "../components/layout/WeeklyHeader";
 import PageContainer from "../components/layout/PageContainer";
 import PillSummary from "../components/medications/PillSummary";
 import LogMedication from "../components/medications/LogMedication";
-import { useGetMedSummaryByDateQuery } from "../features/medications/medicationsApi";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { formatDate, parseDateStr } from "../utils/utils_dates";
 import Loader from "../components/layout/Loader";
+import TodaysDoses from "../components/medications/TodaysDoses";
+import LoggedMedsCard from "../components/medications/LoggedMedsCard";
 
 const LogMedButton = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -51,16 +53,13 @@ const MedicationsPage = () => {
 	const baseDate = new Date().toString();
 	const header = useWeekHeader(baseDate);
 	const currentUser = useSelector(selectCurrentUser);
-	const [showLogMedModal, setShowLogMedModal] = useState<boolean>(false);
 	const targetDate = prepareTargetDate(header.selectedDate);
-	const { data, isLoading } = useGetMedSummaryByDateQuery({
-		medID: myMed.medID,
-		userID: currentUser.userID,
-		targetDate: targetDate,
-	});
+	const { data, isLoading } = useMedSummary(myMed.medID, targetDate);
+	const [showLogMedModal, setShowLogMedModal] = useState<boolean>(false);
 	const [selectedMed, setSelectedMed] = useState<CurrentMed | null>(myMed);
+
 	const pillSummary = data?.pillSummary as IPillSummary;
-	const medLogs = data?.medicationLogs as MedLogEntry[];
+	const medLogs = (data?.medicationLogs ?? []) as MedLogEntry[];
 
 	console.log("data", data);
 
@@ -78,9 +77,7 @@ const MedicationsPage = () => {
 		setShowLogMedModal(false);
 	};
 
-	const onSave = async () => {
-		// do stuff
-
+	const onSave = () => {
 		closeModal();
 	};
 
@@ -116,6 +113,9 @@ const MedicationsPage = () => {
 							totalPills={pillSummary?.totalPills}
 							pillsLeft={pillSummary?.pillsRemaining}
 						/>
+						<LoggedMedsCard pillsTakenToday={pillSummary?.pillsTakenToday}>
+							<TodaysDoses logs={medLogs} />
+						</LoggedMedsCard>
 					</div>
 				)}
 			</div>

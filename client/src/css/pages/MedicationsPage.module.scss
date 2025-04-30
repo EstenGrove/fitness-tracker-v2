@@ -5,18 +5,28 @@
 .MedicationsPage {
 	width: 100%;
 
+	&_header {
+		width: 100%;
+		position: sticky;
+		top: 0;
+		padding-bottom: 1rem;
+		background-color: $background;
+		z-index: 10;
+	}
+
 	&_main {
 		width: 100%;
 		padding: 4rem 0;
+		@include colCenter();
+		gap: 2rem 0;
+		padding-bottom: 10rem;
 	}
 }
 
 .LogMedButton {
 	width: max-content;
-	// height: 3rem;
 	padding: 0.5rem 0.8rem;
 	border-radius: 5rem;
-	// border-radius: 50%;
 	font-size: 1.6rem;
 	background-color: $foreground;
 	color: $accentBlue;

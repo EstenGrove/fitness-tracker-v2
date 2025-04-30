@@ -41,3 +41,33 @@
 		}
 	}
 }
+
+input[type="text"] {
+	&:-webkit-autofill {
+		background-color: $foreground !important;
+		-webkit-box-shadow: 0 0 0px 1000px $foreground inset !important;
+		-webkit-text-fill-color: $text1 !important;
+	}
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	&:-webkit-autofill:active {
+		background-color: $foreground !important;
+	}
+}
+input::-webkit-autofill {
+	background-color: $foreground !important;
+	-webkit-box-shadow: 0 0 0px 1000px $foreground inset !important;
+	-webkit-text-fill-color: $text1 !important;
+}
+input::-webkit-autofill:hover {
+	background-color: $foreground !important;
+}
+input::-webkit-autofill:focus {
+	background-color: $foreground !important;
+}
+input::-webkit-autofill:active {
+	background-color: $foreground !important;
+}
+input::-webkit-autofill:focus-within {
+	background-color: $foreground !important;
+}

@@ -1,19 +1,15 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/OtherHistory.module.scss";
-import { useSelector } from "react-redux";
-import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
+import { getWeekStartAndEnd } from "../utils/utils_dates";
 import { OtherHistory as OtherLog } from "../features/history/types";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 
 const OtherHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
-	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
-		userID: currentUser.userID,
+	const { data, isLoading } = useHistoryForRangeAndType<OtherLog>({
+		startDate: startDate,
+		endDate: endDate,
 		activityType: "Other",
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
 	});
 	const history = data as OtherLog[];
 

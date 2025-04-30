@@ -1,19 +1,15 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/StretchHistory.module.scss";
-import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
+import { getWeekStartAndEnd } from "../utils/utils_dates";
 import { StretchHistory as StretchLog } from "../features/history/types";
-import { useSelector } from "react-redux";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 
 const StretchHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
-	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
-		userID: currentUser.userID,
-		activityType: "Strength",
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
+	const { data, isLoading } = useHistoryForRangeAndType<StretchLog>({
+		startDate: startDate,
+		endDate: endDate,
+		activityType: "Stretch",
 	});
 	const history = data as StretchLog[];
 	return (

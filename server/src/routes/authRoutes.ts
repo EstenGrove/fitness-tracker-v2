@@ -4,6 +4,7 @@ import type {
 	LoggedIn,
 	LoginParams,
 	LogoutParams,
+	RefreshResponse,
 } from "../modules/auth/types.ts";
 import { login } from "../modules/auth/login.ts";
 import { normalizeLoginData } from "../modules/auth/normalize.ts";
@@ -12,7 +13,7 @@ import { normalizeSession } from "../modules/user/user.ts";
 import { logout } from "../modules/auth/logout.ts";
 import type { SessionDB } from "../modules/user/types.ts";
 import { isLocalEnv } from "../utils/env.ts";
-import { getUserIDFromToken } from "../modules/auth/utils.ts";
+import { getUserIDFromToken, setAccessToken } from "../modules/auth/utils.ts";
 import { refreshAuth } from "../modules/auth/refresh.ts";
 
 const app = new Hono();
@@ -54,12 +55,7 @@ app.post("/login", async (ctx: Context) => {
 		session: currentSession,
 	});
 
-	setCookie(ctx, "access_token", token, {
-		httpOnly: true,
-		path: "/",
-		secure: isLocalEnv ? false : true,
-		sameSite: "Strict",
-	});
+	setAccessToken(ctx, token);
 
 	return ctx.json(resp);
 });
@@ -119,8 +115,11 @@ app.get("/refresh", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const refreshedAuth = await refreshAuth(accessCookie);
+	const refreshedAuth = (await refreshAuth(accessCookie)) as RefreshResponse;
+	const newToken = refreshedAuth.token;
 	console.log("refreshedAuth", refreshedAuth);
+
+	setAccessToken(ctx, newToken);
 
 	const resp = getResponseOk({
 		...refreshedAuth,

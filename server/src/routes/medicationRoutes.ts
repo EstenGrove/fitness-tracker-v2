@@ -87,6 +87,7 @@ app.get("/getMedSummaryByDate", async (ctx: Context) => {
 app.post("/logMedication", async (ctx: Context) => {
 	const body = await ctx.req.json<LogMedBody>();
 	const { userID } = body;
+	console.log("body", body);
 
 	// log medication
 	const rawLog = (await medicationsService.logMedication(

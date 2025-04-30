@@ -103,7 +103,9 @@ const LoginPage = () => {
 
 	const onSubmit = () => {
 		setIsSubmitting(true);
-		handleLogin();
+		handleLogin().finally(() => {
+			setIsSubmitting(false);
+		});
 	};
 
 	const handleLogin = async () => {
@@ -114,7 +116,7 @@ const LoginPage = () => {
 		)) as AwaitedResponse<UserExistsResponse>;
 		const data = userResp.Data as UserExistsResponse;
 		const userCheckFailed = hasError(data);
-
+		await sleep(350);
 		// We use the 'error.key' to insure a re-render occurs when 2 of the same error occurs
 		if (userCheckFailed) {
 			const err = getFailedLoginMsg(data);
@@ -125,8 +127,8 @@ const LoginPage = () => {
 			});
 		}
 
+		// Attempt login, after validating user exists
 		const loginData = await dispatch(loginUser(values)).unwrap();
-		await sleep(500);
 
 		if (loginData) {
 			setAccessTokenCookie(loginData.token as string);
