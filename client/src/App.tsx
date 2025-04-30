@@ -19,6 +19,7 @@ const Settings = lazy(() => import("./pages/SettingsPage"));
 const Dashboard = lazy(() => import("./pages/DashboardPage"));
 const Medications = lazy(() => import("./pages/MedicationsPage"));
 const RecentActivity = lazy(() => import("./pages/RecentActivityPage"));
+const MedicationDetails = lazy(() => import("./pages/MedicationDetailsPage"));
 // Layout page
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
@@ -92,6 +93,14 @@ function App() {
 									element={
 										<Suspense fallback={<Loader />}>
 											<Medications />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="/meds/details/:id"
+									element={
+										<Suspense fallback={<Loader />}>
+											<MedicationDetails />
 										</Suspense>
 									}
 								/>

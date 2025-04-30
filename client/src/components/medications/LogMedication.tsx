@@ -2,7 +2,6 @@ import { ReactNode, useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/medications/LogMedication.module.scss";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../store/store";
 import { CurrentUser } from "../../features/user/types";
 import { PillSummary } from "../../features/medications/types";
 import { formatDate, formatTime } from "../../utils/utils_dates";
@@ -209,7 +208,7 @@ const TodaysMedSummary = ({ logs, summary }: TodaySummaryProps) => {
 };
 
 const LogMedication = ({
-	medication = { name: "Buphrenorphine", medID: 1, scheduleID: 3 },
+	medication = { name: "Buphrenorphine", medID: 1, scheduleID: 1 },
 	logs,
 	summary,
 	onSave,
@@ -221,7 +220,6 @@ const LogMedication = ({
 		loggedAt: formatTime(new Date(), "long"),
 		loggedDate: formatDate(selectedDate || new Date(), "long"),
 	});
-	const dispatch = useAppDispatch();
 	const currentUser: CurrentUser = useSelector(selectCurrentUser);
 	const [logMed] = useLogMedicationMutation();
 
@@ -249,8 +247,10 @@ const LogMedication = ({
 
 	const takeMed = async () => {
 		const { userID } = currentUser;
+		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
-			userID,
+			userID: userID,
+			scheduleID: scheduleID ?? 1,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,
@@ -265,8 +265,10 @@ const LogMedication = ({
 
 	const skipMed = async () => {
 		const { userID } = currentUser;
+		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
 			userID,
+			scheduleID: scheduleID ?? 1,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,

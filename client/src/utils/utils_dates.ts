@@ -372,6 +372,13 @@ const getWeekToDate = (base: Date | string = new Date()) => {
 	};
 };
 
+const toBackendFormat = (date: Date | string) => {
+	if (!date) return "";
+	const str = new Date(date).toISOString();
+	const newStr = formatDateTime(str, "db");
+	return newStr;
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -401,4 +408,5 @@ export {
 	applyTimeStrToDate,
 	prepareTimestamp,
 	getWeekToDate,
+	toBackendFormat,
 };

@@ -7,6 +7,7 @@ import { Activity } from "../features/shared/types";
 import { AsyncResponse, DateRange } from "../features/types";
 import { Workout } from "../features/workouts/types";
 import { currentEnv, historyApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
 
 export type AllHistoryResp = AsyncResponse<AllHistory>;
 export type HistoryTypeResp = AsyncResponse<{ history: WorkoutHistory[] }>;
@@ -20,7 +21,7 @@ const fetchHistoryByRange = async (
 	url += "&" + new URLSearchParams({ ...range });
 
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
 		return response;
@@ -40,7 +41,7 @@ const fetchHistoryByRangeAndActivity = async (
 	url += "&" + new URLSearchParams({ ...range });
 
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
 		return response;

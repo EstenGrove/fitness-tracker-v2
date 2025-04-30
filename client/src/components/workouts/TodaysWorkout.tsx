@@ -22,6 +22,8 @@ import MenuDropdown from "../shared/MenuDropdown";
 import ViewWorkout from "./ViewWorkout";
 import ModalLG from "../shared/ModalLG";
 import MarkAsDone from "./MarkAsDone";
+import ModalSM from "../shared/ModalSM";
+import SkipWorkout from "./SkipWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -51,11 +53,13 @@ const getBorderStyles = (workout: ITodaysWorkout) => {
 	if (isDone) {
 		return {
 			borderLeft: `5px solid rgba(0, 226, 189, 1)`,
+			// opacity: "0.3",
 		};
 	} else {
 		const tag = workout?.tagColor ?? "var(--todaysBorder)";
 		return {
 			borderLeft: `5px solid ${tag}`,
+			// opacity: "1.0",
 		};
 	}
 };
@@ -72,7 +76,7 @@ const getWorkoutTimes = (workout: ITodaysWorkout) => {
 	return `${start} to ${end}`;
 };
 
-type ModalType = "VIEW" | "EDIT" | "DELETE" | "COMPLETE" | "CANCEL";
+type ModalType = "VIEW" | "EDIT" | "DELETE" | "COMPLETE" | "CANCEL" | "SKIP";
 
 enum EModalType {
 	VIEW = "VIEW",
@@ -80,6 +84,7 @@ enum EModalType {
 	DELETE = "DELETE",
 	COMPLETE = "COMPLETE",
 	CANCEL = "CANCEL",
+	SKIP = "SKIP",
 }
 
 type ItemsProps = {
@@ -100,6 +105,12 @@ const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
 				style={{ color: "var(--todaysMenuText)" }}
 			>
 				Edit
+			</li>
+			<li
+				onClick={() => onAction(EModalType.SKIP)}
+				style={{ color: "var(--accentRed)" }}
+			>
+				Skip Workout
 			</li>
 			{isDone ? (
 				<li
@@ -143,6 +154,16 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
+const getCompletedStyles = (workout: ITodaysWorkout) => {
+	const isDone = getIsCompleted(workout);
+
+	if (isDone) {
+		return `${styles.TodaysWorkout} ${styles.isDone}`;
+	} else {
+		return `${styles.TodaysWorkout}`;
+	}
+};
+
 const TodaysWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -152,9 +173,10 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const [modalType, setModalType] = useState<ModalType | null>(null);
 	const isCompleted: boolean = getIsCompleted(workout);
 	const borderStyles = getBorderStyles(workout);
+	const doneStyles = getCompletedStyles(workout);
 	const times = getWorkoutTimes(workout);
 	const durationMins: string = getDurationDesc({
-		duration,
+		duration: duration,
 		recorded: recordedDuration,
 	});
 
@@ -209,8 +231,13 @@ const TodaysWorkout = ({ workout }: Props) => {
 		closeModal();
 	};
 
+	const onSkip = () => {
+		//
+		//
+	};
+
 	return (
-		<div className={styles.TodaysWorkout} style={borderStyles}>
+		<div className={doneStyles} style={borderStyles}>
 			<div className={styles.TodaysWorkout_top}>
 				<div className={styles.TodaysWorkout_top_badge}>
 					<TypeBadge activityType={activityType} />
@@ -248,6 +275,11 @@ const TodaysWorkout = ({ workout }: Props) => {
 				<ModalLG onClose={closeModal}>
 					<ViewWorkout workout={workout} onClose={closeModal} />
 				</ModalLG>
+			)}
+			{modalType === EModalType.SKIP && (
+				<ModalSM onClose={closeModal}>
+					<SkipWorkout onConfirm={onSkip} onCancel={closeModal} />
+				</ModalSM>
 			)}
 			{modalType === EModalType.EDIT && (
 				<ModalLG onClose={closeModal}>

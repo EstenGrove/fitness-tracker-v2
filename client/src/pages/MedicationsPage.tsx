@@ -6,8 +6,6 @@ import {
 	MedLogEntry,
 	PillSummary as IPillSummary,
 } from "../features/medications/types";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate, parseDateStr } from "../utils/utils_dates";
 import { useMedSummary } from "../hooks/useMedSummary";
 import ModalLG from "../components/shared/ModalLG";
@@ -52,7 +50,6 @@ const myMed = {
 const MedicationsPage = () => {
 	const baseDate = new Date().toString();
 	const header = useWeekHeader(baseDate);
-	const currentUser = useSelector(selectCurrentUser);
 	const targetDate = prepareTargetDate(header.selectedDate);
 	const { data, isLoading } = useMedSummary(myMed.medID, targetDate);
 	const [showLogMedModal, setShowLogMedModal] = useState<boolean>(false);

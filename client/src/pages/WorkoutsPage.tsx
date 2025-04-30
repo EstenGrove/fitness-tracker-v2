@@ -8,14 +8,15 @@ import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
+import { useNavigate } from "react-router";
+import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
+import { useAllWorkouts } from "../hooks/useAllWorkouts";
 import { TodaysWorkout, Workout } from "../features/workouts/types";
 import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
-import { useNavigate } from "react-router";
-import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
-import { useAllWorkouts } from "../hooks/useAllWorkouts";
+import { isEmptyArray } from "../utils/utils_misc";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -163,6 +164,30 @@ const WorkoutHeader = ({
 	);
 };
 
+const sortByCompleted = (workouts: TodaysWorkout[]) => {
+	if (!workouts || !workouts.length) return [];
+
+	const isDone = (workout: TodaysWorkout) => {
+		const status = workout.workoutStatus;
+
+		switch (status) {
+			case "COMPLETE":
+				return 1;
+			case "NOT-COMPLETE":
+				return 0;
+			case "IN-PROGRESS":
+				return 1.5;
+
+			default:
+				return 0;
+		}
+	};
+
+	return [...workouts]?.sort((a, b) => {
+		return isDone(a) - isDone(b);
+	});
+};
+
 const WorkoutsPage = () => {
 	const navigate = useNavigate();
 	const targetDate = formatDate(new Date(), "db");
@@ -175,7 +200,8 @@ const WorkoutsPage = () => {
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
 
 	const allWorkouts = workoutsList as Workout[];
-	const todaysWorkouts = data as TodaysWorkout[];
+	const list = data as TodaysWorkout[];
+	const todaysWorkouts = sortByCompleted(list);
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);

@@ -95,6 +95,8 @@ app.post("/logMedication", async (ctx: Context) => {
 		body
 	)) as MedicationLogDB;
 
+	console.log("rawLog", rawLog);
+
 	if (rawLog instanceof Error) {
 		const errResp = getResponseError(rawLog, {
 			newLog: null,
@@ -103,6 +105,8 @@ app.post("/logMedication", async (ctx: Context) => {
 	}
 
 	const medLog: MedicationLog = normalizeMedLog(rawLog);
+
+	console.log("medlog", medLog);
 	const resp = getResponseOk({
 		newLog: medLog,
 	});

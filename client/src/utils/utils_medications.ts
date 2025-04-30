@@ -7,6 +7,7 @@ import { fetchWithAuth } from "./utils_requests";
 export interface MedLogBody {
 	userID: string;
 	medID: number;
+	scheduleID: number;
 	amountTaken: number;
 	action: "Taken" | "Skipped";
 	loggedAt: Date | string;
@@ -16,6 +17,7 @@ export interface MedLogVals {
 	userID: string;
 	medID: number;
 	dose: number;
+	scheduleID: number;
 	action: "Taken" | "Skipped";
 	loggedAt: string;
 	loggedDate: Date | string;
@@ -43,7 +45,7 @@ const fetchMedications = async (userID: string) => {
 	let url = currentEnv.base + medicationApis.getUserMeds;
 	url += "?" + new URLSearchParams({ userID });
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {
@@ -115,6 +117,7 @@ const prepareMedLog = (values: MedLogVals): MedLogBody => {
 		loggedAt,
 		medID,
 		dose,
+		scheduleID,
 		loggedDate = new Date(),
 		action = "Taken",
 	} = values;
@@ -123,6 +126,7 @@ const prepareMedLog = (values: MedLogVals): MedLogBody => {
 	const medLog: MedLogBody = {
 		userID: userID,
 		medID: medID,
+		scheduleID: scheduleID,
 		amountTaken: dose,
 		action: action,
 		loggedAt: takenAt,

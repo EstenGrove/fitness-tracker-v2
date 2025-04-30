@@ -67,6 +67,7 @@ const API_ENDPOINTS = {
 		getByID: "/user/getUserByID",
 	},
 	workouts: {
+		skipWorkout: "/workouts/skipWorkout",
 		logWorkout: "/workouts/logWorkout",
 		getAll: "/workouts/getAllWorkouts",
 		getOpen: "/workouts/getOpenWorkouts",

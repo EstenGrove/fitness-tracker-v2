@@ -2,6 +2,7 @@ import { Hono, type Context } from "hono";
 import { getResponseError, getResponseOk } from "../utils/api.ts";
 import { workoutsService } from "../services/index.ts";
 import type {
+	LogWorkoutBody,
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
 	Workout,
@@ -11,6 +12,11 @@ import type {
 import { normalizeTodaysWorkout } from "../modules/workouts/todaysWorkouts.ts";
 import { normalizeWorkoutDetails } from "../modules/workouts/workoutDetails.ts";
 import { normalizeWorkouts } from "../modules/workouts/workouts.ts";
+import {
+	logWorkout,
+	normalizeWorkoutLog,
+} from "../modules/workouts/logWorkout.ts";
+import type { HistoryOfTypeDB } from "../modules/history/types.ts";
 
 const app = new Hono();
 
@@ -111,6 +117,34 @@ app.post("/markWorkoutAsDone", async (ctx: Context) => {
 	const resp = getResponseOk({
 		updatedWorkout: todaysWorkout,
 		history: [],
+	});
+
+	return ctx.json(resp);
+});
+
+app.post("/logWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<LogWorkoutBody>();
+
+	const preparedLog = {
+		...body,
+		duration: body.workoutLength,
+	};
+
+	const rawLog = (await logWorkout(preparedLog)) as HistoryOfTypeDB;
+
+	if (rawLog instanceof Error) {
+		const errResp = getResponseError(rawLog, {
+			newLog: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const newLog = normalizeWorkoutLog(rawLog);
+
+	console.log("newLog", newLog);
+
+	const resp = getResponseOk({
+		newLog: newLog,
 	});
 
 	return ctx.json(resp);

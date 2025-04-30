@@ -1,5 +1,5 @@
 import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
-import type { Activity, RepeatType, WeekDayToken } from "../types.ts";
+import type { Activity, Effort, RepeatType, WeekDayToken } from "../types.ts";
 
 export type WorkoutStatus = "COMPLETE" | "NOT-COMPLETE";
 
@@ -106,3 +106,20 @@ export interface ExerciseSet {
 }
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
+
+export interface LogWorkoutBody {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutDate: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	workoutLength: number;
+	effort?: Effort;
+	steps?: number;
+	miles?: number;
+	pace?: number;
+	exercise?: string;
+	sets?: WorkoutSet[];
+}

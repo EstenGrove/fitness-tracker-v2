@@ -24,7 +24,6 @@ const groupHistoryByDate = (
 	const grouped = groupByFn<WorkoutHistory>(allLogs, (x) =>
 		formatDate(x.startTime, "db")
 	);
-	console.log("grouped", grouped);
 
 	return grouped;
 };

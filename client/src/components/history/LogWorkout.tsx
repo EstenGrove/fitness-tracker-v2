@@ -1,10 +1,15 @@
 import { useMemo, useState } from "react";
 import sprite from "../../assets/icons/calendar.svg";
+import sprite2 from "../../assets/icons/main.svg";
 import styles from "../../css/history/LogWorkout.module.scss";
 import { CurrentUser } from "../../features/user/types";
 import MultiStepModal, { StepItem } from "../shared/MultiStepModal";
 import { Activity } from "../../features/shared/types";
-import { WorkoutSet } from "../../utils/utils_workouts";
+import {
+	LogWorkoutValues,
+	prepareLogWorkout,
+	WorkoutSet,
+} from "../../utils/utils_workouts";
 import { Workout } from "../../features/workouts/types";
 import {
 	ACTIVITIES,
@@ -20,6 +25,7 @@ import MinutesSelector from "../shared/MinutesSelector";
 import EditStrengthSets from "../form/EditStrengthSets";
 import EditWorkoutSets from "../form/EditWorkoutSets";
 import EditWalkInfo from "../form/EditWalkInfo";
+import { useLogWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
 
 type Props = {
 	allWorkouts: Workout[];
@@ -29,25 +35,20 @@ type Props = {
 	onCancel?: () => void;
 };
 
-interface LogWorkoutValues {
-	workoutID: number;
-	activityType: Activity | string;
-	workoutDate: string;
-	startTime: string;
-	endTime: string;
-	duration: number;
-	effort: string;
-	steps: number;
-	miles: number;
-	pace: number;
-	exercise: string;
-	sets: WorkoutSet[];
-}
-
 type StepProps = {
 	values: LogWorkoutValues;
 	onChange: (name: string, value: string | number) => void;
 	onSelect: (name: string, value: string | Date) => void;
+};
+
+const activityIcons = {
+	All: "double-tick",
+	Walk: "walking-2",
+	Stretch: "stretching-2",
+	Strength: "dumbbell-2",
+	Timed: "time",
+	Cardio: "heart-with-pulse",
+	Other: "nothing-found",
 };
 
 const StepHeader = ({ title }: { title: string }) => {
@@ -65,30 +66,40 @@ type SelectWorkoutStepProps = {
 
 type FilterType = Activity | "All";
 
-type FilterPillProps = {
-	filter: FilterType;
-	isSelected: boolean;
-	onSelect: () => void;
-};
-const FilterPill = ({
-	filter,
-	onSelect,
-	isSelected = false,
-}: FilterPillProps) => {
-	const css = isSelected
-		? `${styles.FilterPill} ${styles.isSelected}`
-		: styles.FilterPill;
-	return (
-		<button type="button" onClick={onSelect} className={css}>
-			<span>{filter}</span>
-		</button>
-	);
-};
-
 type WorkoutOptionProps = {
 	workout: Workout;
 	isSelected: boolean;
 	onSelect: () => void;
+};
+type ActivityItemProps = {
+	activity: FilterType;
+	onSelect: () => void;
+	isSelected: boolean;
+};
+
+const ActivityItem = ({
+	activity,
+	onSelect,
+	isSelected = false,
+}: ActivityItemProps) => {
+	const icon = activityIcons[activity];
+	const css = {
+		backgroundColor: isSelected
+			? "rgba(0, 124, 255, 0.1)"
+			: "var(--bg-foreground)",
+		color: isSelected ? "var(--accent-blue)" : "var(--blueGrey300)",
+		borderColor: isSelected ? "var(--accent-blue)" : "var(--border-color)",
+	};
+	const iconCss = {
+		fill: isSelected ? "var(--accent-blue)" : "var(--text1_5)",
+	};
+	return (
+		<div onClick={onSelect} className={styles.ActivityItem} style={css}>
+			<svg className={styles.ActivityItem_icon} style={iconCss}>
+				<use xlinkHref={`${sprite2}#icon-${icon}`}></use>
+			</svg>
+		</div>
+	);
 };
 
 const effortOptions = ["None", "Easy", "Moderate", "Hard", "Strenuous"].map(
@@ -104,9 +115,10 @@ const WorkoutOption = ({
 }: WorkoutOptionProps) => {
 	const name = workout.workoutName || "Unknown Workout";
 	const css = {
-		color: isSelected ? "var(--accent-blue)" : "var(--text1)",
+		color: isSelected ? "#fff" : "var(--text1)",
+		borderColor: isSelected ? "var(--accent-blue)" : "var(--blueGrey800)",
+		backgroundColor: isSelected ? "var(--blueBG)" : "transparent",
 	};
-	console.log(isSelected, workout);
 	return (
 		<li className={styles.WorkoutOption} onClick={onSelect} style={css}>
 			<div className={styles.WorkoutOption_isSelected}>
@@ -278,12 +290,15 @@ const SelectWorkoutStep = ({
 			<StepHeader title="Select Workout" />
 			<div className={styles.SelectWorkoutStep_filters}>
 				{baseFilters.map((item, idx) => (
-					<FilterPill
-						key={item + idx}
-						filter={item}
-						isSelected={item === filter}
-						onSelect={() => selectFilter(item)}
-					/>
+					<div key={idx} className={styles.SelectWorkoutStep_filters_item}>
+						<ActivityItem
+							key={item + idx}
+							activity={item}
+							isSelected={item === filter}
+							onSelect={() => selectFilter(item)}
+						/>
+						<span>{item}</span>
+					</div>
 				))}
 			</div>
 			<ul className={styles.SelectWorkoutStep_options}>
@@ -302,11 +317,23 @@ const SelectWorkoutStep = ({
 	);
 };
 
+const ConfirmLogStep = ({ values }: StepProps) => {
+	const type = values.activityType;
+	return (
+		<div className={styles.ConfirmLogStep}>
+			<StepHeader title="Confirm Workout Details" />
+			<div className={styles.ConfirmLogStep_main}>
+				<div className={styles.ConfirmLogStep_main_main}>Activity: {type}</div>
+			</div>
+		</div>
+	);
+};
+
 const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
 	const [values, setValues] = useState<LogWorkoutValues>({
 		workoutID: 0,
 		activityType: "", // Default to Strength, can be changed later
-		workoutDate: formatDate(new Date().toString(), "db"),
+		workoutDate: formatDate(new Date().toString(), "long"),
 		startTime: formatTime(new Date().toString(), "short"),
 		endTime: formatTime(new Date().toString(), "short"),
 		duration: 0,
@@ -317,6 +344,7 @@ const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
 		exercise: "",
 		sets: [],
 	});
+	const [logWorkout] = useLogWorkoutMutation();
 
 	const onSelectWorkout = (workoutID: number, activityType: Activity) => {
 		setValues({
@@ -337,8 +365,12 @@ const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
 	};
 
 	const saveWorkoutLog = async () => {
-		//
-		//
+		const { userID } = currentUser;
+		const newLog = prepareLogWorkout(userID, values);
+
+		await logWorkout({ userID, newLog });
+
+		return onClose && onClose();
 	};
 
 	const steps: StepItem[] = [
@@ -386,11 +418,24 @@ const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
 			next: 4,
 			validate: () => true,
 		},
+		{
+			id: 4,
+			title: "Confirm Workout",
+			content: (
+				<ConfirmLogStep
+					values={values}
+					onChange={onChange}
+					onSelect={onSelect}
+				/>
+			),
+			prev: 3,
+			validate: () => true,
+		},
 	];
 
 	return (
 		<>
-			<MultiStepModal steps={steps} onClose={onClose} />
+			<MultiStepModal steps={steps} onClose={onClose} onSave={saveWorkoutLog} />
 		</>
 	);
 };
