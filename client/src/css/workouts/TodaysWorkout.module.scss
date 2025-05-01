@@ -137,7 +137,7 @@ $icon: calc($size - 30%);
 }
 
 .isDone {
-	opacity: 0.5;
+	opacity: 0.7;
 	transition: opacity 0.3s ease-in-out;
 	&:hover {
 		cursor: pointer;

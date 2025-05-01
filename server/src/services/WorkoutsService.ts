@@ -1,6 +1,11 @@
 import type { Pool } from "pg";
 import type { Activity, Effort } from "../modules/types.ts";
-import type { WorkoutSet } from "../modules/workouts/types.ts";
+import type {
+	LogWorkoutBody,
+	SkippedWorkoutDB,
+	SkipWorkoutBody,
+	WorkoutSet,
+} from "../modules/workouts/types.ts";
 import type { HistoryOfTypeDB } from "../modules/history/types.ts";
 
 interface MarkAsDoneBody {
@@ -19,11 +24,34 @@ interface MarkAsDoneBody {
 }
 
 export type LoggedWorkoutResp = Promise<HistoryOfTypeDB | unknown>;
+export type SkippedResp = Promise<SkippedWorkoutDB | unknown>;
 
 class WorkoutsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async skipWorkout(userID: string, values: SkipWorkoutBody): SkippedResp {
+		const { workoutID, activityType, workoutDate } = values;
+		try {
+			const query = `SELECT * FROM skip_workout(
+				$1,
+				$2,
+				$3,
+				$4
+			) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+				workoutDate,
+			]);
+			const rows = results?.rows?.[0];
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async logStrength(values: object): LoggedWorkoutResp {

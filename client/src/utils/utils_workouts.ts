@@ -18,6 +18,7 @@ import {
 } from "./utils_dates";
 import { HistoryOfType } from "../features/history/types";
 import { fetchWithAuth } from "./utils_requests";
+import { milesToPace, milesToSteps } from "./utils_steps";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
 export interface MarkAsDoneBody {
@@ -237,6 +238,10 @@ const prepareMarkAsDoneBody = (userID: string, details: MarkAsDoneBody) => {
 		endTime: endTime,
 		duration: workoutLength,
 	});
+	const { steps, pace } = calculateWalkMetrics({
+		miles: details?.miles ?? 0,
+		duration: details.workoutLength,
+	});
 
 	const newBody: MarkAsDoneBody = {
 		userID,
@@ -247,9 +252,9 @@ const prepareMarkAsDoneBody = (userID: string, details: MarkAsDoneBody) => {
 		startTime: newStart,
 		endTime: newEnd,
 		workoutLength: workoutLength,
-		steps: details.steps || 0,
+		steps: steps || 0,
 		miles: details.miles || 0,
-		pace: details.pace || 0,
+		pace: pace || 0,
 		exercise: details.exercise || "",
 		sets: details.sets || [],
 	};
@@ -272,6 +277,17 @@ const calculateEndTimeFromDuration = (values: {
 	const endByMins = addMinutes(start, mins);
 
 	return endByMins;
+};
+
+const calculateWalkMetrics = (values: { miles: number; duration: number }) => {
+	const { miles, duration } = values;
+	const steps = milesToSteps(miles);
+	const pace = milesToPace(miles, duration);
+
+	return {
+		steps,
+		pace,
+	};
 };
 
 // Checks if the start/end times line up with the workout mins & fixes it, if needed
@@ -298,6 +314,10 @@ const prepareLogWorkout = (userID: string, values: LogWorkoutValues) => {
 	const workoutID = values?.workoutID ?? 1;
 	const activityType = (values?.activityType ?? "Other") as Activity;
 	const date = formatDate(values.workoutDate, "db");
+	const { steps, pace } = calculateWalkMetrics({
+		miles: values?.miles ?? 0,
+		duration: values.duration,
+	});
 
 	const newValues: LogWorkoutBody = {
 		userID: userID,
@@ -308,9 +328,9 @@ const prepareLogWorkout = (userID: string, values: LogWorkoutValues) => {
 		endTime: newTimes.endTime,
 		workoutLength: values.duration,
 		effort: values.effort as Effort,
-		steps: values?.steps ?? null,
+		steps: steps ?? null,
 		miles: values?.miles ?? null,
-		pace: values?.pace ?? null,
+		pace: pace ?? null,
 		exercise: values?.exercise ?? activityType + " Exercise",
 		sets: values?.sets ?? [],
 	};
@@ -328,4 +348,5 @@ export {
 	prepareLogWorkout,
 	prepareMarkAsDoneBody,
 	calculateStartAndEndTimes,
+	calculateWalkMetrics,
 };

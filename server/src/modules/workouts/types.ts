@@ -123,3 +123,24 @@ export interface LogWorkoutBody {
 	exercise?: string;
 	sets?: WorkoutSet[];
 }
+
+export interface SkipWorkoutBody {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutDate: string;
+	reason?: string;
+}
+
+export interface SkippedWorkoutDB {
+	user_id: string;
+	workout_date: string;
+	activity_type: Activity;
+	was_skipped: boolean;
+}
+export interface SkippedWorkout {
+	userID: string;
+	workoutDate: string;
+	activityType: Activity;
+	wasSkipped: boolean;
+}

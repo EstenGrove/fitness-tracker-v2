@@ -16,7 +16,6 @@ import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
-import { isEmptyArray } from "../utils/utils_misc";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {

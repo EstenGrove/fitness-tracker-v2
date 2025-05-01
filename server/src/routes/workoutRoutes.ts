@@ -3,6 +3,7 @@ import { getResponseError, getResponseOk } from "../utils/api.ts";
 import { workoutsService } from "../services/index.ts";
 import type {
 	LogWorkoutBody,
+	SkipWorkoutBody,
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
 	Workout,
@@ -17,6 +18,7 @@ import {
 	normalizeWorkoutLog,
 } from "../modules/workouts/logWorkout.ts";
 import type { HistoryOfTypeDB } from "../modules/history/types.ts";
+import { skipWorkout } from "../modules/workouts/skipWorkout.ts";
 
 const app = new Hono();
 
@@ -145,6 +147,28 @@ app.post("/logWorkout", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		newLog: newLog,
+	});
+
+	return ctx.json(resp);
+});
+
+app.post("/skipWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<SkipWorkoutBody>();
+	const { userID } = body;
+
+	const skipped = await skipWorkout(userID, body);
+
+	if (skipped.error) {
+		const errResp = getResponseError(skipped.error, {
+			error: skipped.error,
+			wasSkipped: false,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		error: null,
+		wasSkipped: skipped.wasSkipped,
 	});
 
 	return ctx.json(resp);
