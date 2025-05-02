@@ -6,9 +6,11 @@ import { WorkoutsService } from "./WorkoutsService.ts";
 import { DashboardService } from "./DashboardService.ts";
 import { MedicationsService } from "./MedicationsService.ts";
 import { RecentActivityService } from "./RecentActivityService.ts";
+import { StatsService } from "./StatsService.ts";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);
+const statsService = new StatsService(db);
 const historyService = new HistoryService(db);
 const workoutsService = new WorkoutsService(db);
 const dashboardService = new DashboardService(db);
@@ -18,6 +20,7 @@ const recentActivityService = new RecentActivityService(db);
 const allServices = {
 	user: userService,
 	auth: authService,
+	stats: statsService,
 	history: historyService,
 	workouts: workoutsService,
 	dashboard: dashboardService,
@@ -34,6 +37,7 @@ export {
 	dashboardService,
 	workoutsService,
 	historyService,
+	statsService,
 	authService,
 	userService,
 };

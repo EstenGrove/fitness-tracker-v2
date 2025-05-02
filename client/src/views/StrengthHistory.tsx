@@ -13,6 +13,7 @@ import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
 import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const StrengthHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
@@ -53,13 +54,17 @@ const StrengthHistory = () => {
 			{hasHistory && (
 				<div className={styles.StrengthHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<StrengthHistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<StrengthHistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

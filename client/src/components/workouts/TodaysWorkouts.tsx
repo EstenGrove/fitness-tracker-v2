@@ -1,6 +1,7 @@
 import styles from "../../css/workouts/TodaysWorkouts.module.scss";
 import { TodaysWorkout as ITodaysWorkout } from "../../features/workouts/types";
 import Loader from "../layout/Loader";
+import FadeSlideIn from "../ui/FadeSlideIn";
 import NoData from "../ui/NoData";
 import TodaysWorkout from "./TodaysWorkout";
 import { useNavigate } from "react-router";
@@ -61,9 +62,15 @@ const TodaysWorkouts = ({ workouts, isLoading }: Props) => {
 					<>
 						{noWorkouts && <NoData icon="noData" msg="No workouts found." />}
 						{workouts &&
-							workouts.map((workout) => {
+							workouts.map((workout, idx) => {
+								const delay = idx * 200;
 								const key = `${workout.activityType}-${workout.workoutID}`;
-								return <TodaysWorkout key={key} workout={workout} />;
+								console.log(idx + ":", delay);
+								return (
+									<FadeSlideIn duration={delay} key={key + idx}>
+										<TodaysWorkout key={key} workout={workout} />
+									</FadeSlideIn>
+								);
 							})}
 					</>
 				)}

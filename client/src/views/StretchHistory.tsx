@@ -13,6 +13,7 @@ import { useState } from "react";
 import { EMenuAction } from "../features/types";
 import HistoryEntry from "../components/history/HistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const StretchHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
@@ -50,13 +51,17 @@ const StretchHistory = () => {
 			{hasHistory && (
 				<div className={styles.StretchHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<HistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<HistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

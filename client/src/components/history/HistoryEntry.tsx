@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/history/HistoryEntry.module.scss";
 import { HistoryOfType } from "../../features/history/types";
@@ -48,6 +48,7 @@ const getWorkoutDate = (startTime: string): string => {
 const HistoryEntry = ({ entry, onMenuAction, children }: Props) => {
 	const name = entry.workoutName;
 	const day = getWorkoutDate(entry.startTime);
+	const menuRef = useRef<HTMLDivElement>(null);
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 
 	const openMoreOpts = () => {
@@ -70,10 +71,14 @@ const HistoryEntry = ({ entry, onMenuAction, children }: Props) => {
 					<div className={styles.HistoryEntry_top_title_day}>{day}</div>
 				</div>
 
-				<div className={styles.HistoryEntry_top_icon}>
+				<div className={styles.HistoryEntry_top_icon} ref={menuRef}>
 					<MenuIcon openMenu={openMoreOpts} />
 					{showMenu && (
-						<MenuDropdown closeMenu={closeMoreOpts}>
+						<MenuDropdown
+							closeMenu={closeMoreOpts}
+							usePortal={true}
+							triggerRef={menuRef}
+						>
 							<li onClick={() => handleMenu(EMenuAction.VIEW, entry)}>View</li>
 							<li onClick={() => handleMenu(EMenuAction.EDIT, entry)}>Edit</li>
 							<li onClick={() => handleMenu(EMenuAction.DELETE, entry)}>

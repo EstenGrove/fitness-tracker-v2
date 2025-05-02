@@ -7,9 +7,9 @@
 
 	&_header {
 		width: 100%;
+		background-color: $background;
 		position: sticky;
 		top: 0;
-		background-color: $background;
 		z-index: 10;
 	}
 
@@ -30,7 +30,6 @@
 	&_icon {
 		width: 2.2rem;
 		height: 2.2rem;
-		fill: $text3;
 		fill: $borderColor;
 	}
 }

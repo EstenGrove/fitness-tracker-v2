@@ -22,6 +22,7 @@
 		width: 100%;
 		height: auto;
 		@include colCenter();
+		align-items: stretch;
 		gap: 1rem 0;
 	}
 

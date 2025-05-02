@@ -66,6 +66,15 @@ const API_ENDPOINTS = {
 		getByLogin: "/user/getUserByLogin",
 		getByID: "/user/getUserByID",
 	},
+	stats: {
+		getPostWorkoutStats: "/stats/getPostWorkoutStats",
+		getWeeklyStrengthStats: "/stats/getWeeklyStrengthStats",
+		getWeeklyWalkStats: "/stats/getWeeklyWalkStats",
+		getWeeklyCardioStats: "/stats/getWeeklyCardioStats",
+		getWeeklyStretchStats: "/stats/getWeeklyStretchStats",
+		getWeeklyTimedStats: "/stats/getWeeklyTimedStats",
+		getWeeklyOtherStats: "/stats/getWeeklyOtherStats",
+	},
 	workouts: {
 		skipWorkout: "/workouts/skipWorkout",
 		logWorkout: "/workouts/logWorkout",
@@ -123,6 +132,7 @@ const API_ENDPOINTS = {
 export const {
 	auth: authApis,
 	user: userApis,
+	stats: statsApis,
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,

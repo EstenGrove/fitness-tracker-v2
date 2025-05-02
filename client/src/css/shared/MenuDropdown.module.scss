@@ -4,6 +4,8 @@
 
 .MenuDropdown {
 	position: absolute;
+	display: block;
+	isolation: isolate;
 	top: 2rem;
 	right: 0;
 	width: 12rem;
@@ -12,11 +14,11 @@
 	border-radius: 1rem;
 	border: $borderLight;
 	background-color: $background;
-	z-index: 9999;
 	padding: 1rem 1rem 0.5rem 1rem;
 	-webkit-box-shadow: -2px 4px 33px -8px rgba(0, 0, 0, 0.75);
 	-moz-box-shadow: -2px 4px 33px -8px rgba(0, 0, 0, 0.75);
 	box-shadow: -2px 4px 33px -8px rgba(0, 0, 0, 0.75);
+	z-index: 9999;
 
 	&_list {
 		list-style: none;
@@ -29,6 +31,7 @@
 			padding: 0.3rem 0;
 			font-size: 1.3rem;
 			color: var(--blueGrey400);
+			z-index: 9999;
 			&:hover {
 				cursor: pointer;
 			}

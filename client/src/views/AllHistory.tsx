@@ -11,11 +11,12 @@ import {
 import { groupByFn, TRecord } from "../utils/utils_misc";
 import { EMenuAction } from "../features/types";
 import { parseISO } from "date-fns";
+import { useHistoryForRange } from "../hooks/useHistoryForRange";
 import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
-import { useHistoryForRange } from "../hooks/useHistoryForRange";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const groupHistoryByDate = (
 	allLogs: WorkoutHistory[]
@@ -124,16 +125,19 @@ const AllHistory = () => {
 						<div className={styles.AllHistory_list}>
 							{dates &&
 								dates.map((date, idx) => {
+									const delay = idx * 650;
 									const historyForDate = grouped[date];
 									const target = prepareDate(date);
 
 									return (
-										<HistoryByDate
-											key={date + idx}
-											date={target}
-											history={historyForDate as HistoryOfType[]}
-											onMenuAction={onMenuAction}
-										/>
+										<FadeSlideIn duration={delay} key={delay}>
+											<HistoryByDate
+												key={date + idx}
+												date={target}
+												history={historyForDate as HistoryOfType[]}
+												onMenuAction={onMenuAction}
+											/>
+										</FadeSlideIn>
 									);
 								})}
 						</div>

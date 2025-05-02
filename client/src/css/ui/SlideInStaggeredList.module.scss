@@ -1,0 +1,9 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.SlideInStaggeredList {
+	width: auto;
+	height: auto;
+	will-change: opacity, transform;
+}

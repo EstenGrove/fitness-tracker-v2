@@ -5,14 +5,15 @@ import {
 	CardioHistory as CardioLog,
 	HistoryOfType,
 } from "../features/history/types";
-import HistoryEntry from "../components/history/HistoryEntry";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { useState } from "react";
-import ModalLG from "../components/shared/ModalLG";
 import { EMenuAction } from "../features/types";
 import { isEmptyArray } from "../utils/utils_misc";
 import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import HistoryEntry from "../components/history/HistoryEntry";
+import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const CardioHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
@@ -51,13 +52,19 @@ const CardioHistory = () => {
 			{hasHistory && (
 				<div className={styles.CardioHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${entry.historyID}-${delay}-${idx}`;
 							return (
-								<HistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn duration={delay} key={key}>
+									{/* <div key={key} className={styles.HistoryWrapper}> */}
+									<HistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+									{/* </div> */}
+								</FadeSlideIn>
 							);
 						})}
 				</div>

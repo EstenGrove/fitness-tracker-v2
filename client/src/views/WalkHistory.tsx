@@ -13,6 +13,7 @@ import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const WalkHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
@@ -50,13 +51,17 @@ const WalkHistory = () => {
 			{hasHistory && (
 				<div className={styles.WalkHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<WalkHistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<WalkHistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

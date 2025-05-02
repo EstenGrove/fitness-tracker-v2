@@ -22,6 +22,7 @@
 		width: 100%;
 		height: auto;
 		@include colCenter();
+		align-items: stretch;
 		gap: 1rem 0;
 	}
 
@@ -30,4 +31,22 @@
 		height: 20rem;
 		@include colCenter();
 	}
+}
+
+.HistoryWrapper {
+	overflow: visible;
+	// position: relative;
+	// z-index: auto;
+}
+
+.EntryWrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.HistoryEntry .MenuDropdown {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	z-index: 1000;
 }

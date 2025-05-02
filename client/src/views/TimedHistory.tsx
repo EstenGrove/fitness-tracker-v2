@@ -13,6 +13,7 @@ import { useState } from "react";
 import HistoryEntry from "../components/history/HistoryEntry";
 import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const TimedHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
@@ -49,13 +50,17 @@ const TimedHistory = () => {
 			{hasHistory && (
 				<div className={styles.TimedHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<HistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<HistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

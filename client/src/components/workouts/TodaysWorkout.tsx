@@ -1,6 +1,6 @@
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/workouts/TodaysWorkout.module.scss";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
@@ -167,6 +167,7 @@ const getCompletedStyles = (workout: ITodaysWorkout) => {
 const TodaysWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const triggerRef = useRef<HTMLDivElement>(null);
 	const { workoutName, activityType, duration, recordedDuration } = workout;
 	const [updateWorkout] = useMarkAsDoneMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -246,7 +247,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 					<h6>{workoutName}</h6>
 					<div className={styles.TodaysWorkout_top_title_about}>{times}</div>
 				</div>
-				<div className={styles.TodaysWorkout_top_more}>
+				<div className={styles.TodaysWorkout_top_more} ref={triggerRef}>
 					<svg
 						onClick={openMenu}
 						className={styles.TodaysWorkout_top_more_icon}
@@ -254,7 +255,11 @@ const TodaysWorkout = ({ workout }: Props) => {
 						<use xlinkHref={`${sprite}#icon-dots-three-horizontal`}></use>
 					</svg>
 					{showMenu && (
-						<MenuDropdown closeMenu={closeMenu}>
+						<MenuDropdown
+							closeMenu={closeMenu}
+							triggerRef={triggerRef}
+							usePortal={true}
+						>
 							<MenuItems isDone={isCompleted} onAction={onAction} />
 						</MenuDropdown>
 					)}

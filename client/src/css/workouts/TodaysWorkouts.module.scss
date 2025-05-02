@@ -31,7 +31,9 @@
 		padding: 4rem 0;
 		padding-top: 1rem;
 		@include colCenter();
+		align-items: stretch;
 		gap: 0.5rem 0;
+		// flex-basis: auto;
 	}
 }
 

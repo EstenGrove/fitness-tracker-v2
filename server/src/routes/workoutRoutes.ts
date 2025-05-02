@@ -19,6 +19,8 @@ import {
 } from "../modules/workouts/logWorkout.ts";
 import type { HistoryOfTypeDB } from "../modules/history/types.ts";
 import { skipWorkout } from "../modules/workouts/skipWorkout.ts";
+import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.ts";
+import type { Activity } from "../modules/types.ts";
 
 const app = new Hono();
 
@@ -170,6 +172,27 @@ app.post("/skipWorkout", async (ctx: Context) => {
 		error: null,
 		wasSkipped: skipped.wasSkipped,
 	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getPostWorkoutSummary", async (ctx: Context) => {
+	const { userID, workoutID, historyID, activityType } = ctx.req.query();
+	const type = activityType as Activity;
+
+	const rawStats = await getPostWorkoutStats({
+		userID: userID,
+		workoutID: Number(workoutID),
+		historyID: Number(historyID),
+		activityType: type,
+	});
+
+	if (rawStats instanceof Error) {
+		const errResp = getResponseError(rawStats);
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({});
 
 	return ctx.json(resp);
 });
