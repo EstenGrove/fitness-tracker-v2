@@ -18,9 +18,9 @@ import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 
-const groupHistoryByDate = (
-	allLogs: WorkoutHistory[]
-): TRecord<WorkoutHistory> => {
+type GroupedHistory = TRecord<WorkoutHistory>;
+
+const groupHistoryByDate = (allLogs: WorkoutHistory[]): GroupedHistory => {
 	if (!history || !history.length) return {};
 	const grouped = groupByFn<WorkoutHistory>(allLogs, (x) =>
 		formatDate(x.startTime, "db")
@@ -76,6 +76,15 @@ const prepareDate = (date: string) => {
 	return target;
 };
 
+const getGroupedKeys = (grouped: GroupedHistory): string[] => {
+	const dates = Object.keys(grouped).sort((a, b) => {
+		const dateA = new Date(a).getTime();
+		const dateB = new Date(b).getTime();
+		return dateB - dateA;
+	});
+	return dates;
+};
+
 const AllHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
@@ -86,14 +95,10 @@ const AllHistory = () => {
 		startDate,
 		endDate
 	);
-	const all = allHistory?.all || [];
+	const all: WorkoutHistory[] = allHistory?.all || [];
+	const grouped: GroupedHistory = groupHistoryByDate(all);
+	const dates: string[] = getGroupedKeys(grouped);
 	const totalMins = getTotalMins(all as HistoryOfType[]);
-	const grouped: TRecord<WorkoutHistory> = groupHistoryByDate(all);
-	const dates = Object.keys(grouped).sort((a, b) => {
-		const dateA = new Date(a).getTime();
-		const dateB = new Date(b).getTime();
-		return dateB - dateA;
-	});
 
 	const onMenuAction = (action: MenuAction, entry: HistoryOfType) => {
 		setModalType(action);
@@ -125,12 +130,12 @@ const AllHistory = () => {
 						<div className={styles.AllHistory_list}>
 							{dates &&
 								dates.map((date, idx) => {
-									const delay = idx * 650;
+									const delay = idx * 150;
 									const historyForDate = grouped[date];
 									const target = prepareDate(date);
 
 									return (
-										<FadeSlideIn duration={delay} key={delay}>
+										<FadeSlideIn delay={delay} key={delay}>
 											<HistoryByDate
 												key={date + idx}
 												date={target}

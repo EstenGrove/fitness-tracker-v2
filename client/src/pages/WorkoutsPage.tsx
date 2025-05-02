@@ -10,6 +10,7 @@ import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
 import { useNavigate } from "react-router";
 import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
+import { useSkippedWorkouts } from "../hooks/useSkippedWorkouts";
 import { useAllWorkouts } from "../hooks/useAllWorkouts";
 import { TodaysWorkout, Workout } from "../features/workouts/types";
 import ModalLG from "../components/shared/ModalLG";
@@ -193,14 +194,16 @@ const WorkoutsPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useAllWorkouts();
 	const { data, isLoading } = useTodaysWorkouts(targetDate);
+	const { data: skipList } = useSkippedWorkouts(targetDate);
 
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
 
-	const allWorkouts = workoutsList as Workout[];
 	const list = data as TodaysWorkout[];
+	const skipped = skipList as TodaysWorkout[];
 	const todaysWorkouts = sortByCompleted(list);
+	const allWorkouts = workoutsList as Workout[];
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -245,7 +248,11 @@ const WorkoutsPage = () => {
 					<ActionsPanel onAction={selectPanelAction} />
 				</div>
 				<div className={styles.WorkoutsPage_main_list}>
-					<TodaysWorkouts workouts={todaysWorkouts} isLoading={isLoading} />
+					<TodaysWorkouts
+						workouts={todaysWorkouts}
+						skipped={skipped}
+						isLoading={isLoading}
+					/>
 				</div>
 			</div>
 

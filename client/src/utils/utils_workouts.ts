@@ -88,6 +88,7 @@ export interface LogWorkoutValues {
 }
 
 export type TodaysWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
+export type SkippedWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
 export type WorkoutDetailsResp = AsyncResponse<WorkoutDetails>;
 export type AllWorkoutsResp = AsyncResponse<{ workouts: Workout[] }>;
 export type LoggedWorkoutResp = AsyncResponse<{ newLog: HistoryOfType }>;
@@ -175,6 +176,23 @@ const markWorkoutAsDone = async (userID: string, details: MarkAsDoneBody) => {
 const fetchAllWorkouts = async (userID: string): AllWorkoutsResp => {
 	let url = currentEnv.base + workoutApis.getAll;
 	url += "?" + new URLSearchParams({ userID });
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchSkippedWorkouts = async (
+	userID: string,
+	targetDate: string
+): SkippedWorkoutsResp => {
+	let url = currentEnv.base + workoutApis.getSkippedWorkouts;
+	url += "?" + new URLSearchParams({ userID, targetDate });
+
 	try {
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
@@ -341,6 +359,7 @@ const prepareLogWorkout = (userID: string, values: LogWorkoutValues) => {
 export {
 	logWorkout,
 	skipWorkout,
+	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
 	fetchWorkoutDetails,
 	fetchAllWorkouts,

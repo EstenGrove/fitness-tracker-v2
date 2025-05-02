@@ -34,6 +34,11 @@
 	--redBGAlt: rgba(255, 0, 91, 0.2);
 	--altAccentBG: rgba(255, 0, 91, 0.2);
 
+	--fadedRed: rgba(185, 0, 52, 0.8);
+	--fadedGreen: rgba(0, 226, 189, 0.8);
+	--fadedBlue: rgba(0, 124, 255, 0.8);
+	--fadedPink: rgba(255, 0, 102, 0.8);
+
 	/* background-image: */
 	--blueGradient: linear-gradient(
 		to right top,
@@ -401,6 +406,7 @@ input {
 	background-color: rgba(0, 0, 0, 1);
 	backdrop-filter: blur(15px);
 	filter: blur(15px) grayscale(90%);
+	pointer-events: none;
 	z-index: -1;
 }
 

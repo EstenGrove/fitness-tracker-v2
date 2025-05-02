@@ -4,6 +4,7 @@ import { useSwipeDown } from "../../hooks/useSwipeDown";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll";
 import { useBackgroundBlur } from "../../hooks/useBackgroundBlur";
+import { createPortal } from "react-dom";
 
 type Props = {
 	onClose: () => void;
@@ -23,7 +24,7 @@ const ModalSM = ({ onClose, children }: Props) => {
 		onClose
 	);
 
-	return (
+	return createPortal(
 		<div
 			ref={modalRef}
 			className={styles.ModalSM}
@@ -36,7 +37,8 @@ const ModalSM = ({ onClose, children }: Props) => {
 				<div className={styles.DragHandle}></div>
 			</div>
 			<div className={styles.ModalSM_main}>{children}</div>
-		</div>
+		</div>,
+		document.body
 	);
 };
 

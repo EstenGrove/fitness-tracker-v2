@@ -11,10 +11,12 @@ import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
 import {
 	MarkAsDoneValues,
 	useMarkAsDoneMutation,
+	useSkipWorkoutMutation,
 } from "../../features/workouts/todaysWorkoutsApi";
 import {
 	MarkAsDoneBody,
 	prepareMarkAsDoneBody,
+	SkipWorkoutBody,
 } from "../../utils/utils_workouts";
 import { MarkAsDoneParams } from "../../features/types";
 import { isValid } from "date-fns";
@@ -24,6 +26,7 @@ import ModalLG from "../shared/ModalLG";
 import MarkAsDone from "./MarkAsDone";
 import ModalSM from "../shared/ModalSM";
 import SkipWorkout from "./SkipWorkout";
+import UnskipWorkout from "./UnskipWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -47,19 +50,22 @@ const getIsCompleted = (workout: ITodaysWorkout) => {
 	return status === "COMPLETE";
 };
 
+const isSkipped = (workout: ITodaysWorkout) => {
+	const status = workout.workoutStatus;
+	return status === "SKIPPED";
+};
+
 const getBorderStyles = (workout: ITodaysWorkout) => {
 	const isDone = getIsCompleted(workout);
 
 	if (isDone) {
 		return {
 			borderLeft: `5px solid rgba(0, 226, 189, 1)`,
-			// opacity: "0.3",
 		};
 	} else {
 		const tag = workout?.tagColor ?? "var(--todaysBorder)";
 		return {
 			borderLeft: `5px solid ${tag}`,
-			// opacity: "1.0",
 		};
 	}
 };
@@ -76,7 +82,14 @@ const getWorkoutTimes = (workout: ITodaysWorkout) => {
 	return `${start} to ${end}`;
 };
 
-type ModalType = "VIEW" | "EDIT" | "DELETE" | "COMPLETE" | "CANCEL" | "SKIP";
+type ModalType =
+	| "VIEW"
+	| "EDIT"
+	| "DELETE"
+	| "COMPLETE"
+	| "CANCEL"
+	| "SKIP"
+	| "UNSKIP";
 
 enum EModalType {
 	VIEW = "VIEW",
@@ -85,13 +98,15 @@ enum EModalType {
 	COMPLETE = "COMPLETE",
 	CANCEL = "CANCEL",
 	SKIP = "SKIP",
+	UNSKIP = "UNSKIP",
 }
 
 type ItemsProps = {
 	onAction: (action: ModalType) => void;
 	isDone: boolean;
+	wasSkipped: boolean;
 };
-const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
+const MenuItems = ({ onAction, isDone = false, wasSkipped }: ItemsProps) => {
 	return (
 		<>
 			<li
@@ -106,12 +121,22 @@ const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
 			>
 				Edit
 			</li>
-			<li
-				onClick={() => onAction(EModalType.SKIP)}
-				style={{ color: "var(--accentRed)" }}
-			>
-				Skip Workout
-			</li>
+			{wasSkipped ? (
+				<li
+					onClick={() => onAction(EModalType.SKIP)}
+					style={{ color: "var(--accent-yellow)" }}
+				>
+					Un-skip Workout
+				</li>
+			) : (
+				<li
+					onClick={() => onAction(EModalType.SKIP)}
+					style={{ color: "var(--accentRed)" }}
+				>
+					Skip Workout
+				</li>
+			)}
+
 			{isDone ? (
 				<li
 					onClick={() => onAction(EModalType.CANCEL)}
@@ -170,9 +195,11 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const triggerRef = useRef<HTMLDivElement>(null);
 	const { workoutName, activityType, duration, recordedDuration } = workout;
 	const [updateWorkout] = useMarkAsDoneMutation();
+	const [skipWorkout] = useSkipWorkoutMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
 	const isCompleted: boolean = getIsCompleted(workout);
+	const wasSkipped: boolean = isSkipped(workout);
 	const borderStyles = getBorderStyles(workout);
 	const doneStyles = getCompletedStyles(workout);
 	const times = getWorkoutTimes(workout);
@@ -232,9 +259,19 @@ const TodaysWorkout = ({ workout }: Props) => {
 		closeModal();
 	};
 
-	const onSkip = () => {
-		//
-		//
+	const onConfirmSkip = async () => {
+		const { userID, workoutID, activityType } = workout;
+		const date = formatDate(new Date(), "db");
+		const body: SkipWorkoutBody = {
+			userID: userID,
+			workoutID: workoutID,
+			workoutDate: date,
+			activityType: activityType,
+			reason: "Skipped for today only.",
+		};
+
+		await skipWorkout(body).unwrap();
+		closeModal();
 	};
 
 	return (
@@ -260,7 +297,11 @@ const TodaysWorkout = ({ workout }: Props) => {
 							triggerRef={triggerRef}
 							usePortal={true}
 						>
-							<MenuItems isDone={isCompleted} onAction={onAction} />
+							<MenuItems
+								isDone={isCompleted}
+								onAction={onAction}
+								wasSkipped={wasSkipped}
+							/>
 						</MenuDropdown>
 					)}
 				</div>
@@ -283,7 +324,12 @@ const TodaysWorkout = ({ workout }: Props) => {
 			)}
 			{modalType === EModalType.SKIP && (
 				<ModalSM onClose={closeModal}>
-					<SkipWorkout onConfirm={onSkip} onCancel={closeModal} />
+					<SkipWorkout onConfirm={onConfirmSkip} onCancel={closeModal} />
+				</ModalSM>
+			)}
+			{modalType === EModalType.UNSKIP && (
+				<ModalSM onClose={closeModal}>
+					<UnskipWorkout onConfirm={onConfirmSkip} onCancel={closeModal} />
 				</ModalSM>
 			)}
 			{modalType === EModalType.EDIT && (

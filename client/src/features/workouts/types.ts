@@ -2,7 +2,11 @@ import { WeekDayToken } from "../../utils/utils_dates";
 import { HistoryOfType } from "../history/types";
 import { Activity, RepeatType } from "../shared/types";
 
-export type WorkoutStatus = "COMPLETE" | "IN-PROGRESS" | "NOT-COMPLETE";
+export type WorkoutStatus =
+	| "COMPLETE"
+	| "IN-PROGRESS"
+	| "NOT-COMPLETE"
+	| "SKIPPED";
 
 export interface Workout {
 	userID: string;

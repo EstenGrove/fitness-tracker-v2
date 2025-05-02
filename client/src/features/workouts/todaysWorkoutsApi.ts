@@ -4,6 +4,7 @@ import { AwaitedResponse, MarkAsDoneParams, UserDateParams } from "../types";
 import { TodaysWorkout, Workout } from "./types";
 import {
 	fetchAllWorkouts,
+	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
 	logWorkout,
 	LogWorkoutParams,
@@ -87,6 +88,19 @@ export const todaysWorkoutsApi = createApi({
 				return { data: workouts || [] };
 			},
 		}),
+		getSkippedWorkouts: builder.query<TodaysWorkout[], UserDateParams>({
+			queryFn: async ({ userID, targetDate }) => {
+				const response = (await fetchSkippedWorkouts(
+					userID,
+					targetDate
+				)) as AwaitedResponse<{
+					workouts: TodaysWorkout[];
+				}>;
+				const workouts = response.Data.workouts as TodaysWorkout[];
+
+				return { data: workouts || [] };
+			},
+		}),
 		logWorkout: builder.mutation<HistoryOfType, LogWorkoutParams>({
 			queryFn: async (params) => {
 				const { userID, newLog } = params;
@@ -118,7 +132,9 @@ export const todaysWorkoutsApi = createApi({
 
 export const {
 	useGetTodaysWorkoutsQuery,
+	useGetSkippedWorkoutsQuery,
 	useMarkAsDoneMutation,
 	useGetAllWorkoutsQuery,
 	useLogWorkoutMutation,
+	useSkipWorkoutMutation,
 } = todaysWorkoutsApi;

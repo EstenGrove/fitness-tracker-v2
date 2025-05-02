@@ -72,6 +72,32 @@ app.get("/getTodaysWorkouts", async (ctx: Context) => {
 	return ctx.json(resp);
 });
 
+app.get("/getSkippedWorkouts", async (ctx: Context) => {
+	const { userID, targetDate } = ctx.req.query();
+
+	const workouts = (await workoutsService.getSkippedWorkouts(
+		userID,
+		targetDate
+	)) as TodaysWorkoutDB[];
+
+	if (workouts instanceof Error) {
+		const errResp = getResponseError(workouts, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const todaysWorkouts: TodaysWorkoutClient[] = workouts?.map((entry) =>
+		normalizeTodaysWorkout(entry)
+	);
+
+	const resp = getResponseOk({
+		workouts: todaysWorkouts,
+	});
+
+	return ctx.json(resp);
+});
+
 app.get("/getWorkoutDetails", async (ctx: Context) => {
 	const { userID, workoutID, activityType } = ctx.req.query();
 

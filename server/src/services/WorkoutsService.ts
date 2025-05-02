@@ -47,6 +47,7 @@ class WorkoutsService {
 				activityType,
 				workoutDate,
 			]);
+			console.log("[RESULTS]:\n\n", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -152,6 +153,20 @@ class WorkoutsService {
 			const results = await this.#db.query(query, [userID, targetDate]);
 			const rows = results?.rows;
 			console.log("results.rows", results.rows);
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getSkippedWorkouts(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_skipped_workouts_for_date(
+				$1,
+				$2
+			) as data`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
 			return rows;
 		} catch (error) {
 			return error;

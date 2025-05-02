@@ -91,6 +91,7 @@ const API_ENDPOINTS = {
 		getSelectedWorkout: "/workouts/getSelectedWorkout",
 		getActiveWorkout: "/workouts/getActiveWorkout",
 		getTodaysWorkouts: "/workouts/getTodaysWorkouts",
+		getSkippedWorkouts: "/workouts/getSkippedWorkouts",
 		endWorkout: "/workouts/endWorkout",
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
