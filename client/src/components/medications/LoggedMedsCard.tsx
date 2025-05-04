@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import styles from "../../css/meds/LoggedMedsCard.module.scss";
+import styles from "../../css/medications/LoggedMedsCard.module.scss";
 import DetailsCard from "../layout/DetailsCard";
 
 type Props = { pillsTakenToday: number; children: ReactNode };

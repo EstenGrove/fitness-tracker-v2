@@ -66,7 +66,17 @@ const API_ENDPOINTS = {
 		getByLogin: "/user/getUserByLogin",
 		getByID: "/user/getUserByID",
 	},
+	stats: {
+		getPostWorkoutStats: "/stats/getPostWorkoutStats",
+		getWeeklyStrengthStats: "/stats/getWeeklyStrengthStats",
+		getWeeklyWalkStats: "/stats/getWeeklyWalkStats",
+		getWeeklyCardioStats: "/stats/getWeeklyCardioStats",
+		getWeeklyStretchStats: "/stats/getWeeklyStretchStats",
+		getWeeklyTimedStats: "/stats/getWeeklyTimedStats",
+		getWeeklyOtherStats: "/stats/getWeeklyOtherStats",
+	},
 	workouts: {
+		skipWorkout: "/workouts/skipWorkout",
 		logWorkout: "/workouts/logWorkout",
 		getAll: "/workouts/getAllWorkouts",
 		getOpen: "/workouts/getOpenWorkouts",
@@ -81,6 +91,7 @@ const API_ENDPOINTS = {
 		getSelectedWorkout: "/workouts/getSelectedWorkout",
 		getActiveWorkout: "/workouts/getActiveWorkout",
 		getTodaysWorkouts: "/workouts/getTodaysWorkouts",
+		getSkippedWorkouts: "/workouts/getSkippedWorkouts",
 		endWorkout: "/workouts/endWorkout",
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
@@ -122,6 +133,7 @@ const API_ENDPOINTS = {
 export const {
 	auth: authApis,
 	user: userApis,
+	stats: statsApis,
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,

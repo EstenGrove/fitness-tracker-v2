@@ -2,35 +2,65 @@
 @import "../../sass/mixins";
 @import "../../sass/custom";
 
-.LogMedication {
+.TodaysDoses {
 	width: 100%;
-	// @include fill_container;
-	min-height: auto;
-	padding: 2rem;
-	border-radius: 1rem;
-	border: $borderLight;
-	// background-color: $foreground;
 
-	&_name {
-		font-size: 2.5rem;
-		color: $text1;
+	&_summary {
+		font-size: 1.5rem;
 		text-align: center;
-		margin-bottom: 4rem;
+		margin-bottom: 1rem;
 	}
-	&_takeAmount {
+
+	&_showMore {
 		width: 100%;
-		@include colCenter();
-		margin: 1rem 0;
+		@include flex_row(center, flex-start);
+		margin-bottom: 2rem;
+
+		&_btn {
+			color: $accentBlue;
+			font-size: 1.4rem;
+			background-color: transparent;
+			outline: none;
+			border: none;
+		}
+	}
+
+	&_title {
+		width: 100%;
+		@include flex_row(space-between, center);
+		font-size: 1.5rem;
+		font-weight: 600;
+		padding: 0 2px;
 		margin-top: 4rem;
-		font-size: 1.4rem;
-		color: $text3;
+		margin-bottom: 0.3rem;
+
+		&_label {
+			color: $text3;
+		}
+		&_count {
+			color: $text2;
+		}
 	}
-	&_actions {
+
+	&_logs {
 		width: 100%;
-		height: auto;
-		@include rowCenter();
-		gap: 0 2rem;
-		margin-top: 2rem;
+		list-style: none;
+		@include colCenter();
+		gap: 1rem 0;
+	}
+}
+
+.NoDoses {
+	width: 100%;
+	padding: 2rem 0;
+	@include rowCenter();
+	gap: 0 0.5rem;
+	font-size: 1.6rem;
+
+	&_icon {
+		width: 2rem;
+		height: 2rem;
+		fill: $accentRed;
 	}
 }
 

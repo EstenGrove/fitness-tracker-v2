@@ -4,16 +4,25 @@ import { AwaitedResponse, MarkAsDoneParams, UserDateParams } from "../types";
 import { TodaysWorkout, Workout } from "./types";
 import {
 	fetchAllWorkouts,
+	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
+	logWorkout,
+	LogWorkoutParams,
 	markWorkoutAsDone,
+	skipWorkout,
+	SkipWorkoutParams,
 	WorkoutSet,
 } from "../../utils/utils_workouts";
-import { WorkoutHistory } from "../history/types";
+import { HistoryOfType, WorkoutHistory } from "../history/types";
 import { Effort } from "../shared/types";
 
 export interface MarkAsDonePayload {
 	updatedWorkout: TodaysWorkout;
 	history: WorkoutHistory[];
+}
+
+export interface SkippedResp {
+	wasSkipped: boolean;
 }
 
 export interface MarkAsDoneValues {
@@ -27,6 +36,10 @@ export interface MarkAsDoneValues {
 	miles: number;
 	pace: number;
 	exercise: string;
+}
+
+export interface LoggedWorkoutResponse {
+	newLog: HistoryOfType;
 }
 
 export const todaysWorkoutsApi = createApi({
@@ -75,11 +88,53 @@ export const todaysWorkoutsApi = createApi({
 				return { data: workouts || [] };
 			},
 		}),
+		getSkippedWorkouts: builder.query<TodaysWorkout[], UserDateParams>({
+			queryFn: async ({ userID, targetDate }) => {
+				const response = (await fetchSkippedWorkouts(
+					userID,
+					targetDate
+				)) as AwaitedResponse<{
+					workouts: TodaysWorkout[];
+				}>;
+				const workouts = response.Data.workouts as TodaysWorkout[];
+
+				return { data: workouts || [] };
+			},
+		}),
+		logWorkout: builder.mutation<HistoryOfType, LogWorkoutParams>({
+			queryFn: async (params) => {
+				const { userID, newLog } = params;
+				const response = (await logWorkout(
+					userID,
+					newLog
+				)) as AwaitedResponse<LoggedWorkoutResponse>;
+				const data = response.Data as LoggedWorkoutResponse;
+
+				return { data: data.newLog };
+			},
+			invalidatesTags: ["TodaysWorkouts"],
+		}),
+		skipWorkout: builder.mutation<SkippedResp, SkipWorkoutParams>({
+			queryFn: async (params) => {
+				const { userID } = params;
+				const response = (await skipWorkout(
+					userID,
+					params
+				)) as AwaitedResponse<SkippedResp>;
+				const data = response.Data as SkippedResp;
+
+				return { data };
+			},
+			invalidatesTags: ["TodaysWorkouts"],
+		}),
 	}),
 });
 
 export const {
 	useGetTodaysWorkoutsQuery,
+	useGetSkippedWorkoutsQuery,
 	useMarkAsDoneMutation,
 	useGetAllWorkoutsQuery,
+	useLogWorkoutMutation,
+	useSkipWorkoutMutation,
 } = todaysWorkoutsApi;

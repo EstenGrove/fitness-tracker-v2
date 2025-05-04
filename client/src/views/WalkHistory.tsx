@@ -1,33 +1,30 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/WalkHistory.module.scss";
-import { useSelector } from "react-redux";
-import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
+import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	HistoryOfType,
 	WalkHistory as WalkLog,
 } from "../features/history/types";
 import { isEmptyArray } from "../utils/utils_misc";
-import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { useState } from "react";
 import { EMenuAction } from "../features/types";
-import ModalLG from "../components/shared/ModalLG";
 import { getTotalMins } from "../utils/utils_history";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
+import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const WalkHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
-		userID: currentUser.userID,
+	const { data, isLoading } = useHistoryForRangeAndType<WalkLog>({
+		startDate: startDate,
+		endDate: endDate,
 		activityType: "Walk",
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
 	});
 	const history = data as WalkLog[];
 	const hasHistory = !isEmptyArray(history);
@@ -54,13 +51,17 @@ const WalkHistory = () => {
 			{hasHistory && (
 				<div className={styles.WalkHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<WalkHistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<WalkHistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

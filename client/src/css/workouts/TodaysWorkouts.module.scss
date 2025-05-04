@@ -11,6 +11,7 @@
 		@include flex_row(space-between, center);
 
 		&_title {
+			@include flex_row(flex-start, center);
 			font-size: 1.6rem;
 			color: $text3;
 		}
@@ -31,6 +32,90 @@
 		padding: 4rem 0;
 		padding-top: 1rem;
 		@include colCenter();
+		align-items: stretch;
 		gap: 0.5rem 0;
+		// flex-basis: auto;
+	}
+}
+
+.DoneCount {
+	color: $text2;
+	font-size: 1.4rem;
+	margin-left: 0.5rem;
+	letter-spacing: 1.5px;
+	font-weight: 400;
+}
+
+.Counts {
+	width: max-content;
+	color: $text2;
+	@include flex_row(flex-start, center);
+	font-size: 1.4rem;
+	margin-left: 0.5rem;
+	letter-spacing: 1.5px;
+	font-weight: 400;
+
+	&_skipped {
+		color: $accentRed;
+	}
+	&_done {
+		color: $accentGreen;
+	}
+}
+
+.Pills {
+	width: max-content;
+	color: $text2;
+	@include flex_row(flex-start, center);
+	gap: 0 5px;
+	font-size: 1.4rem;
+	margin-left: 0.5rem;
+	letter-spacing: 1.5px;
+	font-weight: 400;
+	overflow-x: hidden;
+}
+.PillTotal {
+	height: 2rem;
+	border-radius: 2rem;
+	background-color: $text2;
+	color: $text1;
+	font-size: 1.2rem;
+	font-weight: 400;
+	letter-spacing: 1px;
+	@include rowCenter();
+	cursor: pointer;
+	padding: 0 0.65rem;
+	white-space: nowrap;
+	transition: max-width 0.3s ease;
+	overflow: hidden;
+	max-width: 2.5rem;
+
+	&:hover,
+	&:focus {
+		max-width: 10rem; // enough to show full label
+	}
+
+	.PillText {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+	}
+
+	.PillLabel {
+		opacity: 0;
+		max-width: 0;
+		color: var(--blueGrey400);
+		color: #fff;
+		overflow: hidden;
+		transition-delay: 300ms;
+		transition: opacity 0.3s ease, max-width 0.3s ease;
+	}
+
+	&:hover .PillLabel,
+	&:focus .PillLabel {
+		opacity: 1;
+		max-width: 100px; // enough to reveal the text label
+		margin-left: 2px;
 	}
 }

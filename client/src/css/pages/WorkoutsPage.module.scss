@@ -6,7 +6,10 @@
 	@include fill_container;
 
 	&_header {
-		position: relative;
+		position: sticky;
+		top: 0;
+		left: 0;
+		z-index: 10;
 		width: 100%;
 		gap: 0 1rem;
 	}
@@ -22,6 +25,11 @@
 		}
 		&_list {
 			width: 100%;
+
+			&_done {
+				width: 100%;
+				@include rowCenter();
+			}
 		}
 	}
 }
@@ -207,4 +215,16 @@ $bubbleColor: $text2;
 		// fill: $text3;
 		fill: $bubbleColor;
 	}
+}
+
+.AllDone {
+	width: max-content;
+	font-size: 1.5rem;
+	color: $accentGreen;
+	@include rowCenter();
+	text-align: center;
+	padding: 0.3rem 1rem;
+	border-radius: 5rem;
+	border: 1px solid $accentGreen;
+	background-color: var(--greenBG);
 }

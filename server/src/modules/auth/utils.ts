@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import type { JWTAccessPayload, JWTRefreshPayload } from "./types.ts";
+import type { Context } from "hono";
+import { setCookie } from "hono/cookie";
+import { isLocalEnv } from "../../utils/env.ts";
 dotenv.config();
 
 const ACCESS_TOKEN = {
@@ -45,6 +48,26 @@ const verifyRefreshToken = (token: string) => {
 	});
 };
 
+const getUserIDFromToken = async (token: string) => {
+	try {
+		const decoded = (await verifyAccessToken(token)) as { userID: string };
+		console.log("decoded", decoded);
+		return decoded.userID;
+	} catch (error) {
+		return null;
+	}
+};
+
+const setAccessToken = (ctx: Context, accessToken: string) => {
+	const isSecure = isLocalEnv ? false : true;
+	setCookie(ctx, "access_token", accessToken, {
+		httpOnly: true,
+		path: "/",
+		secure: isSecure,
+		sameSite: "Strict",
+	});
+};
+
 export {
 	ACCESS_TOKEN,
 	REFRESH_TOKEN,
@@ -52,4 +75,6 @@ export {
 	generateRefreshToken,
 	verifyAccessToken,
 	verifyRefreshToken,
+	getUserIDFromToken,
+	setAccessToken,
 };

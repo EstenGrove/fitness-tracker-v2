@@ -1,6 +1,7 @@
 import { AsyncResponse } from "../features/types";
 import { CurrentSession, CurrentUser } from "../features/user/types";
 import { apiEndpoints, currentEnv, authApis, userApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
 
 export type UserResponse = {
 	error: string | null;
@@ -18,15 +19,22 @@ export interface UserExistsResponse {
 	userNotFound: boolean;
 	invalidCreds: boolean;
 }
+export interface AuthRefreshResponse {
+	currentUser: CurrentUser | null;
+	currentSession: CurrentSession | null;
+	token: string | null;
+	error: string | null;
+}
 
 export type LoginResp = AsyncResponse<LoginResponse>;
 export type UserExistsResp = AsyncResponse<UserExistsResponse>;
+export type AuthRefreshResp = AsyncResponse<AuthRefreshResponse>;
 
 const login = async (username: string, password: string): LoginResp => {
 	const url = currentEnv.base + authApis.login;
 
 	try {
-		const request = await fetch(url, {
+		const request = await fetchWithAuth(url, {
 			method: "POST",
 			body: JSON.stringify({
 				username,
@@ -46,13 +54,29 @@ const logout = async (userID: string, sessionID: string) => {
 	url += "&" + new URLSearchParams({ sessionID });
 
 	try {
-		const request = await fetch(url, {
+		const request = await fetchWithAuth(url, {
 			method: "POST",
 			body: JSON.stringify({
 				userID,
 				sessionID,
 			}),
 		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const getRefreshAuth = async (userID?: string): AuthRefreshResp => {
+	let url = currentEnv.base + authApis.refresh;
+
+	if (userID) {
+		url += "?" + new URLSearchParams({ userID });
+	}
+
+	try {
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {
@@ -111,4 +135,11 @@ const fetchUserByID = async (userID: string): AsyncResponse<UserResponse> => {
 	}
 };
 
-export { logout, login, fetchUserByLogin, fetchUserByID, fetchUserExists };
+export {
+	logout,
+	login,
+	getRefreshAuth,
+	fetchUserByLogin,
+	fetchUserByID,
+	fetchUserExists,
+};

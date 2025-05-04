@@ -1,0 +1,39 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.InfoBanner {
+	width: 100%;
+	padding: 1rem 1.5rem;
+	border-radius: 1rem;
+	border: 1px solid $borderColor;
+	@include flex_row(flex-start, center);
+	gap: 0 1rem;
+
+	&_wrapper {
+		width: 2rem;
+		height: 100%;
+		@include colCenter();
+		font-size: 2rem;
+
+		&_icon {
+			width: 3.5rem;
+			height: 3.5rem;
+			fill: $accentGreen;
+		}
+	}
+	&_content {
+		width: calc(100% - 4rem);
+		height: 100%;
+		@include flex_col(flex-start, flex-start);
+
+		&_title {
+			font-size: 1.6rem;
+			font-weight: 800;
+		}
+		&_msg {
+			font-size: 1.3rem;
+			font-weight: 300;
+		}
+	}
+}

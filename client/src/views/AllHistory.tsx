@@ -1,12 +1,5 @@
-import { useSelector } from "react-redux";
 import styles from "../css/views/AllHistory.module.scss";
-import { useGetHistoryForRangeQuery } from "../features/history/historyApi";
-import { selectCurrentUser } from "../features/user/userSlice";
-import {
-	AllHistory as AllHistoryLogs,
-	HistoryOfType,
-	WorkoutHistory,
-} from "../features/history/types";
+import { HistoryOfType, WorkoutHistory } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { useState } from "react";
 import { getTotalMins } from "../utils/utils_history";
@@ -18,19 +11,20 @@ import {
 import { groupByFn, TRecord } from "../utils/utils_misc";
 import { EMenuAction } from "../features/types";
 import { parseISO } from "date-fns";
+import { useHistoryForRange } from "../hooks/useHistoryForRange";
 import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
-const groupHistoryByDate = (
-	allLogs: WorkoutHistory[]
-): TRecord<WorkoutHistory> => {
+type GroupedHistory = TRecord<WorkoutHistory>;
+
+const groupHistoryByDate = (allLogs: WorkoutHistory[]): GroupedHistory => {
 	if (!history || !history.length) return {};
 	const grouped = groupByFn<WorkoutHistory>(allLogs, (x) =>
 		formatDate(x.startTime, "db")
 	);
-	console.log("grouped", grouped);
 
 	return grouped;
 };
@@ -82,27 +76,29 @@ const prepareDate = (date: string) => {
 	return target;
 };
 
-const AllHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
-	const [modalType, setModalType] = useState<MenuAction | null>(null);
-	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
-		null
-	);
-	const { data, isLoading } = useGetHistoryForRangeQuery({
-		userID: currentUser.userID,
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
-	});
-	const allHistory = data as AllHistoryLogs;
-	const all = allHistory?.all || [];
-	const totalMins = getTotalMins(all as HistoryOfType[]);
-	const grouped: TRecord<WorkoutHistory> = groupHistoryByDate(all);
+const getGroupedKeys = (grouped: GroupedHistory): string[] => {
 	const dates = Object.keys(grouped).sort((a, b) => {
 		const dateA = new Date(a).getTime();
 		const dateB = new Date(b).getTime();
 		return dateB - dateA;
 	});
+	return dates;
+};
+
+const AllHistory = () => {
+	const { startDate, endDate } = getWeekStartAndEnd();
+	const [modalType, setModalType] = useState<MenuAction | null>(null);
+	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
+		null
+	);
+	const { data: allHistory, isLoading } = useHistoryForRange(
+		startDate,
+		endDate
+	);
+	const all: WorkoutHistory[] = allHistory?.all || [];
+	const grouped: GroupedHistory = groupHistoryByDate(all);
+	const dates: string[] = getGroupedKeys(grouped);
+	const totalMins = getTotalMins(all as HistoryOfType[]);
 
 	const onMenuAction = (action: MenuAction, entry: HistoryOfType) => {
 		setModalType(action);
@@ -134,16 +130,19 @@ const AllHistory = () => {
 						<div className={styles.AllHistory_list}>
 							{dates &&
 								dates.map((date, idx) => {
+									const delay = idx * 150;
 									const historyForDate = grouped[date];
 									const target = prepareDate(date);
 
 									return (
-										<HistoryByDate
-											key={date + idx}
-											date={target}
-											history={historyForDate as HistoryOfType[]}
-											onMenuAction={onMenuAction}
-										/>
+										<FadeSlideIn delay={delay} key={delay}>
+											<HistoryByDate
+												key={date + idx}
+												date={target}
+												history={historyForDate as HistoryOfType[]}
+												onMenuAction={onMenuAction}
+											/>
+										</FadeSlideIn>
 									);
 								})}
 						</div>

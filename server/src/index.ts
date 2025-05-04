@@ -11,14 +11,15 @@ const SERVER = {
 	port: Number(process.env.API_PORT),
 };
 
+const corsConfig = {
+	origin: "http://192.168.0.196:5175",
+	credentials: true,
+};
+
 const app = new Hono().basePath("/api/v1");
 
 app.use(logger());
-app.use(cors());
-
-app.get("/", (c) => {
-	return c.text("Hello Hono!");
-});
+app.use(cors(corsConfig));
 
 app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);

@@ -1,6 +1,6 @@
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/workouts/TodaysWorkout.module.scss";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
@@ -11,17 +11,22 @@ import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
 import {
 	MarkAsDoneValues,
 	useMarkAsDoneMutation,
+	useSkipWorkoutMutation,
 } from "../../features/workouts/todaysWorkoutsApi";
 import {
 	MarkAsDoneBody,
 	prepareMarkAsDoneBody,
+	SkipWorkoutBody,
 } from "../../utils/utils_workouts";
 import { MarkAsDoneParams } from "../../features/types";
+import { isValid } from "date-fns";
 import MenuDropdown from "../shared/MenuDropdown";
 import ViewWorkout from "./ViewWorkout";
 import ModalLG from "../shared/ModalLG";
 import MarkAsDone from "./MarkAsDone";
-import { isValid } from "date-fns";
+import ModalSM from "../shared/ModalSM";
+import SkipWorkout from "./SkipWorkout";
+import UnskipWorkout from "./UnskipWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -45,18 +50,26 @@ const getIsCompleted = (workout: ITodaysWorkout) => {
 	return status === "COMPLETE";
 };
 
+const isSkipped = (workout: ITodaysWorkout) => {
+	const status = workout.workoutStatus;
+	return status === "SKIPPED";
+};
+
 const getBorderStyles = (workout: ITodaysWorkout) => {
 	const isDone = getIsCompleted(workout);
+	const wasSkipped = isSkipped(workout);
 
-	if (isDone) {
-		return {
-			borderLeft: `5px solid rgba(0, 226, 189, 1)`,
-		};
-	} else {
-		const tag = workout?.tagColor ?? "var(--todaysBorder)";
-		return {
-			borderLeft: `5px solid ${tag}`,
-		};
+	switch (true) {
+		case isDone: {
+			return `${styles.TodaysWorkout} ${styles.isDone}`;
+		}
+		case wasSkipped: {
+			return `${styles.TodaysWorkout} ${styles.isSkipped}`;
+		}
+
+		default: {
+			return `${styles.TodaysWorkout} ${styles.notComplete}`;
+		}
 	}
 };
 
@@ -72,7 +85,14 @@ const getWorkoutTimes = (workout: ITodaysWorkout) => {
 	return `${start} to ${end}`;
 };
 
-type ModalType = "VIEW" | "EDIT" | "DELETE" | "COMPLETE" | "CANCEL";
+type ModalType =
+	| "VIEW"
+	| "EDIT"
+	| "DELETE"
+	| "COMPLETE"
+	| "CANCEL"
+	| "SKIP"
+	| "UNSKIP";
 
 enum EModalType {
 	VIEW = "VIEW",
@@ -80,13 +100,16 @@ enum EModalType {
 	DELETE = "DELETE",
 	COMPLETE = "COMPLETE",
 	CANCEL = "CANCEL",
+	SKIP = "SKIP",
+	UNSKIP = "UNSKIP",
 }
 
 type ItemsProps = {
 	onAction: (action: ModalType) => void;
 	isDone: boolean;
+	wasSkipped: boolean;
 };
-const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
+const MenuItems = ({ onAction, isDone = false, wasSkipped }: ItemsProps) => {
 	return (
 		<>
 			<li
@@ -101,6 +124,22 @@ const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
 			>
 				Edit
 			</li>
+			{wasSkipped ? (
+				<li
+					onClick={() => onAction(EModalType.SKIP)}
+					style={{ color: "var(--accent-yellow)" }}
+				>
+					Un-skip Workout
+				</li>
+			) : (
+				<li
+					onClick={() => onAction(EModalType.SKIP)}
+					style={{ color: "var(--accentRed)" }}
+				>
+					Skip Workout
+				</li>
+			)}
+
 			{isDone ? (
 				<li
 					onClick={() => onAction(EModalType.CANCEL)}
@@ -114,10 +153,6 @@ const MenuItems = ({ onAction, isDone = false }: ItemsProps) => {
 			<li onClick={() => onAction(EModalType.DELETE)}>Delete</li>
 		</>
 	);
-};
-
-const IsCompleted = () => {
-	return <div className={styles.IsCompleted}>Done</div>;
 };
 
 const TypeBadge = ({ activityType }: { activityType: Activity }) => {
@@ -142,19 +177,63 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 		</button>
 	);
 };
+const CompletedBadge = ({ onClick }: { onClick?: () => void }) => {
+	return (
+		<div className={styles.CompletedBadge} onClick={onClick}>
+			Done
+		</div>
+	);
+};
+const SkippedBadge = ({ onClick }: { onClick?: () => void }) => {
+	return (
+		<div className={styles.SkippedBadge} onClick={onClick}>
+			Skipped
+		</div>
+	);
+};
+const StatusBadge = ({
+	workout,
+	onClick,
+}: {
+	workout: ITodaysWorkout;
+	onClick: () => void;
+}) => {
+	const status = workout.workoutStatus;
+
+	const badges = {
+		COMPLETE: <CompletedBadge />,
+		SKIPPED: <SkippedBadge />,
+		// SKIPPED: <StartButton onClick={onClick} />,
+		"NOT-COMPLETE": <StartButton onClick={onClick} />,
+	};
+	const badge = badges[status as keyof object];
+
+	return <>{badge}</>;
+};
+
+const hasStatus = (workout: ITodaysWorkout) => {
+	const status = workout.workoutStatus;
+	const hasUpdate = ["COMPLETE", "SKIPPED"].includes(status);
+	const hasMins = !!workout.recordedDuration;
+	return hasMins || hasUpdate;
+};
 
 const TodaysWorkout = ({ workout }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const triggerRef = useRef<HTMLDivElement>(null);
 	const { workoutName, activityType, duration, recordedDuration } = workout;
 	const [updateWorkout] = useMarkAsDoneMutation();
+	const [skipWorkout] = useSkipWorkoutMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
-	const isCompleted: boolean = getIsCompleted(workout);
 	const borderStyles = getBorderStyles(workout);
+	const hasUpdate: boolean = hasStatus(workout);
+	const wasSkipped: boolean = isSkipped(workout);
+	const isCompleted: boolean = getIsCompleted(workout);
 	const times = getWorkoutTimes(workout);
 	const durationMins: string = getDurationDesc({
-		duration,
+		duration: duration,
 		recorded: recordedDuration,
 	});
 
@@ -209,8 +288,23 @@ const TodaysWorkout = ({ workout }: Props) => {
 		closeModal();
 	};
 
+	const onConfirmSkip = async () => {
+		const { userID, workoutID, activityType } = workout;
+		const date = formatDate(new Date(), "db");
+		const body: SkipWorkoutBody = {
+			userID: userID,
+			workoutID: workoutID,
+			workoutDate: date,
+			activityType: activityType,
+			reason: "Skipped for today only.",
+		};
+
+		await skipWorkout(body).unwrap();
+		closeModal();
+	};
+
 	return (
-		<div className={styles.TodaysWorkout} style={borderStyles}>
+		<div className={borderStyles}>
 			<div className={styles.TodaysWorkout_top}>
 				<div className={styles.TodaysWorkout_top_badge}>
 					<TypeBadge activityType={activityType} />
@@ -219,7 +313,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 					<h6>{workoutName}</h6>
 					<div className={styles.TodaysWorkout_top_title_about}>{times}</div>
 				</div>
-				<div className={styles.TodaysWorkout_top_more}>
+				<div className={styles.TodaysWorkout_top_more} ref={triggerRef}>
 					<svg
 						onClick={openMenu}
 						className={styles.TodaysWorkout_top_more_icon}
@@ -227,8 +321,16 @@ const TodaysWorkout = ({ workout }: Props) => {
 						<use xlinkHref={`${sprite}#icon-dots-three-horizontal`}></use>
 					</svg>
 					{showMenu && (
-						<MenuDropdown closeMenu={closeMenu}>
-							<MenuItems isDone={isCompleted} onAction={onAction} />
+						<MenuDropdown
+							closeMenu={closeMenu}
+							triggerRef={triggerRef}
+							usePortal={true}
+						>
+							<MenuItems
+								isDone={isCompleted}
+								onAction={onAction}
+								wasSkipped={wasSkipped}
+							/>
 						</MenuDropdown>
 					)}
 				</div>
@@ -237,8 +339,8 @@ const TodaysWorkout = ({ workout }: Props) => {
 				<div className={styles.TodaysWorkout_bottom_times}>
 					<span>{durationMins}</span>
 				</div>
-				{isCompleted ? (
-					<IsCompleted />
+				{hasUpdate ? (
+					<StatusBadge workout={workout} onClick={goToStartWorkout} />
 				) : (
 					<StartButton onClick={goToStartWorkout} />
 				)}
@@ -248,6 +350,16 @@ const TodaysWorkout = ({ workout }: Props) => {
 				<ModalLG onClose={closeModal}>
 					<ViewWorkout workout={workout} onClose={closeModal} />
 				</ModalLG>
+			)}
+			{modalType === EModalType.SKIP && (
+				<ModalSM onClose={closeModal}>
+					<SkipWorkout onConfirm={onConfirmSkip} onCancel={closeModal} />
+				</ModalSM>
+			)}
+			{modalType === EModalType.UNSKIP && (
+				<ModalSM onClose={closeModal}>
+					<UnskipWorkout onConfirm={onConfirmSkip} onCancel={closeModal} />
+				</ModalSM>
 			)}
 			{modalType === EModalType.EDIT && (
 				<ModalLG onClose={closeModal}>

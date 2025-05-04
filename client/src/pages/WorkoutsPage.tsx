@@ -5,19 +5,18 @@ import sprite3 from "../assets/icons/dashboard.svg";
 import styles from "../css/pages/WorkoutsPage.module.scss";
 import { ReactNode, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-import {
-	useGetAllWorkoutsQuery,
-	useGetTodaysWorkoutsQuery,
-} from "../features/workouts/todaysWorkoutsApi";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { formatDate } from "../utils/utils_dates";
+import { useNavigate } from "react-router";
+import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
+import { useSkippedWorkouts } from "../hooks/useSkippedWorkouts";
+import { useAllWorkouts } from "../hooks/useAllWorkouts";
 import { TodaysWorkout, Workout } from "../features/workouts/types";
 import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
-import { useNavigate } from "react-router";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -165,22 +164,48 @@ const WorkoutHeader = ({
 	);
 };
 
+const sortByCompleted = (workouts: TodaysWorkout[]) => {
+	if (!workouts || !workouts.length) return [];
+
+	const isDone = (workout: TodaysWorkout) => {
+		const status = workout.workoutStatus;
+
+		switch (status) {
+			case "COMPLETE":
+				return 1;
+			case "IN-PROGRESS":
+				return 1.5;
+			case "NOT-COMPLETE":
+				return 0;
+			case "SKIPPED":
+				return 2;
+
+			default:
+				return 0;
+		}
+	};
+
+	return [...workouts]?.sort((a, b) => {
+		return isDone(a) - isDone(b);
+	});
+};
+
 const WorkoutsPage = () => {
 	const navigate = useNavigate();
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
-	const { data: workoutsList } = useGetAllWorkoutsQuery({
-		userID: currentUser.userID,
-	});
-	const { data, isLoading } = useGetTodaysWorkoutsQuery({
-		userID: currentUser.userID,
-		targetDate: targetDate,
-	});
-	const allWorkouts = workoutsList as Workout[];
-	const todaysWorkouts = data as TodaysWorkout[];
+	const { data: workoutsList } = useAllWorkouts();
+	const { data, isLoading } = useTodaysWorkouts(targetDate);
+	const { data: skipList } = useSkippedWorkouts(targetDate);
+
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
+
+	const list = data as TodaysWorkout[];
+	const skipped = skipList as TodaysWorkout[];
+	const todaysWorkouts = sortByCompleted(list);
+	const allWorkouts = workoutsList as Workout[];
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -225,7 +250,11 @@ const WorkoutsPage = () => {
 					<ActionsPanel onAction={selectPanelAction} />
 				</div>
 				<div className={styles.WorkoutsPage_main_list}>
-					<TodaysWorkouts workouts={todaysWorkouts} isLoading={isLoading} />
+					<TodaysWorkouts
+						workouts={todaysWorkouts}
+						skipped={skipped}
+						isLoading={isLoading}
+					/>
 				</div>
 			</div>
 

@@ -1,0 +1,11 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.FadeSlideIn {
+	position: relative;
+	width: auto;
+	height: auto;
+	will-change: opacity;
+	z-index: 1;
+}

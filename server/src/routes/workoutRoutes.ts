@@ -2,6 +2,8 @@ import { Hono, type Context } from "hono";
 import { getResponseError, getResponseOk } from "../utils/api.ts";
 import { workoutsService } from "../services/index.ts";
 import type {
+	LogWorkoutBody,
+	SkipWorkoutBody,
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
 	Workout,
@@ -11,6 +13,14 @@ import type {
 import { normalizeTodaysWorkout } from "../modules/workouts/todaysWorkouts.ts";
 import { normalizeWorkoutDetails } from "../modules/workouts/workoutDetails.ts";
 import { normalizeWorkouts } from "../modules/workouts/workouts.ts";
+import {
+	logWorkout,
+	normalizeWorkoutLog,
+} from "../modules/workouts/logWorkout.ts";
+import type { HistoryOfTypeDB } from "../modules/history/types.ts";
+import { skipWorkout } from "../modules/workouts/skipWorkout.ts";
+import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.ts";
+import type { Activity } from "../modules/types.ts";
 
 const app = new Hono();
 
@@ -40,6 +50,32 @@ app.get("/getTodaysWorkouts", async (ctx: Context) => {
 	const { userID, targetDate } = ctx.req.query();
 
 	const workouts = (await workoutsService.getTodaysWorkouts(
+		userID,
+		targetDate
+	)) as TodaysWorkoutDB[];
+
+	if (workouts instanceof Error) {
+		const errResp = getResponseError(workouts, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const todaysWorkouts: TodaysWorkoutClient[] = workouts?.map((entry) =>
+		normalizeTodaysWorkout(entry)
+	);
+
+	const resp = getResponseOk({
+		workouts: todaysWorkouts,
+	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getSkippedWorkouts", async (ctx: Context) => {
+	const { userID, targetDate } = ctx.req.query();
+
+	const workouts = (await workoutsService.getSkippedWorkouts(
 		userID,
 		targetDate
 	)) as TodaysWorkoutDB[];
@@ -112,6 +148,77 @@ app.post("/markWorkoutAsDone", async (ctx: Context) => {
 		updatedWorkout: todaysWorkout,
 		history: [],
 	});
+
+	return ctx.json(resp);
+});
+
+app.post("/logWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<LogWorkoutBody>();
+
+	const preparedLog = {
+		...body,
+		duration: body.workoutLength,
+	};
+
+	const rawLog = (await logWorkout(preparedLog)) as HistoryOfTypeDB;
+
+	if (rawLog instanceof Error) {
+		const errResp = getResponseError(rawLog, {
+			newLog: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const newLog = normalizeWorkoutLog(rawLog);
+
+	console.log("newLog", newLog);
+
+	const resp = getResponseOk({
+		newLog: newLog,
+	});
+
+	return ctx.json(resp);
+});
+
+app.post("/skipWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<SkipWorkoutBody>();
+	const { userID } = body;
+
+	const skipped = await skipWorkout(userID, body);
+
+	if (skipped.error) {
+		const errResp = getResponseError(skipped.error, {
+			error: skipped.error,
+			wasSkipped: false,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		error: null,
+		wasSkipped: skipped.wasSkipped,
+	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getPostWorkoutSummary", async (ctx: Context) => {
+	const { userID, workoutID, historyID, activityType } = ctx.req.query();
+	const type = activityType as Activity;
+
+	const rawStats = await getPostWorkoutStats({
+		userID: userID,
+		workoutID: Number(workoutID),
+		historyID: Number(historyID),
+		activityType: type,
+	});
+
+	if (rawStats instanceof Error) {
+		const errResp = getResponseError(rawStats);
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({});
 
 	return ctx.json(resp);
 });

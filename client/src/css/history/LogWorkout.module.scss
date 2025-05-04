@@ -12,7 +12,6 @@
 		color: $text1;
 	}
 }
-
 .SelectWorkoutStep {
 	width: 100%;
 	padding: 0 1rem;
@@ -20,17 +19,41 @@
 
 	&_filters {
 		width: 100%;
-		@include flex_row(flex-start, center, wrap);
-		gap: 0.5rem 1rem;
+		@include flex_row(center, center, wrap);
+		gap: 1rem 2rem;
 		margin-bottom: 2rem;
+
+		&_item {
+			font-size: 1.3rem;
+			@include colCenter();
+			color: $text2;
+		}
 	}
 
 	&_options {
 		width: 100%;
 		list-style: none;
+		padding: 0 1rem;
+		@include colCenter();
+		gap: 0.5rem 0;
 	}
 }
+.ActivityItem {
+	width: 7rem;
+	height: 5rem;
+	border-radius: 1rem;
+	border: $borderLight;
+	background-color: $foreground;
+	font-size: 1.4rem;
+	outline: none;
+	@include colCenter();
 
+	&_icon {
+		width: 2.5rem;
+		height: 2.5rem;
+		fill: $text3;
+	}
+}
 .FilterPill {
 	padding: 0.3rem 0.6rem;
 	border-radius: 5rem;
@@ -49,11 +72,13 @@
 	height: 3.5rem;
 	padding: 0.4rem 0.5rem;
 	@include flex_row(flex-start, center);
-	border-radius: 5rem;
+	border-radius: 0.5rem;
+	border: $borderLight;
 
 	&_isSelected {
 		width: 3rem;
 		height: 100%;
+		border-color: $accentBlue;
 		@include rowCenter();
 
 		&_icon {
@@ -94,7 +119,6 @@
 		margin-bottom: 2rem;
 	}
 }
-
 .MoreDetailsStep {
 	width: 100%;
 	height: auto;

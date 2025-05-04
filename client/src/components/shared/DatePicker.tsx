@@ -237,8 +237,11 @@ const DatePicker = ({
 }: Props) => {
 	const [showCalendar, setShowCalendar] = useState<boolean>(false);
 	const selectedDate = useMemo(() => {
-		return formatDate(value, "long");
+		return formatDate(value.toString(), "long");
 	}, [value]);
+
+	console.log("value", value);
+	console.log("selectedDate", selectedDate);
 	const [datePicker, setDatePicker] = useState<DatePickerState>({
 		monthStart: startOfMonth(value).toString(),
 		monthEnd: endOfMonth(value).toString(),

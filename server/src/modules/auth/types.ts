@@ -42,3 +42,10 @@ export interface IsLoggedInDB {
 	date: string;
 	is_logged_in: boolean;
 }
+
+export interface RefreshResponse {
+	currentUser: User;
+	currentSession: Session;
+	token: string;
+}
+export type RefreshResp = Promise<RefreshResponse | unknown>;

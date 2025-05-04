@@ -13,6 +13,7 @@ import Select from "../shared/Select";
 import EditStrengthSets from "../form/EditStrengthSets";
 import TimePicker from "../shared/TimePicker";
 import EditWalkInfo from "../form/EditWalkInfo";
+import EditWorkoutSets from "../form/EditWorkoutSets";
 
 type Props = {
 	workout: TodaysWorkout;
@@ -39,7 +40,7 @@ const getInitialState = (workout: TodaysWorkout): MarkAsDoneValues => {
 	return {
 		startTime: newStart,
 		endTime: newEnd,
-		workoutDate: formatDate(new Date(), "db"),
+		workoutDate: formatDate(new Date().toString(), "long"),
 		duration: workout.duration,
 		effort: "None",
 		steps: 0,
@@ -111,12 +112,18 @@ const ActivityDetails = ({
 			)}
 			{enableSets && (
 				<>
+					{/* WORKOUT SETS (CARDIO, STRETCH, TIMED, & OTHER) */}
 					{showExerciseSetsUI(activityType) && (
 						<div className={styles.MarkAsDone_details_sets}>
-							{/* Exercise sets UI can be added here */}
-							{/* This could include a list of exercises, durations, etc. */}
+							<EditWorkoutSets
+								sets={4}
+								reps={10} // Placeholder, can be adjusted
+								onChange={onSetChange}
+								exercise={values.exercise ?? ""}
+							/>
 						</div>
 					)}
+					{/* STRENGTH SETS */}
 					{showStrengthSetsUI(activityType) && (
 						<div className={styles.MarkAsDone_details_sets}>
 							<label
@@ -130,8 +137,8 @@ const ActivityDetails = ({
 								Workout Sets:
 							</label>
 							<EditStrengthSets
-								sets={1}
-								reps={1} // Placeholder, can be adjusted
+								sets={4}
+								reps={20} // Placeholder, can be adjusted
 								weight={20} // Placeholder, can be adjusted
 								onChange={onSetChange}
 							/>

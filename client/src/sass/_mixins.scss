@@ -80,7 +80,7 @@
 	left: 0;
 	transform: translate(-0%, -0%);
 	width: 100dvw;
-	height: 60dvh;
+	height: 50dvh;
 	border-radius: 2rem 2rem 0 0;
 	border: $borderLight;
 	background-color: $foreground;
@@ -102,7 +102,9 @@
 	display: block;
 	bottom: 0;
 	left: 0;
-	transform: translate(-0%, -0%);
+	// transform: translate(-0%, -0%);
+	transform: translate(-50%, -0%);
+
 	width: 100dvw;
 	height: 90dvh;
 	border-radius: 2rem 2rem 0 0;

@@ -101,7 +101,7 @@ const PillSummary = ({
 	pillsLeft = 13,
 	daysLeft = 11,
 }: Props) => {
-	const to = String(medID);
+	const to = "details/" + medID;
 	const newTitle = addEllipsis(title, 15);
 	const pillLeftCss = getPillsLeftColor({
 		pillsLeft,

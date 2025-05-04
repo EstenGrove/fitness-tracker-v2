@@ -54,6 +54,7 @@
 	&_list {
 		width: 100%;
 		@include colCenter();
+		align-items: stretch;
 		gap: 1rem 0;
 	}
 }

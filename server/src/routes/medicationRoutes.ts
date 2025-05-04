@@ -87,12 +87,15 @@ app.get("/getMedSummaryByDate", async (ctx: Context) => {
 app.post("/logMedication", async (ctx: Context) => {
 	const body = await ctx.req.json<LogMedBody>();
 	const { userID } = body;
+	console.log("body", body);
 
 	// log medication
 	const rawLog = (await medicationsService.logMedication(
 		userID,
 		body
 	)) as MedicationLogDB;
+
+	console.log("rawLog", rawLog);
 
 	if (rawLog instanceof Error) {
 		const errResp = getResponseError(rawLog, {
@@ -102,6 +105,8 @@ app.post("/logMedication", async (ctx: Context) => {
 	}
 
 	const medLog: MedicationLog = normalizeMedLog(rawLog);
+
+	console.log("medlog", medLog);
 	const resp = getResponseOk({
 		newLog: medLog,
 	});

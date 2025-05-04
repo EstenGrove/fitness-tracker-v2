@@ -67,7 +67,7 @@ const LoginForm = ({
 				<button
 					type="button"
 					onClick={onSubmit}
-					disabled={!canSubmit}
+					disabled={!canSubmit || isLoading}
 					className={styles.LoginForm_actions_login}
 				>
 					{isLoading ? "Submitting..." : "Login"}

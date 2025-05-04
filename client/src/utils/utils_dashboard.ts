@@ -1,6 +1,7 @@
 import { DashboardSummary } from "../features/dashboard/types";
 import { AsyncResponse, DateRange } from "../features/types";
 import { dashboardApis, currentEnv } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
 
 export type DashboardSummaryResp = AsyncResponse<DashboardSummary>;
 
@@ -13,7 +14,7 @@ const fetchDashboardSummary = async (
 	url += "&" + new URLSearchParams({ targetDate });
 
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {
@@ -30,7 +31,7 @@ const fetchDashboardSummaryByRange = async (
 	url += "&" + new URLSearchParams({ startDate, endDate });
 
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {

@@ -1,9 +1,6 @@
-import { useSelector } from "react-redux";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/StrengthHistory.module.scss";
-import { formatDate, getWeekStartAndEnd } from "../utils/utils_dates";
-import { selectCurrentUser } from "../features/user/userSlice";
-import { useGetHistoryByRangeAndTypeQuery } from "../features/history/historyApi";
+import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	HistoryOfType,
 	StrengthHistory as StrengthLog,
@@ -15,20 +12,21 @@ import StrengthHistoryEntry from "../components/history/StrengthHistoryEntry";
 import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
 import { getTotalMins } from "../utils/utils_history";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const StrengthHistory = () => {
 	const { startDate, endDate } = getWeekStartAndEnd();
-	const currentUser = useSelector(selectCurrentUser);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useGetHistoryByRangeAndTypeQuery({
-		userID: currentUser.userID,
+	const { data, isLoading } = useHistoryForRangeAndType<StrengthLog>({
+		startDate: startDate,
+		endDate: endDate,
 		activityType: "Strength",
-		startDate: formatDate(startDate, "db"),
-		endDate: formatDate(endDate, "db"),
 	});
+
 	const history = (data || []) as StrengthLog[];
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
@@ -56,13 +54,17 @@ const StrengthHistory = () => {
 			{hasHistory && (
 				<div className={styles.StrengthHistory_list}>
 					{history &&
-						history.map((entry) => {
+						history.map((entry, idx) => {
+							const delay = idx * 650;
+							const key = `${delay}-${idx}`;
 							return (
-								<StrengthHistoryEntry
-									key={entry.historyID}
-									entry={entry}
-									onMenuAction={onMenuAction}
-								/>
+								<FadeSlideIn key={key} duration={delay}>
+									<StrengthHistoryEntry
+										key={entry.historyID}
+										entry={entry}
+										onMenuAction={onMenuAction}
+									/>
+								</FadeSlideIn>
 							);
 						})}
 				</div>

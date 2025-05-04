@@ -4,6 +4,7 @@ import {
 } from "../features/recent-activity/types";
 import { AsyncResponse } from "../features/types";
 import { currentEnv, recentActivityApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
 
 export type ActivitySummaryResp = AsyncResponse<ActivitySummaryFor>;
 
@@ -17,7 +18,7 @@ const fetchRecentActivitySummary = async (
 	url += "&" + new URLSearchParams({ targetDate, rangeType });
 
 	try {
-		const request = await fetch(url);
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {
