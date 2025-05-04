@@ -1,9 +1,9 @@
 import styles from "../css/pages/TrendsPage.module.scss";
-import PageContainer from "../components/layout/PageContainer";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
-import NavArrows from "../components/layout/NavArrows";
 import { useNavigate } from "react-router";
+import NavArrows from "../components/layout/NavArrows";
+import PageContainer from "../components/layout/PageContainer";
 
 const TrendsPage = () => {
 	const navigate = useNavigate();

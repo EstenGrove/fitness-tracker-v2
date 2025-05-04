@@ -173,10 +173,12 @@ const sortByCompleted = (workouts: TodaysWorkout[]) => {
 		switch (status) {
 			case "COMPLETE":
 				return 1;
-			case "NOT-COMPLETE":
-				return 0;
 			case "IN-PROGRESS":
 				return 1.5;
+			case "NOT-COMPLETE":
+				return 0;
+			case "SKIPPED":
+				return 2;
 
 			default:
 				return 0;

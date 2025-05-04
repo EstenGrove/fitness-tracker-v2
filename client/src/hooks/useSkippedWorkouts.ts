@@ -4,6 +4,7 @@ import { useGetSkippedWorkoutsQuery } from "../features/workouts/todaysWorkoutsA
 
 /**
  * Wrapper hook for implementing 'skip' behavior for hook's automated re-fetching
+ * - List of skipped workouts
  */
 
 const useSkippedWorkouts = (targetDate: string) => {

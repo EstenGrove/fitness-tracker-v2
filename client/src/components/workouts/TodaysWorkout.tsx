@@ -57,16 +57,19 @@ const isSkipped = (workout: ITodaysWorkout) => {
 
 const getBorderStyles = (workout: ITodaysWorkout) => {
 	const isDone = getIsCompleted(workout);
+	const wasSkipped = isSkipped(workout);
 
-	if (isDone) {
-		return {
-			borderLeft: `5px solid rgba(0, 226, 189, 1)`,
-		};
-	} else {
-		const tag = workout?.tagColor ?? "var(--todaysBorder)";
-		return {
-			borderLeft: `5px solid ${tag}`,
-		};
+	switch (true) {
+		case isDone: {
+			return `${styles.TodaysWorkout} ${styles.isDone}`;
+		}
+		case wasSkipped: {
+			return `${styles.TodaysWorkout} ${styles.isSkipped}`;
+		}
+
+		default: {
+			return `${styles.TodaysWorkout} ${styles.notComplete}`;
+		}
 	}
 };
 
@@ -152,10 +155,6 @@ const MenuItems = ({ onAction, isDone = false, wasSkipped }: ItemsProps) => {
 	);
 };
 
-const IsCompleted = () => {
-	return <div className={styles.IsCompleted}>Done</div>;
-};
-
 const TypeBadge = ({ activityType }: { activityType: Activity }) => {
 	const { icon, color, bg } = getActivityStyles(activityType);
 	const iconCSS = { fill: color };
@@ -178,15 +177,45 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 		</button>
 	);
 };
+const CompletedBadge = ({ onClick }: { onClick?: () => void }) => {
+	return (
+		<div className={styles.CompletedBadge} onClick={onClick}>
+			Done
+		</div>
+	);
+};
+const SkippedBadge = ({ onClick }: { onClick?: () => void }) => {
+	return (
+		<div className={styles.SkippedBadge} onClick={onClick}>
+			Skipped
+		</div>
+	);
+};
+const StatusBadge = ({
+	workout,
+	onClick,
+}: {
+	workout: ITodaysWorkout;
+	onClick: () => void;
+}) => {
+	const status = workout.workoutStatus;
 
-const getCompletedStyles = (workout: ITodaysWorkout) => {
-	const isDone = getIsCompleted(workout);
+	const badges = {
+		COMPLETE: <CompletedBadge />,
+		SKIPPED: <SkippedBadge />,
+		// SKIPPED: <StartButton onClick={onClick} />,
+		"NOT-COMPLETE": <StartButton onClick={onClick} />,
+	};
+	const badge = badges[status as keyof object];
 
-	if (isDone) {
-		return `${styles.TodaysWorkout} ${styles.isDone}`;
-	} else {
-		return `${styles.TodaysWorkout}`;
-	}
+	return <>{badge}</>;
+};
+
+const hasStatus = (workout: ITodaysWorkout) => {
+	const status = workout.workoutStatus;
+	const hasUpdate = ["COMPLETE", "SKIPPED"].includes(status);
+	const hasMins = !!workout.recordedDuration;
+	return hasMins || hasUpdate;
 };
 
 const TodaysWorkout = ({ workout }: Props) => {
@@ -198,10 +227,10 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const [skipWorkout] = useSkipWorkoutMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
-	const isCompleted: boolean = getIsCompleted(workout);
-	const wasSkipped: boolean = isSkipped(workout);
 	const borderStyles = getBorderStyles(workout);
-	const doneStyles = getCompletedStyles(workout);
+	const hasUpdate: boolean = hasStatus(workout);
+	const wasSkipped: boolean = isSkipped(workout);
+	const isCompleted: boolean = getIsCompleted(workout);
 	const times = getWorkoutTimes(workout);
 	const durationMins: string = getDurationDesc({
 		duration: duration,
@@ -275,7 +304,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 	};
 
 	return (
-		<div className={doneStyles} style={borderStyles}>
+		<div className={borderStyles}>
 			<div className={styles.TodaysWorkout_top}>
 				<div className={styles.TodaysWorkout_top_badge}>
 					<TypeBadge activityType={activityType} />
@@ -310,8 +339,8 @@ const TodaysWorkout = ({ workout }: Props) => {
 				<div className={styles.TodaysWorkout_bottom_times}>
 					<span>{durationMins}</span>
 				</div>
-				{isCompleted ? (
-					<IsCompleted />
+				{hasUpdate ? (
+					<StatusBadge workout={workout} onClick={goToStartWorkout} />
 				) : (
 					<StartButton onClick={goToStartWorkout} />
 				)}

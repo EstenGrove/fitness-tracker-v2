@@ -8,6 +8,13 @@ export type WorkoutStatus =
 	| "NOT-COMPLETE"
 	| "SKIPPED";
 
+export enum EWorkoutStatus {
+	COMPLETE = "COMPLETE",
+	"IN-PROGRESS" = "IN-PROGRESS",
+	"NOT-COMPLETE" = "NOT-COMPLETE",
+	SKIPPED = "SKIPPED",
+}
+
 export interface Workout {
 	userID: string;
 	workoutID: number;

@@ -153,3 +153,49 @@ $icon: calc($size - 30%);
 .isDoneFocused {
 	opacity: 1;
 }
+
+.isDone {
+	opacity: 0.7;
+	border-left: 5px solid rgba(0, 226, 189, 1);
+	transition: opacity 0.3s ease-in-out;
+	&:hover {
+		cursor: pointer;
+		opacity: 1;
+	}
+	&:focus-within {
+		cursor: pointer;
+		opacity: 1;
+	}
+}
+.isSkipped {
+	opacity: 0.4;
+	border-left: 5px solid var(--accent-red);
+	transition: opacity 0.3s ease-in-out;
+	&:hover {
+		cursor: pointer;
+		opacity: 1;
+	}
+	&:focus-within {
+		cursor: pointer;
+		opacity: 1;
+	}
+}
+
+.notComplete {
+	border-left: 5px solid var(--todaysBorder);
+}
+
+.SkippedBadge {
+	padding: 0.2rem 0.4rem;
+	border-radius: 5rem;
+	border: 1px solid rgba(255, 51, 61, 1);
+	background-color: rgba(185, 0, 52, 0.2);
+	color: rgba(255, 51, 61, 1);
+}
+.CompletedBadge {
+	padding: 0.2rem 0.4rem;
+	border-radius: 5rem;
+	border: 1px solid rgba(0, 226, 189, 1);
+	background-color: rgba(0, 226, 189, 0.1);
+	color: rgb(0, 226, 189);
+}

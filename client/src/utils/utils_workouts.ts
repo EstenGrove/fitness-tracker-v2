@@ -7,6 +7,7 @@ import {
 	TodaysWorkout,
 	Workout,
 	WorkoutDetails,
+	WorkoutStatus,
 } from "../features/workouts/types";
 import { currentEnv, workoutApis } from "./utils_env";
 import {
@@ -224,6 +225,15 @@ const skipWorkout = async (
 
 // Utils
 
+const getWorkoutsByStatus = (
+	status: WorkoutStatus,
+	workouts: TodaysWorkout[]
+) => {
+	if (!workouts || !workouts.length) return [];
+
+	return workouts.filter((workout) => workout.workoutStatus == status);
+};
+
 const calculateStartAndEndTimes = (values: {
 	startTime: string;
 	endTime: string;
@@ -368,4 +378,5 @@ export {
 	prepareMarkAsDoneBody,
 	calculateStartAndEndTimes,
 	calculateWalkMetrics,
+	getWorkoutsByStatus,
 };

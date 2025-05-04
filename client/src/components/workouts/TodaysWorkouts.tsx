@@ -1,5 +1,9 @@
 import styles from "../../css/workouts/TodaysWorkouts.module.scss";
-import { TodaysWorkout as ITodaysWorkout } from "../../features/workouts/types";
+import {
+	EWorkoutStatus,
+	TodaysWorkout as ITodaysWorkout,
+} from "../../features/workouts/types";
+import { getWorkoutsByStatus } from "../../utils/utils_workouts";
 import Loader from "../layout/Loader";
 import FadeSlideIn from "../ui/FadeSlideIn";
 import NoData from "../ui/NoData";
@@ -9,7 +13,6 @@ import { useNavigate } from "react-router";
 type Props = {
 	isLoading: boolean;
 	workouts: ITodaysWorkout[];
-	skipped: ITodaysWorkout[];
 };
 
 const getDoneCount = (workouts: ITodaysWorkout[]) => {
@@ -91,13 +94,13 @@ const Totals = ({
 							total={skipped}
 							color="var(--fadedRed)"
 						/>
-						<PillTotal label="Total" total={total + skipped} />
+						<PillTotal label="Total" total={total} />
 					</>
 				) : (
 					<>
 						<PillTotal label="Done" total={done} color="var(--greenBG)" />
 						<PillTotal label="Skipped" total={skipped} color="var(--redBG)" />
-						<PillTotal label="Total" total={total + skipped} />
+						<PillTotal label="Total" total={total} />
 					</>
 				)}
 			</div>
@@ -131,9 +134,16 @@ const Totals = ({
 	);
 };
 
-const TodaysWorkouts = ({ workouts, skipped, isLoading }: Props) => {
+const getSkippedWorkouts = (workouts: ITodaysWorkout[]) => {
+	const skipped = getWorkoutsByStatus(EWorkoutStatus.SKIPPED, workouts);
+
+	return skipped;
+};
+
+const TodaysWorkouts = ({ workouts, isLoading }: Props) => {
 	const navigate = useNavigate();
 	const noWorkouts = !isLoading && (!workouts || !workouts.length);
+	const skipped = getSkippedWorkouts(workouts);
 
 	const goToAll = () => {
 		navigate("all");
@@ -145,7 +155,6 @@ const TodaysWorkouts = ({ workouts, skipped, isLoading }: Props) => {
 				<h3 className={styles.TodaysWorkouts_heading_title}>
 					<span>Today's Workouts</span>
 					<Totals workouts={workouts} skippedWorkouts={skipped} />
-					{/* <DoneCount workouts={workouts} /> */}
 				</h3>
 				<div
 					className={styles.TodaysWorkouts_heading_showAll}
