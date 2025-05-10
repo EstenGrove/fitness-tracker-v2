@@ -218,7 +218,9 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const resp = getResponseOk({});
+	console.log("rawStats", rawStats);
+
+	const resp = getResponseOk(rawStats);
 
 	return ctx.json(resp);
 });

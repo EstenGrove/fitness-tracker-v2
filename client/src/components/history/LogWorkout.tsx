@@ -17,15 +17,15 @@ import {
 	isStrengthType,
 	isWalkType,
 } from "../../utils/utils_activity";
+import { formatDate, formatTime } from "../../utils/utils_dates";
+import { useLogWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
 import Select from "../shared/Select";
 import TimePicker from "../shared/TimePicker";
-import { formatDate, formatTime } from "../../utils/utils_dates";
 import DatePicker from "../shared/DatePicker";
 import MinutesSelector from "../shared/MinutesSelector";
 import EditStrengthSets from "../form/EditStrengthSets";
 import EditWorkoutSets from "../form/EditWorkoutSets";
 import EditWalkInfo from "../form/EditWalkInfo";
-import { useLogWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
 
 type Props = {
 	allWorkouts: Workout[];

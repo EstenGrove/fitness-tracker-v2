@@ -84,6 +84,13 @@ const ActivityDetails = ({
 	onSetChange,
 	onWalkChange,
 }: ActivityDetailsProps) => {
+	const isStrength = showStrengthSetsUI(activityType);
+	const isExercise = showExerciseSetsUI(activityType);
+
+	console.log("isStrength", isStrength);
+	console.log("isExercise", isExercise);
+	console.log("activityType", activityType);
+
 	const handleWalkChange = (name: string, value: string | number) => {
 		const newValues = { ...values, [name]: value };
 		const steps = milesToSteps(Number(value)) || 0;

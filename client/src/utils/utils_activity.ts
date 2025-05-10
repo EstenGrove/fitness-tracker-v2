@@ -62,7 +62,7 @@ const isStrengthType = (type: Activity | string) => {
 };
 const isExerciseType = (type: Activity | string) => {
 	return (
-		type === "Strength" ||
+		type === "Stretch" ||
 		type === "Cardio" ||
 		type === "Timed" ||
 		type === "Other"

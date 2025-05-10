@@ -34,4 +34,13 @@ const getPostWorkoutStats = async (params: PostWorkoutParams) => {
 	}
 };
 
-export { getPostWorkoutStats };
+const getPostWorkoutDetails = async (params: PostWorkoutParams) => {
+	try {
+		const details = await statsService.getPostWorkoutDetails(params);
+		return details;
+	} catch (error) {
+		return error;
+	}
+};
+
+export { getPostWorkoutStats, getPostWorkoutDetails };

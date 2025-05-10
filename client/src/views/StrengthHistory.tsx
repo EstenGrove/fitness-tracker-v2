@@ -1,6 +1,5 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/StrengthHistory.module.scss";
-import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	HistoryOfType,
 	StrengthHistory as StrengthLog,
@@ -14,9 +13,11 @@ import ModalLG from "../components/shared/ModalLG";
 import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 
 const StrengthHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
+	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null

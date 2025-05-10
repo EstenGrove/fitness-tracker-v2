@@ -8,6 +8,26 @@ class StatsService {
 		this.#db = db;
 	}
 
+	async getPostWorkoutDetails(params: PostWorkoutParams) {
+		const { userID, workoutID, activityType } = params;
+		try {
+			const query = `SELECT * FROM get_post_workout_details(
+				$1,
+				$2,
+				$3
+			) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+			]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async getPostWorkoutStrengthStats(params: PostWorkoutParams) {
 		const { userID, workoutID, historyID } = params;
 		const type = "Strength";

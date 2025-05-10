@@ -1,4 +1,10 @@
-export const BASE_URL: string = import.meta.env.VITE_API_BASE;
+const isRemote = Boolean(
+	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE
+);
+
+export const BASE_URL: string = !isRemote
+	? import.meta.env.VITE_API_BASE
+	: import.meta.env.REMOTE_API_BASE;
 export const PORT: number = 3002;
 
 const API_AUTH = {
@@ -47,6 +53,13 @@ const API_AUTH = {
 		password: import.meta.env.VITE_SSL_API_USER_PASSWORD,
 		enableHttps: true,
 	},
+	// RACHELS PLACE
+	remote: {
+		base: import.meta.env.VITE_REMOTE_API_BASE,
+		user: import.meta.env.VITE_API_USER,
+		password: import.meta.env.VITE_API_USER_PASSWORD,
+		enableHttps: import.meta.env.VITE_ENABLE_HTTPS,
+	},
 };
 
 const CURRENT_ENV_KEY = "local";
@@ -67,6 +80,8 @@ const API_ENDPOINTS = {
 		getByID: "/user/getUserByID",
 	},
 	stats: {
+		getPostWorkoutDetails: "/stats/getPostWorkoutDetails",
+		getWorkoutStats: "/stats/getWorkoutStats",
 		getPostWorkoutStats: "/stats/getPostWorkoutStats",
 		getWeeklyStrengthStats: "/stats/getWeeklyStrengthStats",
 		getWeeklyWalkStats: "/stats/getWeeklyWalkStats",
@@ -76,6 +91,7 @@ const API_ENDPOINTS = {
 		getWeeklyOtherStats: "/stats/getWeeklyOtherStats",
 	},
 	workouts: {
+		getLastWorkout: "/workouts/getLastWorkout",
 		skipWorkout: "/workouts/skipWorkout",
 		logWorkout: "/workouts/logWorkout",
 		getAll: "/workouts/getAllWorkouts",
@@ -97,6 +113,7 @@ const API_ENDPOINTS = {
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
 	},
 	history: {
+		getLastWorkout: "/history/getLastWorkout",
 		getByID: "/history/getWorkoutHistoryByID",
 		getByDate: "/history/getWorkoutHistoryByDate",
 		getByRange: "/history/getHistoryByRange",

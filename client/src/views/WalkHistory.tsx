@@ -1,6 +1,5 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/WalkHistory.module.scss";
-import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	HistoryOfType,
 	WalkHistory as WalkLog,
@@ -11,12 +10,14 @@ import { useState } from "react";
 import { EMenuAction } from "../features/types";
 import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const WalkHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
+	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null

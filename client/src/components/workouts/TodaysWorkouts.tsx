@@ -66,7 +66,7 @@ const PillTotal = ({ total, color, label }: PillTotalProps) => {
 };
 
 const pillOpts = {
-	usePills: true,
+	usePills: false,
 	useFaded: true,
 };
 
@@ -113,12 +113,8 @@ const Totals = ({
 				{done}
 			</span>
 			<span>|</span>
-			<span
-				id="total"
-				style={countStyles.total}
-				title={`${total + skipped} total`}
-			>
-				{total + skipped}
+			<span id="total" style={countStyles.total} title={`${total} total`}>
+				{total}
 			</span>
 			)
 			{skipped > 0 && (

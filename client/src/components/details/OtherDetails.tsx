@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/details/OtherDetails.module.scss";
 import { OtherWorkout } from "../../features/workouts/types";
-import TypeBadge from "../activity/TypeBadge";
 import { OtherHistory } from "../../features/history/types";
 
 type Props = { entry: OtherWorkout | OtherHistory };
@@ -40,20 +39,9 @@ const DetailsItem = ({ label, icon, children }: DetailsProps) => {
 };
 
 const OtherDetails = ({ entry }: Props) => {
-	const { workoutName, workoutDesc, exercise, duration } = entry;
+	const { exercise, duration } = entry;
 	return (
 		<div className={styles.OtherDetails}>
-			<div className={styles.OtherDetails_header}>
-				<TypeBadge activityType="Other" />
-				<div className={styles.OtherDetails_header_about}>
-					<h3 className={styles.OtherDetails_header_about_name}>
-						{workoutName}
-					</h3>
-					<div className={styles.OtherDetails_header_about_desc}>
-						{workoutDesc}
-					</div>
-				</div>
-			</div>
 			<div className={styles.OtherDetails_main}>
 				<DetailsItem icon="exercise" label="Exercise: ">
 					<span>{exercise}</span>

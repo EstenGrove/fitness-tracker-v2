@@ -27,6 +27,7 @@ import MarkAsDone from "./MarkAsDone";
 import ModalSM from "../shared/ModalSM";
 import SkipWorkout from "./SkipWorkout";
 import UnskipWorkout from "./UnskipWorkout";
+import ViewPostWorkout from "../details/ViewPostWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -348,7 +349,12 @@ const TodaysWorkout = ({ workout }: Props) => {
 
 			{modalType === EModalType.VIEW && (
 				<ModalLG onClose={closeModal}>
-					<ViewWorkout workout={workout} onClose={closeModal} />
+					{isCompleted && (
+						<ViewPostWorkout workout={workout} onClose={closeModal} />
+					)}
+					{!isCompleted && (
+						<ViewWorkout workout={workout} onClose={closeModal} />
+					)}
 				</ModalLG>
 			)}
 			{modalType === EModalType.SKIP && (

@@ -5,15 +5,45 @@ import { historyService } from "../services/index.ts";
 import {
 	normalizeAllHistory,
 	normalizeHistoryByType,
+	normalizeHistoryEntryByType,
 } from "../modules/history/allHistory.ts";
 import type {
 	AllHistoryDB,
 	HistoryOfType,
 	HistoryOfTypeDB,
+	WorkoutHistoryDB,
 } from "../modules/history/types.ts";
+import {
+	getLastWorkoutByDate,
+	type LastSessionParams,
+} from "../modules/history/getLastWorkout.ts";
 
 const app = new Hono();
 
+app.get("/getLastWorkout", async (ctx: Context) => {
+	const details = ctx.req.query();
+	const params = details as unknown as LastSessionParams;
+	const type = params.activityType as Activity;
+	const last = (await getLastWorkoutByDate(params)) as HistoryOfTypeDB;
+
+	if (last instanceof Error) {
+		const errResp = getResponseError(last);
+
+		return ctx.json(errResp);
+	}
+
+	console.log("type", type);
+	console.log("last", last);
+	const lastSession: HistoryOfType = normalizeHistoryEntryByType(type, last);
+
+	console.log("lastSession", lastSession);
+
+	const resp = getResponseOk({
+		lastSession: lastSession,
+	});
+
+	return ctx.json(resp);
+});
 app.get("/getHistoryByRange", async (ctx: Context) => {
 	const { userID, startDate, endDate } = ctx.req.query();
 

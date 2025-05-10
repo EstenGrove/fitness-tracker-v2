@@ -4,15 +4,23 @@ import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { allRoutes } from "./routes/index.ts";
+import { isRemote } from "./utils/env.ts";
 dotenv.config();
 
 const SERVER = {
-	host: process.env.API_HOST,
+	host: isRemote ? process.env.REMOTE_IP : process.env.API_HOST,
 	port: Number(process.env.API_PORT),
 };
+const CLIENT = {
+	host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
+	port: Number(process.env.CLIENT_HTTP_PORT),
+};
+
+const origin = "http://" + CLIENT.host + ":" + CLIENT.port;
+console.log("origin", origin);
 
 const corsConfig = {
-	origin: "http://192.168.0.196:5175",
+	origin: origin,
 	credentials: true,
 };
 
@@ -23,6 +31,7 @@ app.use(cors(corsConfig));
 
 app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);
+app.route("stats", allRoutes.stats);
 app.route("history", allRoutes.history);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);

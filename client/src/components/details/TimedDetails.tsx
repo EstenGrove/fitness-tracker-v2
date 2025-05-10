@@ -40,20 +40,9 @@ const DetailsItem = ({ label, icon, children }: DetailsProps) => {
 };
 
 const TimedDetails = ({ entry }: Props) => {
-	const { workoutName, workoutDesc, exercise, duration } = entry;
+	const { exercise, duration } = entry;
 	return (
 		<div className={styles.TimedDetails}>
-			<div className={styles.TimedDetails_header}>
-				<TypeBadge activityType="Timed" />
-				<div className={styles.TimedDetails_header_about}>
-					<h3 className={styles.TimedDetails_header_about_name}>
-						{workoutName}
-					</h3>
-					<div className={styles.TimedDetails_header_about_desc}>
-						{workoutDesc}
-					</div>
-				</div>
-			</div>
 			<div className={styles.TimedDetails_main}>
 				<DetailsItem icon="exercise" label="Exercise: ">
 					<span>{exercise}</span>

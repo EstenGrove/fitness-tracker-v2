@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 import sprite from "../assets/icons/calendar.svg";
+import {
+	selectHistoryRange,
+	setDateRange,
+} from "../features/history/historySlice";
+import { DateRange } from "../features/types";
+import { useAppDispatch } from "../store/store";
+import { formatDate } from "../utils/utils_dates";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import styles from "../css/pages/HistoryPage.module.scss";
 import ModalLG from "../components/shared/ModalLG";
 import HistoryTabs from "../components/history/HistoryTabs";
+import DateRangeCalendar from "../components/calendars/DateRangeCalendar";
+import { useSelector } from "react-redux";
 
 const CalendarIcon = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -18,6 +27,8 @@ const CalendarIcon = ({ onClick }: { onClick: () => void }) => {
 };
 
 const HistoryPage = () => {
+	const dispatch = useAppDispatch();
+	const dateRange = useSelector(selectHistoryRange);
 	const [showRangeCalendar, setShowRangeCalendar] = useState<boolean>(false);
 
 	const openCalendar = () => {
@@ -25,6 +36,15 @@ const HistoryPage = () => {
 	};
 	const closeCalendar = () => {
 		setShowRangeCalendar(false);
+	};
+
+	const changeDateRange = (range: DateRange) => {
+		const newRange: DateRange = {
+			startDate: formatDate(range.startDate, "long"),
+			endDate: formatDate(range.endDate, "long"),
+		};
+		dispatch(setDateRange(newRange));
+		closeCalendar();
 	};
 
 	return (
@@ -44,7 +64,11 @@ const HistoryPage = () => {
 
 			{showRangeCalendar && (
 				<ModalLG onClose={closeCalendar}>
-					<div>Select date range</div>
+					<DateRangeCalendar
+						onClose={closeCalendar}
+						onConfirm={changeDateRange}
+						initialSelection={dateRange}
+					/>
 				</ModalLG>
 			)}
 		</PageContainer>
