@@ -1,8 +1,4 @@
-import {
-	HistoryOfType,
-	StrengthHistory,
-	WorkoutHistory,
-} from "../features/history/types";
+import { StrengthHistory } from "../features/history/types";
 import { PostWorkoutHistory } from "../features/stats/types";
 import { StrengthSet, StrengthWorkout } from "../features/workouts/types";
 import { WorkoutSet } from "./utils_workouts";
