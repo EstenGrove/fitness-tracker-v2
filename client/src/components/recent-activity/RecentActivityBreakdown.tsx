@@ -19,8 +19,8 @@ type Props = {
 };
 
 const getDateRangeDesc = (range: DateRange) => {
-	const parsedStart = parseISO(range.startDate);
-	const parsedEnd = parseISO(range.endDate);
+	const parsedStart = parseISO(range.startDate as string);
+	const parsedEnd = parseISO(range.endDate as string);
 	const start = formatCustomDate(parsedStart, "range");
 	const end = formatCustomDate(parsedEnd, "range");
 

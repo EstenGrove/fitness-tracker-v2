@@ -84,6 +84,9 @@ const ActivityDetails = ({
 	onSetChange,
 	onWalkChange,
 }: ActivityDetailsProps) => {
+	const isStrength = showStrengthSetsUI(activityType);
+	const isExercise = showExerciseSetsUI(activityType);
+
 	const handleWalkChange = (name: string, value: string | number) => {
 		const newValues = { ...values, [name]: value };
 		const steps = milesToSteps(Number(value)) || 0;
@@ -113,7 +116,7 @@ const ActivityDetails = ({
 			{enableSets && (
 				<>
 					{/* WORKOUT SETS (CARDIO, STRETCH, TIMED, & OTHER) */}
-					{showExerciseSetsUI(activityType) && (
+					{isExercise && (
 						<div className={styles.MarkAsDone_details_sets}>
 							<EditWorkoutSets
 								sets={4}
@@ -124,7 +127,7 @@ const ActivityDetails = ({
 						</div>
 					)}
 					{/* STRENGTH SETS */}
-					{showStrengthSetsUI(activityType) && (
+					{isStrength && (
 						<div className={styles.MarkAsDone_details_sets}>
 							<label
 								htmlFor="sets"

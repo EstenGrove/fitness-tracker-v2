@@ -1,6 +1,5 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/CardioHistory.module.scss";
-import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	CardioHistory as CardioLog,
 	HistoryOfType,
@@ -11,12 +10,14 @@ import { EMenuAction } from "../features/types";
 import { isEmptyArray } from "../utils/utils_misc";
 import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 import HistoryEntry from "../components/history/HistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 
 const CardioHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
+	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null

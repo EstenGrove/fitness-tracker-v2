@@ -3,20 +3,19 @@ import { HistoryOfType, WorkoutHistory } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { useState } from "react";
 import { getTotalMins } from "../utils/utils_history";
-import {
-	formatCustomDate,
-	formatDate,
-	getWeekStartAndEnd,
-} from "../utils/utils_dates";
+import { formatCustomDate, formatDate } from "../utils/utils_dates";
 import { groupByFn, TRecord } from "../utils/utils_misc";
 import { EMenuAction } from "../features/types";
 import { parseISO } from "date-fns";
 import { useHistoryForRange } from "../hooks/useHistoryForRange";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 type GroupedHistory = TRecord<WorkoutHistory>;
 
@@ -86,7 +85,7 @@ const getGroupedKeys = (grouped: GroupedHistory): string[] => {
 };
 
 const AllHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
+	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
@@ -156,14 +155,13 @@ const AllHistory = () => {
 			)}
 
 			{/* VIEW MODAL */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{/* EDIT MODAL */}
-			{modalType === EMenuAction.EDIT && (
+			{selectedEntry && modalType === EMenuAction.EDIT && (
 				<ModalLG onClose={closeActionModal}>
 					{/*  */}
 					{/*  */}

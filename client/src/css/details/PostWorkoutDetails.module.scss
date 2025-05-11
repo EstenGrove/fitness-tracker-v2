@@ -1,0 +1,57 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.PostWorkoutDetails {
+	width: 100%;
+	@include colCenter();
+	gap: 0 0.5rem;
+	text-align: center;
+	font-size: 1.7rem;
+	font-weight: 700;
+
+	&_blocks {
+		width: 100%;
+		@include colCenter();
+	}
+	&_stats {
+		width: 100%;
+		margin-top: 2rem;
+	}
+}
+
+.Block {
+	width: 100%;
+	@include colCenter();
+
+	&_group {
+		width: 100%;
+		@include flex_row(center, center, wrap);
+		gap: 0 1rem;
+	}
+}
+
+.DetailsSet {
+	width: 100%;
+	@include flex_row(center, center, wrap);
+	gap: 1rem;
+}
+
+.NthStatsInfo {
+	width: 100%;
+	font-size: 1.5rem;
+
+	&_label {
+		font-size: 1.5rem;
+		color: $text2;
+	}
+
+	&_group {
+		width: 100%;
+		text-wrap: break-word;
+
+		& b {
+			color: $accentBlue;
+		}
+	}
+}

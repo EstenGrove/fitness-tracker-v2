@@ -1,52 +1,12 @@
-import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/details/ScheduleDetails.module.scss";
 import { WorkoutSchedule } from "../../features/workouts/types";
-import DetailsItem from "./DetailsItem";
 import { RepeatType } from "../../features/shared/types";
-import {
-	formatDate,
-	formatTime,
-	MONTHS,
-	parseAnyTime,
-} from "../../utils/utils_dates";
+import { formatTime, MONTHS, parseAnyTime } from "../../utils/utils_dates";
 import DetailsBlock from "./DetailsBlock";
 import { getMonthDaySuffix, isRecurring } from "../../utils/utils_recurring";
 
 type Props = {
 	schedule: WorkoutSchedule;
-};
-
-const RepeatTypeBadge = ({ repeatType }: { repeatType: RepeatType }) => {
-	return (
-		<div className={styles.RepeatTypeBadge}>
-			<svg className={styles.RepeatTypeBadge_icon}>
-				<use xlinkHref={`${sprite}#icon-synchronize`}></use>
-			</svg>
-			<span>{repeatType}</span>
-		</div>
-	);
-};
-
-const getWhenDates = (schedule: WorkoutSchedule) => {
-	const { startDate, endDate } = schedule;
-	const start = formatDate(startDate, "clean");
-	const end = formatDate(endDate, "clean");
-
-	return `${start} to ${end}`;
-};
-
-// Convert start times
-const getWhenTimes = (schedule: WorkoutSchedule) => {
-	if (!schedule.startTime && !schedule.endTime) {
-		return "All Day";
-	} else {
-		const startP = parseAnyTime(schedule.startTime);
-		const endP = parseAnyTime(schedule.endTime);
-		const start = formatTime(startP, "short");
-		const end = formatTime(endP, "short");
-		// convert times
-		return `${start} - ${end}`;
-	}
 };
 
 const getStart = (start: string) => {
@@ -76,11 +36,14 @@ const WeeklyDetails = ({ schedule }: RepeatProps) => {
 	const start = getStart(startTime);
 	const frequency = schedule.frequency as RepeatType;
 	const days = byDay.length + "x/week";
+	const daysList = byDay.join(",");
+
 	return (
 		<div className={styles.WeeklyDetails}>
 			<DetailsBlock type="Repeat" label="Repeats" value={frequency} />
 			<DetailsBlock type="Date" label="When" value={start} />
 			<DetailsBlock type="ByDay" label="Days" value={days} />
+			<DetailsBlock type="ByDay" label="Days" value={daysList} />
 		</div>
 	);
 };

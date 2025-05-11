@@ -15,6 +15,7 @@ import EditStrengthSets from "../form/EditStrengthSets";
 import { formatDate } from "../../utils/utils_dates";
 import { ExerciseSet, StrengthSet } from "../../features/workouts/types";
 import EditWorkoutSets from "../form/EditWorkoutSets";
+import { WorkoutSet } from "../../utils/utils_workouts";
 
 type Props = {
 	onClose: () => void;
@@ -218,19 +219,23 @@ const ScheduleStep = ({ values, onChange, onChecked, onSelect }: StepProps) => {
 	);
 };
 
-const SummaryStep = ({ values, onChange, onSetChange }: StepProps) => {
+const SummaryStep = ({ values }: StepProps) => {
 	return (
 		<div className={styles.SummaryStep}>
 			<StepHeader title="Workout Summary" />
 			<div className={styles.SummaryStep_body}>
 				<p>Review your workout details before saving.</p>
+				<div className={styles.SummaryStep_body_name}>Name: {values.name}</div>
+				<div className={styles.SummaryStep_body_name}>
+					Type: {values.activityType}
+				</div>
 				{/* Add summary details here */}
 			</div>
 		</div>
 	);
 };
 
-const DetailsStep = ({ values, onChange, onSetChange }: StepProps) => {
+const DetailsStep = ({ values, onSetChange }: StepProps) => {
 	const type = values.activityType as Activity;
 	const isStrength = type === "Strength";
 	const isExercise = ["Timed", "Cardio", "Other"].includes(type);
@@ -262,7 +267,7 @@ const DetailsStep = ({ values, onChange, onSetChange }: StepProps) => {
 
 const CreateWorkout = ({ onClose }: Props) => {
 	const [values, setValues] = useState<CreateWorkoutValues>({
-		activityType: "Strength",
+		activityType: "",
 		date: formatDate(new Date(), "db"),
 		name: "",
 		desc: "",
@@ -277,9 +282,7 @@ const CreateWorkout = ({ onClose }: Props) => {
 		startDate: formatDate(new Date(), "db"),
 		endDate: formatDate(new Date(), "db"),
 	});
-	const [workoutSets, setWorkoutSets] = useState<StrengthSet[] | ExerciseSet[]>(
-		[]
-	);
+	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>([]);
 
 	const onChecked = (name: string, value: boolean) => {
 		setValues({ ...values, [name]: value });
@@ -290,16 +293,16 @@ const CreateWorkout = ({ onClose }: Props) => {
 	const onSelect = (name: string, value: string | Date) => {
 		setValues({ ...values, [name]: value });
 	};
-	const onSetChange = (sets: StrengthSet[] | ExerciseSet[]) => {
+	const onSetChange = (sets: WorkoutSet[]) => {
 		setWorkoutSets(sets);
 	};
 
 	const steps: StepItem[] = [
 		{
 			id: 1,
-			title: "Details Step",
+			title: "Activity Type",
 			content: (
-				<DetailsStep
+				<ActivityStep
 					values={values}
 					onSelect={onSelect}
 					onChange={onChange}
@@ -310,21 +313,6 @@ const CreateWorkout = ({ onClose }: Props) => {
 			next: 2,
 			validate: () => true,
 		},
-		// {
-		// 	id: 1,
-		// 	title: "Activity Type",
-		// 	content: (
-		// 		<ActivityStep
-		// 			values={values}
-		// 			onSelect={onSelect}
-		// 			onChange={onChange}
-		// 			onChecked={onChecked}
-		// 			onSetChange={onSetChange}
-		// 		/>
-		// 	),
-		// 	next: 2,
-		// 	validate: () => true,
-		// },
 		{
 			id: 2,
 			title: "Workout Name",
@@ -375,6 +363,22 @@ const CreateWorkout = ({ onClose }: Props) => {
 		},
 		{
 			id: 5,
+			title: "Details Step",
+			content: (
+				<DetailsStep
+					values={values}
+					onSelect={onSelect}
+					onChange={onChange}
+					onChecked={onChecked}
+					onSetChange={onSetChange}
+				/>
+			),
+			prev: 4,
+			next: 6,
+			validate: () => true,
+		},
+		{
+			id: 6,
 			title: "Workout Summary",
 			content: (
 				<SummaryStep
@@ -385,8 +389,7 @@ const CreateWorkout = ({ onClose }: Props) => {
 					onSetChange={onSetChange}
 				/>
 			),
-			prev: 3,
-			next: 5,
+			prev: 5,
 			validate: () => true,
 		},
 	];

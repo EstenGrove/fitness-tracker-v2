@@ -14,10 +14,11 @@ import {
 	selectIsLoadingWorkout,
 	selectSelectedWorkout,
 } from "../../features/workouts/workoutsSlice";
-import { useCallback, useEffect } from "react";
+import { ReactNode, useCallback, useEffect } from "react";
 import { useAppDispatch } from "../../store/store";
 import { getWorkoutDetails } from "../../features/workouts/operations";
 import { selectCurrentUser } from "../../features/user/userSlice";
+import { WorkoutHistory } from "../../features/history/types";
 import Loader from "../layout/Loader";
 import StrengthDetails from "../details/StrengthDetails";
 import ScheduleDetails from "../details/ScheduleDetails";
@@ -30,6 +31,26 @@ import OtherDetails from "../details/OtherDetails";
 type Props = {
 	workout: TodaysWorkout;
 	onClose: () => void;
+};
+
+type DetailsProps = {
+	history: WorkoutHistory[];
+	schedule: WorkoutSchedule;
+	children?: ReactNode;
+};
+
+const DetailsSection = ({ history, schedule, children }: DetailsProps) => {
+	const total = history?.length ?? 0;
+	return (
+		<>
+			{children}
+			<ScheduleDetails schedule={schedule} />
+			<div className={styles.HistoryDetails_title}>History</div>
+			<div className={styles.HistoryDetails_list}>
+				You've performed this workout <b>{total}</b> times.
+			</div>
+		</>
+	);
 };
 
 const ViewWorkout = ({ workout }: Props) => {
@@ -65,6 +86,8 @@ const ViewWorkout = ({ workout }: Props) => {
 		};
 	}, [getDetails]);
 
+	console.log("workout", workout);
+
 	if (isLoading) {
 		return (
 			<div className={styles.ViewWorkout}>
@@ -86,38 +109,44 @@ const ViewWorkout = ({ workout }: Props) => {
 				<>
 					{activityType === "Strength" && (
 						<>
-							<StrengthDetails entry={details.workout as StrengthWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<StrengthDetails entry={details.workout as StrengthWorkout} />
+							</DetailsSection>
 						</>
 					)}
 					{activityType === "Stretch" && (
 						<>
-							<StretchDetails entry={details.workout as StretchWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<StretchDetails entry={details.workout as StretchWorkout} />
+							</DetailsSection>
 						</>
 					)}
 					{activityType === "Walk" && (
 						<>
-							<WalkDetails entry={details.workout as WalkWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<WalkDetails entry={details.workout as WalkWorkout} />
+							</DetailsSection>
 						</>
 					)}
 					{activityType === "Cardio" && (
 						<>
-							<CardioDetails entry={details.workout as CardioWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<CardioDetails entry={details.workout as CardioWorkout} />
+							</DetailsSection>
 						</>
 					)}
 					{activityType === "Timed" && (
 						<>
-							<TimedDetails entry={details.workout as TimedWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<TimedDetails entry={details.workout as TimedWorkout} />
+							</DetailsSection>
 						</>
 					)}
 					{activityType === "Other" && (
 						<>
-							<OtherDetails entry={details.workout as OtherWorkout} />
-							<ScheduleDetails schedule={schedule} />
+							<DetailsSection history={details.history} schedule={schedule}>
+								<OtherDetails entry={details.workout as OtherWorkout} />
+							</DetailsSection>
 						</>
 					)}
 				</>

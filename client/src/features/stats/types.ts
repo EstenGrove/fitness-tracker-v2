@@ -1,8 +1,14 @@
-import { Activity } from "../shared/types";
+import { Activity, Effort } from "../shared/types";
+import { ExerciseSet, StrengthSet } from "../workouts/types";
+
+export interface WorkoutStatsParams {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+}
 
 export interface PostWorkoutParams {
 	userID: string;
-	historyID: number;
 	workoutID: number;
 	activityType: Activity;
 }
@@ -122,21 +128,116 @@ export interface PostWorkoutStats {
 	activeDays: ActiveDaysStat;
 }
 
-export interface PostWorkoutStrength extends PostWorkoutStats {
+export interface PostWorkoutStrengthActivity extends PostWorkoutStats {
 	activityStats: PostStrengthStats;
 }
-export interface PostWorkoutWalk extends PostWorkoutStats {
+export interface PostWorkoutWalkActivity extends PostWorkoutStats {
 	activityStats: PostWalkStats;
 }
-export interface PostWorkoutCardio extends PostWorkoutStats {
+export interface PostWorkoutCardioActivity extends PostWorkoutStats {
 	activityStats: PostCardioStats;
 }
-export interface PostWorkoutStretch extends PostWorkoutStats {
+export interface PostWorkoutStretchActivity extends PostWorkoutStats {
 	activityStats: PostStretchStats;
 }
-export interface PostWorkoutTimed extends PostWorkoutStats {
+export interface PostWorkoutTimedActivity extends PostWorkoutStats {
 	activityStats: PostTimedStats;
 }
-export interface PostWorkoutOther extends PostWorkoutStats {
+export interface PostWorkoutOtherActivity extends PostWorkoutStats {
 	activityStats: PostOtherStats;
 }
+
+export type WorkoutStats = (
+	| PostStrengthStats
+	| PostStretchStats
+	| PostWalkStats
+	| PostCardioStats
+	| PostTimedStats
+	| PostOtherStats
+) &
+	PostWorkoutStats;
+
+export interface PostWorkoutHistory {
+	userID: string;
+	workoutID: number;
+	historyID: number;
+	activityType: Activity;
+	workoutName: string;
+	workoutDate: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	calories: number;
+}
+export interface PostWorkoutWorkout {
+	userID: string;
+	workoutID: number;
+	historyID: number;
+	activityType: Activity;
+	workoutName: string;
+	workoutDate: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	calories: number;
+}
+
+export interface PostWorkout {
+	history: PostWorkoutHistory;
+	workout: PostWorkoutWorkout;
+	nthStats: {
+		nthWorkout: string;
+	};
+}
+
+export interface PostWorkoutCardioHistory extends PostWorkoutHistory {
+	sets: ExerciseSet[];
+	exercise?: string;
+}
+export interface PostWorkoutTimedHistory extends PostWorkoutHistory {
+	sets: ExerciseSet[];
+	exercise?: string;
+}
+export interface PostWorkoutStretchHistory extends PostWorkoutHistory {
+	sets: ExerciseSet[];
+	exercise?: string;
+}
+export interface PostWorkoutOtherHistory extends PostWorkoutHistory {
+	sets: ExerciseSet[];
+	exercise?: string;
+}
+export interface PostWorkoutWalkHistory extends PostWorkoutHistory {
+	steps: number;
+	miles: number;
+	pace: number;
+}
+export interface PostWorkoutStrengthHistory extends PostWorkoutHistory {
+	sets: StrengthSet[];
+}
+
+export type PostWorkoutOfType<T extends PostWorkoutHistory> = {
+	history: T;
+	workout: PostWorkoutWorkout;
+	nthStats: NthStats;
+};
+
+export type PostWorkoutStrength = PostWorkoutOfType<PostWorkoutStrengthHistory>;
+export type PostWorkoutStretch = PostWorkoutOfType<PostWorkoutStretchHistory>;
+export type PostWorkoutCardio = PostWorkoutOfType<PostWorkoutCardioHistory>;
+export type PostWorkoutWalk = PostWorkoutOfType<PostWorkoutWalkHistory>;
+export type PostWorkoutTimed = PostWorkoutOfType<PostWorkoutTimedHistory>;
+export type PostWorkoutOther = PostWorkoutOfType<PostWorkoutOtherHistory>;
+
+export type PostWorkoutDetails =
+	| PostWorkoutStrength
+	| PostWorkoutStretch
+	| PostWorkoutCardio
+	| PostWorkoutWalk
+	| PostWorkoutTimed
+	| PostWorkoutOther;
+
+export type PostWorkoutHistoryWithSets = PostWorkoutHistory & {
+	sets: StrengthSet[] | ExerciseSet[];
+};

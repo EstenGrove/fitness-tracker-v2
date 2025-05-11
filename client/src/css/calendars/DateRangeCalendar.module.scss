@@ -1,0 +1,113 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.DateRangeCalendar {
+	width: 100%;
+	height: 100%;
+	padding: 1rem 1rem 2rem 1rem;
+	@include calendar;
+
+	&_header {
+		width: 100%;
+		height: 10rem;
+	}
+
+	&_body {
+		height: calc(100% - 16rem);
+		@include calendarBody;
+	}
+
+	&_footer {
+		height: 6rem;
+		@include calendarFooter;
+	}
+}
+
+.CalendarHeader {
+	@include calendarHeader;
+	padding: 1rem 0;
+	border-bottom: 1px solid $borderColor;
+}
+.CalendarFooter {
+	height: 6rem;
+	padding: 0.5rem 1rem;
+	@include calendarFooter;
+}
+
+.MonthDates {
+	width: 100%;
+	height: max-content;
+	display: block;
+	padding: 2rem 1rem;
+
+	&_name {
+		font-size: 1.5rem;
+		padding-left: 1.8rem;
+	}
+
+	&_weeks {
+		@include flex_row(space-evenly, center);
+		gap: 0 0;
+		flex-wrap: wrap;
+		padding: 0.2rem 0;
+
+		&_week {
+			width: 100%;
+			height: 5rem;
+			@include flex_row(space-evenly, center);
+			gap: 1rem 0;
+		}
+	}
+}
+
+.Day {
+	width: 100%;
+	height: 100%;
+	@include rowCenter();
+	font-size: 1.4rem;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.3s ease;
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.notInMonth {
+	opacity: 0;
+}
+
+.inSelectedRange {
+	background-color: var(--blueGrey700);
+	color: $text1;
+}
+
+.isSelected {
+	background-color: $accentBlue;
+	color: #fff;
+	border-radius: 1rem;
+}
+
+.isInRange {
+	background-color: $text3;
+	color: $text1;
+}
+
+// $radius: 2.5rem;
+// $radius: 1rem;
+$radius: 5rem;
+
+.isStart {
+	border-radius: $radius 0 0 $radius;
+	background-color: $accentBlue;
+}
+.isEnd {
+	border-radius: 0 $radius $radius 0;
+	background-color: $accentBlue;
+}
+
+.isStartEnd {
+	border-radius: 50%;
+	background-color: $accentBlue;
+}

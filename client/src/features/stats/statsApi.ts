@@ -1,14 +1,58 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
-import { getPostWorkoutStats } from "../../utils/utils_stats";
+import {
+	getPostWorkoutDetails,
+	getPostWorkoutStats,
+	getWorkoutStats,
+} from "../../utils/utils_stats";
 import { AwaitedResponse } from "../types";
-import { PostWorkoutParams, PostWorkoutStats } from "./types";
+import {
+	PostWorkoutParams,
+	PostWorkoutStats,
+	PostWorkoutDetails,
+	WorkoutStats,
+	WorkoutStatsParams,
+} from "./types";
+import { getLastWorkout, LastSessionParams } from "../../utils/utils_workouts";
+import { HistoryOfType } from "../history/types";
 
 export const statsApi = createApi({
 	reducerPath: "statsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
 	tagTypes: ["WorkoutStats"],
 	endpoints: (builder) => ({
+		getLastWorkout: builder.query<HistoryOfType, LastSessionParams>({
+			queryFn: async (params) => {
+				const response = (await getLastWorkout(params)) as AwaitedResponse<{
+					lastSession: HistoryOfType;
+				}>;
+				const data = response.Data.lastSession as HistoryOfType;
+
+				return { data };
+			},
+		}),
+		getWorkoutStats: builder.query<WorkoutStats, WorkoutStatsParams>({
+			queryFn: async (params) => {
+				const response = (await getWorkoutStats(
+					params
+				)) as AwaitedResponse<WorkoutStats>;
+				const data = response.Data as WorkoutStats;
+				return { data };
+			},
+			providesTags: () => [{ type: "WorkoutStats" }],
+		}),
+		getPostWorkoutDetails: builder.query<PostWorkoutDetails, PostWorkoutParams>(
+			{
+				queryFn: async (params) => {
+					const response = (await getPostWorkoutDetails(
+						params
+					)) as AwaitedResponse<PostWorkoutDetails>;
+					const data = response.Data as PostWorkoutDetails;
+
+					return { data };
+				},
+			}
+		),
 		getPostWorkoutStats: builder.query<PostWorkoutStats, PostWorkoutParams>({
 			queryFn: async (params) => {
 				const response = (await getPostWorkoutStats(
@@ -17,8 +61,16 @@ export const statsApi = createApi({
 				const data = response.Data as PostWorkoutStats;
 				return { data };
 			},
+			providesTags: () => [{ type: "WorkoutStats" }],
 		}),
 	}),
 });
 
-export const { useGetPostWorkoutStatsQuery } = statsApi;
+export const {
+	useGetLastWorkoutQuery,
+	useGetPostWorkoutStatsQuery,
+	useGetPostWorkoutDetailsQuery,
+	useLazyGetPostWorkoutDetailsQuery,
+	useLazyGetPostWorkoutStatsQuery,
+	useGetWorkoutStatsQuery,
+} = statsApi;

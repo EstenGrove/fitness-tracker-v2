@@ -92,7 +92,6 @@ const SetEntry = ({
 						onChange={onChange}
 						onFocus={(ref) => ref.currentTarget.select()}
 						className={styles.SetEntry_item_exercise}
-						inputMode="numeric"
 					/>
 				</div>
 				<button onClick={deleteSet} className={styles.SetEntry_item_delete}>

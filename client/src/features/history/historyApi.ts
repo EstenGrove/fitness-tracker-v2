@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
-import { AllHistory, HistoryOfType } from "./types";
+import { AllHistory, HistoryDetails, HistoryOfType } from "./types";
 import {
 	AwaitedResponse,
 	UserRangeActivityParams,
@@ -9,6 +9,8 @@ import {
 import {
 	fetchHistoryByRange,
 	fetchHistoryByRangeAndActivity,
+	fetchHistoryDetails,
+	HistoryDetailsParams,
 } from "../../utils/utils_history";
 
 export const historyApi = createApi({
@@ -42,8 +44,23 @@ export const historyApi = createApi({
 				return { data: data.history };
 			},
 		}),
+		getHistoryDetails: builder.query<HistoryDetails, HistoryDetailsParams>({
+			queryFn: async (params) => {
+				const { userID, historyID, activityType } = params;
+				const response = (await fetchHistoryDetails(
+					userID,
+					historyID,
+					activityType
+				)) as AwaitedResponse<HistoryDetails>;
+				const data = response.Data as HistoryDetails;
+				return { data };
+			},
+		}),
 	}),
 });
 
-export const { useGetHistoryForRangeQuery, useGetHistoryByRangeAndTypeQuery } =
-	historyApi;
+export const {
+	useGetHistoryForRangeQuery,
+	useGetHistoryByRangeAndTypeQuery,
+	useGetHistoryDetailsQuery,
+} = historyApi;

@@ -83,12 +83,12 @@ export interface WorkoutScheduleDB {
 }
 
 export interface WorkoutDetailsDB {
-	workout: TodaysWorkoutDB;
+	workout: WorkoutOfTypeDB;
 	schedule: WorkoutScheduleDB | null;
 	history: HistoryOfTypeDB[];
 }
 export interface WorkoutDetails {
-	workout: TodaysWorkoutClient;
+	workout: WorkoutOfType;
 	schedule: WorkoutSchedule | null;
 	history: HistoryOfType[];
 }
@@ -144,3 +144,44 @@ export interface SkippedWorkout {
 	activityType: Activity;
 	wasSkipped: boolean;
 }
+
+export interface StrengthWorkoutDB extends WorkoutDB {
+	reps: number;
+	sets: number;
+	weight: number;
+}
+export interface ExerciseWorkoutDB extends WorkoutDB {
+	reps: number;
+	sets: number;
+	exercise: string;
+}
+export interface ExerciseWorkout extends Workout {
+	reps: number;
+	sets: number;
+	exercise: string;
+}
+
+export interface WalkWorkoutDB extends WorkoutDB {
+	steps: number;
+	miles: number;
+	pace: number;
+}
+export interface WalkWorkout extends Workout {
+	steps: number;
+	miles: number;
+	pace: number;
+}
+export interface StrengthWorkout extends Workout {
+	reps: number;
+	sets: number;
+	weight: number;
+}
+
+export type WorkoutByType<T> = Workout & T;
+export type WorkoutByTypeDB<T> = WorkoutDB & T;
+
+export type WorkoutOfType = StrengthWorkout | WalkWorkout | ExerciseWorkout;
+export type WorkoutOfTypeDB =
+	| StrengthWorkoutDB
+	| WalkWorkoutDB
+	| ExerciseWorkoutDB;

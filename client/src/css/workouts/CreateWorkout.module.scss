@@ -120,3 +120,18 @@
 		width: 100%;
 	}
 }
+.SummaryStep {
+	width: 100%;
+	padding: 0 2rem;
+
+	&_body {
+		width: 100%;
+		color: $text3;
+
+		&_name {
+			width: auto;
+			font-size: 1.6rem;
+			color: $text1;
+		}
+	}
+}

@@ -27,8 +27,8 @@ export type AsyncResponse<T> = Promise<TResponse<T> | unknown>;
 export type AwaitedResponse<T> = TResponse<T>;
 
 export interface DateRange {
-	startDate: string;
-	endDate: string;
+	startDate: Date | string;
+	endDate: Date | string;
 }
 
 export interface UserRangeParams {

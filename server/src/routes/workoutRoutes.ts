@@ -100,11 +100,12 @@ app.get("/getSkippedWorkouts", async (ctx: Context) => {
 
 app.get("/getWorkoutDetails", async (ctx: Context) => {
 	const { userID, workoutID, activityType } = ctx.req.query();
+	const type = activityType as Activity;
 
 	const details = (await workoutsService.getWorkoutDetails(
 		userID,
 		Number(workoutID),
-		activityType
+		type
 	)) as WorkoutDetailsDB;
 
 	if (details instanceof Error) {
@@ -116,7 +117,7 @@ app.get("/getWorkoutDetails", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const workoutDetails = normalizeWorkoutDetails(details);
+	const workoutDetails = normalizeWorkoutDetails(type, details);
 
 	const resp = getResponseOk({
 		workout: workoutDetails.workout,
@@ -218,7 +219,9 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const resp = getResponseOk({});
+	console.log("rawStats", rawStats);
+
+	const resp = getResponseOk(rawStats);
 
 	return ctx.json(resp);
 });

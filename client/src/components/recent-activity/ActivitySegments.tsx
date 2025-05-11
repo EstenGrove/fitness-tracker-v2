@@ -36,11 +36,20 @@ const SegmentsLegend = ({ segments }: { segments: Segment[] }) => {
 	);
 };
 
-const ActivitySegments = ({ label = "Time Breakdown", segments }: Props) => {
+// When there are more than 4 segments, hide the label
+// and show the legend only...this prevents overflow & misalignment of the segments' legend
+const hasOverflow = (segments: Segment[]) => {
+	return segments.length > 4;
+};
+
+const ActivitySegments = ({ label = "Breakdown", segments }: Props) => {
+	const hideLabel = hasOverflow(segments);
 	return (
 		<div className={styles.ActivitySegments}>
 			<div className={styles.ActivitySegments_header}>
-				<div className={styles.ActivitySegments_header_label}>{label}</div>
+				<div className={styles.ActivitySegments_header_label}>
+					{!hideLabel && label}
+				</div>
 				<div className={styles.ActivitySegments_legend}>
 					<SegmentsLegend segments={segments} />
 				</div>

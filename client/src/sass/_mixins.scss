@@ -123,3 +123,99 @@
 		// padding: 1rem;
 	}
 }
+
+// CALENDAR MIXINS
+@mixin calendar() {
+	@include fill_container;
+	@include colCenter();
+	border-radius: 1rem;
+	background-color: $foreground;
+}
+@mixin calendarHeader() {
+	@include fill_container;
+
+	&_current {
+		width: 100%;
+		@include flex_row(center, center);
+		gap: 0 0.5rem;
+		margin-bottom: 1.5rem;
+		font-size: 1.8rem;
+		&_month {
+			font-weight: 700;
+			color: $text1;
+		}
+		&_year {
+			font-weight: 600;
+			color: $text3;
+		}
+	}
+
+	&_weekdays {
+		width: 100%;
+		@include flex_row(space-evenly, center);
+		gap: 0 1rem;
+
+		&_day {
+			font-size: 1.5rem;
+			color: $text2;
+		}
+	}
+}
+@mixin calendarBody() {
+	@include fill_container;
+	min-height: 40rem;
+	overflow-y: auto;
+	@include scrollbar();
+}
+@mixin calendarFooter() {
+	@include fill_container;
+	@include flex_row(flex-end, center);
+	gap: 0 0.5rem;
+	border-top: $borderLight;
+	font-size: 1.6rem;
+
+	&_reset {
+		padding: 0.7rem 1.3rem;
+		border-radius: 1rem;
+		background-color: transparent;
+		color: $text3;
+		border: 1px solid $text3;
+		outline: none;
+		margin-right: auto;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	&_cancel {
+		padding: 0.7rem 1.3rem;
+		border-radius: 1rem;
+		background-color: transparent;
+		color: $text1;
+		border: none;
+		outline: none;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	&_confirm {
+		padding: 0.7rem 1.3rem;
+		border-radius: 1rem;
+		background-color: $accentBlue;
+		color: #fff;
+		border: none;
+		outline: none;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}
+@mixin calendarDay() {
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	background-color: transparent;
+	color: $text1;
+	&:hover {
+		cursor: pointer;
+	}
+}

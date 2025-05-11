@@ -1,6 +1,5 @@
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/TimedHistory.module.scss";
-import { getWeekStartAndEnd } from "../utils/utils_dates";
 import {
 	HistoryOfType,
 	TimedHistory as TimedLog,
@@ -14,9 +13,11 @@ import HistoryEntry from "../components/history/HistoryEntry";
 import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 
 const TimedHistory = () => {
-	const { startDate, endDate } = getWeekStartAndEnd();
+	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null

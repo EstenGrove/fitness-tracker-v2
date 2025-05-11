@@ -70,6 +70,7 @@ export interface StrengthSet {
 
 export interface ExerciseSet {
 	id: number;
+	sets: number;
 	reps: number;
 	exercise: string;
 }

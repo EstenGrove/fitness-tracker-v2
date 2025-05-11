@@ -9,7 +9,7 @@ import {
 	WorkoutDetails,
 	WorkoutStatus,
 } from "../features/workouts/types";
-import { currentEnv, workoutApis } from "./utils_env";
+import { currentEnv, historyApis, workoutApis } from "./utils_env";
 import {
 	applyTimeStrToDate,
 	formatDate,
@@ -22,6 +22,13 @@ import { fetchWithAuth } from "./utils_requests";
 import { milesToPace, milesToSteps } from "./utils_steps";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
+
+export interface LastSessionParams {
+	userID: string;
+	workoutID: number;
+	activityType: string;
+	targetDate: string;
+}
 export interface MarkAsDoneBody {
 	userID: string;
 	workoutID: number;
@@ -223,6 +230,22 @@ const skipWorkout = async (
 	}
 };
 
+const getLastWorkout = async (params: LastSessionParams) => {
+	const { userID, workoutID, activityType, targetDate } = params;
+	let url = currentEnv.base + historyApis.getLastWorkout;
+	url += "?" + new URLSearchParams({ activityType });
+	url += "&" + new URLSearchParams({ userID, targetDate });
+	url += "&" + new URLSearchParams({ workoutID: String(workoutID) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
 // Utils
 
 const getWorkoutsByStatus = (
@@ -373,6 +396,7 @@ export {
 	fetchTodaysWorkouts,
 	fetchWorkoutDetails,
 	fetchAllWorkouts,
+	getLastWorkout,
 	markWorkoutAsDone,
 	prepareLogWorkout,
 	prepareMarkAsDoneBody,

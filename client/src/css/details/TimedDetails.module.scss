@@ -24,6 +24,11 @@
 			}
 		}
 	}
+	&_main {
+		width: 100%;
+		@include flex_row(center, center, wrap);
+		gap: 0.5rem 1rem;
+	}
 }
 
 $size: 4rem;

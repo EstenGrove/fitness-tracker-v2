@@ -28,6 +28,7 @@ const formatLargeNumber = (num: number) => {
 
 export type TKey<T> = keyof T;
 export type TRecord<T> = Record<string, T[]>;
+export type Groups<T> = Record<string, T>;
 
 const groupBy = <T extends object>(key: TKey<T>, list: T[]) => {
 	const grouped = {} as TRecord<T>;

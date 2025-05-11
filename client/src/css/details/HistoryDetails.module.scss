@@ -4,26 +4,54 @@
 
 .HistoryDetails {
 	width: 100%;
+	margin: 2rem 0;
+	padding: 0 0;
 
 	&_title {
-		font-size: 1.8rem;
+		font-size: 2rem;
+		color: $text2;
+		font-weight: 700;
+		// padding-left: 3rem;
+		text-align: center;
+	}
+
+	&_name {
+		width: 100%;
+		text-align: center;
+		font-size: 2.5rem;
+		font-weight: 800;
+		margin: 2rem 0;
+		color: $text1;
+	}
+
+	&_when {
+		width: 100%;
+		@include rowCenter();
+		text-align: center;
+		font-size: 1.5rem;
 		color: $text3;
 	}
 	&_list {
 		width: 100%;
-		@include colCenter();
-		gap: 1rem 0;
-		list-style: none;
+		text-align: center;
+		font-size: 1.6rem;
+		text-wrap: break-word;
+
+		& > b {
+			color: $accentBlue;
+		}
 	}
-}
 
-.HistoryItem {
-	width: 100%;
-	padding: 0.5rem 1rem;
-	border-radius: 1rem;
-	border: $borderLight;
+	&_main {
+		width: 100%;
+		@include colCenter();
 
-	&_name {
-		font-size: 1.5rem;
+		&_block {
+			width: 100%;
+			@include rowCenter();
+			flex-wrap: wrap;
+			gap: 1rem 2rem;
+			margin: 1rem 0;
+		}
 	}
 }

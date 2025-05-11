@@ -204,27 +204,45 @@ const normalizeHistoryEntryByType = (
 	switch (type) {
 		case "Strength": {
 			const entry = normalizeStrengthHistory(history as StrengthHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Strength",
+			};
 		}
 		case "Cardio": {
 			const entry = normalizeCardioHistory(history as CardioHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Cardio",
+			};
 		}
 		case "Walk": {
 			const entry = normalizeWalkHistory(history as WalkHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Walk",
+			};
 		}
 		case "Stretch": {
 			const entry = normalizeStretchHistory(history as StretchHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Stretch",
+			};
 		}
 		case "Timed": {
 			const entry = normalizeTimedHistory(history as TimedHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Timed",
+			};
 		}
 		case "Other": {
 			const entry = normalizeOtherHistory(history as OtherHistoryDB);
-			return entry;
+			return {
+				...entry,
+				activityType: "Other",
+			};
 		}
 
 		default:
