@@ -18,6 +18,29 @@ class HistoryService {
 		this.#db = db;
 	}
 
+	async getHistoryDetails(
+		userID: string,
+		historyID: number,
+		activityType: string
+	) {
+		try {
+			const query = `SELECT * FROM get_history_details(
+				$1,
+				$2,
+				$3
+			) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				historyID,
+				activityType,
+			]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async getMostRecentSession(params: LastSessionParams) {
 		const { userID, workoutID, activityType } = params;
 		try {

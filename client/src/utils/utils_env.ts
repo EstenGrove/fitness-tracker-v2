@@ -62,7 +62,7 @@ const API_AUTH = {
 	},
 };
 
-const CURRENT_ENV_KEY = "local";
+const CURRENT_ENV_KEY = "remote";
 const CURRENT_ENV = API_AUTH[CURRENT_ENV_KEY];
 
 const API_ENDPOINTS = {
@@ -113,6 +113,7 @@ const API_ENDPOINTS = {
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
 	},
 	history: {
+		getHistoryDetails: "/history/getHistoryDetails",
 		getLastWorkout: "/history/getLastWorkout",
 		getByID: "/history/getWorkoutHistoryByID",
 		getByDate: "/history/getWorkoutHistoryByDate",

@@ -9,6 +9,7 @@ import {
 } from "../modules/history/allHistory.ts";
 import type {
 	AllHistoryDB,
+	HistoryDetailsDB,
 	HistoryOfType,
 	HistoryOfTypeDB,
 	WorkoutHistoryDB,
@@ -17,6 +18,7 @@ import {
 	getLastWorkoutByDate,
 	type LastSessionParams,
 } from "../modules/history/getLastWorkout.ts";
+import { normalizeHistoryDetails } from "../modules/history/historyDetails.ts";
 
 const app = new Hono();
 
@@ -101,6 +103,29 @@ app.get("/getHistoryByRangeAndType", async (ctx: Context) => {
 		history: history,
 	});
 
+	return ctx.json(resp);
+});
+app.get("/getHistoryDetails", async (ctx: Context) => {
+	const { userID, historyID, activityType } = ctx.req.query();
+	const type = activityType as Activity;
+	console.log("type", type);
+
+	const history = (await historyService.getHistoryDetails(
+		userID,
+		Number(historyID),
+		type
+	)) as HistoryDetailsDB;
+
+	console.log("history", history);
+
+	if (history instanceof Error) {
+		const errResp = getResponseError(history, {
+			history: null,
+		});
+		return ctx.json(errResp);
+	}
+	const historyDetails = normalizeHistoryDetails(history);
+	const resp = getResponseOk(historyDetails);
 	return ctx.json(resp);
 });
 

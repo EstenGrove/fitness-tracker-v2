@@ -1,4 +1,5 @@
 import type { Activity, Effort } from "../types.ts";
+import type { Workout, WorkoutByTypeDB, WorkoutDB } from "../workouts/types.ts";
 
 export interface StrengthSet {
 	id: number;
@@ -125,4 +126,15 @@ export interface AllHistory {
 	cardio: CardioHistory[];
 	timed: TimedHistory[];
 	other: OtherHistory[];
+}
+
+export interface HistoryDetailsDB {
+	workout: WorkoutDB;
+	history: HistoryOfTypeDB;
+	activityType: Activity;
+}
+export interface HistoryDetails {
+	workout: Workout;
+	history: HistoryOfType;
+	activityType: Activity;
 }

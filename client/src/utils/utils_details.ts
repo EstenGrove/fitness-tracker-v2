@@ -80,7 +80,7 @@ const getSetsSummary = (sets: WorkoutSet[]) => {
 
 const getTotalReps = (sets: StrengthSet[]): number => {
 	if (!sets || !sets.length) return 0;
-	const total = sets.reduce((total, set) => (total += set.reps), 0);
+	const total = sets.reduce((total, set) => (total += Number(set.reps)), 0);
 
 	return total;
 };

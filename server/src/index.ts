@@ -16,8 +16,13 @@ const CLIENT = {
 	port: Number(process.env.CLIENT_HTTP_PORT),
 };
 
-const origin = "http://" + CLIENT.host + ":" + CLIENT.port;
-console.log("origin", origin);
+const ORIGIN = {
+	prefix: "http://",
+	host: CLIENT.host,
+	port: CLIENT.port,
+};
+
+const origin = ORIGIN.prefix + CLIENT.host + ":" + CLIENT.port;
 
 const corsConfig = {
 	origin: origin,

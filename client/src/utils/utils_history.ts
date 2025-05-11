@@ -1,5 +1,6 @@
 import {
 	AllHistory,
+	HistoryDetails,
 	HistoryOfType,
 	WalkHistory,
 	WorkoutHistory,
@@ -13,7 +14,13 @@ import { fetchWithAuth } from "./utils_requests";
 
 export type AllHistoryResp = AsyncResponse<AllHistory>;
 export type HistoryTypeResp = AsyncResponse<{ history: WorkoutHistory[] }>;
+export type HistoryDetailsResp = AsyncResponse<HistoryDetails>;
 
+export interface HistoryDetailsParams {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+}
 interface DateRangeStr {
 	startDate: string;
 	endDate: string;
@@ -47,6 +54,25 @@ const fetchHistoryByRangeAndActivity = async (
 	url += "&" + new URLSearchParams({ activityType });
 	url += "&" + new URLSearchParams({ ...range });
 
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchHistoryDetails = async (
+	userID: string,
+	historyID: number,
+	activityType: Activity
+): HistoryDetailsResp => {
+	let url = currentEnv.base + historyApis.getHistoryDetails;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ activityType });
+	url += "&" + new URLSearchParams({ historyID: String(historyID) });
 	try {
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
@@ -109,6 +135,7 @@ const getExerciseFromSets = (sets: ExerciseSet[], fallback: string = "") => {
 };
 
 export {
+	fetchHistoryDetails,
 	fetchHistoryByRange,
 	fetchHistoryByRangeAndActivity,
 	getKcals,

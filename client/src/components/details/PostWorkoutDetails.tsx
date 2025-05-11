@@ -26,7 +26,6 @@ import {
 	NthStats,
 	PostWorkoutHistory,
 	PostWorkoutHistoryWithSets,
-	PostWorkoutOfType,
 } from "../../features/stats/types";
 import DetailsBlock from "./DetailsBlock";
 import { WorkoutSet } from "../../utils/utils_workouts";
@@ -62,6 +61,7 @@ const Strength = ({ entry }: DetailsProps<StrengthHistory>) => {
 	const sets = getSets(entry);
 	const weight = getWeight(entry);
 	const reps = getTotalReps(entry.sets);
+	console.log("entry.sets", entry.sets);
 
 	return (
 		<div className={styles.Block}>
@@ -168,9 +168,10 @@ const SetsSummary = ({ entry }: { entry: PostWorkoutHistoryWithSets }) => {
 			</div>
 			<div className={styles.SetsSummary_group}>
 				{summary &&
-					summary.map((desc: string) => {
+					summary.map((desc: string, idx) => {
+						const key = `${desc.slice(0, 10)}-${idx}`;
 						return (
-							<div key={desc} className={styles.SetsSummary_item}>
+							<div key={key} className={styles.SetsSummary_item}>
 								{desc}
 							</div>
 						);

@@ -1,5 +1,5 @@
 import { Activity, Effort } from "../shared/types";
-import { ExerciseSet, StrengthSet } from "../workouts/types";
+import { ExerciseSet, StrengthSet, WorkoutByType } from "../workouts/types";
 
 export interface WorkoutHistory {
 	userID: string;
@@ -27,6 +27,7 @@ export interface StrengthHistory extends WorkoutHistory {
 export interface StretchHistory extends WorkoutHistory {
 	sets: ExerciseSet[];
 	reps: number;
+	exercise: string | null;
 }
 export interface CardioHistory extends WorkoutHistory {
 	reps: number;
@@ -62,3 +63,9 @@ export type HistoryOfType =
 	| OtherHistory;
 
 export type HistoryForActivity<T> = WorkoutHistory & T;
+
+export interface HistoryDetails {
+	activityType: Activity;
+	workout: WorkoutByType;
+	history: HistoryOfType;
+}

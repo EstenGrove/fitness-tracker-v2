@@ -25,6 +25,7 @@ const getWeight = (entry: Entry) => {
 		);
 		return weight + "lbs.";
 	} else {
+		console.log("entry", entry);
 		// workout
 		const record = entry as StrengthWorkout;
 		return record.weight + "lbs.";

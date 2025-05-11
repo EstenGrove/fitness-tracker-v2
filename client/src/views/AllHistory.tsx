@@ -15,6 +15,7 @@ import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 type GroupedHistory = TRecord<WorkoutHistory>;
 
@@ -154,14 +155,13 @@ const AllHistory = () => {
 			)}
 
 			{/* VIEW MODAL */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{/* EDIT MODAL */}
-			{modalType === EMenuAction.EDIT && (
+			{selectedEntry && modalType === EMenuAction.EDIT && (
 				<ModalLG onClose={closeActionModal}>
 					{/*  */}
 					{/*  */}
