@@ -42,7 +42,8 @@ const pillFractions = {
 } as const;
 
 const getPillFraction = (dose: number): string => {
-	const fraction = pillFractions[dose as keyof object];
+	const normed = dose.toFixed(2);
+	const fraction = pillFractions[normed as keyof object];
 
 	return fraction;
 };

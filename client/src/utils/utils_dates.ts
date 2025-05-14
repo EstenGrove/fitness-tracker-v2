@@ -188,6 +188,17 @@ const formatTime = (
 	return formatted;
 };
 
+const formatTimestamp = (
+	timestamp: string | number,
+	formatToken: keyof DateFormats["time"] = "long"
+) => {
+	if (!timestamp) return "";
+	const token = TIME_TOKENS[formatToken];
+	const formatted = format(timestamp, token);
+
+	return formatted;
+};
+
 const formatDateTime = (
 	date: Date | string,
 	formatToken: keyof DateFormats["datetime"] = "db"
@@ -392,6 +403,7 @@ export {
 	formatDateTime,
 	formatCustomDate,
 	formatDateAsWeekDay,
+	formatTimestamp,
 	// PARSING STRINGS AS DATE/TIME/DATETIME
 	parseDate,
 	parseAnyDate,

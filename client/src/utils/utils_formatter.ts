@@ -46,4 +46,33 @@ const extractHrsAndMins = (
 	return { hrs, mins };
 };
 
-export { NumberFormatter, extractHrsAndMins };
+export interface IMinsAndSecs {
+	minutes: number;
+	seconds: number;
+}
+const timerToMinsAndSecs = (timer: number): IMinsAndSecs => {
+	const mins = Math.floor(timer / 60);
+	const secs = timer - mins * 60;
+
+	return {
+		minutes: mins,
+		seconds: secs,
+	};
+};
+
+const formattedTime = (timer: number) => {
+	// format the timerValue => '0:01'
+	const { minutes, seconds } = timerToMinsAndSecs(timer);
+	const secs = seconds < 10 ? `0${seconds}` : seconds;
+	const mins = minutes < 10 ? `0${minutes}` : minutes;
+	const newTime = `${mins}:${secs}`;
+
+	return newTime;
+};
+
+export {
+	NumberFormatter,
+	extractHrsAndMins,
+	timerToMinsAndSecs,
+	formattedTime,
+};

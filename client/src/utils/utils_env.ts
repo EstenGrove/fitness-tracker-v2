@@ -128,6 +128,7 @@ const API_ENDPOINTS = {
 		getOtherByRange: "/history/getOtherHistoryByRange",
 	},
 	meds: {
+		getMedsInfo: "/medications/getMedsInfo",
 		logMed: "/medications/logMedication",
 		getPillSummaryByDate: "/medications/getPillSummary",
 		getSummaryByDate: "/medications/getMedSummaryByDate",

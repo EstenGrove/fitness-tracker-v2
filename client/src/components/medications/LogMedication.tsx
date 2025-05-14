@@ -250,7 +250,7 @@ const LogMedication = ({
 		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
 			userID: userID,
-			scheduleID: scheduleID ?? 1,
+			scheduleID: scheduleID ?? 2,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,
@@ -259,7 +259,6 @@ const LogMedication = ({
 		});
 
 		await logMed(medLog);
-		// await dispatch(logMedication({ userID: userID, medLog }));
 		return onSave && onSave();
 	};
 
@@ -268,7 +267,7 @@ const LogMedication = ({
 		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
 			userID,
-			scheduleID: scheduleID ?? 1,
+			scheduleID: scheduleID ?? 2,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,
@@ -278,7 +277,6 @@ const LogMedication = ({
 
 		console.log("[SKIPPED]:", medLog);
 		await logMed(medLog);
-		// await dispatch(logMedication({ userID: userID, medLog }));
 		return onSave && onSave();
 	};
 

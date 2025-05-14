@@ -1,18 +1,32 @@
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/active-workout/EndedWorkout.module.scss";
-import { TimeInfoAndTotal } from "../../hooks/useWorkoutTimer";
-import { formatTime } from "../../utils/utils_dates";
+import { TimerStatus } from "../../hooks/usePersistentTimer";
+import { formatTimestamp } from "../../utils/utils_dates";
+
+interface TotalInfo {
+	startedAt: number;
+	startTime: string;
+	status: TimerStatus;
+	intervalInSecs: number;
+	endedAt: number;
+	endTime: string;
+	pausedAt: number | null;
+	pauseTime: string | null;
+	resumedAt: number | null;
+	resumeTime: string | null;
+	totalSecs: number;
+	totalLength: string;
+}
 
 type Props = {
-	info: TimeInfoAndTotal;
+	info: TotalInfo;
 };
 
 const EndedWorkout = ({ info }: Props) => {
-	const { startedAt, endedAt, totalTime } = info;
-	const start = formatTime(startedAt as string, "longMs");
-	const end = formatTime(endedAt as string, "longMs");
+	const { startedAt, endedAt, totalSecs, totalLength } = info;
+	const start = formatTimestamp(startedAt, "longMs");
+	const end = formatTimestamp(endedAt, "longMs");
 
-	console.log("info(EndedWorkout):", info);
 	return (
 		<div className={styles.EndedWorkout}>
 			<div className={styles.EndedWorkout_wrapper}>
@@ -25,7 +39,10 @@ const EndedWorkout = ({ info }: Props) => {
 			</div>
 			<div className={styles.EndedWorkout_about}>
 				<div>
-					Length: <b>{totalTime}</b>
+					Length:{" "}
+					<b>
+						{totalLength} ({totalSecs}s)
+					</b>
 				</div>
 				<div>
 					Started at: <b>{start}</b>

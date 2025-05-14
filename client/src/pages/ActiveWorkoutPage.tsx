@@ -12,6 +12,7 @@ import NavArrows from "../components/layout/NavArrows";
 import { LocalStorage } from "../utils/utils_storage";
 import { useAppDispatch } from "../store/store";
 import { useEffect } from "react";
+import { addEllipsis } from "../utils/utils_misc";
 
 const ACTIVE_KEY = "ACTIVE";
 const storage = new LocalStorage();
@@ -20,7 +21,8 @@ const ActiveWorkoutPage = () => {
 	const dispatch = useAppDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const activeWorkout: TodaysWorkout = useSelector(selectActiveWorkout);
-	const workoutName: string = activeWorkout?.workoutName ?? "Active Workout";
+	const workoutName: string =
+		addEllipsis(activeWorkout?.workoutName, 20) ?? "Active Workout";
 
 	// Sync active workout upon refresh
 	useEffect(() => {

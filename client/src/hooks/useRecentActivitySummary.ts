@@ -12,7 +12,7 @@ const useRecentActivitySummary = (
 ) => {
 	const currentUser = useSelector(selectCurrentUser);
 	const shouldFetch = Boolean(currentUser?.userID);
-	const { data, isLoading } = useGetActivitySummaryQuery(
+	const { data, isLoading, refetch } = useGetActivitySummaryQuery(
 		{
 			userID: currentUser?.userID,
 			targetDate: targetDate,
@@ -23,6 +23,7 @@ const useRecentActivitySummary = (
 	const activitySummary = data as ActivitySummaryFor;
 
 	return {
+		refetch: refetch,
 		data: activitySummary,
 		isLoading: isLoading,
 	};

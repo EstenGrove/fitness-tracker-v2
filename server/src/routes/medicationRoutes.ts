@@ -8,6 +8,7 @@ import type {
 	MedicationDB,
 	MedicationLog,
 	MedicationLogDB,
+	MedsInfo,
 	MedSummary,
 	MedSummaryDB,
 	PillSummary,
@@ -16,6 +17,7 @@ import type {
 import { normalizePillSummary } from "../modules/medications/pillSummary.ts";
 import { normalizeMedSummary } from "../modules/medications/medSummary.ts";
 import { normalizeMedLog } from "../modules/medications/medLogs.ts";
+import { getMedsInfo } from "../modules/medications/getMedsInfo.ts";
 
 const app = new Hono();
 
@@ -57,6 +59,24 @@ app.get("/getPillSummary", async (ctx: Context) => {
 	const resp = getResponseOk({
 		summary: pillSummary,
 	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getMedsInfo", async (ctx: Context) => {
+	const { userID, targetDate } = ctx.req.query();
+
+	const medsInfo = (await getMedsInfo(userID, targetDate)) as MedsInfo;
+
+	if (medsInfo instanceof Error) {
+		const errResp = getResponseError(medsInfo, {
+			activeMeds: [],
+			activeSchedules: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(medsInfo);
 
 	return ctx.json(resp);
 });

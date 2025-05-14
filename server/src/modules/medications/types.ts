@@ -98,3 +98,12 @@ export interface MedSummary {
 	pillSummary: PillSummary;
 	medicationLogs: MedicationLog[];
 }
+
+export interface MedsInfoDB {
+	activeMeds: MedicationDB[];
+	activeSchedules: MedicationScheduleDB[];
+}
+export interface MedsInfo {
+	activeMeds: Medication[];
+	activeSchedules: MedicationSchedule[];
+}

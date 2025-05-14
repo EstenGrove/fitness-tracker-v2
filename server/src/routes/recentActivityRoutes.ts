@@ -1,9 +1,7 @@
 import { type Context, Hono } from "hono";
-import { recentActivityService } from "../services/index.ts";
 import { getRecentActivityFor } from "../modules/recentActivity/summaryFor.ts";
 import type {
 	ActivityRangeType,
-	ActivitySummaryFor,
 	ActivitySummaryForDB,
 } from "../modules/recentActivity/types.ts";
 import { getResponseError, getResponseOk } from "../utils/api.ts";
