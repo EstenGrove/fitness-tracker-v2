@@ -60,9 +60,6 @@ const ViewPostWorkout = ({ workout }: Props) => {
 						/>
 					</>
 				)}
-				{/*  */}
-				{/*  */}
-				{/*  */}
 			</div>
 		</div>
 	);

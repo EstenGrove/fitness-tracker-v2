@@ -20,9 +20,10 @@ interface TotalInfo {
 
 type Props = {
 	info: TotalInfo;
+	onAddDetails: () => void;
 };
 
-const EndedWorkout = ({ info }: Props) => {
+const EndedWorkout = ({ info, onAddDetails }: Props) => {
 	const { startedAt, endedAt, totalSecs, totalLength } = info;
 	const start = formatTimestamp(startedAt, "longMs");
 	const end = formatTimestamp(endedAt, "longMs");
@@ -50,6 +51,18 @@ const EndedWorkout = ({ info }: Props) => {
 				<div>
 					Ended at: <b>{end}</b>
 				</div>
+			</div>
+			<div className={styles.EndedWorkout_actions}>
+				<button
+					type="button"
+					onClick={onAddDetails}
+					className={styles.EndedWorkout_actions_add}
+				>
+					<svg className={styles.EndedWorkout_actions_add_icon}>
+						<use xlinkHref={`${sprite}#icon-edit-property`}></use>
+					</svg>
+					<span>Add Details</span>
+				</button>
 			</div>
 		</div>
 	);

@@ -33,6 +33,7 @@ const generateSets = (
 			id: i + 1,
 			reps: reps,
 			exercise: exercise || "",
+			sets: sets ?? 1,
 		};
 		workoutSets.push(entry);
 	}

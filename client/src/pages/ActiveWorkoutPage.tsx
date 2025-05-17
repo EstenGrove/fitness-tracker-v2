@@ -13,11 +13,13 @@ import { LocalStorage } from "../utils/utils_storage";
 import { useAppDispatch } from "../store/store";
 import { useEffect } from "react";
 import { addEllipsis } from "../utils/utils_misc";
+import { useLocation } from "react-router";
 
 const ACTIVE_KEY = "ACTIVE";
 const storage = new LocalStorage();
 
 const ActiveWorkoutPage = () => {
+	const location = useLocation();
 	const dispatch = useAppDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const activeWorkout: TodaysWorkout = useSelector(selectActiveWorkout);

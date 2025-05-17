@@ -320,6 +320,11 @@
 
 	--cardBorder: var(--blueGrey300);
 	--cardGoToIcon: var(--blueGrey500);
+
+	/* Habits */
+	--habitDisplay: #000;
+	--habitColor: #fff;
+	--habitMinus: #000;
 }
 
 *,
@@ -369,6 +374,9 @@ body {
 
 	--cardBorder: var(--blueGrey300);
 	--cardGoToIcon: var(--blueGrey400);
+	--habitDisplay: #000;
+	--habitColor: #000;
+	--habitMinus: #000;
 }
 
 :root[data-theme="dark"] {
@@ -391,6 +399,10 @@ body {
 
 	--cardBorder: var(--blueGrey800);
 	--cardGoToIcon: var(--blueGrey800);
+
+	--habitDisplay: #fff;
+	--habitColor: #fff;
+	--habitMinus: var(--blueGrey600);
 }
 
 input {

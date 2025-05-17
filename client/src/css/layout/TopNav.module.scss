@@ -65,14 +65,57 @@
 	z-index: 9999;
 	transition: left 0.3s ease-in-out;
 
-	&_inner {
-		@include fill_container;
+	&_top {
+		width: 100%;
+		height: 10%;
+		padding: 1rem 1rem;
+	}
+
+	&_main {
+		width: 100%;
+		height: 80%;
+		padding: 1rem 1rem;
+
+		&_list {
+			width: 100%;
+			height: auto;
+			padding-left: 1rem;
+			list-style-type: none;
+			@include flex_col(flex-start, flex-start);
+			gap: 2rem 0;
+			margin-bottom: 2rem;
+		}
+		&_section {
+			// padding-left: 0.5rem;
+			font-size: 1.5rem;
+			color: $text3;
+			margin-top: 1rem;
+			margin-bottom: 0.5rem;
+		}
+	}
+	&_bottom {
+		width: 100%;
+		height: 10%;
+		padding: 1rem 1rem;
 	}
 }
 .slideIn {
 	-webkit-animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
 		both;
 	animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.SidePanelItem {
+	font-size: 1.8rem;
+	font-weight: 800;
+	color: $text1;
+	text-decoration: none;
+}
+
+.isActive {
+	color: $accentBlue;
+	text-decoration: 2px underline $accentBlue;
+	text-decoration: 2px underline $text2;
 }
 
 /* ----------------------------------------------

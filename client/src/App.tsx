@@ -20,6 +20,9 @@ const Dashboard = lazy(() => import("./pages/DashboardPage"));
 const Medications = lazy(() => import("./pages/MedicationsPage"));
 const RecentActivity = lazy(() => import("./pages/RecentActivityPage"));
 const MedicationDetails = lazy(() => import("./pages/MedicationDetailsPage"));
+// Habits Pages
+const Habits = lazy(() => import("./pages/HabitsPage"));
+const HabitTracker = lazy(() => import("./pages/HabitTrackerPage"));
 // Layout page
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
@@ -69,6 +72,23 @@ function App() {
 								}
 							>
 								<Route index element={<Dashboard />} />
+
+								<Route
+									path="/habits"
+									element={
+										<Suspense fallback={<Loader />}>
+											<Habits />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="/habits/:id/tracker"
+									element={
+										<Suspense fallback={<Loader />}>
+											<HabitTracker />
+										</Suspense>
+									}
+								/>
 
 								<Route
 									path="active/:id"

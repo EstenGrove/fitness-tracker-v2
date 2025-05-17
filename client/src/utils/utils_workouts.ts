@@ -389,6 +389,23 @@ const prepareLogWorkout = (userID: string, values: LogWorkoutValues) => {
 	return newValues;
 };
 
+export interface EndedWorkoutValues {
+	workoutID: number;
+	activityType: Activity | string;
+	workoutDate: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: string;
+	steps: number;
+	miles: number;
+	pace: number;
+	exercise: string;
+	sets: WorkoutSet[];
+}
+
+const prepareEndedWorkout = (userID: string, values: EndedWorkoutValues) => {};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -403,4 +420,5 @@ export {
 	calculateStartAndEndTimes,
 	calculateWalkMetrics,
 	getWorkoutsByStatus,
+	prepareEndedWorkout,
 };

@@ -147,6 +147,11 @@ const API_ENDPOINTS = {
 	recentActivity: {
 		getSummary: "/recentActivity/getRecentActivitySummary",
 	},
+	habits: {
+		getHabits: "/habits/getHabits",
+		getHabitLogs: "/habits/getHabitLogs",
+		getHabitSummaries: "/habits/getHabitSummaries",
+	},
 };
 
 export const {
@@ -156,6 +161,7 @@ export const {
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,
+	habits: habitApis,
 	history: historyApis,
 	meds: medicationApis,
 	dashboard: dashboardApis,

@@ -16,7 +16,7 @@ export interface PillSummary {
 	pillsTakenToday: number;
 }
 export interface Medication {
-	medID: number;
+	medicationID: number;
 	scheduleID: number;
 	scheduleStart: Date | string;
 	scheduleEnd: Date | string;

@@ -12,6 +12,7 @@ import { formattedTime } from "../../utils/utils_formatter";
 type Props = {
 	duration: number;
 	onEnd: (info: TimeInfo) => void;
+	onSkip: () => void;
 };
 
 type ButtonProps = {
@@ -24,6 +25,7 @@ type TimerControlProps = {
 	pause: () => void;
 	resume: () => void;
 	end: () => void;
+	skip: () => void;
 };
 
 const TimerControls = ({
@@ -32,6 +34,7 @@ const TimerControls = ({
 	pause,
 	resume,
 	end,
+	skip,
 }: TimerControlProps) => {
 	const showStart =
 		status === ETimerStatus.IDLE || status === ETimerStatus.PAUSED;
@@ -49,7 +52,7 @@ const TimerControls = ({
 			) : (
 				<PauseButton onClick={pause} />
 			)}
-			<SkipButton onClick={end} />
+			<SkipButton onClick={skip} />
 		</div>
 	);
 };
@@ -122,7 +125,7 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 	);
 };
 
-const WorkoutTimer = ({ duration, onEnd }: Props) => {
+const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
 	const timer = usePersistentTimer(duration, {
 		onEnd(info) {
 			console.log("info", info);
@@ -151,6 +154,9 @@ const WorkoutTimer = ({ duration, onEnd }: Props) => {
 	const resume = () => {
 		timer.resume();
 	};
+	const skip = () => {
+		return onSkip && onSkip();
+	};
 
 	return (
 		<div className={styles.WorkoutTimer}>
@@ -164,6 +170,7 @@ const WorkoutTimer = ({ duration, onEnd }: Props) => {
 					pause={pause}
 					resume={resume}
 					end={end}
+					skip={skip}
 				/>
 			</div>
 			<div className={styles.WorkoutTimer_reset}>

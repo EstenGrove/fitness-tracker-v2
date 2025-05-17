@@ -1,0 +1,17 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.HabitsList {
+	width: 100%;
+	padding-left: 1rem;
+
+	&_container {
+		width: 100%;
+		@include flex_row(flex-start, center);
+		gap: 0 2rem;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-behavior: smooth;
+	}
+}

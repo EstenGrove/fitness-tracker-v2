@@ -1,7 +1,4 @@
-const saveToLocalStorage = (
-	key: string,
-	data: object | number | string | null
-) => {
+const saveToLocalStorage = (key: string, data: JsonValue) => {
 	const value: string = JSON.stringify(data);
 
 	localStorage.setItem(key, value);
@@ -20,12 +17,51 @@ const removeFromLocalStorage = (key: string) => {
 	localStorage.removeItem(key);
 };
 
-class LocalStorage {
+const saveToSessionStorage = (key: string, data: JsonValue) => {
+	const value: string = JSON.stringify(data);
+
+	sessionStorage.setItem(key, value);
+};
+
+const getFromSessionStorage = (key: string) => {
+	const valueStr = sessionStorage.getItem(key);
+	if (valueStr) {
+		return JSON.parse(valueStr);
+	} else {
+		return null;
+	}
+};
+
+const removeFromSessionStorage = (key: string) => {
+	sessionStorage.removeItem(key);
+};
+
+export type JsonValue =
+	| string
+	| number
+	| boolean
+	| null
+	| JsonValue[]
+	| { [key: string]: JsonValue };
+
+export interface BrowserStorage {
+	get: (key: string) => unknown;
+	set: (
+		key: string,
+		data: JsonValue
+		// data: object | number | Array<unknown> | string | null
+	) => void;
+	remove: (key: string) => void;
+	clear: () => void;
+	getAll: () => Record<string, unknown>;
+}
+
+class LocalStorage implements BrowserStorage {
 	get(key: string) {
 		return getFromLocalStorage(key);
 	}
-	set(key: string, data: object | number | Array<unknown> | string | null) {
-		return saveToLocalStorage(key, data);
+	set(key: string, data: JsonValue) {
+		return saveToLocalStorage(key, data as JsonValue);
 	}
 	remove(key: string) {
 		return removeFromLocalStorage(key);
@@ -39,9 +75,33 @@ class LocalStorage {
 	}
 }
 
+class SessionStorage implements BrowserStorage {
+	get(key: string) {
+		return getFromSessionStorage(key);
+	}
+	set(key: string, data: JsonValue) {
+		return saveToSessionStorage(key, data);
+	}
+	remove(key: string) {
+		return removeFromSessionStorage(key);
+	}
+	clear() {
+		return sessionStorage.clear();
+	}
+	getAll() {
+		const items = { ...sessionStorage };
+		return items;
+	}
+}
+
 export {
 	saveToLocalStorage,
 	getFromLocalStorage,
 	removeFromLocalStorage,
 	LocalStorage,
+	// Session
+	saveToSessionStorage,
+	getFromSessionStorage,
+	removeFromSessionStorage,
+	SessionStorage,
 };

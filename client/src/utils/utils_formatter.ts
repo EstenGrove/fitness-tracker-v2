@@ -37,6 +37,7 @@ class NumberFormatter {
 		return intl.format(num);
 	}
 }
+const numFormatter = new NumberFormatter();
 
 const extractHrsAndMins = (
 	totalMinutes: number
@@ -70,9 +71,23 @@ const formattedTime = (timer: number) => {
 	return newTime;
 };
 
+const formatLargeNumber = (num: number) => {
+	return numFormatter.largeNumber(num);
+};
+const formatMoney = (num: number) => {
+	return numFormatter.currency(num);
+};
+const formatAsPercent = (num: number) => {
+	return numFormatter.percent(num);
+};
+
 export {
 	NumberFormatter,
+	numFormatter,
 	extractHrsAndMins,
 	timerToMinsAndSecs,
+	formatMoney,
+	formatAsPercent,
 	formattedTime,
+	formatLargeNumber,
 };
