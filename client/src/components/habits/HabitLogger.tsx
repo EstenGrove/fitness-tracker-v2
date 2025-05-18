@@ -1,26 +1,33 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+	ChangeEvent,
+	FocusEvent,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/habits/HabitLogger.module.scss";
-import { HabitCardInfo } from "../../features/habits/types";
+import {
+	Habit,
+	HabitLogValues,
+	HabitSummary,
+} from "../../features/habits/types";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-import { useLongPressInterval } from "../../hooks/useLongPressInterval";
 import FadeIn from "../ui/FadeIn";
+import {
+	DeferredFetch,
+	DeferredLog,
+	useDeferredLogQueue,
+} from "../../hooks/useDeferredLogQueue";
+import { logHabitsBatched } from "../../utils/utils_habits";
+import { prepareTimestamp } from "../../utils/utils_dates";
 
-type Props = { habit: HabitCardInfo; habitStep: number };
+type Props = { habit: Habit; summary: HabitSummary; habitStep: number };
 
 const MinusButton = ({ onClick }: { onClick: () => void }) => {
-	const handlers = useLongPressInterval({
-		delay: 300,
-		interval: 100,
-		onPress: onClick,
-	});
 	return (
-		<button
-			type="button"
-			{...handlers}
-			onClick={onClick}
-			className={styles.MinusButton}
-		>
+		<button type="button" onClick={onClick} className={styles.MinusButton}>
 			<svg className={styles.MinusButton_icon}>
 				<use xlinkHref={`${sprite}#icon-minus`}></use>
 			</svg>
@@ -28,18 +35,8 @@ const MinusButton = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 const AddButton = ({ onClick }: { onClick: () => void }) => {
-	const handlers = useLongPressInterval({
-		delay: 300,
-		interval: 100,
-		onPress: onClick,
-	});
 	return (
-		<button
-			type="button"
-			{...handlers}
-			onClick={onClick}
-			className={styles.AddButton}
-		>
+		<button type="button" onClick={onClick} className={styles.AddButton}>
 			<svg className={styles.AddButton_icon}>
 				<use xlinkHref={`${sprite}#icon-plus-math`}></use>
 			</svg>
@@ -50,29 +47,29 @@ const AddButton = ({ onClick }: { onClick: () => void }) => {
 type DisplayProps = {
 	value: number;
 	onChange: (value: number) => void;
-	hitGoal: boolean;
 };
 type DisplayInputProps = {
 	habitValue: number;
 	closeInput: () => void;
 	onChange: (value: number) => void;
-	hitGoal: boolean;
 };
 
 const DisplayInput = ({
 	habitValue,
 	onChange,
 	closeInput,
-	hitGoal,
 }: DisplayInputProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	useOutsideClick(inputRef, closeInput);
-	const css = { color: hitGoal ? "var(--accent-green)" : "initial" };
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target;
 
 		return onChange(Number(value));
+	};
+
+	const selectText = (e: FocusEvent<HTMLInputElement>) => {
+		e.currentTarget.select();
 	};
 
 	// Focus & select text onMount
@@ -92,29 +89,21 @@ const DisplayInput = ({
 
 	return (
 		<input
-			ref={inputRef}
 			type="number"
 			name="value"
 			id="value"
 			inputMode="numeric"
+			ref={inputRef}
 			value={habitValue}
 			onChange={handleChange}
+			onFocus={selectText}
 			className={styles.DisplayInput}
-			style={css}
-			// onFocus={(el) => el.currentTarget.select()}
 		/>
 	);
 };
 
-const DisplayValue = ({
-	value = 0,
-	onChange,
-	hitGoal = false,
-}: DisplayProps) => {
+const DisplayValue = ({ value = 0, onChange }: DisplayProps) => {
 	const [showInput, setShowInput] = useState<boolean>(false);
-	const css = {
-		color: hitGoal ? "var(--accent-green)" : "var(--habitDisplay)",
-	};
 
 	const openInput = () => {
 		setShowInput(true);
@@ -126,17 +115,12 @@ const DisplayValue = ({
 	return (
 		<div className={styles.DisplayValue}>
 			{!showInput && (
-				<div
-					className={styles.DisplayValue_text}
-					onClick={openInput}
-					style={css}
-				>
+				<div className={styles.DisplayValue_text} onClick={openInput}>
 					{value}
 				</div>
 			)}
 			{showInput && (
 				<DisplayInput
-					hitGoal={hitGoal}
 					habitValue={value}
 					onChange={onChange}
 					closeInput={closeInput}
@@ -157,19 +141,19 @@ const HitGoal = () => {
 	);
 };
 
-const hasHitGoal = (habitsLogged: number, habit: HabitCardInfo) => {
+const hasHitGoal = (habitsLogged: number, habit: Habit) => {
 	const { intent, habitTarget } = habit;
 	const current = Number(habitsLogged);
 
 	switch (intent) {
 		case "BUILD": {
-			return current >= habitTarget;
+			return !!current && current >= habitTarget;
 		}
 		case "ELIMINATE": {
-			return current === 0;
+			return !!current && current === 0;
 		}
 		case "REDUCE": {
-			return current < habitTarget;
+			return !!current && current < habitTarget;
 		}
 		case "LAPSE": {
 			return !(current > 0);
@@ -180,26 +164,52 @@ const hasHitGoal = (habitsLogged: number, habit: HabitCardInfo) => {
 	}
 };
 
-const HabitLogger = ({ habit, habitStep = 1 }: Props) => {
+const prepareHabitLog = (value: number, habit: Habit) => {
+	const loggedAt = prepareTimestamp(new Date());
+	const values: HabitLogValues = {
+		userID: habit.userID,
+		habitID: habit.habitID,
+		loggedAmount: value,
+		loggedAt: loggedAt,
+		notes: "Habit logged",
+	};
+	return values;
+};
+
+const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 	const [todaysValue, setTodaysValue] = useState<number>(
-		habit.habitsLogged || 0
-		// 10
+		summary.totalLogged || 0
 	);
+	const { queueLog } = useDeferredLogQueue(
+		1000,
+		logHabitsBatched as DeferredFetch<HabitLogValues>
+	);
+
 	const hitGoal = useMemo(() => {
 		return hasHitGoal(todaysValue, habit);
-		// return true;
 	}, [todaysValue, habit]);
 
 	const handleEdit = (value: number) => {
 		setTodaysValue(value);
+
+		const newLog = prepareHabitLog(value, habit);
+		queueLog(newLog as unknown as DeferredLog);
 	};
 
 	const add = () => {
-		setTodaysValue(todaysValue + habitStep);
+		const value = todaysValue + habitStep;
+		setTodaysValue(value);
+
+		const newLog = prepareHabitLog(habitStep, habit);
+		queueLog(newLog as unknown as DeferredLog);
 	};
 	const minus = () => {
 		const newValue = todaysValue - habitStep;
-		setTodaysValue(newValue >= 0 ? newValue : 0);
+		const value = newValue >= 0 ? newValue : 0;
+		setTodaysValue(value);
+
+		const newLog = prepareHabitLog(-habitStep, habit);
+		queueLog(newLog as unknown as DeferredLog);
 	};
 
 	return (
@@ -207,25 +217,19 @@ const HabitLogger = ({ habit, habitStep = 1 }: Props) => {
 			<div className={styles.HabitLogger_display}>
 				<div className={styles.HabitLogger_display_main}>
 					<MinusButton onClick={minus} />
-					<DisplayValue
-						hitGoal={hitGoal}
-						value={todaysValue}
-						onChange={handleEdit}
-					/>
+					<DisplayValue value={todaysValue} onChange={handleEdit} />
 					<AddButton onClick={add} />
 				</div>
 				<div className={styles.HabitLogger_display_unitDesc}>
-					of 10 {habit.habitUnit}
+					of {habit.habitTarget} {habit.habitUnit}
 				</div>
 			</div>
 			<div className={styles.HabitLogger_goal}>
-				{/*  */}
 				{hitGoal && (
 					<FadeIn>
 						<HitGoal />
 					</FadeIn>
 				)}
-				{/*  */}
 			</div>
 		</div>
 	);

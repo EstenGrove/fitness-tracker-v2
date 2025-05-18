@@ -1,13 +1,65 @@
 import type { Pool } from "pg";
-import type { HabitDB, HabitLogDB } from "../modules/habits/types.ts";
+import type {
+	HabitDB,
+	HabitDetailParams,
+	HabitDetailsDB,
+	HabitLogDB,
+	HabitLogValues,
+} from "../modules/habits/types.ts";
 
+export type LoggedHabitResp = Promise<HabitDB | unknown>;
+export type BatchedLogsResp = Promise<HabitDB[] | unknown>;
 export type HabitsResp = Promise<HabitDB[] | unknown>;
 export type HabitLogsResp = Promise<HabitLogDB[] | unknown>;
+export type HabitDetailsResp = Promise<HabitDetailsDB | unknown>;
 
 class HabitsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async logHabitsBatched(logs: HabitLogValues[]): BatchedLogsResp {
+		try {
+			const query = `SELECT * FROM log_habits_batched($1::JSONB)`;
+			const results = await this.#db.query(query, [JSON.stringify(logs)]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async logHabit(values: HabitLogValues): LoggedHabitResp {
+		try {
+			const query = `SELECT * FROM log_habit(
+        $1
+      )`;
+			const results = await this.#db.query(query, [values]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getHabitDetails(params: HabitDetailParams): HabitDetailsResp {
+		const { userID, habitID, targetDate } = params;
+		try {
+			const query = `SELECT * FROM get_habit_details(
+				$1,
+				$2,
+				$3
+			) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				habitID,
+				targetDate,
+			]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 	async getHabits(userID: string, targetDate: string): HabitsResp {
 		try {

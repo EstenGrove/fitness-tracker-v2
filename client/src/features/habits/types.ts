@@ -6,11 +6,23 @@ export type HabitIntent = "BUILD" | "ELIMINATE" | "REDUCE" | "LAPSE";
 export type HabitFrequency = Omit<RepeatType, "None"> | "Custom";
 
 export type HabitStatus =
+	| "Not Started"
 	| "On Track"
 	| "Above Goal"
 	| "Below Goal"
 	| "Lapsed"
-	| "Eliminated";
+	| "Eliminated"
+	| "Over Target";
+
+export enum EHabitStatus {
+	OK = "On Track", // Reached Goal minimum!
+	ABOVE = "Above Goal",
+	BELOW = "Below Goal",
+	OVER = "Over Target",
+	LAPSED = "Lapsed",
+	ELIMINATED = "Eliminated",
+	NONE = "Not Started",
+}
 
 export interface Habit {
 	userID: string;
@@ -21,6 +33,10 @@ export interface Habit {
 	frequency: HabitFrequency;
 	habitTarget: number;
 	habitUnit: string;
+	icon: keyof typeof habitIcons;
+	iconColor: string;
+	startDate: string;
+	endDate: string | null;
 	isActive: boolean;
 	createdDate: string;
 }
@@ -52,19 +68,27 @@ export interface HabitCardInfo {
 }
 
 export interface HabitSummary {
+	habitID: number;
+	startDate: string;
+	endDate: string;
+	habitGoal: number;
+	maxStreak: number;
+	habitIntent: HabitIntent;
+	habitStatus: HabitStatus;
+	totalLogged: number;
+}
+
+export interface HabitLogValues {
 	userID: string;
 	habitID: number;
-	habitName: string;
-	habitDesc: string;
-	intent: HabitIntent;
-	frequency: HabitFrequency;
-	habitTarget: number;
-	habitUnit: string;
-	maxStreak: string; // 3 (days|weeks|months)
-	habitsLogged: number; // current habit
-	habitStatus: HabitStatus;
-	icon: keyof typeof habitIcons;
-	iconColor: string;
-	startDate: string;
-	endDate: string | null;
+	loggedAmount: number;
+	notes: string;
+	loggedAt: string;
+}
+
+export interface HabitDetails {
+	habit: Habit;
+	allLogs: HabitLog[];
+	summary: HabitSummary;
+	logsForRange: HabitLog[];
 }

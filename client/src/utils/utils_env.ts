@@ -148,8 +148,11 @@ const API_ENDPOINTS = {
 		getSummary: "/recentActivity/getRecentActivitySummary",
 	},
 	habits: {
+		logHabit: "/habits/logHabit",
 		getHabits: "/habits/getHabits",
 		getHabitLogs: "/habits/getHabitLogs",
+		logHabitsBatched: "/habits/logHabitsBatched",
+		getHabitDetails: "/habits/getHabitDetails",
 		getHabitSummaries: "/habits/getHabitSummaries",
 	},
 };

@@ -27,6 +27,10 @@ const normalizeHabit = (habit: HabitDB): Habit => {
 		frequency: habit.frequency,
 		habitTarget: habit.target_value,
 		habitUnit: habit.target_unit,
+		icon: habit.icon,
+		iconColor: habit.icon_color,
+		startDate: habit.start_date,
+		endDate: habit.end_date,
 		isActive: habit.isActive,
 		createdDate: habit.createdDate,
 	};
