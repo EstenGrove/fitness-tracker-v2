@@ -49,6 +49,8 @@
 
 // Modal Mixins
 
+$modalRadius: 5rem;
+
 @mixin dialog() {
 	position: fixed;
 	display: block;
@@ -57,7 +59,7 @@
 	transform: translate(-0%, -0%);
 	width: 100dvw;
 	height: 65dvh;
-	border-radius: 2rem 2rem 0 0;
+	border-radius: $modalRadius $modalRadius 0 0;
 	border: $borderLight;
 	background-color: $foreground;
 	z-index: 9999;
@@ -78,10 +80,10 @@
 	display: block;
 	bottom: 0;
 	left: 0;
-	transform: translate(-0%, -0%);
+	transform: translate(0%, 0%);
 	width: 100dvw;
 	height: 50dvh;
-	border-radius: 2rem 2rem 0 0;
+	border-radius: $modalRadius $modalRadius 0 0;
 	border: $borderLight;
 	background-color: $foreground;
 	z-index: 9999;
@@ -94,7 +96,7 @@
 	&_main {
 		position: relative;
 		@include fill_container;
-		padding: 1rem;
+		padding-bottom: 1rem;
 	}
 }
 @mixin modalLG() {
@@ -102,12 +104,11 @@
 	display: block;
 	bottom: 0;
 	left: 0;
-	// transform: translate(-0%, -0%);
 	transform: translate(-50%, -0%);
 
 	width: 100dvw;
 	height: 90dvh;
-	border-radius: 2rem 2rem 0 0;
+	border-radius: $modalRadius $modalRadius 0 0;
 	border: $borderLight;
 	background-color: $foreground;
 	z-index: 9999;
@@ -118,9 +119,7 @@
 	}
 
 	&_main {
-		// position: relative;
 		@include fill_container;
-		// padding: 1rem;
 	}
 }
 

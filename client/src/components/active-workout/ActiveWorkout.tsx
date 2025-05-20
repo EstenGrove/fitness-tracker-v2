@@ -1,8 +1,9 @@
 import styles from "../../css/active-workout/ActiveWorkout.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CurrentUser } from "../../features/user/types";
 import { TodaysWorkout } from "../../features/workouts/types";
 import { TimeInfo, TimerStatus } from "../../hooks/usePersistentTimer";
+import { useSkipWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
 import { formattedTime } from "../../utils/utils_formatter";
 import {
 	EndedWorkoutValues,
@@ -16,7 +17,6 @@ import WorkoutTimer from "./WorkoutTimer";
 import AddWorkoutDetails from "./AddWorkoutDetails";
 import SkipWorkout from "../workouts/SkipWorkout";
 import ModalSM from "../shared/ModalSM";
-import { useSkipWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
 
 type Props = {
 	currentUser: CurrentUser;

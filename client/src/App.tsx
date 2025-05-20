@@ -23,6 +23,7 @@ const MedicationDetails = lazy(() => import("./pages/MedicationDetailsPage"));
 // Habits Pages
 const Habits = lazy(() => import("./pages/HabitsPage"));
 const HabitTracker = lazy(() => import("./pages/HabitTrackerPage"));
+const RecentHabitHistory = lazy(() => import("./pages/RecentHabitHistoryPage"));
 // Layout page
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
@@ -86,6 +87,14 @@ function App() {
 									element={
 										<Suspense fallback={<Loader />}>
 											<HabitTracker />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="/habits/recents"
+									element={
+										<Suspense fallback={<Loader />}>
+											<RecentHabitHistory />
 										</Suspense>
 									}
 								/>

@@ -2,15 +2,21 @@ import { useState } from "react";
 import sprite from "../../assets/icons/habits.svg";
 import sprite2 from "../../assets/icons/main.svg";
 import styles from "../../css/habits/HabitCard.module.scss";
-import { HabitCardInfo } from "../../features/habits/types";
-import { habitIcons } from "../../utils/utils_habits";
+import { HabitCard as IHabitCard } from "../../features/habits/types";
+import {
+	EHabitModalType,
+	habitIcons,
+	HabitModalType,
+} from "../../utils/utils_habits";
 import { addEllipsis } from "../../utils/utils_misc";
 import { formatDate } from "../../utils/utils_dates";
 import { useNavigate } from "react-router";
 import MenuDropdown from "../shared/MenuDropdown";
+import NumberCounter from "../ui/NumberCounter";
 
 type Props = {
-	habit: HabitCardInfo;
+	habit: IHabitCard;
+	onAction: (type: HabitModalType, habit: IHabitCard) => void;
 };
 
 type TotalProps = {
@@ -25,7 +31,9 @@ const Total = ({ loggedValue = 0, targetValue = 0, unit }: TotalProps) => {
 	const habitUnit = addEllipsis(unit, 10);
 	return (
 		<div className={styles.Total}>
-			<span className={styles.Total_logged}>{loggedValue}</span>
+			<span className={styles.Total_logged}>
+				<NumberCounter number={loggedValue} duration={650} />
+			</span>
 			<span className={styles.Total_slash}>/</span>
 			<span className={styles.Total_target}>
 				{targetValue} {habitUnit}
@@ -39,6 +47,7 @@ type HeaderProps = {
 	color: string;
 	name: string;
 	goTo: () => void;
+	onAction: (action: HabitModalType) => void;
 };
 
 const HabitHeader = ({
@@ -46,6 +55,7 @@ const HabitHeader = ({
 	name,
 	color = "var(--text1_5",
 	goTo,
+	onAction,
 }: HeaderProps) => {
 	const css = { fill: color };
 	const habitName = addEllipsis(name, 18);
@@ -53,6 +63,11 @@ const HabitHeader = ({
 
 	const openMore = () => setShowMore(true);
 	const closeMore = () => setShowMore(false);
+
+	const handleAction = (type: HabitModalType) => {
+		onAction(type);
+		closeMore();
+	};
 
 	return (
 		<div className={styles.HabitHeader}>
@@ -68,9 +83,24 @@ const HabitHeader = ({
 
 			{showMore && (
 				<MenuDropdown closeMenu={closeMore}>
-					<li className={styles.MenuItem}>View</li>
-					<li className={styles.MenuItem}>Change Goal</li>
-					<li className={styles.MenuItem}>Delete</li>
+					<li
+						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.EDIT)}
+					>
+						View
+					</li>
+					<li
+						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.EDIT)}
+					>
+						Change Goal
+					</li>
+					<li
+						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.DELETE)}
+					>
+						Delete
+					</li>
 				</MenuDropdown>
 			)}
 		</div>
@@ -78,7 +108,7 @@ const HabitHeader = ({
 };
 
 type AboutProps = {
-	habit: HabitCardInfo;
+	habit: IHabitCard;
 };
 
 const getDates = (startDate: string) => {
@@ -104,7 +134,7 @@ const About = ({ habit }: AboutProps) => {
 	);
 };
 
-const HabitCard = ({ habit }: Props) => {
+const HabitCard = ({ habit, onAction }: Props) => {
 	const navigate = useNavigate();
 	const { habitsLogged, habitTarget, habitName, habitUnit, icon, iconColor } =
 		habit;
@@ -116,6 +146,10 @@ const HabitCard = ({ habit }: Props) => {
 		navigate(path);
 	};
 
+	const handleAction = (type: HabitModalType) => {
+		onAction(type, habit);
+	};
+
 	return (
 		<div className={styles.HabitCard}>
 			<div className={styles.HabitCard_top}>
@@ -124,6 +158,7 @@ const HabitCard = ({ habit }: Props) => {
 					color={iconColor}
 					name={habitName}
 					goTo={goToHabit}
+					onAction={handleAction}
 				/>
 			</div>
 			<div className={styles.HabitCard_main}>

@@ -49,6 +49,40 @@ export interface HabitLog {
 	createdDate: string;
 }
 
+export interface RecentHabitLog {
+	logID: number;
+	habitID: number;
+	habitName: string;
+	intent: HabitIntent;
+	frequency: HabitFrequency;
+	habitTarget: number;
+	habitUnit: string;
+	unitDesc: string;
+	logTime: string;
+	loggedValue: number;
+	notes: string;
+	createdDate: string;
+	icon: keyof typeof habitIcons;
+	iconColor: string;
+}
+
+export interface HabitCard {
+	userID: string;
+	habitID: number;
+	habitName: string;
+	habitDesc: string;
+	intent: HabitIntent;
+	frequency: HabitFrequency;
+	habitTarget: number;
+	habitUnit: string;
+	habitsLogged: number; // current habit
+	maxStreak: string; // 3 (days|weeks|months)
+	icon: keyof typeof habitIcons;
+	iconColor: string;
+	startDate: string;
+	endDate: string | null;
+}
+
 export interface HabitCardInfo {
 	userID: string;
 	habitID: number;

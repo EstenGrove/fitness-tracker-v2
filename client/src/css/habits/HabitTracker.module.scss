@@ -17,8 +17,7 @@
 	&_title {
 		width: 100%;
 		height: 100%;
-		@include flex_row(flex-start, center);
-		@include rowCenter();
+		@include flex_row(center, center);
 		gap: 0 0.7rem;
 
 		&_icon {
@@ -29,6 +28,12 @@
 		&_name {
 			font-size: $size;
 			font-weight: 700;
+		}
+		&_last {
+			text-align: center;
+			font-size: 1.3rem;
+			color: $text2;
+			margin-top: -2rem;
 		}
 	}
 }

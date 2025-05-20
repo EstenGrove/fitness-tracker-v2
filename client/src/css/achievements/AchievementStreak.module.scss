@@ -1,0 +1,70 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.AchievementStreak {
+	$baseSize: 2rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+	border-radius: 50%;
+	@include colCenter();
+
+	&_icon {
+		width: 100%;
+		height: 100%;
+	}
+	&_text {
+		font-size: 1.7rem;
+		color: $text1;
+	}
+}
+
+.XSM {
+	$size: 1.5rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+}
+.SM {
+	$size: 2.5rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+}
+.MD {
+	$size: 3.5rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+}
+.LG {
+	$size: 5rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+}
+.XLG {
+	$size: 7rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+}

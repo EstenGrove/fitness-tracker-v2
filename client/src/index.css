@@ -39,6 +39,8 @@
 	--fadedBlue: rgba(0, 124, 255, 0.8);
 	--fadedPink: rgba(255, 0, 102, 0.8);
 
+	--lightBorder: var(--blueGrey800);
+
 	/* background-image: */
 	--blueGradient: linear-gradient(
 		to right top,
@@ -377,6 +379,8 @@ body {
 	--habitDisplay: #000;
 	--habitColor: #000;
 	--habitMinus: #000;
+
+	--lightBorder: var(--blueGrey400);
 }
 
 :root[data-theme="dark"] {
@@ -403,6 +407,8 @@ body {
 	--habitDisplay: #fff;
 	--habitColor: #fff;
 	--habitMinus: var(--blueGrey600);
+
+	--lightBorder: var(--blueGrey700);
 }
 
 input {

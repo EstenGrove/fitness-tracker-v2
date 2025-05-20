@@ -19,8 +19,10 @@ const ModalWithFooter = ({ size, onClose, footer, children }: Props) => {
 
 	return (
 		<Modal onClose={onClose}>
-			<div className={styles.ModalWithFooter}>{children}</div>
-			<div className={styles.Footer}>{footer}</div>
+			<div className={styles.ModalWithFooter}>
+				{children}
+				<div className={styles.Footer}>{footer}</div>
+			</div>
 		</Modal>
 	);
 };

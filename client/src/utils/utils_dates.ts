@@ -113,6 +113,9 @@ export interface DateFormats {
 	custom: {
 		monthAndDay: string;
 		range: string;
+		dayAndTime: string;
+		monthDayAndTime: string;
+		monthDateAndTime: string;
 	};
 }
 
@@ -155,6 +158,9 @@ const FORMAT_TOKENS: DateFormats = {
 	custom: {
 		monthAndDay: "EEE, MMM do",
 		range: "MMM do",
+		dayAndTime: "EEEE at hh:mm:ss a",
+		monthDayAndTime: "MMM. Lo at hh:mm:ss a",
+		monthDateAndTime: "Lo at hh:mm:ss a",
 	},
 };
 const {

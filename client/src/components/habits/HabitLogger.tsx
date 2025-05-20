@@ -10,6 +10,7 @@ import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/habits/HabitLogger.module.scss";
 import {
 	Habit,
+	HabitLog,
 	HabitLogValues,
 	HabitSummary,
 } from "../../features/habits/types";
@@ -22,6 +23,7 @@ import {
 } from "../../hooks/useDeferredLogQueue";
 import { logHabitsBatched } from "../../utils/utils_habits";
 import { prepareTimestamp } from "../../utils/utils_dates";
+import { useBatchedHabitLogger } from "../../hooks/useBatchedHabitLogger";
 
 type Props = { habit: Habit; summary: HabitSummary; habitStep: number };
 
@@ -180,10 +182,14 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 	const [todaysValue, setTodaysValue] = useState<number>(
 		summary.totalLogged || 0
 	);
-	const { queueLog } = useDeferredLogQueue(
-		1000,
+	const { queueLog } = useBatchedHabitLogger(
+		650,
 		logHabitsBatched as DeferredFetch<HabitLogValues>
 	);
+	// const { queueLog } = useDeferredLogQueue(
+	// 	600,
+	// 	logHabitsBatched as DeferredFetch<HabitLogValues>
+	// );
 
 	const hitGoal = useMemo(() => {
 		return hasHitGoal(todaysValue, habit);
@@ -193,7 +199,8 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(value, habit);
-		queueLog(newLog as unknown as DeferredLog);
+		// queueLog(newLog as unknown as DeferredLog);
+		queueLog(newLog);
 	};
 
 	const add = () => {
@@ -201,7 +208,8 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(habitStep, habit);
-		queueLog(newLog as unknown as DeferredLog);
+		// queueLog(newLog as unknown as DeferredLog);
+		queueLog(newLog);
 	};
 	const minus = () => {
 		const newValue = todaysValue - habitStep;
@@ -209,7 +217,8 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(-habitStep, habit);
-		queueLog(newLog as unknown as DeferredLog);
+		// queueLog(newLog as unknown as DeferredLog);
+		queueLog(newLog);
 	};
 
 	return (
