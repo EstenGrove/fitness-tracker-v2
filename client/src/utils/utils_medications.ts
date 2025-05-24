@@ -1,4 +1,9 @@
-import { MedLogEntry, PillSummary } from "../features/medications/types";
+import {
+	Medication,
+	MedicationSchedule,
+	MedLogEntry,
+	PillSummary,
+} from "../features/medications/types";
 import { AsyncResponse, DateRange } from "../features/types";
 import { applyTimeStrToDate, prepareTimestamp } from "./utils_dates";
 import { currentEnv, medicationApis } from "./utils_env";
@@ -41,9 +46,32 @@ export interface SummaryByDateParams {
 	targetDate: string;
 }
 
+export interface MedsInfo {
+	activeMeds: Medication[];
+	activeSchedules: MedicationSchedule[];
+}
+
+export type MedsInfoResp = AsyncResponse<MedsInfo>;
+
 const fetchMedications = async (userID: string) => {
 	let url = currentEnv.base + medicationApis.getUserMeds;
 	url += "?" + new URLSearchParams({ userID });
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchMedsInfo = async (
+	userID: string,
+	targetDate: string
+): MedsInfoResp => {
+	let url = currentEnv.base + medicationApis.getMedsInfo;
+	url += "?" + new URLSearchParams({ userID, targetDate });
+
 	try {
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
@@ -117,7 +145,7 @@ const prepareMedLog = (values: MedLogVals): MedLogBody => {
 		loggedAt,
 		medID,
 		dose,
-		scheduleID,
+		scheduleID = 2,
 		loggedDate = new Date(),
 		action = "Taken",
 	} = values;
@@ -152,6 +180,7 @@ export {
 	fetchMedLogsByRange,
 	fetchMedSummaryByDate,
 	fetchMedications,
+	fetchMedsInfo,
 	// Utils
 	prepareMedLog,
 	processPillSummary,

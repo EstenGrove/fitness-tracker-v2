@@ -4,8 +4,8 @@ import styles from "../../css/history/HistoryEntry.module.scss";
 import { HistoryOfType } from "../../features/history/types";
 import { formatDateAsWeekDay, formatDateTime } from "../../utils/utils_dates";
 import { EMenuAction } from "../../features/types";
-import MenuDropdown, { MenuAction, MenuIcon } from "../shared/MenuDropdown";
 import { isToday } from "date-fns";
+import MenuDropdown, { MenuAction, MenuIcon } from "../shared/MenuDropdown";
 
 type Props = {
 	entry: HistoryOfType;

@@ -349,9 +349,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 
 			{modalType === EModalType.VIEW && (
 				<ModalLG onClose={closeModal}>
-					{isCompleted && (
-						<ViewPostWorkout workout={workout} onClose={closeModal} />
-					)}
+					{isCompleted && <ViewPostWorkout workout={workout} />}
 					{!isCompleted && (
 						<ViewWorkout workout={workout} onClose={closeModal} />
 					)}

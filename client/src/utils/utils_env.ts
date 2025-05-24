@@ -128,6 +128,7 @@ const API_ENDPOINTS = {
 		getOtherByRange: "/history/getOtherHistoryByRange",
 	},
 	meds: {
+		getMedsInfo: "/medications/getMedsInfo",
 		logMed: "/medications/logMedication",
 		getPillSummaryByDate: "/medications/getPillSummary",
 		getSummaryByDate: "/medications/getMedSummaryByDate",
@@ -146,6 +147,17 @@ const API_ENDPOINTS = {
 	recentActivity: {
 		getSummary: "/recentActivity/getRecentActivitySummary",
 	},
+	habits: {
+		logHabit: "/habits/logHabit",
+		getHabits: "/habits/getHabits",
+		getHabitLogs: "/habits/getHabitLogs",
+		logHabitsBatched: "/habits/logHabitsBatched",
+		getHabitDetails: "/habits/getHabitDetails",
+		getHabitSummaries: "/habits/getHabitSummaries",
+		getHabitCards: "/habits/getHabitCards",
+		createHabit: "/habits/createHabit",
+		getRecentLogs: "/habits/getRecentHabitLogs",
+	},
 };
 
 export const {
@@ -155,6 +167,7 @@ export const {
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,
+	habits: habitApis,
 	history: historyApis,
 	meds: medicationApis,
 	dashboard: dashboardApis,

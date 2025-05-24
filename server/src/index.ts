@@ -37,6 +37,7 @@ app.use(cors(corsConfig));
 app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);
 app.route("stats", allRoutes.stats);
+app.route("habits", allRoutes.habits);
 app.route("history", allRoutes.history);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);

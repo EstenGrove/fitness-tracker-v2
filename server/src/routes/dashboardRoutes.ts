@@ -2,7 +2,6 @@ import { Hono, type Context } from "hono";
 import { dashboardService } from "../services/index.ts";
 import type { DashboardSummaryDB } from "../modules/dashboard/types.ts";
 import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { da } from "date-fns/locale";
 import { normalizeDashboardSummary } from "../modules/dashboard/summary.ts";
 
 const app = new Hono();

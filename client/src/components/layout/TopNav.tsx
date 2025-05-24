@@ -4,6 +4,7 @@ import styles from "../../css/layout/TopNav.module.scss";
 import { useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { LocalStorage } from "../../utils/utils_storage";
+import { NavLink } from "react-router";
 
 const THEME_KEY = "APP_THEME";
 const storage = new LocalStorage();
@@ -18,6 +19,14 @@ const toggleTheme = () => {
 	} else {
 		document.documentElement.dataset.theme = "dark";
 		storage.set(THEME_KEY, "dark");
+	}
+};
+
+const isActiveRoute = ({ isActive }: { isActive: boolean }) => {
+	if (isActive) {
+		return `${styles.SidePanelItem} ${styles.isActive}`;
+	} else {
+		return styles.SidePanelItem;
 	}
 };
 
@@ -37,15 +46,40 @@ const LogoutButton = ({ onLogout }: { onLogout: () => void }) => {
 
 type SidePanelProps = {
 	closePanel: () => void;
+	onSelect: () => void;
 };
 
-const SidePanel = ({ closePanel }: SidePanelProps) => {
+const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 	const panelRef = useRef<HTMLDivElement>(null);
 	useOutsideClick(panelRef, closePanel);
 
 	return (
 		<div className={`${styles.SidePanel} ${styles.slideIn}`} ref={panelRef}>
-			{/*  */}
+			<div className={styles.SidePanel_top}>{/*  */}</div>
+			<div className={styles.SidePanel_main}>
+				<div className={styles.SidePanel_main_section}>Workouts</div>
+				<ul className={styles.SidePanel_main_list}>
+					<li className={styles.SidePanelItem} onClick={onSelect}>
+						<NavLink to="goals" className={isActiveRoute}>
+							Goals
+						</NavLink>
+					</li>
+					<li className={styles.SidePanelItem} onClick={onSelect}>
+						<NavLink to="trends" className={isActiveRoute}>
+							Trends
+						</NavLink>
+					</li>
+				</ul>
+				<div className={styles.SidePanel_main_section}>Other</div>
+				<ul className={styles.SidePanel_main_list}>
+					<li className={styles.SidePanelItem} onClick={onSelect}>
+						<NavLink to="habits" className={isActiveRoute}>
+							Habits
+						</NavLink>
+					</li>
+				</ul>
+			</div>
+			<div className={styles.SidePanel_bottom}>{/*  */}</div>
 			{/*  */}
 			{/*  */}
 		</div>
@@ -57,6 +91,10 @@ const TopNav = ({ onLogout }: Props) => {
 
 	const openPanel = () => setShowSidePanel(true);
 	const closePanel = () => setShowSidePanel(false);
+
+	const selectLink = () => {
+		closePanel();
+	};
 
 	return (
 		<nav className={styles.TopNav}>
@@ -76,7 +114,9 @@ const TopNav = ({ onLogout }: Props) => {
 				</li>
 			</ul>
 
-			{showSidePanel && <SidePanel closePanel={closePanel} />}
+			{showSidePanel && (
+				<SidePanel closePanel={closePanel} onSelect={selectLink} />
+			)}
 		</nav>
 	);
 };

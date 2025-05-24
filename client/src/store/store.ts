@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 // Apis
 import { statsApi } from "../features/stats/statsApi";
+import { habitsApi } from "../features/habits/habitsApi";
 import { historyApi } from "../features/history/historyApi";
 import { summaryApi } from "../features/dashboard/summaryApi";
 import { medicationsApi } from "../features/medications/medicationsApi";
@@ -23,6 +24,7 @@ const store = configureStore({
 		workouts: workoutsReducer,
 		medications: medicationsReducer,
 		[statsApi.reducerPath]: statsApi.reducer,
+		[habitsApi.reducerPath]: habitsApi.reducer,
 		[historyApi.reducerPath]: historyApi.reducer,
 		[summaryApi.reducerPath]: summaryApi.reducer,
 		[medicationsApi.reducerPath]: medicationsApi.reducer,
@@ -36,7 +38,8 @@ const store = configureStore({
 			.concat(summaryApi.middleware)
 			.concat(medicationsApi.middleware)
 			.concat(recentActivityApi.middleware)
-			.concat(statsApi.middleware);
+			.concat(statsApi.middleware)
+			.concat(habitsApi.middleware);
 	},
 });
 

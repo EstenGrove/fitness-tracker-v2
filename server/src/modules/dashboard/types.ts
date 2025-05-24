@@ -1,3 +1,10 @@
+import type {
+	HabitCard,
+	HabitCardDB,
+	RecentHabitLog,
+	RecentHabitLogDB,
+} from "../habits/types.ts";
+import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
 import type { Activity, Effort } from "../types.ts";
 
 export interface RecentWorkoutDB {
@@ -115,6 +122,32 @@ export type DailyStepsSummary = DailySteps[];
 export type DailyCaloriesSummary = DailyCalories[];
 export type DailyWorkoutsSummary = DailyWorkouts[];
 
+export interface TodaysWorkoutProgressDB {
+	todaysCalories: number;
+	todaysScheduled: number; // number of workouts schedule
+	todaysLogged: number; // number of recorded workouts so far today
+	todaysLogs: HistoryOfTypeDB[];
+}
+export interface TodaysWorkoutProgress {
+	todaysCalories: number;
+	todaysScheduled: number; // number of workouts schedule
+	todaysLogged: number; // number of recorded workouts so far today
+	todaysLogs: HistoryOfType[];
+}
+
+export interface TodaysHabitProgressDB {
+	todaysHabits: number; // number of habits for today
+	// todaysSummaries: HabitSummary[];
+	todaysSummaries: HabitCardDB[];
+	todaysLogs: RecentHabitLogDB[];
+}
+export interface TodaysHabitProgress {
+	todaysHabits: number; // number of habits for today
+	// todaysSummaries: HabitSummary[];
+	todaysSummaries: HabitCard[];
+	todaysLogs: RecentHabitLog[];
+}
+
 export interface DashboardSummaryDB {
 	// Totals (DB)
 	totalMiles: TotalMilesDB;
@@ -128,6 +161,10 @@ export interface DashboardSummaryDB {
 	dailyWorkouts: DailyWorkoutsSummaryDB;
 	// Recents
 	recentWorkouts: RecentWorkoutDB[];
+	// Workouts Progress
+	workoutProgress: TodaysWorkoutProgressDB;
+	// Habit Progress
+	habitProgress: TodaysHabitProgressDB;
 }
 
 export interface DashboardSummary {
@@ -143,4 +180,7 @@ export interface DashboardSummary {
 	dailyWorkouts: DailyWorkoutsSummary;
 	// Recents
 	recentWorkouts: RecentWorkout[];
+	// Workouts Progress
+	workoutProgress: TodaysWorkoutProgress;
+	habitProgress: TodaysHabitProgress;
 }

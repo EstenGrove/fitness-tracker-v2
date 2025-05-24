@@ -22,7 +22,7 @@ interface PillCounts {
 type PillsAndDaysLeft = Pick<PillCounts, "daysLeft" | "pillsLeft">;
 
 type MainItemProps = {
-	total: number;
+	total: number | string;
 	label: string;
 	icon: string;
 	color?: string;
@@ -117,7 +117,7 @@ const PillSummary = ({
 			<div className={styles.PillSummary}>
 				<div className={styles.PillSummary_wrapper}>
 					<MainItem
-						total={pillsLeft}
+						total={pillsLeft.toFixed(2)}
 						label="Pills Left"
 						icon="pill"
 						color={pillLeftCss.color}

@@ -5,7 +5,7 @@ import { Card, CardHeader, CardIcon, CardTitles } from "./Card";
 
 type Props = {
 	title: string;
-	icon: keyof typeof iconsMap;
+	icon: keyof (typeof iconsMap)[1] | keyof (typeof iconsMap)[2];
 	to?: string;
 	background?: string;
 	color?: string;

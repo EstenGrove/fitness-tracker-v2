@@ -65,9 +65,9 @@ const groupByFn = <T extends object>(
 };
 
 const sortByDate = <T extends object>(key: TKey<T>, list: T[]): T[] => {
-	if (!list || !list.length) return list;
+	if (!list || !list.length) return [];
 
-	return list.sort((a, b) => {
+	return [...list]?.sort((a, b) => {
 		const valA = a[key] as string;
 		const valB = b[key] as string;
 		const dateA = new Date(valA).getTime();
@@ -75,6 +75,11 @@ const sortByDate = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 
 		return dateB - dateA;
 	});
+};
+const provideFallbackStr = (targetVal: string, fallback: string) => {
+	if (!targetVal || targetVal === "") return fallback;
+
+	return targetVal;
 };
 
 export {
@@ -85,4 +90,5 @@ export {
 	groupBy,
 	groupByFn,
 	sortByDate,
+	provideFallbackStr,
 };

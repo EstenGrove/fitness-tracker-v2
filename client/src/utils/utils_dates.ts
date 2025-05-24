@@ -113,6 +113,9 @@ export interface DateFormats {
 	custom: {
 		monthAndDay: string;
 		range: string;
+		dayAndTime: string;
+		monthDayAndTime: string;
+		monthDateAndTime: string;
 	};
 }
 
@@ -155,6 +158,9 @@ const FORMAT_TOKENS: DateFormats = {
 	custom: {
 		monthAndDay: "EEE, MMM do",
 		range: "MMM do",
+		dayAndTime: "EEEE at hh:mm:ss a",
+		monthDayAndTime: "MMM. Lo at hh:mm:ss a",
+		monthDateAndTime: "Lo at hh:mm:ss a",
 	},
 };
 const {
@@ -184,6 +190,17 @@ const formatTime = (
 	if (!date) return "";
 	const token = TIME_TOKENS[formatToken];
 	const formatted = format(date, token);
+
+	return formatted;
+};
+
+const formatTimestamp = (
+	timestamp: string | number,
+	formatToken: keyof DateFormats["time"] = "long"
+) => {
+	if (!timestamp) return "";
+	const token = TIME_TOKENS[formatToken];
+	const formatted = format(timestamp, token);
 
 	return formatted;
 };
@@ -392,6 +409,7 @@ export {
 	formatDateTime,
 	formatCustomDate,
 	formatDateAsWeekDay,
+	formatTimestamp,
 	// PARSING STRINGS AS DATE/TIME/DATETIME
 	parseDate,
 	parseAnyDate,

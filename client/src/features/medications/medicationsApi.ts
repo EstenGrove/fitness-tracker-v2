@@ -3,9 +3,11 @@ import { currentEnv } from "../../utils/utils_env";
 import {
 	fetchMedications,
 	fetchMedLogsByRange,
+	fetchMedsInfo,
 	fetchMedSummaryByDate,
 	MedLogBody,
 	MedLogOptions,
+	MedsInfo,
 	saveMedicationLog,
 	SummaryParams,
 } from "../../utils/utils_medications";
@@ -18,6 +20,11 @@ interface NewMedLog {
 interface MedLogsByRange {
 	logs: MedLogEntry[];
 	range: DateRange;
+}
+
+interface UserDateParams {
+	userID: string;
+	targetDate: string;
 }
 
 export const medicationsApi = createApi({
@@ -73,10 +80,24 @@ export const medicationsApi = createApi({
 			},
 			providesTags: () => [{ type: "MedSummary" }],
 		}),
+		// Get active meds & schedules
+		getMedsInfo: builder.query<MedsInfo, UserDateParams>({
+			queryFn: async (params) => {
+				const { userID, targetDate } = params;
+				const response = (await fetchMedsInfo(
+					userID,
+					targetDate
+				)) as AwaitedResponse<MedsInfo>;
+				const data = response.Data as MedsInfo;
+
+				return { data };
+			},
+		}),
 	}),
 });
 
 export const {
+	useGetMedsInfoQuery,
 	useGetMedicationsQuery,
 	useGetLogsByRangeQuery,
 	useLogMedicationMutation,

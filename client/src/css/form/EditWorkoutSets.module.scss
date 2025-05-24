@@ -20,10 +20,15 @@
 	&_title {
 		width: 2ch;
 		height: 2ch;
+		min-width: 2ch;
+		min-height: 2ch;
+		max-width: 2ch;
+		max-height: 2ch;
 		font-size: 1.5rem;
 		border-radius: 50%;
 		border: $borderLight;
 		color: $text2;
+		background-color: rgba(0, 0, 0, 0.2);
 		@include rowCenter();
 	}
 	&_fields {

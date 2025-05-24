@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import type { LogMedBody } from "../modules/medications/types.ts";
+import type { LogMedBody, MedsInfoDB } from "../modules/medications/types.ts";
 
 interface PillSummaryArgs {
 	scheduleID: number;
@@ -10,10 +10,26 @@ interface MedSummaryArgs {
 	targetDate: string;
 }
 
+export type MedsInfoResp = Promise<MedsInfoDB | unknown>;
+
 class MedicationsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async getMedsInfo(userID: string, targetDate: string): MedsInfoResp {
+		try {
+			const query = `SELECT * FROM get_meds_info(
+				$1,
+				$2
+			) as data`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async logMedication(userID: string, body: LogMedBody) {

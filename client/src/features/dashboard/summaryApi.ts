@@ -7,6 +7,7 @@ import { DashboardSummary } from "./types";
 export const summaryApi = createApi({
 	reducerPath: "summaryApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
+	tagTypes: ["DashboardSummary"],
 	endpoints: (builder) => ({
 		getDashboardSummary: builder.query<DashboardSummary, UserDateParams>({
 			queryFn: async (params) => {
@@ -19,6 +20,7 @@ export const summaryApi = createApi({
 
 				return { data };
 			},
+			providesTags: () => [{ type: "DashboardSummary" }],
 		}),
 	}),
 });

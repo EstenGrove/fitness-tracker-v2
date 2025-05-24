@@ -9,18 +9,26 @@ import {
 import ActiveWorkout from "../components/active-workout/ActiveWorkout";
 import PageContainer from "../components/layout/PageContainer";
 import NavArrows from "../components/layout/NavArrows";
-import { LocalStorage } from "../utils/utils_storage";
+import { JsonValue, LocalStorage } from "../utils/utils_storage";
 import { useAppDispatch } from "../store/store";
 import { useEffect } from "react";
+import { addEllipsis } from "../utils/utils_misc";
+import { useNavigate } from "react-router";
 
 const ACTIVE_KEY = "ACTIVE";
 const storage = new LocalStorage();
 
 const ActiveWorkoutPage = () => {
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const activeWorkout: TodaysWorkout = useSelector(selectActiveWorkout);
-	const workoutName: string = activeWorkout?.workoutName ?? "Active Workout";
+	const workoutName: string =
+		addEllipsis(activeWorkout?.workoutName, 20) ?? "Active Workout";
+
+	const goBack = () => {
+		navigate(-1);
+	};
 
 	// Sync active workout upon refresh
 	useEffect(() => {
@@ -31,7 +39,7 @@ const ActiveWorkoutPage = () => {
 			const workout = storage.get(ACTIVE_KEY);
 			dispatch(setActiveWorkout(workout as TodaysWorkout));
 		} else {
-			storage.set(ACTIVE_KEY, activeWorkout);
+			storage.set(ACTIVE_KEY, activeWorkout as unknown as JsonValue);
 		}
 
 		return () => {
@@ -43,14 +51,18 @@ const ActiveWorkoutPage = () => {
 		<PageContainer>
 			<div className={styles.ActiveWorkoutPage}>
 				<div className={styles.ActiveWorkoutPage_top}>
-					<NavArrows />
+					<NavArrows onBack={goBack} />
 				</div>
 				<div className={styles.ActiveWorkoutPage_header}>
 					<h2>{workoutName}</h2>
 				</div>
 				<div className={styles.ActiveWorkoutPage_body}>
 					{activeWorkout && (
-						<ActiveWorkout currentUser={currentUser} workout={activeWorkout} />
+						<ActiveWorkout
+							goBack={goBack}
+							currentUser={currentUser}
+							workout={activeWorkout}
+						/>
 					)}
 				</div>
 			</div>

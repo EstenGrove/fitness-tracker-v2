@@ -1,3 +1,10 @@
+import { normalizeHabitCard } from "../habits/getHabitCards.ts";
+import { normalizeRecentHabitLogs } from "../habits/getRecentHabitLogs.ts";
+import type { HabitCard } from "../habits/types.ts";
+import {
+	normalizeHistoryByType,
+	normalizeHistoryEntryByType,
+} from "../history/allHistory.ts";
 import type {
 	DailyCalories,
 	DailyCaloriesDB,
@@ -11,6 +18,10 @@ import type {
 	DashboardSummaryDB,
 	RecentWorkout,
 	RecentWorkoutDB,
+	TodaysHabitProgress,
+	TodaysHabitProgressDB,
+	TodaysWorkoutProgress,
+	TodaysWorkoutProgressDB,
 	TotalCalories,
 	TotalCaloriesDB,
 	TotalMiles,
@@ -99,6 +110,20 @@ const normalizeTotalCalories = (miles: TotalCaloriesDB): TotalCalories => {
 	return newMiles;
 };
 
+const normalizeWorkoutProgress = (
+	progress: TodaysWorkoutProgressDB
+): TodaysWorkoutProgress => {
+	const { todaysLogs } = progress;
+	const logs = todaysLogs.map((entry) =>
+		normalizeHistoryEntryByType(entry.activity_type, entry)
+	);
+
+	return {
+		...progress,
+		todaysLogs: logs,
+	};
+};
+
 // Recents
 const normalizeRecentWorkouts = (
 	workouts: RecentWorkoutDB[]
@@ -119,6 +144,21 @@ const normalizeRecentWorkouts = (
 	return newWorkouts;
 };
 
+const normalizeHabitProgress = (
+	progress: TodaysHabitProgressDB
+): TodaysHabitProgress => {
+	const { todaysHabits, todaysSummaries, todaysLogs } = progress;
+
+	const recentLogs = normalizeRecentHabitLogs(todaysLogs);
+	const summaries: HabitCard[] = todaysSummaries.map(normalizeHabitCard);
+
+	return {
+		todaysHabits: todaysHabits,
+		todaysSummaries: summaries,
+		todaysLogs: recentLogs,
+	};
+};
+
 const normalizeDashboardSummary = (
 	summary: DashboardSummaryDB
 ): DashboardSummary => {
@@ -133,6 +173,10 @@ const normalizeDashboardSummary = (
 	const totalCalories = normalizeTotalCalories(summary.totalCalories);
 	// Recents
 	const recentWorkouts = normalizeRecentWorkouts(summary.recentWorkouts);
+	// Workout Progress
+	const workoutProgress = normalizeWorkoutProgress(summary.workoutProgress);
+	// Habit Progress
+	const habitProgress = normalizeHabitProgress(summary.habitProgress);
 
 	const dailyWorkouts = summary.dailyWorkouts.map((item) => ({
 		date: item.date,
@@ -153,6 +197,10 @@ const normalizeDashboardSummary = (
 		totalCalories,
 		// Recents
 		recentWorkouts,
+		// Workouts Progress
+		workoutProgress,
+		// Habit Progress
+		habitProgress,
 	};
 };
 
@@ -171,4 +219,8 @@ export {
 	normalizeDailySteps,
 	// Recents
 	normalizeRecentWorkouts,
+	// Workout Progrdss
+	normalizeWorkoutProgress,
+	// Habit Progress
+	normalizeHabitProgress,
 };

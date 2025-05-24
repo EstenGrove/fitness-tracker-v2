@@ -3,12 +3,12 @@ import styles from "../../css/ui/NoData.module.scss";
 import { iconsMap } from "../../utils/utils_icons";
 
 type Props = {
-	icon?: keyof typeof iconsMap;
+	icon?: keyof (typeof iconsMap)[1];
 	msg?: string;
 };
 
 const NoData = ({ icon = "empty", msg = "No data." }: Props) => {
-	const name = iconsMap[icon];
+	const name = iconsMap[1][icon];
 	return (
 		<div className={styles.NoData}>
 			<svg className={styles.NoData_icon}>

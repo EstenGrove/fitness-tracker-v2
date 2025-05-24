@@ -47,9 +47,14 @@ const NextButton = ({ onClick, isDisabled = false }: NavButtonProps) => {
 		</button>
 	);
 };
-const SaveButton = ({ onClick }: NavButtonProps) => {
+const SaveButton = ({ onClick, isDisabled = false }: NavButtonProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.SaveButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			className={styles.SaveButton}
+			disabled={isDisabled}
+		>
 			Save
 		</button>
 	);

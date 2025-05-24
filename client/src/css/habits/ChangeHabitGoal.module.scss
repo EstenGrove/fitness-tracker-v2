@@ -1,0 +1,42 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.ChangeHabitGoal {
+	width: 100%;
+	padding: 0 3rem;
+
+	&_title {
+		width: 100%;
+		font-size: 2rem;
+		height: 3rem;
+		@include rowCenter();
+		text-align: center;
+	}
+	&_form {
+		width: 100%;
+		margin-top: 4rem;
+
+		&_target {
+			width: 100%;
+			margin: 2rem 0 3rem 0;
+			@include colCenter();
+
+			& label {
+				font-size: 1.5rem;
+				color: $text2;
+				margin-bottom: 1rem;
+			}
+		}
+
+		&_field {
+			width: 100%;
+			margin: 2rem 0;
+
+			& label {
+				font-size: 1.5rem;
+				color: $text2;
+			}
+		}
+	}
+}

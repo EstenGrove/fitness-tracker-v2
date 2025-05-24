@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styles from "../../css/details/HistoryDetails.module.scss";
 import {
 	HistoryDetails as IHistoryDetails,
@@ -108,7 +108,7 @@ const ExerciseBlock = ({
 };
 
 const HistoryDetails = ({ history }: Props) => {
-	const { data } = useHistoryDetails({
+	const { data, refetch } = useHistoryDetails({
 		userID: history?.userID,
 		historyID: history?.historyID,
 		activityType: history?.activityType,
@@ -123,6 +123,20 @@ const HistoryDetails = ({ history }: Props) => {
 	const isExercise = isExerciseType(activityType);
 
 	console.log("details", details);
+
+	useEffect(() => {
+		let isMounted = true;
+		if (!isMounted) return;
+
+		if (!data) {
+			refetch();
+		}
+
+		return () => {
+			isMounted = false;
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className={styles.HistoryDetails}>
@@ -154,9 +168,6 @@ const HistoryDetails = ({ history }: Props) => {
 									entry={entry as ExerciseHistory}
 								/>
 							)}
-							{/*  */}
-							{/*  */}
-							{/*  */}
 						</div>
 					</div>
 				</>

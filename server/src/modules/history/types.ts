@@ -132,6 +132,7 @@ export interface HistoryDetailsDB {
 	workout: WorkoutDB;
 	history: HistoryOfTypeDB;
 	activityType: Activity;
+	calories: number;
 }
 export interface HistoryDetails {
 	workout: Workout;

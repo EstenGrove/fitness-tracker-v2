@@ -39,6 +39,8 @@
 	--fadedBlue: rgba(0, 124, 255, 0.8);
 	--fadedPink: rgba(255, 0, 102, 0.8);
 
+	--lightBorder: var(--blueGrey800);
+
 	/* background-image: */
 	--blueGradient: linear-gradient(
 		to right top,
@@ -320,6 +322,13 @@
 
 	--cardBorder: var(--blueGrey300);
 	--cardGoToIcon: var(--blueGrey500);
+
+	/* Habits */
+	--habitDisplay: #000;
+	--habitColor: #fff;
+	--habitMinus: #000;
+
+	--iconBG: var(--blueGrey200);
 }
 
 *,
@@ -369,6 +378,13 @@ body {
 
 	--cardBorder: var(--blueGrey300);
 	--cardGoToIcon: var(--blueGrey400);
+	--habitDisplay: #000;
+	--habitColor: #000;
+	--habitMinus: #000;
+
+	--lightBorder: var(--blueGrey400);
+
+	--iconBG: var(--blueGrey200);
 }
 
 :root[data-theme="dark"] {
@@ -391,6 +407,13 @@ body {
 
 	--cardBorder: var(--blueGrey800);
 	--cardGoToIcon: var(--blueGrey800);
+
+	--habitDisplay: #fff;
+	--habitColor: #fff;
+	--habitMinus: var(--blueGrey600);
+
+	--lightBorder: var(--blueGrey700);
+	--iconBG: var(--blueGrey900);
 }
 
 input {

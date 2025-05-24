@@ -17,6 +17,8 @@ import LogMedication from "../components/medications/LogMedication";
 import Loader from "../components/layout/Loader";
 import TodaysDoses from "../components/medications/TodaysDoses";
 import LoggedMedsCard from "../components/medications/LoggedMedsCard";
+import { useMedsInfo } from "../hooks/useMedsInfo";
+import { MedsInfo } from "../utils/utils_medications";
 
 const LogMedButton = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -44,21 +46,20 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 1,
+	scheduleID: 2,
 };
 
 const MedicationsPage = () => {
 	const baseDate = new Date().toString();
 	const header = useWeekHeader(baseDate);
 	const targetDate = prepareTargetDate(header.selectedDate);
+	const { data: medsInfo } = useMedsInfo(targetDate);
 	const { data, isLoading } = useMedSummary(myMed.medID, targetDate);
 	const [showLogMedModal, setShowLogMedModal] = useState<boolean>(false);
 	const [selectedMed, setSelectedMed] = useState<CurrentMed | null>(myMed);
-
 	const pillSummary = data?.pillSummary as IPillSummary;
 	const medLogs = (data?.medicationLogs ?? []) as MedLogEntry[];
-
-	console.log("data", data);
+	const userMedsInfo = medsInfo as MedsInfo;
 
 	const selectMed = (med: CurrentMed) => {
 		setSelectedMed(med);

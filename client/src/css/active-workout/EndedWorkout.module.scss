@@ -29,4 +29,28 @@
 		gap: 1rem 0;
 		margin-top: 2rem;
 	}
+	&_actions {
+		width: 100%;
+		@include rowCenter();
+		margin-top: 2rem;
+
+		&_add {
+			padding: 0.8rem 1.4rem;
+			border-radius: 1rem;
+			background-color: $accentBlue;
+			color: #fff;
+			border: none;
+			outline: none;
+			font-size: 1.6rem;
+			@include rowCenter();
+			gap: 0 0.4rem;
+
+			&_icon {
+				width: 2rem;
+				height: 2rem;
+				fill: #fff;
+				align-self: baseline;
+			}
+		}
+	}
 }

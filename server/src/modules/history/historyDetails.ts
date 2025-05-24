@@ -3,10 +3,13 @@ import { normalizeHistoryEntryByType } from "./allHistory.ts";
 import type { HistoryDetails, HistoryDetailsDB } from "./types.ts";
 
 const normalizeHistoryDetails = (details: HistoryDetailsDB): HistoryDetails => {
-	const { workout, history, activityType } = details;
+	const { workout, history, activityType, calories } = details;
 
 	const workoutEntry = normalizeWorkout(workout);
-	const historyEntry = normalizeHistoryEntryByType(activityType, history);
+	const historyEntry = normalizeHistoryEntryByType(activityType, {
+		...history,
+		calories,
+	});
 	const historyDetails: HistoryDetails = {
 		workout: workoutEntry,
 		history: historyEntry,

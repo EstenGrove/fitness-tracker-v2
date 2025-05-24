@@ -1,0 +1,39 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.HabitTracker {
+	width: 100%;
+	height: 100dvh;
+}
+
+.HabitHeader {
+	width: 100%;
+	height: 10rem;
+
+	$icon: 3rem;
+	$size: 3rem;
+
+	&_title {
+		width: 100%;
+		height: 100%;
+		@include flex_row(center, center);
+		gap: 0 0.7rem;
+
+		&_icon {
+			width: $icon;
+			height: $icon;
+			fill: #000;
+		}
+		&_name {
+			font-size: $size;
+			font-weight: 700;
+		}
+		&_last {
+			text-align: center;
+			font-size: 1.3rem;
+			color: $text2;
+			margin-top: -2rem;
+		}
+	}
+}
