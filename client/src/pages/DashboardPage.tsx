@@ -16,7 +16,7 @@ import CardsSection from "../components/layout/CardsSection";
 import StepsSummary from "../components/summary/StepsSummary";
 import Loader from "../components/layout/Loader";
 import RecentHistoryTabs from "../components/dashboard/RecentHistoryTabs";
-import HabitsList from "../components/habits/HabitsList";
+import DashboardHabits from "../components/dashboard/DashboardHabits";
 
 const activityInfo = {
 	title: "Recent Activity",
@@ -26,6 +26,20 @@ const activityInfo = {
 const habitInfo = {
 	title: "Habit Progress",
 	path: "/habits",
+};
+
+const Spacer = ({
+	margin = "0 0",
+	padding = "0 0",
+}: {
+	padding?: string;
+	margin?: string;
+}) => {
+	const css = {
+		margin,
+		padding,
+	};
+	return <div className={styles.Spacer} style={css}></div>;
 };
 
 const DashboardPage = () => {
@@ -60,12 +74,11 @@ const DashboardPage = () => {
 								</CardsCarousel>
 							</CardsSection>
 							{/* HABITS PROGRESS */}
+							<Spacer margin="1rem 0" />
 							<CardsSection title={habitInfo.title} to={habitInfo.path}>
-								<div style={{ minHeight: "15rem" }}>
-									<HabitsList
-										habits={summary?.habitProgress?.todaysSummaries}
-									/>
-								</div>
+								<DashboardHabits
+									habits={summary?.habitProgress?.todaysSummaries}
+								/>
 							</CardsSection>
 
 							{/* LOGS (WORKOUT & HABITS) */}

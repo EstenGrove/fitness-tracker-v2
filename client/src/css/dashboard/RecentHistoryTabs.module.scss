@@ -21,9 +21,9 @@
 	width: 100%;
 	padding: 0.5rem 1rem;
 	background-color: var(--todayStyles);
-	border: 1px solid var(--lightBorder);
+	border: 1px solid var(--cardBorder);
 	border-radius: 0 0.5rem 0.5rem 0;
-	border-left: 4px solid var(--lightBorder);
+	border-left: 4px solid var(--cardBorder);
 	margin: 0.5rem 0;
 
 	&_top {

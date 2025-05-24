@@ -15,11 +15,13 @@ import { currentEnv, habitApis } from "./utils_env";
 import { provideFallbackStr } from "./utils_misc";
 import { fetchWithAuth } from "./utils_requests";
 
-export type HabitModalType = "CREATE" | "EDIT" | "DELETE";
+export type HabitModalType = "CREATE" | "EDIT" | "DELETE" | "VIEW" | "LOG";
 export enum EHabitModalType {
 	CREATE = "CREATE",
 	EDIT = "EDIT",
 	DELETE = "DELETE",
+	VIEW = "VIEW",
+	LOG = "LOG",
 }
 
 export interface HabitDetailParams {
