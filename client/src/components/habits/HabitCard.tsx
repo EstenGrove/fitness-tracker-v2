@@ -118,7 +118,7 @@ const getDates = (startDate: string) => {
 };
 
 const About = ({ habit }: AboutProps) => {
-	const { startDate, maxStreak = "3 days" } = habit;
+	const { startDate, maxStreak = "0" } = habit;
 	const dateDesc = getDates(startDate);
 
 	return (

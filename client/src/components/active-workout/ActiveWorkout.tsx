@@ -3,7 +3,10 @@ import { useState } from "react";
 import { CurrentUser } from "../../features/user/types";
 import { TodaysWorkout } from "../../features/workouts/types";
 import { TimeInfo, TimerStatus } from "../../hooks/usePersistentTimer";
-import { useSkipWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
+import {
+	useLogWorkoutMutation,
+	useSkipWorkoutMutation,
+} from "../../features/workouts/todaysWorkoutsApi";
 import { formattedTime } from "../../utils/utils_formatter";
 import {
 	EndedWorkoutValues,
@@ -17,10 +20,13 @@ import WorkoutTimer from "./WorkoutTimer";
 import AddWorkoutDetails from "./AddWorkoutDetails";
 import SkipWorkout from "../workouts/SkipWorkout";
 import ModalSM from "../shared/ModalSM";
+import { secondsToMinutes } from "date-fns/fp";
+import { differenceInSeconds } from "date-fns";
 
 type Props = {
 	currentUser: CurrentUser;
 	workout: TodaysWorkout;
+	goBack: () => void;
 };
 
 const secsToMins = (secs: number) => {
@@ -69,7 +75,8 @@ interface TotalInfo {
 
 type EndWorkoutVals = Omit<EndedWorkoutValues, "sets" | "exercise">;
 
-const ActiveWorkout = ({ workout, currentUser }: Props) => {
+const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
+	const [logWorkout] = useLogWorkoutMutation();
 	const [skipWorkout] = useSkipWorkoutMutation();
 	const [hasEnded, setHasEnded] = useState<boolean>(false);
 	const [workoutInfo, setWorkoutInfo] = useState<TotalInfo | null>(null);
@@ -155,13 +162,29 @@ const ActiveWorkout = ({ workout, currentUser }: Props) => {
 	};
 
 	const markWorkoutAsEnded = async () => {
-		const base = new Date();
 		const { userID } = currentUser;
 
 		if (workoutInfo) {
-			// const mins = secondsToMinutes(workoutInfo.intervalInSecs);
-			// const preparedWorkout = prepareEndedWorkout(userID, null);
+			const mins = secondsToMinutes(workoutInfo.intervalInSecs);
+			const preparedWorkout = prepareEndedWorkout(userID, {
+				...workoutValues,
+				startTime: workoutInfo?.startTime,
+				endTime: workoutInfo?.endTime,
+				sets: workoutSets,
+				duration: mins,
+				exercise: workoutValues.activityType,
+			});
+
+			console.log("preparedWorkout", preparedWorkout);
+
+			// await logWorkout({
+			// 	userID: userID,
+			// 	newLog: preparedWorkout,
+			// });
+
+			// go back to Workouts page: '/workouts'
 		}
+		// goBack();
 	};
 
 	return (

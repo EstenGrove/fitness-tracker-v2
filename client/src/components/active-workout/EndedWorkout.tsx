@@ -23,8 +23,15 @@ type Props = {
 	onAddDetails: () => void;
 };
 
+const normalizeLength = (length: string) => {
+	const [start, secs] = length.split(".");
+	const newSecs = secs.slice(0, 3);
+	return `${start}:${newSecs}`;
+};
+
 const EndedWorkout = ({ info, onAddDetails }: Props) => {
 	const { startedAt, endedAt, totalSecs, totalLength } = info;
+	const length = normalizeLength(totalLength);
 	const start = formatTimestamp(startedAt, "longMs");
 	const end = formatTimestamp(endedAt, "longMs");
 
@@ -42,7 +49,7 @@ const EndedWorkout = ({ info, onAddDetails }: Props) => {
 				<div>
 					Length:{" "}
 					<b>
-						{totalLength} ({totalSecs}s)
+						{length} ({totalSecs}s)
 					</b>
 				</div>
 				<div>

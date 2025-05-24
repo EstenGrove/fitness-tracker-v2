@@ -109,3 +109,17 @@
 	@include flex_row(space-between, flex-end);
 	color: $text2;
 }
+
+.StreakBadge {
+	width: 2rem;
+	height: 2rem;
+	@include flex_row(flex-end, center);
+	gap: 0 0.2rem;
+	color: $accentRed;
+
+	&_icon {
+		width: 1.4rem;
+		height: 1.4rem;
+		fill: $accentRed;
+	}
+}

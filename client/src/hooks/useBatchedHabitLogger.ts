@@ -3,12 +3,14 @@ import { DeferredFetch } from "./useDeferredLogQueue";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { useRef, useState } from "react";
 import { prepareTimestamp } from "../utils/utils_dates";
-import { HabitLog, HabitLogValues } from "../features/habits/types";
+import { HabitLogValues } from "../features/habits/types";
 
 /**
  * Defers fetch request for habit logging; merges the logs into a single log w/ the totalled value as the 'loggedAmount'
  * @param delay {number} - Delay before fetch should fire after an even
  * @param deferredFetch {DeferredFetch<T>} - A fetch request that's deferred for X seconds/ms
+ *
+ * NOTE: this is a custom built deferred fetching mechanism that records data triggered by an event (eg. onClick), then waits for X seconds before firing the request. But before it fires, it will merge the data records into a single HabitLogValues record
  */
 
 const createNewLog = (

@@ -66,6 +66,8 @@ const streakIcons = {
 	streak1: "medal",
 	streak2: "medal-second-place",
 	streak3: "medal-third-place",
+	streak5: "medal-2",
+	streak7: "gas_industry",
 } as const;
 
 const awardIcons = {

@@ -2,6 +2,7 @@ import { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
 import { NavLink } from "react-router";
 import { iconsMap } from "../../utils/utils_icons";
 import sprite from "../../assets/icons/main.svg";
+import sprite2 from "../../assets/icons/main.svg";
 import alt from "../../assets/icons/calendar.svg";
 import styles from "../../css/layout/Card.module.scss";
 
@@ -22,7 +23,7 @@ type CardTitlesProps = {
 	title: string;
 };
 interface IconPropsInterface {
-	icon: keyof typeof iconsMap;
+	icon: keyof (typeof iconsMap)[1] | keyof (typeof iconsMap)[2];
 	background?: string;
 	color?: string;
 }
@@ -47,9 +48,24 @@ const GoTo = ({ to, onClick }: GoToProps) => {
 	);
 };
 
+const getSprite = (name: string) => {
+	const in1 = name in iconsMap[1];
+	const in2 = name in iconsMap[2];
+
+	if (in1) {
+		return sprite;
+	} else if (in2) {
+		return sprite2;
+	} else {
+		return alt;
+	}
+};
+
 const getIcon = (name: string): string => {
-	if (name in iconsMap) {
-		return iconsMap[name as keyof object];
+	if (name in iconsMap[1]) {
+		return iconsMap[1][name as keyof object];
+	} else if (name in iconsMap[2]) {
+		return iconsMap[2][name as keyof object];
 	} else {
 		return name;
 	}
@@ -61,13 +77,14 @@ const CardIcon = ({
 	color = "var(--blueGrey800)",
 	...rest
 }: IconProps) => {
+	const sheet = getSprite(icon);
 	const iconName = getIcon(icon);
 	const bg = { backgroundColor: background };
 	const fill = { fill: color };
 	return (
 		<div className={styles.CardIcon} style={bg}>
 			<svg className={styles.CardIcon_icon} style={fill} {...rest}>
-				<use xlinkHref={`${sprite}#icon-${iconName}`}></use>
+				<use xlinkHref={`${sheet}#icon-${iconName}`}></use>
 			</svg>
 		</div>
 	);

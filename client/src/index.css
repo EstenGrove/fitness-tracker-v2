@@ -327,6 +327,8 @@
 	--habitDisplay: #000;
 	--habitColor: #fff;
 	--habitMinus: #000;
+
+	--iconBG: var(--blueGrey200);
 }
 
 *,
@@ -381,6 +383,8 @@ body {
 	--habitMinus: #000;
 
 	--lightBorder: var(--blueGrey400);
+
+	--iconBG: var(--blueGrey200);
 }
 
 :root[data-theme="dark"] {
@@ -409,6 +413,7 @@ body {
 	--habitMinus: var(--blueGrey600);
 
 	--lightBorder: var(--blueGrey700);
+	--iconBG: var(--blueGrey900);
 }
 
 input {

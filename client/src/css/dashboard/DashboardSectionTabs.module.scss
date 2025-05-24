@@ -1,0 +1,49 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.DashboardSectionTabs {
+	width: 100%;
+	height: auto;
+	min-height: 15rem;
+	font-family: $fontPrimary;
+}
+
+.DashboardTabButton {
+	padding: 0.2rem 0.5rem;
+	font-size: 1.8rem;
+	font-weight: 500;
+	background-color: transparent;
+	outline: none;
+	border: none;
+	color: $text3;
+	font-family: $fontPrimary;
+
+	&:last-of-type {
+		margin-left: auto;
+	}
+}
+.DashboardTabButtons {
+	width: 100%;
+
+	&_inner {
+		width: 100%;
+		@include flex_row(space-between, center);
+	}
+}
+
+.isActive {
+	color: $accentBlue;
+	color: $text1;
+}
+
+.DashboardTabPanels {
+	width: 100%;
+	height: auto;
+	padding: 1rem 0;
+}
+.DashboardTabPanel {
+	width: 100%;
+	height: auto;
+	padding: 0 0.5rem;
+}

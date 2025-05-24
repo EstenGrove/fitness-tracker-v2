@@ -15,10 +15,17 @@ import CardsCarousel from "../components/layout/CardsCarousel";
 import CardsSection from "../components/layout/CardsSection";
 import StepsSummary from "../components/summary/StepsSummary";
 import Loader from "../components/layout/Loader";
+import RecentHistoryTabs from "../components/dashboard/RecentHistoryTabs";
+import HabitsList from "../components/habits/HabitsList";
 
 const activityInfo = {
 	title: "Recent Activity",
 	path: "/activity?view=WEEK",
+};
+
+const habitInfo = {
+	title: "Habit Progress",
+	path: "/habits",
 };
 
 const DashboardPage = () => {
@@ -44,13 +51,29 @@ const DashboardPage = () => {
 				</div>
 				<div className={styles.DashboardPage_body}>
 					{!isLoading && summary ? (
-						<CardsSection title={activityInfo.title} to={activityInfo.path}>
-							<CardsCarousel containerRef={cardsRef}>
-								<MinutesSummary minsSummary={summary.dailyMins} />
-								<CaloriesSummary caloriesSummary={summary.dailyCalories} />
-								<StepsSummary stepsSummary={summary.dailySteps} />
-							</CardsCarousel>
-						</CardsSection>
+						<>
+							<CardsSection title={activityInfo.title} to={activityInfo.path}>
+								<CardsCarousel containerRef={cardsRef}>
+									<MinutesSummary minsSummary={summary.dailyMins} />
+									<CaloriesSummary caloriesSummary={summary.dailyCalories} />
+									<StepsSummary stepsSummary={summary.dailySteps} />
+								</CardsCarousel>
+							</CardsSection>
+							{/* HABITS PROGRESS */}
+							<CardsSection title={habitInfo.title} to={habitInfo.path}>
+								<div style={{ minHeight: "15rem" }}>
+									<HabitsList
+										habits={summary?.habitProgress?.todaysSummaries}
+									/>
+								</div>
+							</CardsSection>
+
+							{/* LOGS (WORKOUT & HABITS) */}
+							<RecentHistoryTabs
+								recentWorkouts={summary?.recentWorkouts}
+								recentHabitLogs={summary?.habitProgress?.todaysLogs}
+							/>
+						</>
 					) : (
 						<Loader>
 							<span>Loading summary...please wait..</span>

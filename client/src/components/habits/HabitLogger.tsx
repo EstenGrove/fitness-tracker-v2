@@ -10,20 +10,15 @@ import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/habits/HabitLogger.module.scss";
 import {
 	Habit,
-	HabitLog,
 	HabitLogValues,
 	HabitSummary,
 } from "../../features/habits/types";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-import FadeIn from "../ui/FadeIn";
-import {
-	DeferredFetch,
-	DeferredLog,
-	useDeferredLogQueue,
-} from "../../hooks/useDeferredLogQueue";
+import { DeferredFetch } from "../../hooks/useDeferredLogQueue";
 import { logHabitsBatched } from "../../utils/utils_habits";
 import { prepareTimestamp } from "../../utils/utils_dates";
 import { useBatchedHabitLogger } from "../../hooks/useBatchedHabitLogger";
+import FadeIn from "../ui/FadeIn";
 
 type Props = { habit: Habit; summary: HabitSummary; habitStep: number };
 
@@ -186,10 +181,6 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		650,
 		logHabitsBatched as DeferredFetch<HabitLogValues>
 	);
-	// const { queueLog } = useDeferredLogQueue(
-	// 	600,
-	// 	logHabitsBatched as DeferredFetch<HabitLogValues>
-	// );
 
 	const hitGoal = useMemo(() => {
 		return hasHitGoal(todaysValue, habit);
@@ -199,7 +190,6 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(value, habit);
-		// queueLog(newLog as unknown as DeferredLog);
 		queueLog(newLog);
 	};
 
@@ -208,7 +198,6 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(habitStep, habit);
-		// queueLog(newLog as unknown as DeferredLog);
 		queueLog(newLog);
 	};
 	const minus = () => {
@@ -217,7 +206,6 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		setTodaysValue(value);
 
 		const newLog = prepareHabitLog(-habitStep, habit);
-		// queueLog(newLog as unknown as DeferredLog);
 		queueLog(newLog);
 	};
 

@@ -1,4 +1,10 @@
-import { addMinutes, differenceInMinutes } from "date-fns";
+import {
+	addMinutes,
+	differenceInMinutes,
+	differenceInSeconds,
+	parse,
+	secondsToMinutes,
+} from "date-fns";
 import { Activity, Effort } from "../features/shared/types";
 import { AsyncResponse } from "../features/types";
 import {
@@ -342,8 +348,14 @@ const calculateWalkMetrics = (values: { miles: number; duration: number }) => {
 };
 
 // Checks if the start/end times line up with the workout mins & fixes it, if needed
-const prepareStartAndEndDuration = (values: LogWorkoutValues): StartAndEnd => {
+const prepareStartAndEndDuration = (values: {
+	startTime: string;
+	workoutDate: string;
+	duration: number;
+}): StartAndEnd => {
 	const { startTime, workoutDate, duration } = values;
+	console.log("startTime", startTime);
+	console.log("workoutDate", workoutDate);
 	const startStr = startTime as string;
 	const start = applyTimeStrToDate(startStr, workoutDate);
 	const endTime = calculateEndTimeFromDuration({
@@ -403,8 +415,111 @@ export interface EndedWorkoutValues {
 	exercise: string;
 	sets: WorkoutSet[];
 }
+export interface FinalWorkoutVals extends LogWorkoutValues {
+	userID: string;
+}
 
-const prepareEndedWorkout = (userID: string, values: EndedWorkoutValues) => {};
+const calculateDurationFromTimestamps = (
+	startTime: string,
+	endTime: string
+) => {
+	const diffInSecs = differenceInSeconds(endTime, startTime);
+	const mins = secondsToMinutes(diffInSecs);
+	return mins.toFixed(2);
+};
+
+const calculateDurationFromEndedTimes = (start: string, end: string) => {
+	const parseKey = "MM/dd/yyyy h:mm:ss a";
+	const startP = parse(start, parseKey, new Date());
+	const endP = parse(end, parseKey, new Date());
+
+	const total = differenceInSeconds(endP, startP);
+
+	const mins = total / 60;
+	return mins.toFixed(2);
+};
+
+const prepareEndedWorkout = (
+	userID: string,
+	values: EndedWorkoutValues
+): LogWorkoutBody => {
+	const type = values.activityType as Activity;
+	// Returns mins as a numeric decimal (eg 0.25 => 15seconds) 1.25 => 1m 15s
+	const length = calculateDurationFromEndedTimes(
+		values.startTime,
+		values.endTime
+	);
+	console.log("length", length);
+
+	const withTime = {
+		...values,
+		effort: values.effort as Effort,
+		activityType: type,
+		userID: userID,
+		startTime: values.startTime,
+		endTime: values.endTime,
+		workoutLength: values.duration,
+	};
+
+	switch (type) {
+		case "Strength": {
+			return {
+				...withTime,
+				sets: values.sets,
+				userID: userID,
+			};
+		}
+		case "Walk": {
+			const { steps, pace } = calculateWalkMetrics({
+				miles: values.miles,
+				duration: values.duration,
+			});
+			return {
+				...withTime,
+				userID: userID,
+				steps: steps,
+				miles: values.miles,
+				pace: pace,
+			};
+		}
+		case "Stretch": {
+			return {
+				...withTime,
+				userID: userID,
+				sets: values.sets,
+				exercise: "Stretch",
+			};
+		}
+		case "Cardio": {
+			return {
+				...withTime,
+				userID: userID,
+				exercise: "Cardio",
+			};
+		}
+		case "Timed": {
+			return {
+				...withTime,
+				userID: userID,
+				sets: values.sets,
+				exercise: "Timed",
+			};
+		}
+		case "Other": {
+			return {
+				...withTime,
+				userID: userID,
+				sets: values.sets,
+				exercise: "Other",
+			};
+		}
+		default:
+			return {
+				...withTime,
+				userID: userID,
+			};
+	}
+};
 
 export {
 	logWorkout,
@@ -421,4 +536,6 @@ export {
 	calculateWalkMetrics,
 	getWorkoutsByStatus,
 	prepareEndedWorkout,
+	calculateDurationFromTimestamps,
+	calculateDurationFromEndedTimes,
 };
