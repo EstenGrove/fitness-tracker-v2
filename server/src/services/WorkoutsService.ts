@@ -143,6 +143,20 @@ class WorkoutsService {
 			return error;
 		}
 	}
+	async getAllUserWorkouts(userID: string) {
+		try {
+			const query = `SELECT * FROM get_all_user_workouts(
+				$1
+			) as data`;
+			const results = await this.#db.query(query, [userID]);
+			console.log("[RESULTS]", results);
+			const rows = results?.rows;
+			console.log("results.rows", results.rows);
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
 
 	async getTodaysWorkouts(userID: string, targetDate: string) {
 		try {

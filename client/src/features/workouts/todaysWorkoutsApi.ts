@@ -99,7 +99,6 @@ export const todaysWorkoutsApi = createApi({
 				)) as AwaitedResponse<{
 					workouts: TodaysWorkout[];
 				}>;
-				console.log("response", response);
 				const data = response.Data as { workouts: TodaysWorkout[] };
 				const workouts = data.workouts as TodaysWorkout[];
 

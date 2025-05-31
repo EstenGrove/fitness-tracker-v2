@@ -38,7 +38,6 @@ app.get("/getPostWorkoutDetails", async (ctx: Context) => {
 
 	return ctx.json(response);
 });
-
 app.get("/getWorkoutStats", async (ctx: Context) => {
 	const { userID, workoutID, activityType, targetDate } = ctx.req.query();
 
@@ -75,6 +74,14 @@ app.get("/getPostWorkoutStats", async (ctx: Context) => {
 	return ctx.json({
 		stats: stats,
 	});
+});
+
+// Summary Stats
+app.get("/getMinsSummaryForRange", async (ctx: Context) => {
+	const { userID, targetDate, rangeType } = ctx.req.query();
+
+	//
+	//
 });
 
 export default app;

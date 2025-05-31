@@ -1,4 +1,5 @@
-import { act, ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useRef, useState } from "react";
+import sprite from "../../assets/icons/dashboard.svg";
 import styles from "../../css/workouts/AllWorkouts.module.scss";
 import { TodaysWorkout as ITodaysWorkouts } from "../../features/workouts/types";
 import { groupBy, isEmptyArray } from "../../utils/utils_misc";
@@ -115,6 +116,58 @@ const searchAndFilter = (
 	return searched;
 };
 
+type InputProps = {
+	value: string;
+	onSearch: (value: string) => void;
+	clearSearch: () => void;
+};
+const SearchInput = ({ value, onSearch, clearSearch }: InputProps) => {
+	const inputRef = useRef<HTMLInputElement>(null);
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+
+		return onSearch(value);
+	};
+
+	const focusInput = () => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	};
+
+	const handleClear = () => {
+		clearSearch();
+		focusInput();
+	};
+
+	return (
+		<div className={styles.SearchInput}>
+			<input
+				ref={inputRef}
+				type="text"
+				name="search"
+				id="search"
+				value={value}
+				onChange={handleSearch}
+				placeholder="Search workouts..."
+				className={styles.SearchInput_input}
+			/>
+			{!!value && (
+				<div
+					tabIndex={0}
+					onClick={handleClear}
+					onKeyDown={handleClear}
+					className={styles.SearchInput_clear}
+				>
+					<svg className={styles.SearchInput_clear_icon}>
+						<use xlinkHref={`${sprite}#icon-clear`}></use>
+					</svg>
+				</div>
+			)}
+		</div>
+	);
+};
+
 const AllWorkouts = ({ workouts }: Props) => {
 	const filters = getFiltersFromWorkouts(workouts);
 	const [searchValue, setSearchValue] = useState<string>("");
@@ -129,8 +182,7 @@ const AllWorkouts = ({ workouts }: Props) => {
 		});
 	}, [selectedFilters, workouts, searchValue]);
 
-	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
+	const handleSearch = (value: string) => {
 		setSearchValue(value);
 	};
 
@@ -148,20 +200,18 @@ const AllWorkouts = ({ workouts }: Props) => {
 		}
 	};
 
-	console.log("selectedFilters", selectedFilters);
+	const clearSearch = () => {
+		setSearchValue("");
+	};
 
 	return (
 		<div className={styles.AllWorkouts}>
 			<div className={styles.AllWorkouts_header}>
 				<div className={styles.AllWorkouts_search}>
-					<input
-						type="text"
-						name="search"
-						id="search"
+					<SearchInput
 						value={searchValue}
-						onChange={handleSearch}
-						placeholder="Search workouts..."
-						className={styles.AllWorkouts_search_input}
+						onSearch={handleSearch}
+						clearSearch={clearSearch}
 					/>
 				</div>
 				<div className={styles.AllWorkouts_filters}>

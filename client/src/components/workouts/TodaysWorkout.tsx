@@ -4,7 +4,12 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
-import { formatDate, formatTime, parseAnyTime } from "../../utils/utils_dates";
+import {
+	formatDate,
+	formatTime,
+	isMidnight,
+	parseAnyTime,
+} from "../../utils/utils_dates";
 import { TodaysWorkout as ITodaysWorkout } from "../../features/workouts/types";
 import { useAppDispatch } from "../../store/store";
 import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
@@ -38,6 +43,11 @@ const getDurationDesc = (info: {
 	recorded: number | null;
 }) => {
 	const { duration, recorded } = info;
+	const isOpen = Number(duration) === 0;
+	if (isOpen) {
+		return "Open";
+	}
+
 	if (!recorded) {
 		return duration + "min.";
 	} else {
@@ -76,6 +86,11 @@ const getBorderStyles = (workout: ITodaysWorkout) => {
 
 const getWorkoutTimes = (workout: ITodaysWorkout) => {
 	const { startTime, endTime } = workout;
+
+	// check for midnight
+	if (isMidnight(startTime) || isMidnight(endTime)) {
+		return "Any time";
+	}
 
 	if (!startTime || !endTime) return "";
 	const startP = parseAnyTime(startTime);
