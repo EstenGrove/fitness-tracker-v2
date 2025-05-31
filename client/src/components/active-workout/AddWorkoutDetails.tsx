@@ -39,18 +39,13 @@ type DetailsProps = {
 };
 
 // Strength ONLY
-const AddStrengthDetails = ({ sets, onSetChange }: DetailsProps) => {
+const AddStrengthDetails = ({ onSetChange }: DetailsProps) => {
 	return (
 		<div className={styles.AddStrengthDetails}>
 			<label htmlFor="sets" className={styles.AddStrengthDetails_sets}>
 				Add set details
 			</label>
-			<EditStrengthSets
-				reps={20}
-				weight={20}
-				sets={sets?.length ?? 4}
-				onChange={onSetChange}
-			/>
+			<EditStrengthSets reps={20} weight={20} sets={4} onChange={onSetChange} />
 		</div>
 	);
 };

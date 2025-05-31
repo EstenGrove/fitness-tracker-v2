@@ -76,10 +76,42 @@ const sortByDate = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 		return dateB - dateA;
 	});
 };
+const sortByDateDesc = <T extends object>(key: TKey<T>, list: T[]): T[] => {
+	if (!list || !list.length) return [];
+
+	return [...list]?.sort((a, b) => {
+		const valA = a[key] as string;
+		const valB = b[key] as string;
+		const dateA = new Date(valA).getTime();
+		const dateB = new Date(valB).getTime();
+
+		return dateA - dateB;
+	});
+};
 const provideFallbackStr = (targetVal: string, fallback: string) => {
 	if (!targetVal || targetVal === "") return fallback;
 
 	return targetVal;
+};
+
+const sortByDateOrder = <T extends object>(
+	key: TKey<T>,
+	list: T[],
+	order: "ASC" | "DESC" = "ASC"
+): T[] => {
+	if (!list || !list.length) return [];
+
+	switch (order) {
+		case "ASC": {
+			return sortByDate(key, list);
+		}
+		case "DESC": {
+			return sortByDateDesc(key, list);
+		}
+
+		default:
+			return sortByDate(key, list);
+	}
 };
 
 export {
@@ -90,5 +122,7 @@ export {
 	groupBy,
 	groupByFn,
 	sortByDate,
+	sortByDateDesc,
+	sortByDateOrder,
 	provideFallbackStr,
 };

@@ -1,4 +1,5 @@
 import sprite from "../../assets/icons/main.svg";
+import sprite2 from "../../assets/icons/habits.svg";
 import styles from "../../css/dashboard/RecentHistoryTabs.module.scss";
 import {
 	DashboardSectionTabs,
@@ -9,11 +10,16 @@ import {
 } from "./DashboardSectionTabs";
 import { RecentWorkout } from "../../features/dashboard/types";
 import { RecentHabitLog } from "../../features/habits/types";
-import { addEllipsis, isEmptyArray } from "../../utils/utils_misc";
+import {
+	addEllipsis,
+	isEmptyArray,
+	sortByDateOrder,
+} from "../../utils/utils_misc";
 import { formatDateAsWeekDay, formatDateTime } from "../../utils/utils_dates";
-import { format, formatDistanceToNow, isToday } from "date-fns";
+import { format, formatDistanceToNow, isToday, parse } from "date-fns";
 import { habitIcons } from "../../utils/utils_habits";
 import NoData from "../ui/NoData";
+import { getActivityStyles } from "../../utils/utils_activity";
 
 type Props = {
 	recentWorkouts: RecentWorkout[];
@@ -45,18 +51,29 @@ const WhenBadge = ({ startTime }: WhenProps) => {
 };
 
 const getWorkoutDate = (startTime: string): string => {
-	if (isToday(startTime)) {
+	const parsed = parse(startTime, "yyyy-MM-dd", new Date());
+	if (isToday(parsed)) {
 		return "Today";
 	} else {
-		return formatDateAsWeekDay(startTime);
+		return formatDateAsWeekDay(parsed);
 	}
+};
+
+const getWorkoutStyles = (entry: RecentWorkout) => {
+	const type = entry.activityType;
+	const { color = "var(--cardBorder)" } = getActivityStyles(type);
+
+	return {
+		borderLeft: `4px solid ${color}`,
+	};
 };
 
 const RecentWorkoutEntry = ({ entry }: { entry: RecentWorkout }) => {
 	const name = addEllipsis(entry.workoutName, 25);
 	const when = getWorkoutDate(entry.workoutDate);
+	const typeCss = getWorkoutStyles(entry);
 	return (
-		<div className={styles.RecentWorkoutEntry}>
+		<div className={styles.RecentWorkoutEntry} style={typeCss}>
 			<div className={styles.RecentWorkoutEntry_top}>
 				<div className={styles.RecentWorkoutEntry_top_title}>{name}</div>
 				<div className={styles.RecentWorkoutEntry_top_when}>{when}</div>
@@ -90,7 +107,7 @@ const RecentHabitEntry = ({ entry }: { entry: RecentHabitLog }) => {
 		<div className={styles.RecentHabitEntry}>
 			<div className={styles.RecentHabitEntry_top}>
 				<svg className={styles.RecentHabitEntry_top_icon} style={color}>
-					<use xlinkHref={`${sprite}#icon-${icon}`}></use>
+					<use xlinkHref={`${sprite2}#icon-${icon}`}></use>
 				</svg>
 				<h4 className={styles.RecentHabitEntry_top_title}>{name}</h4>
 			</div>
@@ -137,13 +154,39 @@ const RecentHabits = ({ recentHabits }: { recentHabits: RecentHabitLog[] }) => {
 	);
 };
 
+const sortWorkouts = (
+	workouts: RecentWorkout[],
+	order: "ASC" | "DESC" = "ASC"
+): RecentWorkout[] => {
+	const sortedWorkouts = sortByDateOrder<RecentWorkout>(
+		"startTime",
+		workouts,
+		order
+	);
+	return sortedWorkouts;
+};
+const sortHabitLogs = (
+	habitLogs: RecentHabitLog[],
+	order: "ASC" | "DESC" = "ASC"
+): RecentHabitLog[] => {
+	const sortedLogs = sortByDateOrder<RecentHabitLog>(
+		"logTime",
+		habitLogs,
+		order
+	);
+	return sortedLogs;
+};
+
 const RecentHistoryTabs = ({
 	recentWorkouts = [],
 	recentHabitLogs = [],
 }: Props) => {
+	const sortedWorkouts = sortWorkouts(recentWorkouts, "ASC");
+	const sortedHabits = sortHabitLogs(recentHabitLogs, "ASC");
+
 	return (
 		<div className={styles.RecentHistoryTabs}>
-			<DashboardSectionTabs initialIdx={0}>
+			<DashboardSectionTabs initialIdx={1}>
 				<DashboardTabButtons>
 					<DashboardTabButton>
 						<span>Recent Workouts</span>
@@ -156,11 +199,11 @@ const RecentHistoryTabs = ({
 				<DashboardTabPanels>
 					{/* RECENT WORKOUTS */}
 					<DashboardTabPanel>
-						<RecentWorkouts recentWorkouts={recentWorkouts} />
+						<RecentWorkouts recentWorkouts={sortedWorkouts} />
 					</DashboardTabPanel>
 					{/* RECENT HABITS */}
 					<DashboardTabPanel>
-						<RecentHabits recentHabits={recentHabitLogs} />
+						<RecentHabits recentHabits={sortedHabits} />
 					</DashboardTabPanel>
 				</DashboardTabPanels>
 			</DashboardSectionTabs>
