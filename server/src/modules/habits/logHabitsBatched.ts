@@ -1,7 +1,7 @@
-import { habitsService } from "../../services/index.ts";
-import { getResponseError } from "../../utils/api.ts";
-import { normalizeHabitLog } from "./logHabit.ts";
-import type { HabitLogDB, HabitLogValues } from "./types.ts";
+import { habitsService } from "../../services/index.js";
+import { getResponseError } from "../../utils/api.js";
+import { normalizeHabitLog } from "./logHabit.js";
+import type { HabitLogDB, HabitLogValues } from "./types.js";
 
 const logHabitsBatched = async (newLogs: HabitLogValues[]) => {
 	if (!newLogs) {

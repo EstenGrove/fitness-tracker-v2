@@ -1,6 +1,6 @@
 import { Hono, type Context } from "hono";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { workoutsService } from "../services/index.ts";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { workoutsService } from "../services/index.js";
 import type {
 	LogWorkoutBody,
 	SkipWorkoutBody,
@@ -9,18 +9,18 @@ import type {
 	Workout,
 	WorkoutDB,
 	WorkoutDetailsDB,
-} from "../modules/workouts/types.ts";
-import { normalizeTodaysWorkout } from "../modules/workouts/todaysWorkouts.ts";
-import { normalizeWorkoutDetails } from "../modules/workouts/workoutDetails.ts";
-import { normalizeWorkouts } from "../modules/workouts/workouts.ts";
+} from "../modules/workouts/types.js";
+import { normalizeTodaysWorkout } from "../modules/workouts/todaysWorkouts.js";
+import { normalizeWorkoutDetails } from "../modules/workouts/workoutDetails.js";
+import { normalizeWorkouts } from "../modules/workouts/workouts.js";
 import {
 	logWorkout,
 	normalizeWorkoutLog,
-} from "../modules/workouts/logWorkout.ts";
-import type { HistoryOfTypeDB } from "../modules/history/types.ts";
-import { skipWorkout } from "../modules/workouts/skipWorkout.ts";
-import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.ts";
-import type { Activity } from "../modules/types.ts";
+} from "../modules/workouts/logWorkout.js";
+import type { HistoryOfTypeDB } from "../modules/history/types.js";
+import { skipWorkout } from "../modules/workouts/skipWorkout.js";
+import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.js";
+import type { Activity } from "../modules/types.js";
 
 const app = new Hono();
 

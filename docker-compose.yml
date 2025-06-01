@@ -14,7 +14,7 @@ services:
     ports:
       - "3003:3002"
     environment:
-      - DATABASE_URL=postgres://x-main-user:t_(1U>*XS?Ivsm^9bfLW@db:5432/FitnessTracker-v2
+      - DATABASE_URL="postgres://x-main-user:t_%281U%3E*XS%3FIvsm%5E9bfLW@db:5432/FitnessTracker-v2"
     depends_on:
       - db
 

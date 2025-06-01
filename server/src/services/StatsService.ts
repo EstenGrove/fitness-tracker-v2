@@ -1,6 +1,6 @@
 import type { Pool } from "pg";
-import type { Activity } from "../modules/types.ts";
-import type { PostWorkoutParams } from "../modules/stats/types.ts";
+import type { Activity } from "../modules/types.js";
+import type { PostWorkoutParams } from "../modules/stats/types.js";
 
 export interface MinSummaryParams {
 	userID: string;

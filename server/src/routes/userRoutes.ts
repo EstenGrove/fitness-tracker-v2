@@ -1,6 +1,6 @@
 import { Hono, type Context } from "hono";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { userExists, type UserExists } from "../modules/user/userExists.ts";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { userExists, type UserExists } from "../modules/user/userExists.js";
 
 const app = new Hono();
 

@@ -1,5 +1,5 @@
-import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
-import type { Activity, Effort, RepeatType, WeekDayToken } from "../types.ts";
+import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.js";
+import type { Activity, Effort, RepeatType, WeekDayToken } from "../types.js";
 
 export type WorkoutStatus = "COMPLETE" | "NOT-COMPLETE";
 

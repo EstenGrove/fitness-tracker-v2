@@ -3,7 +3,7 @@ import type {
 	ActivityOtherDB,
 	ActivityOtherSummary,
 	ActivityOtherSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivityOther = (other: ActivityOtherDB): ActivityOther => {
 	const newOther: ActivityOther = {

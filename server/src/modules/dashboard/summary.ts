@@ -1,10 +1,10 @@
-import { normalizeHabitCard } from "../habits/getHabitCards.ts";
-import { normalizeRecentHabitLogs } from "../habits/getRecentHabitLogs.ts";
-import type { HabitCard } from "../habits/types.ts";
+import { normalizeHabitCard } from "../habits/getHabitCards.js";
+import { normalizeRecentHabitLogs } from "../habits/getRecentHabitLogs.js";
+import type { HabitCard } from "../habits/types.js";
 import {
 	normalizeHistoryByType,
 	normalizeHistoryEntryByType,
-} from "../history/allHistory.ts";
+} from "../history/allHistory.js";
 import type {
 	DailyCalories,
 	DailyCaloriesDB,
@@ -30,7 +30,7 @@ import type {
 	TotalStepsDB,
 	TotalWorkouts,
 	TotalWorkoutsDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeDailyMins = (dailyMins: DailyMinsDB[]): DailyMins[] => {
 	if (!dailyMins || !dailyMins.length) return [];

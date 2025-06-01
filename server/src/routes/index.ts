@@ -1,12 +1,12 @@
-import userRoutes from "./userRoutes.ts";
-import authRoutes from "./authRoutes.ts";
-import habitRoutes from "./habitRoutes.ts";
-import statsRoutes from "./statsRoutes.ts";
-import historyRoutes from "./historyRoutes.ts";
-import workoutRoutes from "./workoutRoutes.ts";
-import dashboardRoutes from "./dashboardRoutes.ts";
-import medicationRoutes from "./medicationRoutes.ts";
-import recentActivityRoutes from "./recentActivityRoutes.ts";
+import userRoutes from "./userRoutes.js";
+import authRoutes from "./authRoutes.js";
+import habitRoutes from "./habitRoutes.js";
+import statsRoutes from "./statsRoutes.js";
+import historyRoutes from "./historyRoutes.js";
+import workoutRoutes from "./workoutRoutes.js";
+import dashboardRoutes from "./dashboardRoutes.js";
+import medicationRoutes from "./medicationRoutes.js";
+import recentActivityRoutes from "./recentActivityRoutes.js";
 
 const allRoutes = {
 	recentActivity: recentActivityRoutes,

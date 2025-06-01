@@ -1,4 +1,4 @@
-import type { TotalTime, TotalTimeDB } from "./types.ts";
+import type { TotalTime, TotalTimeDB } from "./types.js";
 
 const normalizeTotalMins = (mins: TotalTimeDB): TotalTime => {
 	const newMins: TotalTime = {

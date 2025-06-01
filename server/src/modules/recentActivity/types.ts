@@ -1,4 +1,4 @@
-import type { DateRange, DateRangeDB } from "../types.ts";
+import type { DateRange, DateRangeDB } from "../types.js";
 
 export type ActivityRangeType = "DAY" | "WEEK" | "MONTH" | "QUARTER" | "YEAR";
 

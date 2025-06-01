@@ -1,4 +1,4 @@
-import type { Activity } from "../types.ts";
+import type { Activity } from "../types.js";
 import type {
 	AllHistory,
 	AllHistoryDB,
@@ -16,7 +16,7 @@ import type {
 	TimedHistoryDB,
 	WalkHistory,
 	WalkHistoryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeWalkHistory = (entry: WalkHistoryDB): WalkHistory => {
 	const client: WalkHistory = {

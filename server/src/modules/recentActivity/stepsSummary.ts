@@ -2,7 +2,7 @@ import type {
 	ActivitySteps,
 	ActivityStepsDB,
 	ActivityStepsSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivitySteps = (steps: ActivityStepsDB): ActivitySteps => {
 	const newSteps: ActivitySteps = {

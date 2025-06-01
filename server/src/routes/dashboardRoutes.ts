@@ -1,8 +1,8 @@
 import { Hono, type Context } from "hono";
-import { dashboardService } from "../services/index.ts";
-import type { DashboardSummaryDB } from "../modules/dashboard/types.ts";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { normalizeDashboardSummary } from "../modules/dashboard/summary.ts";
+import { dashboardService } from "../services/index.js";
+import type { DashboardSummaryDB } from "../modules/dashboard/types.js";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { normalizeDashboardSummary } from "../modules/dashboard/summary.js";
 
 const app = new Hono();
 

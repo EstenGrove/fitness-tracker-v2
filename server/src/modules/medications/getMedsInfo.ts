@@ -1,13 +1,13 @@
-import { medicationsService } from "../../services/index.ts";
-import type { MedsInfoResp } from "../../services/MedicationsService.ts";
+import { medicationsService } from "../../services/index.js";
+import type { MedsInfoResp } from "../../services/MedicationsService.js";
 import type {
 	Medication,
 	MedicationDB,
 	MedicationSchedule,
 	MedicationScheduleDB,
 	MedsInfoDB,
-} from "./types.ts";
-import { normalizeMedSchedules, normalizeUserMeds } from "./userMeds.ts";
+} from "./types.js";
+import { normalizeMedSchedules, normalizeUserMeds } from "./userMeds.js";
 
 const getMedsInfo = async (userID: string, targetDate: string) => {
 	const rawInfo = (await medicationsService.getMedsInfo(

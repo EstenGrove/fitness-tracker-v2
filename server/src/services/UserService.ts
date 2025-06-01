@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import type { UserDB } from "../modules/user/types.ts";
+import type { UserDB } from "../modules/user/types.js";
 
 export type UserDBResp = Promise<UserDB | unknown>;
 export type UserExistsResp = Promise<{ is_active_user: boolean } | unknown>;

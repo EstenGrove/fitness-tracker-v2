@@ -1,6 +1,6 @@
 import pg from "pg";
 import type { Pool as PGPool, QueryResultRow } from "pg";
-import { dbConfig } from "./dbConfig.ts";
+import { dbConfig } from "./dbConfig.js";
 
 // PostgreSQL Database Pool
 // - A pool of database connections

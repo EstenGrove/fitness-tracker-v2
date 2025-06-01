@@ -1,5 +1,5 @@
 import { Hono, type Context } from "hono";
-import { getUserHabits } from "../modules/habits/getUserHabits.ts";
+import { getUserHabits } from "../modules/habits/getUserHabits.js";
 import type {
 	Habit,
 	HabitCard,
@@ -7,14 +7,14 @@ import type {
 	HabitLogValues,
 	NewHabitValues,
 	RecentHabitLog,
-} from "../modules/habits/types.ts";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { logHabit } from "../modules/habits/logHabit.ts";
-import { getHabitDetails } from "../modules/habits/getHabitDetails.ts";
-import { logHabitsBatched } from "../modules/habits/logHabitsBatched.ts";
-import { getHabitCards } from "../modules/habits/getHabitCards.ts";
-import { createHabit } from "../modules/habits/createHabit.ts";
-import { getRecentHabitLogs } from "../modules/habits/getRecentHabitLogs.ts";
+} from "../modules/habits/types.js";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { logHabit } from "../modules/habits/logHabit.js";
+import { getHabitDetails } from "../modules/habits/getHabitDetails.js";
+import { logHabitsBatched } from "../modules/habits/logHabitsBatched.js";
+import { getHabitCards } from "../modules/habits/getHabitCards.js";
+import { createHabit } from "../modules/habits/createHabit.js";
+import { getRecentHabitLogs } from "../modules/habits/getRecentHabitLogs.js";
 
 const app = new Hono();
 

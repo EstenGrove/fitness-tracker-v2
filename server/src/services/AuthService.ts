@@ -1,6 +1,5 @@
 import type { Pool } from "pg";
-import type { LoggedInDB } from "../modules/auth/types.ts";
-import type { SessionDB } from "../modules/user/types.ts";
+import type { LoggedInDB } from "../modules/auth/types.js";
 
 export type LoggedInDBResp = Promise<LoggedInDB | unknown>;
 export type LoggedOutDBResp = Promise<LoggedOutDBResp | unknown>;

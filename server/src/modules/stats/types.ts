@@ -1,6 +1,6 @@
-import type { Activity, Effort } from "../types.ts";
-import type { StrengthSet } from "../history/types.ts";
-import type { ExerciseSet } from "../workouts/types.ts";
+import type { Activity, Effort } from "../types.js";
+import type { StrengthSet } from "../history/types.js";
+import type { ExerciseSet } from "../workouts/types.js";
 
 export interface PostWorkoutParams {
 	userID: string;

@@ -1,6 +1,6 @@
-import type { RecentHabitParams } from "../../services/HabitsService.ts";
-import { habitsService } from "../../services/index.ts";
-import type { RecentHabitLog, RecentHabitLogDB } from "./types.ts";
+import type { RecentHabitParams } from "../../services/HabitsService.js";
+import { habitsService } from "../../services/index.js";
+import type { RecentHabitLog, RecentHabitLogDB } from "./types.js";
 
 const getRecentHabitLogs = async (
 	userID: string,

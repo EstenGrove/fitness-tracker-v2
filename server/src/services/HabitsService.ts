@@ -8,7 +8,7 @@ import type {
 	HabitLogValues,
 	NewHabitValues,
 	RecentHabitLogDB,
-} from "../modules/habits/types.ts";
+} from "../modules/habits/types.js";
 
 export interface RecentHabitParams {
 	targetDate: string;

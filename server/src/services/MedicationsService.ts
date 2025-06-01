@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import type { LogMedBody, MedsInfoDB } from "../modules/medications/types.ts";
+import type { LogMedBody, MedsInfoDB } from "../modules/medications/types.js";
 
 interface PillSummaryArgs {
 	scheduleID: number;

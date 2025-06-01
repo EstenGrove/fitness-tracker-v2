@@ -3,8 +3,8 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
-import { allRoutes } from "./routes/index.ts";
-import { isRemote } from "./utils/env.ts";
+import { allRoutes } from "./routes/index.js";
+import { isRemote } from "./utils/env.js";
 dotenv.config();
 
 const SERVER = {

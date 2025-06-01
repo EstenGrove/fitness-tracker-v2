@@ -1,6 +1,6 @@
-import { normalizeWorkout } from "../workouts/workouts.ts";
-import { normalizeHistoryEntryByType } from "./allHistory.ts";
-import type { HistoryDetails, HistoryDetailsDB } from "./types.ts";
+import { normalizeWorkout } from "../workouts/workouts.js";
+import { normalizeHistoryEntryByType } from "./allHistory.js";
+import type { HistoryDetails, HistoryDetailsDB } from "./types.js";
 
 const normalizeHistoryDetails = (details: HistoryDetailsDB): HistoryDetails => {
 	const { workout, history, activityType, calories } = details;

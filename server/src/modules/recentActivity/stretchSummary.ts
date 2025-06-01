@@ -3,7 +3,7 @@ import type {
 	ActivityStretchDB,
 	ActivityStretchSummary,
 	ActivityStretchSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivityStretch = (
 	cardio: ActivityStretchDB

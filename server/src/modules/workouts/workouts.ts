@@ -1,4 +1,4 @@
-import type { Workout, WorkoutDB } from "./types.ts";
+import type { Workout, WorkoutDB } from "./types.js";
 
 const normalizeWorkout = (workout: WorkoutDB): Workout => {
 	return {

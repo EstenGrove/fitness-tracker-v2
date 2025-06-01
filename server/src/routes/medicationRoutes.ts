@@ -1,7 +1,7 @@
 import { Hono, type Context } from "hono";
-import { medicationsService } from "../services/index.ts";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { normalizeUserMeds } from "../modules/medications/userMeds.ts";
+import { medicationsService } from "../services/index.js";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { normalizeUserMeds } from "../modules/medications/userMeds.js";
 import type {
 	LogMedBody,
 	Medication,
@@ -13,11 +13,11 @@ import type {
 	MedSummaryDB,
 	PillSummary,
 	PillSummaryDB,
-} from "../modules/medications/types.ts";
-import { normalizePillSummary } from "../modules/medications/pillSummary.ts";
-import { normalizeMedSummary } from "../modules/medications/medSummary.ts";
-import { normalizeMedLog } from "../modules/medications/medLogs.ts";
-import { getMedsInfo } from "../modules/medications/getMedsInfo.ts";
+} from "../modules/medications/types.js";
+import { normalizePillSummary } from "../modules/medications/pillSummary.js";
+import { normalizeMedSummary } from "../modules/medications/medSummary.js";
+import { normalizeMedLog } from "../modules/medications/medLogs.js";
+import { getMedsInfo } from "../modules/medications/getMedsInfo.js";
 
 const app = new Hono();
 

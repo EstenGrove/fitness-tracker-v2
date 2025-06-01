@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import type { DashboardSummaryDB } from "../modules/dashboard/types.ts";
+import type { DashboardSummaryDB } from "../modules/dashboard/types.js";
 
 export type SummaryResp = Promise<DashboardSummaryDB | unknown>;
 

@@ -1,4 +1,4 @@
-import type { RepeatType } from "../types.ts";
+import type { RepeatType } from "../types.js";
 
 export type HabitIntent = "BUILD" | "ELIMINATE" | "REDUCE" | "LAPSE";
 

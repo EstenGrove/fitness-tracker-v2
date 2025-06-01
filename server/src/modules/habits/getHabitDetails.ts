@@ -1,14 +1,14 @@
-import type { HabitDetailsResp } from "../../services/HabitsService.ts";
-import { habitsService } from "../../services/index.ts";
-import { normalizeHabit } from "./getUserHabits.ts";
-import { normalizeHabitLog } from "./logHabit.ts";
+import type { HabitDetailsResp } from "../../services/HabitsService.js";
+import { habitsService } from "../../services/index.js";
+import { normalizeHabit } from "./getUserHabits.js";
+import { normalizeHabitLog } from "./logHabit.js";
 import type {
 	HabitDetailParams,
 	HabitDetails,
 	HabitDetailsDB,
 	HabitSummary,
 	HabitSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const getHabitDetails = async (params: HabitDetailParams) => {
 	const details = (await habitsService.getHabitDetails(

@@ -1,5 +1,5 @@
-import { statsService } from "../../services/index.ts";
-import type { MinSummaryParams } from "../../services/StatsService.ts";
+import { statsService } from "../../services/index.js";
+import type { MinSummaryParams } from "../../services/StatsService.js";
 
 const getMonthlyMins = async (userID: string, targetDate: string) => {
 	const data = await statsService.getMonthlyMins(userID, targetDate);

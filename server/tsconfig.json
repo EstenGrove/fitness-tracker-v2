@@ -5,10 +5,12 @@
 		"strict": true,
 		"verbatimModuleSyntax": true,
 		"skipLibCheck": true,
-		"allowImportingTsExtensions": true,
-		"noEmit": true,
 		"types": ["node"],
 		"jsx": "react-jsx",
-		"jsxImportSource": "hono/jsx"
-	}
+		"jsxImportSource": "hono/jsx",
+		"outDir": "dist",
+		"rootDir": "src",
+		"moduleResolution": "nodenext"
+	},
+	"include": ["src"]
 }

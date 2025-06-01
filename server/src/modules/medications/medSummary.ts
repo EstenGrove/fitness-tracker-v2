@@ -1,6 +1,6 @@
-import { normalizeMedLogs } from "./medLogs.ts";
-import { normalizePillSummary } from "./pillSummary.ts";
-import type { MedSummary, MedSummaryDB } from "./types.ts";
+import { normalizeMedLogs } from "./medLogs.js";
+import { normalizePillSummary } from "./pillSummary.js";
+import type { MedSummary, MedSummaryDB } from "./types.js";
 
 const normalizeMedSummary = (summary: MedSummaryDB): MedSummary => {
 	const pillSummary = normalizePillSummary(summary.pillSummary);

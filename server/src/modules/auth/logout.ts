@@ -1,5 +1,5 @@
-import { authService } from "../../services/index.ts";
-import type { LoggedOutDB } from "./types.ts";
+import { authService } from "../../services/index.js";
+import type { LoggedOutDB } from "./types.js";
 
 const logout = async (userID: string, sessionID: string) => {
 	if (!userID || !sessionID) {

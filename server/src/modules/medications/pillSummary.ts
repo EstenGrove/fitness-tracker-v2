@@ -1,4 +1,4 @@
-import type { PillSummary, PillSummaryDB } from "./types.ts";
+import type { PillSummary, PillSummaryDB } from "./types.js";
 
 const normalizePillSummary = (summary: PillSummaryDB): PillSummary => {
 	const client: PillSummary = {

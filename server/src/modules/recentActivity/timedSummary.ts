@@ -3,7 +3,7 @@ import type {
 	ActivityTimedDB,
 	ActivityTimedSummary,
 	ActivityTimedSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivityTimed = (timed: ActivityTimedDB): ActivityTimed => {
 	const newTimed: ActivityTimed = {

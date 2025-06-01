@@ -1,24 +1,24 @@
 import { Hono, type Context } from "hono";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import type { Activity } from "../modules/types.ts";
-import { historyService } from "../services/index.ts";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import type { Activity } from "../modules/types.js";
+import { historyService } from "../services/index.js";
 import {
 	normalizeAllHistory,
 	normalizeHistoryByType,
 	normalizeHistoryEntryByType,
-} from "../modules/history/allHistory.ts";
+} from "../modules/history/allHistory.js";
 import type {
 	AllHistoryDB,
 	HistoryDetailsDB,
 	HistoryOfType,
 	HistoryOfTypeDB,
 	WorkoutHistoryDB,
-} from "../modules/history/types.ts";
+} from "../modules/history/types.js";
 import {
 	getLastWorkoutByDate,
 	type LastSessionParams,
-} from "../modules/history/getLastWorkout.ts";
-import { normalizeHistoryDetails } from "../modules/history/historyDetails.ts";
+} from "../modules/history/getLastWorkout.js";
+import { normalizeHistoryDetails } from "../modules/history/historyDetails.js";
 
 const app = new Hono();
 

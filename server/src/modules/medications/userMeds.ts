@@ -3,7 +3,7 @@ import type {
 	MedicationDB,
 	MedicationSchedule,
 	MedicationScheduleDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeUserMeds = (meds: MedicationDB[]): Medication[] => {
 	if (!meds || !meds.length) return [];
