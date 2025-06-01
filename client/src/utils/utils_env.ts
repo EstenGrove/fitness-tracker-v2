@@ -89,8 +89,15 @@ const API_ENDPOINTS = {
 		getWeeklyStretchStats: "/stats/getWeeklyStretchStats",
 		getWeeklyTimedStats: "/stats/getWeeklyTimedStats",
 		getWeeklyOtherStats: "/stats/getWeeklyOtherStats",
+		// Summary
+		getDailyMinsSummary: "/stats/getDailyMinsSummary",
+		getWeeklyMinsSummary: "/stats/getWeeklyMinsSummary",
+		getMonthlyMinsSummary: "/stats/getMonthlyMinsSummary",
+		getYearlyMinsSummary: "/stats/getYearlyMinsSummary",
+		getMinsSummaryForRange: "/stats/getMinsSummaryForRange",
 	},
 	workouts: {
+		getAllUserWorkouts: "/workouts/getAllUserWorkouts",
 		getLastWorkout: "/workouts/getLastWorkout",
 		skipWorkout: "/workouts/skipWorkout",
 		logWorkout: "/workouts/logWorkout",

@@ -241,3 +241,17 @@ export type PostWorkoutDetails =
 export type PostWorkoutHistoryWithSets = PostWorkoutHistory & {
 	sets: StrengthSet[] | ExerciseSet[];
 };
+
+export type TimeKey = "day" | "week" | "month" | "year";
+
+export type MinsSummaryItem<T extends TimeKey> = {
+	startDate: string;
+	endDate: string;
+	mins: number;
+} & {
+	[K in T]: string;
+};
+
+export interface MinsSummaryData<T extends TimeKey> {
+	summary: MinsSummaryItem<T>[];
+}

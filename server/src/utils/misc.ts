@@ -1,31 +1,3 @@
-const addEllipsis = (str: string, maxLength: number = 30) => {
-	if (!str) return "";
-	if (str.length <= maxLength) return str;
-
-	return str.slice(0, maxLength - 3) + "...";
-};
-
-const isEmptyArray = (arr: Array<unknown>) => {
-	if (!arr) return true;
-
-	return Array.isArray(arr) && arr.length <= 0;
-};
-
-const formatThousand = (num: number) => {
-	if (num >= 1000) {
-		return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
-	}
-	return num.toString();
-};
-
-const formatLargeNumber = (num: number) => {
-	const short = new Intl.NumberFormat("en-us", {
-		notation: "compact",
-		compactDisplay: "short",
-	});
-	return short.format(num);
-};
-
 export type TKey<T> = keyof T;
 export type TRecord<T> = Record<string, T[]>;
 export type Groups<T> = Record<string, T>;
@@ -88,41 +60,5 @@ const sortByDateDesc = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 		return dateA - dateB;
 	});
 };
-const provideFallbackStr = (targetVal: string, fallback: string) => {
-	if (!targetVal || targetVal === "") return fallback;
 
-	return targetVal;
-};
-
-const sortByDateOrder = <T extends object>(
-	key: TKey<T>,
-	list: T[],
-	order: "ASC" | "DESC" = "ASC"
-): T[] => {
-	if (!list || !list.length) return [];
-
-	switch (order) {
-		case "ASC": {
-			return sortByDate(key, list);
-		}
-		case "DESC": {
-			return sortByDateDesc(key, list);
-		}
-
-		default:
-			return sortByDate(key, list);
-	}
-};
-
-export {
-	addEllipsis,
-	isEmptyArray,
-	formatThousand,
-	formatLargeNumber,
-	groupBy,
-	groupByFn,
-	sortByDate,
-	sortByDateDesc,
-	sortByDateOrder,
-	provideFallbackStr,
-};
+export { sortByDate, sortByDateDesc, groupBy, groupByFn };

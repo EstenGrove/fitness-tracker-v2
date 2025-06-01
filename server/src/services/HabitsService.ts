@@ -23,6 +23,7 @@ export type HabitLogsResp = Promise<HabitLogDB[] | unknown>;
 export type HabitDetailsResp = Promise<HabitDetailsDB | unknown>;
 export type HabitCardsResp = Promise<HabitCardDB[] | unknown>;
 export type RecentHabitLogsResp = Promise<RecentHabitLogDB[] | unknown>;
+export type HabitItemResp = Promise<HabitDB | unknown>;
 
 class HabitsService {
 	#db: Pool;
@@ -30,6 +31,19 @@ class HabitsService {
 		this.#db = db;
 	}
 
+	async getHabitByID(userID: string, habitID: number): HabitItemResp {
+		try {
+			const query = `SELECT * FROM get_habit_by_id(
+				$1,
+				$2
+			)`;
+			const results = await this.#db.query(query, [userID, habitID]);
+			const row = results?.rows?.[0];
+			return row;
+		} catch (error) {
+			return error;
+		}
+	}
 	async getRecentHabitLogs(
 		userID: string,
 		params: RecentHabitParams
@@ -52,7 +66,6 @@ class HabitsService {
 			return error;
 		}
 	}
-
 	async createHabit(userID: string, values: NewHabitValues): HabitResp {
 		try {
 			const query = `SELECT * FROM create_habit(

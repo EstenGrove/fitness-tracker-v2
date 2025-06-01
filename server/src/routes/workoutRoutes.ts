@@ -24,6 +24,29 @@ import type { Activity } from "../modules/types.ts";
 
 const app = new Hono();
 
+app.get("/getAllUserWorkouts", async (ctx: Context) => {
+	const { userID } = ctx.req.query();
+
+	const workouts = (await workoutsService.getAllUserWorkouts(
+		userID
+	)) as TodaysWorkoutDB[];
+
+	if (workouts instanceof Error) {
+		const errResp = getResponseError(workouts, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+	const allWorkouts: TodaysWorkoutClient[] = workouts?.map(
+		normalizeTodaysWorkout
+	);
+
+	const resp = getResponseOk({
+		workouts: allWorkouts,
+	});
+	return ctx.json(resp);
+});
+
 app.get("/getAllWorkouts", async (ctx: Context) => {
 	const { userID } = ctx.req.query();
 	console.log("userID", userID);

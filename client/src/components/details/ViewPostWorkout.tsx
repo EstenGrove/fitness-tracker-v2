@@ -17,8 +17,8 @@ const ViewPostWorkout = ({ workout }: Props) => {
 	const name = addEllipsis(workoutName, 25);
 	const { data, refetch } = usePostWorkoutDetails(workoutID, activityType);
 	const workoutStats = data as TPostWorkoutDetails;
-	console.log("workoutStats", workoutStats);
 
+	// always refetch when loading, to purge stale cache
 	useEffect(() => {
 		let isMounted = true;
 		if (!isMounted) {

@@ -102,6 +102,7 @@ export interface LogWorkoutValues {
 }
 
 export type TodaysWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
+export type AllUserWorkoutsResp = AsyncResponse<{ workouts: TodaysWorkout[] }>;
 export type SkippedWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
 export type WorkoutDetailsResp = AsyncResponse<WorkoutDetails>;
 export type AllWorkoutsResp = AsyncResponse<{ workouts: Workout[] }>;
@@ -138,6 +139,19 @@ const fetchTodaysWorkouts = async (
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchAllUserWorkouts = async (userID: string): AllUserWorkoutsResp => {
+	let url = currentEnv.base + workoutApis.getAllUserWorkouts;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
 		return response;
 	} catch (error) {
 		return error;
@@ -436,7 +450,8 @@ const calculateDurationFromEndedTimes = (start: string, end: string) => {
 	const total = differenceInSeconds(endP, startP);
 
 	const mins = total / 60;
-	return mins.toFixed(2);
+	return mins;
+	// return mins.toFixed(2);
 };
 
 const prepareEndedWorkout = (
@@ -524,6 +539,7 @@ const prepareEndedWorkout = (
 export {
 	logWorkout,
 	skipWorkout,
+	fetchAllUserWorkouts,
 	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
 	fetchWorkoutDetails,

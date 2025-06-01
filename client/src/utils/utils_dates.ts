@@ -3,9 +3,12 @@ import {
 	endOfWeek,
 	endOfYear,
 	format,
+	isEqual,
 	isValid,
+	isYesterday,
 	parse,
 	set,
+	startOfDay,
 	startOfMonth,
 	startOfWeek,
 	startOfYear,
@@ -373,6 +376,13 @@ const getLastXMonthsRange = (last: number = 3) => {
 	};
 };
 
+const isMidnight = (date: string | Date): boolean => {
+	return isEqual(date, startOfDay(date));
+};
+const wasYesterday = (date: Date | string): boolean => {
+	return isYesterday(date);
+};
+
 // Converts date to ISO string
 const prepareTimestamp = (date: Date | string) => {
 	const base = new Date(date);
@@ -417,6 +427,9 @@ export {
 	parseTime,
 	parseAnyTime,
 	parseDateStr,
+	// DATE COMPARATORS
+	isMidnight,
+	wasYesterday,
 	// CALCULATE DATE RANGES
 	getWeekStartAndEnd,
 	getMonthStartAndEnd,

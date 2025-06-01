@@ -21,7 +21,6 @@ import AddWorkoutDetails from "./AddWorkoutDetails";
 import SkipWorkout from "../workouts/SkipWorkout";
 import ModalSM from "../shared/ModalSM";
 import { secondsToMinutes } from "date-fns/fp";
-import { differenceInSeconds } from "date-fns";
 
 type Props = {
 	currentUser: CurrentUser;
@@ -165,7 +164,7 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 		const { userID } = currentUser;
 
 		if (workoutInfo) {
-			const mins = secondsToMinutes(workoutInfo.intervalInSecs);
+			const mins = secondsToMinutes(workoutInfo.totalSecs);
 			const preparedWorkout = prepareEndedWorkout(userID, {
 				...workoutValues,
 				startTime: workoutInfo?.startTime,
@@ -175,16 +174,16 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 				exercise: workoutValues.activityType,
 			});
 
-			console.log("preparedWorkout", preparedWorkout);
-
-			// await logWorkout({
-			// 	userID: userID,
-			// 	newLog: preparedWorkout,
-			// });
+			await logWorkout({
+				userID: userID,
+				newLog: preparedWorkout,
+			}).catch((err) => {
+				alert("Error: " + err);
+			});
 
 			// go back to Workouts page: '/workouts'
 		}
-		// goBack();
+		goBack();
 	};
 
 	return (

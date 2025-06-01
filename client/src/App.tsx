@@ -30,6 +30,7 @@ const DashboardLayout = lazy(
 );
 // Active Workout
 const ActiveWorkout = lazy(() => import("./pages/ActiveWorkoutPage"));
+const AllWorkouts = lazy(() => import("./pages/AllWorkoutsPage"));
 // History Views
 const AllHistory = lazy(() => import("./views/AllHistory"));
 const WalkHistory = lazy(() => import("./views/WalkHistory"));
@@ -113,6 +114,14 @@ function App() {
 									element={
 										<Suspense fallback={<Loader />}>
 											<Workouts />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="workouts/all"
+									element={
+										<Suspense fallback={<Loader />}>
+											<AllWorkouts />
 										</Suspense>
 									}
 								/>

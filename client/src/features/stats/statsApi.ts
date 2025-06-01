@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import {
+	getMinsSummaryForRange,
 	getPostWorkoutDetails,
 	getPostWorkoutStats,
 	getWorkoutStats,
+	MinsSummaryRangeResp,
 } from "../../utils/utils_stats";
 import { AwaitedResponse } from "../types";
 import {
@@ -12,6 +14,7 @@ import {
 	PostWorkoutDetails,
 	WorkoutStats,
 	WorkoutStatsParams,
+	TimeKey,
 } from "./types";
 import { getLastWorkout, LastSessionParams } from "../../utils/utils_workouts";
 import { HistoryOfType } from "../history/types";
@@ -63,6 +66,18 @@ export const statsApi = createApi({
 			},
 			providesTags: () => [{ type: "WorkoutStats" }],
 		}),
+		getMinsSummaryForRange: builder.query({
+			queryFn: async (params) => {
+				const { userID, targetDate, rangeType } = params;
+				const response = (await getMinsSummaryForRange(
+					userID,
+					targetDate,
+					rangeType
+				)) as AwaitedResponse<{ summary: MinsSummaryRangeResp<TimeKey>[] }>;
+				const data = response.Data;
+				return { data: data.summary };
+			},
+		}),
 	}),
 });
 
@@ -73,4 +88,5 @@ export const {
 	useLazyGetPostWorkoutDetailsQuery,
 	useLazyGetPostWorkoutStatsQuery,
 	useGetWorkoutStatsQuery,
+	useGetMinsSummaryForRangeQuery,
 } = statsApi;

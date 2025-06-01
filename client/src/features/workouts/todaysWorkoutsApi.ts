@@ -3,6 +3,7 @@ import { currentEnv } from "../../utils/utils_env";
 import { AwaitedResponse, MarkAsDoneParams, UserDateParams } from "../types";
 import { TodaysWorkout, Workout } from "./types";
 import {
+	fetchAllUserWorkouts,
 	fetchAllWorkouts,
 	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
@@ -88,6 +89,22 @@ export const todaysWorkoutsApi = createApi({
 				return { data: workouts || [] };
 			},
 		}),
+		getAllUserWorkouts: builder.query<
+			TodaysWorkout[],
+			Pick<UserDateParams, "userID">
+		>({
+			queryFn: async ({ userID }) => {
+				const response = (await fetchAllUserWorkouts(
+					userID
+				)) as AwaitedResponse<{
+					workouts: TodaysWorkout[];
+				}>;
+				const data = response.Data as { workouts: TodaysWorkout[] };
+				const workouts = data.workouts as TodaysWorkout[];
+
+				return { data: workouts || [] };
+			},
+		}),
 		getSkippedWorkouts: builder.query<TodaysWorkout[], UserDateParams>({
 			queryFn: async ({ userID, targetDate }) => {
 				const response = (await fetchSkippedWorkouts(
@@ -131,6 +148,7 @@ export const todaysWorkoutsApi = createApi({
 });
 
 export const {
+	useGetAllUserWorkoutsQuery,
 	useGetTodaysWorkoutsQuery,
 	useGetSkippedWorkoutsQuery,
 	useMarkAsDoneMutation,

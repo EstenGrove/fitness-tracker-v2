@@ -1,0 +1,132 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+@import "../../sass/custom";
+
+.AllWorkouts {
+	width: 100%;
+	margin-top: 4rem;
+
+	&_header {
+		width: 100%;
+		height: auto;
+		background-color: $background;
+	}
+
+	&_search {
+		width: 100%;
+		@include rowCenter();
+		padding: 0 2rem;
+		margin: 2rem 0;
+
+		&_input {
+			width: 100%;
+			height: 3.5rem;
+			max-width: 50rem;
+			border-radius: 5rem;
+			font-size: 1.6rem;
+			background-color: $foreground;
+			outline: none;
+			border: 1px solid $borderColor;
+			padding-left: 1rem;
+			color: $text3;
+		}
+	}
+
+	&_filters {
+		width: 100%;
+		max-width: 100%;
+		@include flex_row(flex-start, center);
+		gap: 0 1.5rem;
+		overflow-x: auto;
+
+		&_counts {
+			width: max-content;
+			font-size: 1.5rem;
+			color: $text3;
+		}
+	}
+
+	&_list {
+		margin-top: 2rem;
+		@include colCenter();
+		gap: 1rem 0;
+	}
+}
+
+.TypeFilter {
+	padding: 0.4rem 1.2rem;
+	border-radius: 5rem;
+	font-size: 1.6rem;
+	color: $text3;
+	border: 1px solid $borderColor;
+	outline: none;
+	background-color: transparent;
+}
+.TypeFilters {
+	width: 100%;
+
+	&_list {
+		@include flex_row(flex-start, center);
+		gap: 0 1rem;
+	}
+}
+
+.isSelected {
+	border-color: $accentBlue;
+	background-color: rgba(0, 124, 255, 0.1);
+	color: $accentBlue;
+}
+
+.SearchInput {
+	width: 100%;
+	height: auto;
+	position: relative;
+
+	&_input {
+		width: 100%;
+		height: 3.5rem;
+		max-width: 50rem;
+		border-radius: 5rem;
+		font-size: 1.6rem;
+		background-color: $foreground;
+		outline: none;
+		border: 1px solid $borderColor;
+		padding-left: 1rem;
+		color: $text1;
+		&:hover,
+		&:focus-within {
+			border-color: $accent;
+		}
+	}
+
+	&_clear {
+		$size: 2.7rem;
+		position: absolute;
+		top: 0.35rem;
+		right: 0.5rem;
+		width: $size;
+		height: $size;
+		min-width: $size;
+		min-height: $size;
+		max-width: $size;
+		max-height: $size;
+		border-radius: 50%;
+		@include rowCenter();
+		background-color: var(--cardBorder);
+		outline: none;
+		&:focus-within {
+			background-color: $accentRed;
+			outline: none;
+
+			.SearchInput_clear_icon {
+				fill: #fff;
+			}
+		}
+
+		&_icon {
+			width: 2rem;
+			height: 2rem;
+			fill: $accentRed;
+		}
+	}
+}

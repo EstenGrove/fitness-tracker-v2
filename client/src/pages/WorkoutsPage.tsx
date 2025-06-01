@@ -16,6 +16,8 @@ import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
+import { useAppDispatch } from "../store/store";
+import { summaryApi } from "../features/dashboard/summaryApi";
 
 const getTodaysDate = (date?: Date | string) => {
 	if (!date) {
@@ -191,6 +193,7 @@ const sortByCompleted = (workouts: TodaysWorkout[]) => {
 
 const WorkoutsPage = () => {
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 	const targetDate = formatDate(new Date(), "db");
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useAllWorkouts();
@@ -207,9 +210,15 @@ const WorkoutsPage = () => {
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
 
+	const invalidateCaches = () => {
+		// Add more state Api's to invalidate, if needed
+		dispatch(summaryApi.util.invalidateTags([{ type: "DashboardSummary" }]));
+	};
+
 	// Closes quick action modal
 	const closeQuickAction = () => {
 		setQuickAction(null);
+		invalidateCaches();
 	};
 
 	const selectAction = (action: QuickAction) => {

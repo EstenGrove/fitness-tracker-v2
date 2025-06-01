@@ -2,6 +2,12 @@ import type { Pool } from "pg";
 import type { Activity } from "../modules/types.ts";
 import type { PostWorkoutParams } from "../modules/stats/types.ts";
 
+export interface MinSummaryParams {
+	userID: string;
+	targetDate: string;
+	rangeType: "Daily" | "Weekly" | "Monthly" | "Yearly";
+}
+
 class StatsService {
 	#db: Pool;
 	constructor(db: Pool) {
@@ -27,7 +33,6 @@ class StatsService {
 			return error;
 		}
 	}
-
 	async getPostWorkoutStrengthStats(params: PostWorkoutParams) {
 		const { userID, workoutID, historyID } = params;
 		const type = "Strength";
@@ -161,6 +166,79 @@ class StatsService {
 			]);
 			console.log("results", results);
 			const rows = results?.rows?.[0];
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getDailyMins(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_daily_mins(
+				$1,
+				$2
+			)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getWeeklyMins(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_weekly_mins(
+				$1,
+				$2
+			)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getMonthlyMins(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_monthly_mins(
+				$1,
+				$2
+			)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getYearlyMins(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_yearly_mins(
+				$1,
+				$2
+			)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	// Summary Stats
+	async getMinsSummaryForRange(params: MinSummaryParams) {
+		const { userID, targetDate, rangeType } = params;
+		try {
+			const query = `SELECT * FROM get_mins_summary_for_range(
+			$1,
+			$2,
+			$3
+			)`;
+			const results = await this.#db.query(query, [
+				userID,
+				targetDate,
+				rangeType,
+			]);
+			const rows = results?.rows;
 			return rows;
 		} catch (error) {
 			return error;
