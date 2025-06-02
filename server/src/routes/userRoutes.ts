@@ -6,10 +6,7 @@ const app = new Hono();
 
 app.get("/getUserExists", async (ctx: Context) => {
 	const { username, password } = ctx.req.query();
-
 	const isActiveUser = (await userExists(username, password)) as UserExists;
-
-	console.log("isActiveUser", isActiveUser);
 
 	if (!isActiveUser) {
 		const err = new Error("User not found");

@@ -4,17 +4,15 @@ import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { allRoutes } from "./routes/index.js";
-import { defaultPort, getServer, isRemote, SERVERS } from "./utils/env.js";
+import { getServer, isRemote } from "./utils/env.js";
 dotenv.config();
 
-const target = getServer("docker");
+const target = getServer("local");
 console.log("TARGET ENV:", target);
 
 const SERVER = {
 	host: target.ip,
 	port: target.port,
-	// host: isRemote ? process.env.REMOTE_IP : process.env.API_HOST,
-	// port: Number(process.env.API_PORT),
 };
 const CLIENT = {
 	host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,

@@ -31,4 +31,6 @@ services:
       - "5433:5432"
 
 volumes:
-  postgres_data:
+  - /etc/letsencrypt/live/app.sgore.dev/:/etc/letsencrypt/live/app.sgore.dev/:ro
+  - /etc/letsencrypt/archive/app.sgore.dev/:/etc/letsencrypt/archive/app.sgore.dev/:ro
+  - /etc/letsencrypt/renewal/:/etc/letsencrypt/renewal/:ro
