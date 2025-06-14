@@ -4,6 +4,7 @@ import { getResponseError, getResponseOk } from "../utils/api.js";
 import { normalizeUserMeds } from "../modules/medications/userMeds.js";
 import type {
 	LogMedBody,
+	MedDetails,
 	Medication,
 	MedicationDB,
 	MedicationLog,
@@ -18,6 +19,7 @@ import { normalizePillSummary } from "../modules/medications/pillSummary.js";
 import { normalizeMedSummary } from "../modules/medications/medSummary.js";
 import { normalizeMedLog } from "../modules/medications/medLogs.js";
 import { getMedsInfo } from "../modules/medications/getMedsInfo.js";
+import { getMedDetails } from "../modules/medications/getMedDetails.js";
 
 const app = new Hono();
 
@@ -129,6 +131,50 @@ app.post("/logMedication", async (ctx: Context) => {
 	console.log("medlog", medLog);
 	const resp = getResponseOk({
 		newLog: medLog,
+	});
+	return ctx.json(resp);
+});
+
+app.get("/getMedDetails", async (ctx: Context) => {
+	const { userID, medID: id } = ctx.req.query();
+	const medID = Number(id);
+
+	const details = (await getMedDetails(userID, medID)) as MedDetails;
+
+	if (details instanceof Error) {
+		const errResp = getResponseError(details, {
+			medication: null,
+			schedule: null,
+			logs: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(details);
+
+	return ctx.json(resp);
+});
+
+app.get("/getMedLogsByRange", async (ctx: Context) => {
+	const { userID, medID: id, startDate, endDate } = ctx.req.query();
+	const medID = Number(id);
+
+	const rawLogs = (await medicationsService.getMedLogsByRange(userID, {
+		medID,
+		startDate,
+		endDate,
+	})) as MedicationLogDB[];
+
+	if (rawLogs instanceof Error) {
+		const errResp = getResponseError(rawLogs, {
+			logs: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const medLogs: MedicationLog[] = rawLogs.map(normalizeMedLog);
+	const resp = getResponseOk({
+		logs: medLogs,
 	});
 	return ctx.json(resp);
 });

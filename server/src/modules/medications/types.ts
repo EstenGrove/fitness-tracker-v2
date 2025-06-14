@@ -107,3 +107,14 @@ export interface MedsInfo {
 	activeMeds: Medication[];
 	activeSchedules: MedicationSchedule[];
 }
+
+export interface MedDetailsDB {
+	medication: MedicationDB;
+	schedule: MedicationScheduleDB;
+	logs: MedicationLogDB[];
+}
+export interface MedDetails {
+	medication: Medication;
+	schedule: MedicationSchedule;
+	logs: MedicationLog[];
+}

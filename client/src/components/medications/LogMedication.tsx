@@ -208,7 +208,7 @@ const TodaysMedSummary = ({ logs, summary }: TodaySummaryProps) => {
 };
 
 const LogMedication = ({
-	medication = { name: "Buphrenorphine", medID: 1, scheduleID: 1 },
+	medication = { name: "Buphrenorphine", medID: 1, scheduleID: 3 },
 	logs,
 	summary,
 	onSave,
@@ -250,7 +250,7 @@ const LogMedication = ({
 		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
 			userID: userID,
-			scheduleID: scheduleID ?? 2,
+			scheduleID: scheduleID ?? 3,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,
@@ -267,7 +267,7 @@ const LogMedication = ({
 		const { scheduleID } = medication;
 		const medLog: MedLogBody = prepareMedLog({
 			userID,
-			scheduleID: scheduleID ?? 2,
+			scheduleID: scheduleID ?? 3,
 			medID: medication.medID,
 			loggedAt: values.loggedAt,
 			dose: values.dose,

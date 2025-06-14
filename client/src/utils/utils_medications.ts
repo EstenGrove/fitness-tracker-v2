@@ -51,7 +51,14 @@ export interface MedsInfo {
 	activeSchedules: MedicationSchedule[];
 }
 
+export interface MedDetails {
+	medication: Medication;
+	schedule: MedicationSchedule;
+	logs: MedLogEntry[];
+}
+
 export type MedsInfoResp = AsyncResponse<MedsInfo>;
+export type MedDetailsResp = AsyncResponse<MedDetails>;
 
 const fetchMedications = async (userID: string) => {
 	let url = currentEnv.base + medicationApis.getUserMeds;
@@ -71,6 +78,23 @@ const fetchMedsInfo = async (
 ): MedsInfoResp => {
 	let url = currentEnv.base + medicationApis.getMedsInfo;
 	url += "?" + new URLSearchParams({ userID, targetDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchMedDetails = async (
+	userID: string,
+	medID: number
+): MedDetailsResp => {
+	let url = currentEnv.base + medicationApis.getMedDetails;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ medID: String(medID) });
 
 	try {
 		const request = await fetchWithAuth(url);
@@ -181,6 +205,7 @@ export {
 	fetchMedSummaryByDate,
 	fetchMedications,
 	fetchMedsInfo,
+	fetchMedDetails,
 	// Utils
 	prepareMedLog,
 	processPillSummary,

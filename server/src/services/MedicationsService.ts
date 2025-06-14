@@ -10,12 +10,54 @@ interface MedSummaryArgs {
 	targetDate: string;
 }
 
+interface MedLogRangeArgs {
+	medID: number;
+	startDate: string;
+	endDate: string;
+}
+
 export type MedsInfoResp = Promise<MedsInfoDB | unknown>;
 
 class MedicationsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async getMedDetails(userID: string, medID: number) {
+		try {
+			const query = `SELECT * FROM get_medication_details(
+				$1,
+				$2
+			) as data`;
+			const results = await this.#db.query(query, [userID, medID]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getMedLogsByRange(userID: string, params: MedLogRangeArgs) {
+		const { medID, startDate, endDate } = params;
+		try {
+			const query = `SELECT * FROM get_medication_logs_by_range(
+				$1,
+				$2,
+				$3,
+				$4
+			)`;
+			const results = await this.#db.query(query, [
+				userID,
+				medID,
+				startDate,
+				endDate,
+			]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async getMedsInfo(userID: string, targetDate: string): MedsInfoResp {
