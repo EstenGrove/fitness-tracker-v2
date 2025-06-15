@@ -1,7 +1,13 @@
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/medications/MedicationLogHistory.module.scss";
 import { MedLogEntry } from "../../features/medications/types";
-import { addEllipsis, groupByFn, isEmptyArray } from "../../utils/utils_misc";
+import {
+	addEllipsis,
+	groupByFn,
+	isEmptyArray,
+	sortByDateDesc,
+	TRecord,
+} from "../../utils/utils_misc";
 import {
 	formatCustomDate,
 	formatDate,
@@ -100,7 +106,7 @@ const MedLogItem = ({ name = "Buprenorphine", logEntry }: MedLogProps) => {
 				{action.toUpperCase() === "SKIPPED" && <SkippedBadge />}
 				<div className={styles.MedLogItem_top_head}>
 					<div className={styles.MedLogItem_top_head_name}>
-						{desc}, {medName}
+						{desc} {medName}
 					</div>
 					<div className={styles.MedLogItem_top_head_time}>
 						{formatTime(loggedAt, "long")}
@@ -124,7 +130,7 @@ const MedLogItem = ({ name = "Buprenorphine", logEntry }: MedLogProps) => {
 
 const LogsForDate = ({ date, logs }: LogsForDateProps) => {
 	const logsDate = formatLogDate(date);
-	const total = getTotalForDate(logs);
+	const total = getTotalForDate(logs).toFixed(2);
 	const logsCount = logs.length || 0;
 	return (
 		<div className={styles.LogsForDate}>
@@ -133,13 +139,13 @@ const LogsForDate = ({ date, logs }: LogsForDateProps) => {
 					<h4>{logsDate}</h4>
 					<div>({logsCount})</div>
 				</div>
-				<div className={styles.LogsForDate_header_total}>{total}</div>
+				<div className={styles.LogsForDate_header_total}>Total: {total}</div>
 			</div>
 			<ul className={styles.LogsForDate_list}>
 				{logsCount > 0 &&
 					logs.map((log, idx) => {
 						const key = `${log.logID}-${idx}`;
-						return <MedLogItem key={key} name="Bup" logEntry={log} />;
+						return <MedLogItem key={key} logEntry={log} />;
 					})}
 			</ul>
 		</div>
@@ -154,9 +160,17 @@ const groupLogs = (logs: MedLogEntry[]) => {
 	return grouped;
 };
 
+const sortLogHistory = (logsByDate: TRecord<MedLogEntry>) => {
+	return Object.keys(logsByDate).sort((a, b) => {
+		const dateA = new Date(a).getTime();
+		const dateB = new Date(b).getTime();
+		return dateB - dateA;
+	});
+};
+
 const MedicationLogHistory = ({ logs }: Props) => {
 	const logsByDate = groupLogs(logs);
-	const dates = Object.keys(logsByDate);
+	const dates = sortLogHistory(logsByDate);
 	return (
 		<div className={styles.MedicationLogHistory}>
 			<div className={styles.MedicationLogHistory_list}>

@@ -5,9 +5,13 @@
 .MedicationLogHistory {
 	width: 100%;
 	display: block;
+	margin-bottom: 10rem;
 
 	&_list {
 		width: 100%;
+		max-width: 80rem;
+		display: block;
+		margin: 0 auto;
 		@include flex_col(flex-start, center);
 	}
 }
@@ -22,13 +26,17 @@
 
 		&_date {
 			font-size: 1.7rem;
-			color: $accentBlue;
+			color: $text2;
 			@include flex_row(flex-start, center);
 			gap: 0 0.5rem;
 		}
 		&_count {
 			font-size: 1.6rem;
 			color: $text3;
+		}
+		&_total {
+			font-size: 1.6rem;
+			color: $accentBlue;
 		}
 	}
 	&_list {

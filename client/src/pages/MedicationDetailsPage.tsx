@@ -45,8 +45,8 @@ const MedicationDetailsPage = () => {
 	return (
 		<PageContainer>
 			<div className={styles.MedicationDetailsPage}>
-				<NavArrows />
 				<div className={styles.MedicationDetailsPage_header}>
+					<NavArrows />
 					<PageHeader title={`${medName}`}></PageHeader>
 				</div>
 				{details && details.logs && (

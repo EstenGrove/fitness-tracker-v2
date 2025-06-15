@@ -14,13 +14,13 @@ import {
 	SkipWorkoutBody,
 	WorkoutSet,
 } from "../../utils/utils_workouts";
+import { secondsToMinutes } from "date-fns/fp";
 import { formatDate } from "../../utils/utils_dates";
 import EndedWorkout from "./EndedWorkout";
 import WorkoutTimer from "./WorkoutTimer";
 import AddWorkoutDetails from "./AddWorkoutDetails";
 import SkipWorkout from "../workouts/SkipWorkout";
 import ModalSM from "../shared/ModalSM";
-import { secondsToMinutes } from "date-fns/fp";
 
 type Props = {
 	currentUser: CurrentUser;
