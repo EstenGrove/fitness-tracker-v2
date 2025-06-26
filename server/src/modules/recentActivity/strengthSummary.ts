@@ -3,7 +3,7 @@ import type {
 	ActivityStrengthDB,
 	ActivityStrengthSummary,
 	ActivityStrengthSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivityStrength = (
 	strength: ActivityStrengthDB

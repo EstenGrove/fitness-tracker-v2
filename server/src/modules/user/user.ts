@@ -1,4 +1,4 @@
-import type { Session, SessionDB, User, UserDB } from "./types.ts";
+import type { Session, SessionDB, User, UserDB } from "./types.js";
 
 const normalizeUser = (user: UserDB): User => {
 	const client: User = {

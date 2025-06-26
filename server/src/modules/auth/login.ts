@@ -1,7 +1,7 @@
-import { authService, userService } from "../../services/index.ts";
-import type { UserDB } from "../user/types.ts";
-import type { LoggedInDB } from "./types.ts";
-import { generateAccessToken } from "./utils.ts";
+import { authService, userService } from "../../services/index.js";
+import type { UserDB } from "../user/types.js";
+import type { LoggedInDB } from "./types.js";
+import { generateAccessToken } from "./utils.js";
 
 const login = async (username: string, password: string) => {
 	const existingUser = (await userService.getUserByLogin(

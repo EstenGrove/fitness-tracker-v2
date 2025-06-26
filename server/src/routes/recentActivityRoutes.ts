@@ -1,11 +1,11 @@
 import { type Context, Hono } from "hono";
-import { getRecentActivityFor } from "../modules/recentActivity/summaryFor.ts";
+import { getRecentActivityFor } from "../modules/recentActivity/summaryFor.js";
 import type {
 	ActivityRangeType,
 	ActivitySummaryForDB,
-} from "../modules/recentActivity/types.ts";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import { normalizeRecentSummary } from "../modules/recentActivity/normalizeSummary.ts";
+} from "../modules/recentActivity/types.js";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import { normalizeRecentSummary } from "../modules/recentActivity/normalizeSummary.js";
 
 const app = new Hono();
 

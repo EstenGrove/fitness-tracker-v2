@@ -2,6 +2,7 @@ import {
 	addMinutes,
 	differenceInMinutes,
 	differenceInSeconds,
+	intervalToDuration,
 	parse,
 	secondsToMinutes,
 } from "date-fns";
@@ -26,6 +27,7 @@ import {
 import { HistoryOfType } from "../features/history/types";
 import { fetchWithAuth } from "./utils_requests";
 import { milesToPace, milesToSteps } from "./utils_steps";
+import { LocalStorage } from "./utils_storage";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
 
@@ -536,6 +538,33 @@ const prepareEndedWorkout = (
 	}
 };
 
+const getElapsedWorkoutTime = (cacheKey: string = "TIMER_KEY") => {
+	const cache = new LocalStorage();
+	const timer = cache.get(cacheKey);
+
+	if (!timer) {
+		return { mins: 0, secs: 0 };
+	} else {
+		const elapsed = intervalToDuration({
+			start: timer.startedAt as number,
+			end: Date.now() as number,
+		});
+		const { minutes: mins, seconds: secs } = elapsed;
+		return {
+			mins: mins as number,
+			secs: secs as number,
+		};
+	}
+};
+
+const formatElapsedTime = (mins: number, secs: number) => {
+	const newMins = mins < 10 ? `0${mins}` : mins;
+	const newSecs = secs < 10 ? `0${secs}` : secs;
+	const newTime = `${newMins}m ${newSecs}s`;
+
+	return newTime;
+};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -554,4 +583,6 @@ export {
 	prepareEndedWorkout,
 	calculateDurationFromTimestamps,
 	calculateDurationFromEndedTimes,
+	formatElapsedTime,
+	getElapsedWorkoutTime,
 };

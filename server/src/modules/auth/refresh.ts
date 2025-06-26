@@ -1,8 +1,8 @@
-import { authService, userService } from "../../services/index.ts";
-import type { Session, SessionDB, User, UserDB } from "../user/types.ts";
-import { normalizeLoginData } from "./normalize.ts";
-import type { RefreshResp } from "./types.ts";
-import { generateAccessToken, getUserIDFromToken } from "./utils.ts";
+import { authService, userService } from "../../services/index.js";
+import type { SessionDB, UserDB } from "../user/types.js";
+import { normalizeLoginData } from "./normalize.js";
+import type { RefreshResp } from "./types.js";
+import { generateAccessToken, getUserIDFromToken } from "./utils.js";
 
 const refreshAuth = async (token: string): RefreshResp => {
 	if (!token) return new Error("Invalid token :" + token);

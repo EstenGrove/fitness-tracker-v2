@@ -1,6 +1,6 @@
 import type { Pool } from "pg";
-import type { Activity, DateRange } from "../modules/types.ts";
-import type { HistoryOfTypeDB } from "../modules/history/types.ts";
+import type { Activity, DateRange } from "../modules/types.js";
+import type { HistoryOfTypeDB } from "../modules/history/types.js";
 
 interface LastSessionParams {
 	userID: string;

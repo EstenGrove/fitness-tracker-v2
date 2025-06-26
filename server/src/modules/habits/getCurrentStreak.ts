@@ -1,5 +1,5 @@
 import { format, subDays, subMonths, subWeeks } from "date-fns";
-import { groupByFn } from "../../utils/misc.ts";
+import { groupByFn } from "../../utils/misc.js";
 import type {
 	Habit,
 	HabitDB,
@@ -7,9 +7,9 @@ import type {
 	HabitIntent,
 	HabitLog,
 	HabitLogDB,
-} from "./types.ts";
-import { habitsService } from "../../services/index.ts";
-import { normalizeHabit, normalizeHabitLog } from "./getUserHabits.ts";
+} from "./types.js";
+import { habitsService } from "../../services/index.js";
+import { normalizeHabit, normalizeHabitLog } from "./getUserHabits.js";
 
 const getLogTotalForDate = (logs: HabitLog[]): number => {
 	if (!logs || !logs.length) return 0;

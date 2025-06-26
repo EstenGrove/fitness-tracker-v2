@@ -1,20 +1,20 @@
 import { Hono, type Context } from "hono";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
+import { getResponseError, getResponseOk } from "../utils/api.js";
 import type {
 	LoggedIn,
 	LoginParams,
 	LogoutParams,
 	RefreshResponse,
-} from "../modules/auth/types.ts";
-import { login } from "../modules/auth/login.ts";
-import { normalizeLoginData } from "../modules/auth/normalize.ts";
+} from "../modules/auth/types.js";
+import { login } from "../modules/auth/login.js";
+import { normalizeLoginData } from "../modules/auth/normalize.js";
 import { getCookie, setCookie } from "hono/cookie";
-import { normalizeSession } from "../modules/user/user.ts";
-import { logout } from "../modules/auth/logout.ts";
-import type { SessionDB } from "../modules/user/types.ts";
-import { isLocalEnv } from "../utils/env.ts";
-import { getUserIDFromToken, setAccessToken } from "../modules/auth/utils.ts";
-import { refreshAuth } from "../modules/auth/refresh.ts";
+import { normalizeSession } from "../modules/user/user.js";
+import { logout } from "../modules/auth/logout.js";
+import type { SessionDB } from "../modules/user/types.js";
+import { isLocalEnv } from "../utils/env.js";
+import { getUserIDFromToken, setAccessToken } from "../modules/auth/utils.js";
+import { refreshAuth } from "../modules/auth/refresh.js";
 
 const app = new Hono();
 

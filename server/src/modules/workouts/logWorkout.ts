@@ -1,11 +1,11 @@
-import { workoutsService } from "../../services/index.ts";
+import { workoutsService } from "../../services/index.js";
 import {
 	normalizeHistoryByType,
 	normalizeHistoryEntryByType,
-} from "../history/allHistory.ts";
-import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
-import type { Activity } from "../types.ts";
-import type { LogWorkoutBody } from "./types.ts";
+} from "../history/allHistory.js";
+import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.js";
+import type { Activity } from "../types.js";
+import type { LogWorkoutBody } from "./types.js";
 
 const logWorkout = async (values: LogWorkoutBody) => {
 	const type: Activity = values.activityType;

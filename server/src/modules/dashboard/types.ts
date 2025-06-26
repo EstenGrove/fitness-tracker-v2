@@ -3,9 +3,9 @@ import type {
 	HabitCardDB,
 	RecentHabitLog,
 	RecentHabitLogDB,
-} from "../habits/types.ts";
-import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.ts";
-import type { Activity, Effort } from "../types.ts";
+} from "../habits/types.js";
+import type { HistoryOfType, HistoryOfTypeDB } from "../history/types.js";
+import type { Activity, Effort } from "../types.js";
 
 export interface RecentWorkoutDB {
 	user_id: string;

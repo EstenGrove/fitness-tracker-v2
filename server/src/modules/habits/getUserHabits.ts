@@ -1,6 +1,6 @@
-import { habitsService } from "../../services/index.ts";
-import { getResponseError } from "../../utils/api.ts";
-import type { Habit, HabitDB, HabitLog, HabitLogDB } from "./types.ts";
+import { habitsService } from "../../services/index.js";
+import { getResponseError } from "../../utils/api.js";
+import type { Habit, HabitDB, HabitLog, HabitLogDB } from "./types.js";
 
 const getUserHabits = async (userID: string, targetDate: string) => {
 	const rawHabits = (await habitsService.getHabits(

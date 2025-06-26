@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import jwt, { type SignOptions } from "jsonwebtoken";
-import type { JWTAccessPayload, JWTRefreshPayload } from "./types.ts";
+import type { JWTAccessPayload, JWTRefreshPayload } from "./types.js";
 import type { Context } from "hono";
 import { setCookie } from "hono/cookie";
-import { isLocalEnv } from "../../utils/env.ts";
+import { isLocalEnv } from "../../utils/env.js";
 dotenv.config();
 
 const ACCESS_TOKEN = {

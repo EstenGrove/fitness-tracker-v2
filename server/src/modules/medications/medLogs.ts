@@ -1,4 +1,4 @@
-import type { MedicationLog, MedicationLogDB } from "./types.ts";
+import type { MedicationLog, MedicationLogDB } from "./types.js";
 
 const normalizeMedLog = (log: MedicationLogDB): MedicationLog => {
 	const client: MedicationLog = {

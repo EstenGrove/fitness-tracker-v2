@@ -3,7 +3,7 @@ import type {
 	ActivityCardioDB,
 	ActivityCardioSummary,
 	ActivityCardioSummaryDB,
-} from "./types.ts";
+} from "./types.js";
 
 const normalizeActivityCardio = (cardio: ActivityCardioDB): ActivityCardio => {
 	const newCardio: ActivityCardio = {

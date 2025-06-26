@@ -1,4 +1,4 @@
-import type { TodaysWorkoutClient, TodaysWorkoutDB } from "./types.ts";
+import type { TodaysWorkoutClient, TodaysWorkoutDB } from "./types.js";
 
 const normalizeTodaysWorkout = (
 	workout: TodaysWorkoutDB

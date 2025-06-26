@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import {
+	fetchMedDetails,
 	fetchMedications,
 	fetchMedLogsByRange,
 	fetchMedsInfo,
 	fetchMedSummaryByDate,
+	MedDetails,
 	MedLogBody,
 	MedLogOptions,
 	MedsInfo,
@@ -25,6 +27,11 @@ interface MedLogsByRange {
 interface UserDateParams {
 	userID: string;
 	targetDate: string;
+}
+
+interface DetailsParams {
+	userID: string;
+	medID: number;
 }
 
 export const medicationsApi = createApi({
@@ -93,6 +100,19 @@ export const medicationsApi = createApi({
 				return { data };
 			},
 		}),
+		// Get a given med's medication, schedule & logs
+		getMedDetails: builder.query<MedDetails, DetailsParams>({
+			queryFn: async (params) => {
+				const { userID, medID } = params;
+				const response = (await fetchMedDetails(
+					userID,
+					medID
+				)) as AwaitedResponse<MedDetails>;
+				const data = response.Data as MedDetails;
+
+				return { data };
+			},
+		}),
 	}),
 });
 
@@ -100,6 +120,7 @@ export const {
 	useGetMedsInfoQuery,
 	useGetMedicationsQuery,
 	useGetLogsByRangeQuery,
+	useGetMedDetailsQuery,
 	useLogMedicationMutation,
 	useGetMedSummaryByDateQuery,
 } = medicationsApi;

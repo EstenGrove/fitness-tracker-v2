@@ -1,12 +1,12 @@
 import type { Pool } from "pg";
-import type { Activity, Effort } from "../modules/types.ts";
+import type { Activity, Effort } from "../modules/types.js";
 import type {
 	LogWorkoutBody,
 	SkippedWorkoutDB,
 	SkipWorkoutBody,
 	WorkoutSet,
-} from "../modules/workouts/types.ts";
-import type { HistoryOfTypeDB } from "../modules/history/types.ts";
+} from "../modules/workouts/types.js";
+import type { HistoryOfTypeDB } from "../modules/history/types.js";
 
 interface MarkAsDoneBody {
 	userID: string;

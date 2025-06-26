@@ -1,4 +1,4 @@
-import type { WorkoutSchedule, WorkoutScheduleDB } from "./types.ts";
+import type { WorkoutSchedule, WorkoutScheduleDB } from "./types.js";
 
 const normalizeWorkoutSchedule = (
 	schedule: WorkoutScheduleDB

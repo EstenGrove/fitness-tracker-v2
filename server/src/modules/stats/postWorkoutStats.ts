@@ -1,5 +1,5 @@
-import { statsService } from "../../services/index.ts";
-import type { PostWorkoutParams } from "./types.ts";
+import { statsService } from "../../services/index.js";
+import type { PostWorkoutParams } from "./types.js";
 
 const getPostWorkoutStats = async (params: PostWorkoutParams) => {
 	const type = params.activityType;

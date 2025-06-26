@@ -1,13 +1,13 @@
 import { Hono, type Context } from "hono";
-import { historyService } from "../services/index.ts";
-import { getResponseError, getResponseOk } from "../utils/api.ts";
-import type { HistoryOfTypeDB } from "../modules/history/types.ts";
+import { historyService } from "../services/index.js";
+import { getResponseError, getResponseOk } from "../utils/api.js";
+import type { HistoryOfTypeDB } from "../modules/history/types.js";
 import {
 	getPostWorkoutDetails,
 	getPostWorkoutStats,
-} from "../modules/stats/postWorkoutStats.ts";
-import type { Activity } from "../modules/types.ts";
-import type { PostWorkoutParams } from "../modules/stats/types.ts";
+} from "../modules/stats/postWorkoutStats.js";
+import type { Activity } from "../modules/types.js";
+import type { PostWorkoutParams } from "../modules/stats/types.js";
 
 const app = new Hono();
 

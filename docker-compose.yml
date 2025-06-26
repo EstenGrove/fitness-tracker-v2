@@ -1,30 +1,38 @@
-version: "3.9"
+version: "2.2"
 
 services:
   client:
     build: ./client
     ports:
-      - "8080:80"
-      - "9443:443"
+      - "80:80"
+      - "443:443"
     depends_on:
       - server
+    volumes:
+      - /etc/letsencrypt/live/app.sgore.dev/:/etc/ssl/live/:ro
+      - /etc/letsencrypt/archive/app.sgore.dev/:/etc/ssl/archive/:ro
+      - /etc/letsencrypt/renewal/:/etc/ssl/renewal/:ro
+      - /etc/letsencrypt/live/app.sgore.dev/fullchain.pem:/etc/ssl/certs/app.sgore.dev.crt:ro
+      - /etc/letsencrypt/live/app.sgore.dev/privkey.pem:/etc/ssl/private/app.sgore.dev.key:ro
 
   server:
     build: ./server
     ports:
       - "3003:3002"
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgres://x-main-user:t_(1U>*XS?Ivsm^9bfLW@db:5432/FitnessTracker-v2
     depends_on:
       - db
 
   db:
-    image: postgres:16
+    image: postgres:17
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: x-main-user
+      POSTGRES_PASSWORD: t_(1U>*XS?Ivsm^9bfLW
+      POSTGRES_DB: FitnessTracker-v2
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

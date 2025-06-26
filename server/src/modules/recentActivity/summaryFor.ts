@@ -1,5 +1,5 @@
-import { recentActivityService } from "../../services/index.ts";
-import type { ActivityRangeType, ActivitySummaryFor } from "./types.ts";
+import { recentActivityService } from "../../services/index.js";
+import type { ActivityRangeType, ActivitySummaryFor } from "./types.js";
 
 interface ActivityForParams {
 	targetDate: string;

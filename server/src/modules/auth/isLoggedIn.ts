@@ -1,5 +1,5 @@
-import { authService } from "../../services/index.ts";
-import type { IsLoggedInDB } from "./types.ts";
+import { authService } from "../../services/index.js";
+import type { IsLoggedInDB } from "./types.js";
 
 const isLoggedIn = async (userID: string, date: string): Promise<boolean> => {
 	if (!userID) {

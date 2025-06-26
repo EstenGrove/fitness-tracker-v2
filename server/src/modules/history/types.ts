@@ -1,5 +1,5 @@
-import type { Activity, Effort } from "../types.ts";
-import type { Workout, WorkoutByTypeDB, WorkoutDB } from "../workouts/types.ts";
+import type { Activity, Effort } from "../types.js";
+import type { Workout, WorkoutByTypeDB, WorkoutDB } from "../workouts/types.js";
 
 export interface StrengthSet {
 	id: number;

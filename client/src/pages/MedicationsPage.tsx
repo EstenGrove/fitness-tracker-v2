@@ -46,7 +46,7 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 2,
+	scheduleID: 3,
 };
 
 const MedicationsPage = () => {
@@ -111,7 +111,10 @@ const MedicationsPage = () => {
 							totalPills={pillSummary?.totalPills}
 							pillsLeft={pillSummary?.pillsRemaining}
 						/>
-						<LoggedMedsCard pillsTakenToday={pillSummary?.pillsTakenToday}>
+						<LoggedMedsCard
+							to={`/meds/details/${selectedMed?.medID}`}
+							pillsTakenToday={pillSummary?.pillsTakenToday}
+						>
 							<TodaysDoses logs={medLogs} />
 						</LoggedMedsCard>
 					</div>

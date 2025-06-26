@@ -126,3 +126,12 @@ export interface HabitDetails {
 	summary: HabitSummary;
 	logsForRange: HabitLog[];
 }
+
+export interface HabitHistoryDay {
+	date: string;
+	habitID: number;
+	habitTarget: number;
+	habitValue: number;
+}
+
+export type HabitHistory = HabitHistoryDay[];

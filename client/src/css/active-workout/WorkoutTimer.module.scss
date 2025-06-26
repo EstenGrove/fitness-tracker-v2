@@ -43,6 +43,11 @@
 	&_time {
 		width: 100%;
 
+		&_elapsed {
+			font-size: 3rem;
+			color: $text2;
+		}
+
 		&_paused {
 			color: $accentRed;
 			font-size: 3rem;

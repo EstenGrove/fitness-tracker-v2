@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/active-workout/WorkoutTimer.module.scss";
 import {
@@ -8,6 +8,10 @@ import {
 	usePersistentTimer,
 } from "../../hooks/usePersistentTimer";
 import { formattedTime } from "../../utils/utils_formatter";
+import {
+	formatElapsedTime,
+	getElapsedWorkoutTime,
+} from "../../utils/utils_workouts";
 
 type Props = {
 	duration: number;
@@ -108,14 +112,31 @@ type DisplayProps = {
 };
 
 const TimerDisplay = ({ status, time }: DisplayProps) => {
+	const [elapsed, setElapsed] = useState({
+		show: false,
+		time: "0:00",
+	});
 	const isPaused = status === ETimerStatus.PAUSED;
 	const css = {
 		color:
 			status === ETimerStatus.COUNTDOWN ? "var(--accent-blue)" : "var(--text1)",
 	};
+
+	const onClick = () => {
+		const initial = getElapsedWorkoutTime();
+		const newTime = formatElapsedTime(initial.mins, initial.secs);
+		setElapsed({
+			show: !elapsed.show,
+			time: newTime,
+		});
+	};
+
 	return (
-		<div className={styles.TimerDisplay}>
+		<div className={styles.TimerDisplay} onClick={onClick}>
 			<div className={styles.TimerDisplay_time} style={css}>
+				<div className={styles.TimerDisplay_time_elapsed}>
+					{elapsed.show && `(elapsed ${elapsed.time})`}
+				</div>
 				{time}
 				{isPaused && (
 					<div className={styles.TimerDisplay_time_paused}>(Paused)</div>
@@ -128,7 +149,6 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
 	const timer = usePersistentTimer(duration, {
 		onEnd(info) {
-			console.log("info", info);
 			return onEnd(info);
 		},
 	});
@@ -157,6 +177,8 @@ const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
 	const skip = () => {
 		return onSkip && onSkip();
 	};
+
+	// console.log("timer", timer);
 
 	return (
 		<div className={styles.WorkoutTimer}>

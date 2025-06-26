@@ -1,6 +1,6 @@
-import { workoutsService } from "../../services/index.ts";
-import type { SkippedResp } from "../../services/WorkoutsService.ts";
-import type { SkippedWorkoutDB, SkipWorkoutBody } from "./types.ts";
+import { workoutsService } from "../../services/index.js";
+import type { SkippedResp } from "../../services/WorkoutsService.js";
+import type { SkippedWorkoutDB, SkipWorkoutBody } from "./types.js";
 
 const skipWorkout = async (userID: string, values: SkipWorkoutBody) => {
 	const resp = (await workoutsService.skipWorkout(

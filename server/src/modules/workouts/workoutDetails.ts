@@ -1,9 +1,9 @@
 import {
 	normalizeHistoryByType,
 	normalizeHistoryEntryByType,
-} from "../history/allHistory.ts";
-import type { Activity } from "../types.ts";
-import { normalizeTodaysWorkout } from "./todaysWorkouts.ts";
+} from "../history/allHistory.js";
+import type { Activity } from "../types.js";
+import { normalizeTodaysWorkout } from "./todaysWorkouts.js";
 import type {
 	StrengthWorkoutDB,
 	TodaysWorkoutClient,
@@ -12,9 +12,9 @@ import type {
 	WorkoutDetailsDB,
 	WorkoutOfType,
 	WorkoutOfTypeDB,
-} from "./types.ts";
-import { normalizeWorkout } from "./workouts.ts";
-import { normalizeWorkoutSchedule } from "./workoutSchedule.ts";
+} from "./types.js";
+import { normalizeWorkout } from "./workouts.js";
+import { normalizeWorkoutSchedule } from "./workoutSchedule.js";
 
 const normalizeWorkoutByType = (
 	type: Activity,

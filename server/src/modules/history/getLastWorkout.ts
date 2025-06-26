@@ -1,5 +1,5 @@
-import { historyService } from "../../services/index.ts";
-import type { WorkoutHistoryDB } from "./types.ts";
+import { historyService } from "../../services/index.js";
+import type { WorkoutHistoryDB } from "./types.js";
 
 export interface LastSessionParams {
 	userID: string;

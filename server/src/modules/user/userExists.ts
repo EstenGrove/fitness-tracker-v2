@@ -1,4 +1,4 @@
-import { userService } from "../../services/index.ts";
+import { userService } from "../../services/index.js";
 
 export interface UserExistsDB {
 	is_active_user: boolean;

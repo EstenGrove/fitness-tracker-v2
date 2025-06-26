@@ -1,4 +1,4 @@
-import type { Session, SessionDB, User, UserDB } from "../user/types.ts";
+import type { Session, SessionDB, User, UserDB } from "../user/types.js";
 
 export interface LoginParams {
 	username: string;

@@ -1,6 +1,6 @@
-import type { LoggedHabitResp } from "../../services/HabitsService.ts";
-import { habitsService } from "../../services/index.ts";
-import type { HabitLog, HabitLogDB, HabitLogValues } from "./types.ts";
+import type { LoggedHabitResp } from "../../services/HabitsService.js";
+import { habitsService } from "../../services/index.js";
+import type { HabitLog, HabitLogDB, HabitLogValues } from "./types.js";
 
 const logHabit = async (logVals: HabitLogValues) => {
 	const newLog = (await habitsService.logHabit(logVals)) as HabitLogDB;

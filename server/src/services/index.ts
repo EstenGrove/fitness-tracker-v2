@@ -1,13 +1,13 @@
-import db from "../db/db.ts";
-import { UserService } from "./UserService.ts";
-import { AuthService } from "./AuthService.ts";
-import { HistoryService } from "./HistoryService.ts";
-import { WorkoutsService } from "./WorkoutsService.ts";
-import { DashboardService } from "./DashboardService.ts";
-import { MedicationsService } from "./MedicationsService.ts";
-import { RecentActivityService } from "./RecentActivityService.ts";
-import { StatsService } from "./StatsService.ts";
-import { HabitsService } from "./HabitsService.ts";
+import db from "../db/db.js";
+import { UserService } from "./UserService.js";
+import { AuthService } from "./AuthService.js";
+import { HistoryService } from "./HistoryService.js";
+import { WorkoutsService } from "./WorkoutsService.js";
+import { DashboardService } from "./DashboardService.js";
+import { MedicationsService } from "./MedicationsService.js";
+import { RecentActivityService } from "./RecentActivityService.js";
+import { StatsService } from "./StatsService.js";
+import { HabitsService } from "./HabitsService.js";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);

@@ -1,12 +1,12 @@
-import type { DateRange } from "../types.ts";
-import { normalizeCardioSummary } from "./cardioSummary.ts";
-import { normalizeOtherSummary } from "./otherSummary.ts";
-import { normalizeStepsSummary } from "./stepsSummary.ts";
-import { normalizeStrengthSummary } from "./strengthSummary.ts";
-import { normalizeStretchSummary } from "./stretchSummary.ts";
-import { normalizeTimedSummary } from "./timedSummary.ts";
-import { normalizeTotalMins } from "./totalMins.ts";
-import type { ActivitySummaryFor, ActivitySummaryForDB } from "./types.ts";
+import type { DateRange } from "../types.js";
+import { normalizeCardioSummary } from "./cardioSummary.js";
+import { normalizeOtherSummary } from "./otherSummary.js";
+import { normalizeStepsSummary } from "./stepsSummary.js";
+import { normalizeStrengthSummary } from "./strengthSummary.js";
+import { normalizeStretchSummary } from "./stretchSummary.js";
+import { normalizeTimedSummary } from "./timedSummary.js";
+import { normalizeTotalMins } from "./totalMins.js";
+import type { ActivitySummaryFor, ActivitySummaryForDB } from "./types.js";
 
 const normalizeRecentSummary = (
 	summary: ActivitySummaryForDB

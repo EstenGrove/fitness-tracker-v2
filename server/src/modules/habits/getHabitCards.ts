@@ -1,5 +1,5 @@
-import { habitsService } from "../../services/index.ts";
-import type { HabitCard, HabitCardDB } from "./types.ts";
+import { habitsService } from "../../services/index.js";
+import type { HabitCard, HabitCardDB } from "./types.js";
 
 const getHabitCards = async (userID: string, targetDate: string) => {
 	const cards = (await habitsService.getHabitCards(

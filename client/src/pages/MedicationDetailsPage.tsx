@@ -8,6 +8,8 @@ import { MedsInfo } from "../utils/utils_medications";
 import { useParams } from "react-router";
 import { Medication, MedicationSchedule } from "../features/medications/types";
 import { addEllipsis } from "../utils/utils_misc";
+import { useMedDetails } from "../hooks/useMedDetails";
+import MedicationLogHistory from "../components/medications/MedicationLogHistory";
 
 const getSelectedMedInfo = (medID: number, medsInfo: MedsInfo) => {
 	if (!medID || !medsInfo) return { medication: null, schedule: null };
@@ -31,20 +33,25 @@ const MedicationDetailsPage = () => {
 	const medID: number = Number(params.id);
 	const targetDate = formatDate(baseDate, "long");
 	const { data } = useMedsInfo(targetDate);
+	const { data: details } = useMedDetails(medID);
+
 	const medsInfo = data as MedsInfo;
 	const active = getSelectedMedInfo(medID, medsInfo);
 	const medication = active?.medication as Medication;
 	const medName = addEllipsis(medication?.medName, 18);
+
+	console.log("details", details);
+
 	return (
 		<PageContainer>
 			<div className={styles.MedicationDetailsPage}>
-				<NavArrows />
 				<div className={styles.MedicationDetailsPage_header}>
-					<PageHeader title={`${medName}`}>
-						{/*  */}
-						{/*  */}
-					</PageHeader>
+					<NavArrows />
+					<PageHeader title={`${medName}`}></PageHeader>
 				</div>
+				{details && details.logs && (
+					<MedicationLogHistory logs={details?.logs} />
+				)}
 			</div>
 		</PageContainer>
 	);

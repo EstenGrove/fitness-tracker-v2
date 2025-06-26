@@ -1,6 +1,17 @@
-FROM node:23-alpine
+# server/Dockerfile
+FROM node:23.6.0-alpine
+
 WORKDIR /app
-COPY . .
+
+# Copy package files and install dependencies first
+COPY package*.json ./
 RUN npm install
-EXPOSE 3002
+
+# Copy the rest of your app (including .env)
+COPY . .
+
+RUN npm run build
+
+EXPOSE 3004
+
 CMD ["node", "dist/index.js"]
