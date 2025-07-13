@@ -20,6 +20,7 @@ import ModalLG from "../shared/ModalLG";
 import QuickLogHabit from "../habits/QuickLogHabit";
 import { useAppDispatch } from "../../store/store";
 import { summaryApi } from "../../features/dashboard/summaryApi";
+import { useNavigate } from "react-router";
 
 type Props = {
 	habits: HabitCard[];
@@ -143,6 +144,7 @@ const QuickLogButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
+	const navigate = useNavigate();
 	const { habitName, icon, iconColor, habitsLogged } = habit;
 	const iconName = habitIcons[icon];
 	const logged = habitsLogged;
@@ -153,6 +155,12 @@ const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 		return onAction && onAction(action, habit);
 	};
 
+	const handleGoTo = () => {
+		const id = habit.habitID;
+		const path = `/habits/${id}/tracker`;
+		navigate(path);
+	};
+
 	return (
 		<div className={styles.DashboardHabit}>
 			<div className={styles.DashboardHabit_top}>
@@ -160,7 +168,7 @@ const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 					icon={iconName}
 					name={habitName}
 					color={iconColor}
-					goTo={() => {}}
+					goTo={handleGoTo}
 					onAction={handleAction}
 				/>
 			</div>

@@ -4,6 +4,7 @@ import type {
 	HabitDB,
 	HabitDetailParams,
 	HabitDetailsDB,
+	HabitHistoryDB,
 	HabitLogDB,
 	HabitLogValues,
 	NewHabitValues,
@@ -24,11 +25,31 @@ export type HabitDetailsResp = Promise<HabitDetailsDB | unknown>;
 export type HabitCardsResp = Promise<HabitCardDB[] | unknown>;
 export type RecentHabitLogsResp = Promise<RecentHabitLogDB[] | unknown>;
 export type HabitItemResp = Promise<HabitDB | unknown>;
+export type HabitHistoryResp = Promise<HabitHistoryDB | unknown>;
 
 class HabitsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async getHabitHistory(
+		userID: string,
+		habitID: number,
+		lastXDays: number = 60
+	): HabitHistoryResp {
+		try {
+			const query = `SELECT * FROM get_habit_history_summary(
+				$1,
+				$2,
+				$3
+			)`;
+			const results = await this.#db.query(query, [userID, habitID, lastXDays]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async getHabitByID(userID: string, habitID: number): HabitItemResp {

@@ -132,6 +132,8 @@ export interface HabitHistoryDay {
 	habitID: number;
 	habitTarget: number;
 	habitValue: number;
+	percentage: number;
+	reachedGoal: boolean;
 }
 
 export type HabitHistory = HabitHistoryDay[];

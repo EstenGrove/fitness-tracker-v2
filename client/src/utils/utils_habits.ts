@@ -4,6 +4,7 @@ import {
 	HabitCard,
 	HabitDetails,
 	HabitFrequency,
+	HabitHistory,
 	HabitIntent,
 	HabitLog,
 	HabitLogValues,
@@ -62,6 +63,7 @@ export type NewHabitResp = AsyncResponse<{ newHabit: HabitCard }>;
 export type RecentHabitLogsResp = AsyncResponse<{
 	recentLogs: RecentHabitLog[];
 }>;
+export type HabitHistoryResp = AsyncResponse<{ history: HabitHistory }>;
 
 const fetchHabitCards = async (
 	userID: string,
@@ -145,6 +147,24 @@ const fetchRecentHabitLogs = async (
 	let url = currentEnv.base + habitApis.getRecentLogs;
 	url += "?" + new URLSearchParams({ userID });
 	url += "&" + new URLSearchParams({ targetDate });
+	url += "&" + new URLSearchParams({ lastXDays: String(lastXDays) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+const fetchHabitHistory = async (
+	userID: string,
+	habitID: number,
+	lastXDays: number = 60
+): HabitHistoryResp => {
+	let url = currentEnv.base + habitApis.getHabitHistory;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ habitID: String(habitID) });
 	url += "&" + new URLSearchParams({ lastXDays: String(lastXDays) });
 
 	try {
@@ -336,6 +356,7 @@ export {
 	fetchHabitLogs,
 	fetchHabitCards,
 	fetchHabitDetails,
+	fetchHabitHistory,
 	fetchHabitSummaries,
 	fetchRecentHabitLogs,
 	logHabit,

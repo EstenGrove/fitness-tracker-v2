@@ -11,6 +11,8 @@ import { habitIcons } from "../../utils/utils_habits";
 import { formatCustomDate, formatTime } from "../../utils/utils_dates";
 import HabitLogger from "./HabitLogger";
 import { isThisMonth, isThisWeek } from "date-fns";
+import { useState } from "react";
+import HabitHistory from "./HabitHistory";
 
 type Props = {
 	habit: Habit;
@@ -76,12 +78,41 @@ const HabitHeader = ({ habit, lastEntry }: HeaderProps) => {
 	);
 };
 
+const HistorySection = ({ habit }: { habit: Habit }) => {
+	const [showHistory, setShowHistory] = useState<boolean>(false);
+
+	const openHistory = () => {
+		setShowHistory(true);
+	};
+	const closeHistory = () => {
+		setShowHistory(false);
+	};
+
+	return (
+		<div className={styles.HistorySection}>
+			<button
+				type="button"
+				onClick={openHistory}
+				className={styles.HistorySection_btn}
+			>
+				<svg className={styles.HistorySection_btn_icon}>
+					<use xlinkHref={`${sprite}#icon-synchronize`}></use>
+				</svg>
+				<span>Show History</span>
+			</button>
+
+			{showHistory && <HabitHistory habit={habit} onClose={closeHistory} />}
+		</div>
+	);
+};
+
 const HabitTracker = ({ habit, summary, allLogs }: Props) => {
 	const lastTaken = getLastEntry(habit.frequency, allLogs);
 	return (
 		<div className={styles.HabitTracker}>
 			<HabitHeader habit={habit} lastEntry={lastTaken ?? ""} />
 			<HabitLogger habit={habit} summary={summary} habitStep={1} />
+			<HistorySection habit={habit} />
 		</div>
 	);
 };

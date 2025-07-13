@@ -182,3 +182,23 @@ export interface RecentHabitLog {
 	icon: string;
 	iconColor: string;
 }
+
+export interface HabitHistoryDay {
+	date: string;
+	habitID: number;
+	habitTarget: number;
+	habitValue: number;
+	percentage: number;
+	reachedGoal: boolean;
+}
+export interface HabitHistoryDayDB {
+	date: string;
+	habit_id: number;
+	total_logged: number;
+	percentage: number;
+	target_value: number;
+	reached_goal: boolean;
+}
+
+export type HabitHistory = HabitHistoryDay[];
+export type HabitHistoryDB = HabitHistoryDayDB[];

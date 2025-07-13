@@ -3,6 +3,7 @@ import { getUserHabits } from "../modules/habits/getUserHabits.js";
 import type {
 	Habit,
 	HabitCard,
+	HabitHistory,
 	HabitLog,
 	HabitLogValues,
 	NewHabitValues,
@@ -15,6 +16,7 @@ import { logHabitsBatched } from "../modules/habits/logHabitsBatched.js";
 import { getHabitCards } from "../modules/habits/getHabitCards.js";
 import { createHabit } from "../modules/habits/createHabit.js";
 import { getRecentHabitLogs } from "../modules/habits/getRecentHabitLogs.js";
+import { getHabitHistory } from "../modules/habits/getHabitHistory.js";
 
 const app = new Hono();
 
@@ -158,6 +160,28 @@ app.post("/logHabitsBatched", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		newLogs: habitLogs,
+	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getHabitHistory", async (ctx: Context) => {
+	const params = ctx.req.query();
+	const { userID } = params;
+	const id = Number(params.habitID);
+	const lastDays = Number(params.lastXDays);
+
+	const history = (await getHabitHistory(userID, id, lastDays)) as HabitHistory;
+
+	if (history instanceof Error) {
+		const errResp = getResponseError(history, {
+			history: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		history: history,
 	});
 
 	return ctx.json(resp);

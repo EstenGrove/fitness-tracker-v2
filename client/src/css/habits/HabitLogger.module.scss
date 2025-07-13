@@ -7,9 +7,13 @@ $displayWidth: 14rem;
 
 .HabitLogger {
 	width: 100%;
-	min-height: 45rem;
+	// min-height: 45rem; // original value
+	// NEWLY ADDED STYLES:
+	min-height: 42rem;
+	max-height: 45rem;
 	@include colCenter();
 	gap: 2rem 0;
+	margin-bottom: 0;
 
 	&_display {
 		width: 100%;

@@ -21,6 +21,7 @@ for arg in "$@"; do
 done
 
 # SYNC CODE
+# - Copies project files but excludes certain files & folders
 printf "${GREEN}Syncing project to remote host at ${REMOTE_HOST}${NC}\n"
 rsync -av --progress \
   --exclude node_modules \

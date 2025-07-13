@@ -162,6 +162,7 @@ const API_ENDPOINTS = {
 		getHabitCards: "/habits/getHabitCards",
 		createHabit: "/habits/createHabit",
 		getRecentLogs: "/habits/getRecentHabitLogs",
+		getHabitHistory: "/habits/getHabitHistory",
 	},
 };
 

@@ -4,9 +4,11 @@ import {
 	createHabit,
 	fetchHabitCards,
 	fetchHabitDetails,
+	fetchHabitHistory,
 	fetchHabitSummaries,
 	fetchRecentHabitLogs,
 	HabitDetailParams,
+	HabitHistoryResp,
 	logHabit,
 	NewHabitParams,
 	RecentHabitParams,
@@ -14,6 +16,7 @@ import {
 import {
 	HabitCard,
 	HabitDetails,
+	HabitHistory,
 	HabitLog,
 	HabitLogValues,
 	RecentHabitLog,
@@ -27,6 +30,12 @@ export interface HabitParams {
 export interface HabitDateParams {
 	userID: string;
 	targetDate: string;
+}
+
+export interface HabitHistoryParams {
+	userID: string;
+	habitID: number;
+	lastXDays: number;
 }
 
 export const habitsApi = createApi({
@@ -101,6 +110,19 @@ export const habitsApi = createApi({
 			},
 			invalidatesTags: ["HabitCards", "HabitLogs"],
 		}),
+		getHabitHistory: builder.query<HabitHistory, HabitHistoryParams>({
+			queryFn: async (params) => {
+				const { userID, habitID, lastXDays = 60 } = params;
+				const response = (await fetchHabitHistory(
+					userID,
+					habitID,
+					lastXDays
+				)) as AwaitedResponse<{ history: HabitHistory }>;
+				const data = response.Data.history as HabitHistory;
+
+				return { data };
+			},
+		}),
 	}),
 });
 
@@ -111,4 +133,5 @@ export const {
 	useGetHabitSummariesQuery,
 	useGetHabitDetailsQuery,
 	useGetRecentHabitLogsQuery,
+	useGetHabitHistoryQuery,
 } = habitsApi;
