@@ -21,3 +21,19 @@
 		padding-bottom: 10rem;
 	}
 }
+
+.NewScheduleButton {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	outline: none;
+	border: 1px solid $text3;
+	background-color: transparent;
+	@include rowCenter();
+
+	&_icon {
+		width: 2rem;
+		height: 2rem;
+		fill: $text3;
+	}
+}

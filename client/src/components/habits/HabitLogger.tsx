@@ -173,12 +173,15 @@ const prepareHabitLog = (value: number, habit: Habit) => {
 	return values;
 };
 
+// Previously 650
+const batchDelay = 450;
+
 const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 	const [todaysValue, setTodaysValue] = useState<number>(
 		summary.totalLogged || 0
 	);
 	const { queueLog } = useBatchedHabitLogger(
-		650,
+		batchDelay,
 		logHabitsBatched as DeferredFetch<HabitLogValues>
 	);
 

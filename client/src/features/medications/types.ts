@@ -8,7 +8,7 @@ export interface MedLogEntry {
 }
 
 export interface PillSummary {
-	scheduleID?: number;
+	scheduleID?: number | number[];
 	daysLeft: number;
 	totalPills: number;
 	pillsTaken: number;

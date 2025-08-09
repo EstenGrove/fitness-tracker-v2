@@ -83,6 +83,7 @@ app.get("/getMedsInfo", async (ctx: Context) => {
 	return ctx.json(resp);
 });
 
+// Med summary (pill summary and more)
 app.get("/getMedSummaryByDate", async (ctx: Context) => {
 	const { userID, medID, targetDate } = ctx.req.query();
 
@@ -90,8 +91,6 @@ app.get("/getMedSummaryByDate", async (ctx: Context) => {
 		medID: Number(medID),
 		targetDate: targetDate,
 	})) as MedSummaryDB;
-
-	console.log("summary", summary);
 
 	if (summary instanceof Error) {
 		const errResp = getResponseError(summary, {

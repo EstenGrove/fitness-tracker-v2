@@ -46,7 +46,7 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 5,
+	scheduleID: 6,
 };
 
 const MedicationsPage = () => {
