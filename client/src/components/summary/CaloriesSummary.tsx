@@ -26,7 +26,7 @@ const CaloriesSummary = ({ caloriesSummary }: Props) => {
 		<div className={styles.CaloriesSummary}>
 			<div className={styles.CaloriesSummary_card}>
 				<DetailsCard
-					to="details"
+					to="/stats/calories"
 					title="Daily Calories"
 					icon="fire"
 					color="var(--accent-red3)"

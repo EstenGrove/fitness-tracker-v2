@@ -1,3 +1,4 @@
+import { TotalMinsBy } from "../../utils/utils_stats";
 import { Activity, Effort } from "../shared/types";
 import { ExerciseSet, StrengthSet } from "../workouts/types";
 
@@ -254,4 +255,27 @@ export type MinsSummaryItem<T extends TimeKey> = {
 
 export interface MinsSummaryData<T extends TimeKey> {
 	summary: MinsSummaryItem<T>[];
+}
+
+export interface StatsSummaryItem {
+	label: string; // Might be a date, or a day of the month or a month name etc
+	value: number;
+	date: string;
+	[key: string]: number | string | boolean;
+}
+
+export interface MonthlyMinsStats {
+	month: string;
+	monthStart: string;
+	monthEnd: string;
+	totalMins: number;
+}
+
+export interface ByYearParams {
+	userID: string;
+	targetYear: number;
+}
+
+export interface MinsByParams extends TotalMinsBy {
+	userID: string;
 }

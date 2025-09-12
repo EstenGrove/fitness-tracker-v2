@@ -1,0 +1,11 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
+
+.HabitHistoryModal {
+	@include fill_container;
+	padding: 1rem 2rem;
+	max-width: 60rem;
+	display: block;
+	margin: 0 auto;
+}

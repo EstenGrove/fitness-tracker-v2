@@ -13,6 +13,9 @@ import { useMedDetails } from "../hooks/useMedDetails";
 import MedicationLogHistory from "../components/medications/MedicationLogHistory";
 import { useState } from "react";
 import ModalLG from "../components/shared/ModalLG";
+import CreateMedSchedule from "../components/medications/CreateMedSchedule";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../features/user/userSlice";
 
 const getSelectedMedInfo = (medID: number, medsInfo: MedsInfo) => {
 	if (!medID || !medsInfo) return { medication: null, schedule: null };
@@ -51,6 +54,8 @@ const MedicationDetailsPage = () => {
 	const baseDate = new Date().toString();
 	const medID: number = Number(params.id);
 	const targetDate = formatDate(baseDate, "long");
+	const currentUser = useSelector(selectCurrentUser);
+
 	const { data: info } = useMedsInfo(targetDate);
 	const { data: details } = useMedDetails(medID);
 	const [showNewScheduleModal, setShowNewScheduleModal] =
@@ -86,8 +91,11 @@ const MedicationDetailsPage = () => {
 
 			{showNewScheduleModal && (
 				<ModalLG onClose={closeScheduleModal}>
-					{/*  */}
-					{/*  */}
+					<CreateMedSchedule
+						medicationID={active.medication?.medicationID as number}
+						userID={currentUser.userID}
+						onClose={closeScheduleModal}
+					/>
 				</ModalLG>
 			)}
 		</PageContainer>

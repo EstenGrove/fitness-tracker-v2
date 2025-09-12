@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useMemo, useRef, useState, useEffect } from "react";
 import sprite from "../../assets/icons/dashboard.svg";
 import styles from "../../css/workouts/AllWorkouts.module.scss";
 import { TodaysWorkout as ITodaysWorkouts } from "../../features/workouts/types";
@@ -135,10 +135,30 @@ const SearchInput = ({ value, onSearch, clearSearch }: InputProps) => {
 		}
 	};
 
+	const selectText = () => {
+		if (inputRef.current) {
+			inputRef.current.select();
+		}
+	};
+
 	const handleClear = () => {
 		clearSearch();
 		focusInput();
 	};
+
+	// auto-focus input onMount
+	useEffect(() => {
+		let isMounted = true;
+		if (!isMounted) {
+			return;
+		}
+		focusInput();
+		selectText();
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
 
 	return (
 		<div className={styles.SearchInput}>

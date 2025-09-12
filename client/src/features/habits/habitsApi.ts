@@ -5,10 +5,13 @@ import {
 	fetchHabitCards,
 	fetchHabitDetails,
 	fetchHabitHistory,
+	fetchHabitHistoryForRange,
+	fetchHabitHistorySummary,
 	fetchHabitSummaries,
 	fetchRecentHabitLogs,
 	HabitDetailParams,
-	HabitHistoryResp,
+	HabitHistoryByRange,
+	HabitHistoryByRangeParams,
 	logHabit,
 	NewHabitParams,
 	RecentHabitParams,
@@ -19,6 +22,7 @@ import {
 	HabitHistory,
 	HabitLog,
 	HabitLogValues,
+	HabitYearSummary,
 	RecentHabitLog,
 } from "./types";
 import { AwaitedResponse } from "../types";
@@ -36,6 +40,11 @@ export interface HabitHistoryParams {
 	userID: string;
 	habitID: number;
 	lastXDays: number;
+}
+export interface HabitHistorySummaryParams {
+	userID: string;
+	habitID: number;
+	year: number;
 }
 
 export const habitsApi = createApi({
@@ -123,6 +132,37 @@ export const habitsApi = createApi({
 				return { data };
 			},
 		}),
+		getHabitHistorySummary: builder.query<
+			HabitYearSummary,
+			HabitHistorySummaryParams
+		>({
+			queryFn: async (params) => {
+				const { userID, habitID, year } = params;
+				const response = (await fetchHabitHistorySummary(
+					userID,
+					habitID,
+					year
+				)) as AwaitedResponse<HabitYearSummary>;
+				const data = response.Data as HabitYearSummary;
+
+				return { data };
+			},
+		}),
+		getHabitHistoryForRange: builder.query<
+			HabitHistoryByRange,
+			HabitHistoryByRangeParams
+		>({
+			queryFn: async (params) => {
+				const { userID } = params;
+				const response = (await fetchHabitHistoryForRange(
+					userID,
+					params
+				)) as AwaitedResponse<HabitHistoryByRange>;
+				const data = response.Data as HabitHistoryByRange;
+
+				return { data };
+			},
+		}),
 	}),
 });
 
@@ -134,4 +174,7 @@ export const {
 	useGetHabitDetailsQuery,
 	useGetRecentHabitLogsQuery,
 	useGetHabitHistoryQuery,
+	useGetHabitHistorySummaryQuery,
+	useGetHabitHistoryForRangeQuery,
+	useLazyGetHabitHistoryForRangeQuery,
 } = habitsApi;

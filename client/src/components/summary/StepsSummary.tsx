@@ -34,7 +34,7 @@ const StepsSummary = ({ stepsSummary }: Props) => {
 		<div className={styles.StepsSummary}>
 			<div className={styles.StepsSummary_card}>
 				<DetailsCard
-					to="details"
+					to="/stats/steps"
 					title="Daily Steps"
 					icon="steps"
 					color="var(--accent-orange)"

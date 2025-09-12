@@ -90,6 +90,15 @@
 		#ea1f6f,
 		#e32571
 	);
+	--orangeGradient: linear-gradient(to right top, #ff7700, #f1186c, #cccf0c);
+	--rainbowGradient: linear-gradient(
+		to right top,
+		#ff0066,
+		#007cff,
+		#5200af,
+		#f9f871,
+		#f1186c
+	);
 
 	/* darker accent bgs */
 	--accent-blue-bg: rgba(0, 124, 255, 0.1);

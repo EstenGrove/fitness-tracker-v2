@@ -22,7 +22,8 @@
 	&_header {
 		width: 100%;
 		height: 5rem;
-		@include flex_row(space-between, center);
+		padding: 0.5rem 0;
+		@include flex_row(space-between, flex-end);
 
 		&_date {
 			font-size: 1.7rem;
@@ -42,6 +43,8 @@
 	&_list {
 		width: 100%;
 		list-style: none;
+		@include colCenter();
+		gap: 0.5rem 0;
 	}
 }
 

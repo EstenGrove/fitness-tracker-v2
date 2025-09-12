@@ -24,6 +24,14 @@ const MedicationDetails = lazy(() => import("./pages/MedicationDetailsPage"));
 const Habits = lazy(() => import("./pages/HabitsPage"));
 const HabitTracker = lazy(() => import("./pages/HabitTrackerPage"));
 const RecentHabitHistory = lazy(() => import("./pages/RecentHabitHistoryPage"));
+const HabitHistory = lazy(() => import("./pages/HabitHistoryPage"));
+
+// Stats Page
+const Stats = lazy(() => import("./pages/StatsPage"));
+const MinsStats = lazy(() => import("./components/stats/MinsStats"));
+const StepsStats = lazy(() => import("./components/stats/StepsStats"));
+const WorkoutsStats = lazy(() => import("./components/stats/WorkoutsStats"));
+const ActivityStats = lazy(() => import("./components/stats/ActivityStats"));
 // Layout page
 const DashboardLayout = lazy(
 	() => import("./components/layout/DashboardLayout")
@@ -74,6 +82,30 @@ function App() {
 								}
 							>
 								<Route index element={<Dashboard />} />
+
+								<Route
+									path="/stats/*"
+									element={
+										<Suspense fallback={<Loader />}>
+											<Stats />
+										</Suspense>
+									}
+								>
+									<Route path="mins" element={<MinsStats />} />
+									<Route path="steps" element={<StepsStats />} />
+									<Route path="workouts" element={<WorkoutsStats />} />
+									<Route path="activity" element={<ActivityStats />} />
+								</Route>
+
+								{/* DUMMY PAGE FOR NOW! */}
+								<Route
+									path="/habit-history"
+									element={
+										<Suspense fallback={<Loader />}>
+											<HabitHistory />
+										</Suspense>
+									}
+								/>
 
 								<Route
 									path="/habits"

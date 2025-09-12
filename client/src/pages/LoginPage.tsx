@@ -1,5 +1,4 @@
-import { useState } from "react";
-import LoginForm from "../components/login/LoginForm";
+import { startTransition, useState } from "react";
 import styles from "../css/pages/LoginPage.module.scss";
 import sprite from "../assets/icons/calendar.svg";
 import { LoginValues } from "../features/user/types";
@@ -11,7 +10,12 @@ import { AwaitedResponse } from "../features/types";
 import { setAccessTokenCookie } from "../utils/utils_cookies";
 import { sleep } from "../utils/utils_requests";
 import FadeIn from "../components/ui/FadeIn";
+import LoginForm from "../components/login/LoginForm";
 import SelfDestruct from "../components/ui/SelfDestruct";
+
+// ##TODO:
+// - Update 'isSubmitting' handling to use 'useTransition'
+// - This should prevent the loading state from flipping back to false before navigating, meaning the loading state will persist until a navigation occurs, not before.
 
 enum ELoginErrors {
 	INVALID_CREDENTIALS = "Invalid Credentials",
@@ -76,6 +80,7 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	const [error, setError] = useState<ErrorInfo>({
 		error: null,
 		key: 0,
@@ -104,7 +109,9 @@ const LoginPage = () => {
 	const onSubmit = () => {
 		setIsSubmitting(true);
 		handleLogin().finally(() => {
-			setIsSubmitting(false);
+			startTransition(() => {
+				setIsSubmitting(false);
+			});
 		});
 	};
 

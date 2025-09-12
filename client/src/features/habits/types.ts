@@ -1,3 +1,4 @@
+import { WeekDay } from "../../utils/utils_dates";
 import { habitIcons } from "../../utils/utils_habits";
 import { RepeatType } from "../shared/types";
 
@@ -128,12 +129,47 @@ export interface HabitDetails {
 }
 
 export interface HabitHistoryDay {
-	date: string;
 	habitID: number;
-	habitTarget: number;
-	habitValue: number;
-	percentage: number;
-	reachedGoal: boolean;
+	metGoal: boolean;
+	weekDay: WeekDay;
+	loggedDate: string;
+	totalLogged: number;
+	goal: number;
 }
 
 export type HabitHistory = HabitHistoryDay[];
+
+export interface HabitHistoryMonth {
+	date: string;
+	month: string;
+	summary: HabitHistoryDay[];
+}
+
+export interface HabitWeekSummary {
+	habit: Habit;
+	summary: HabitHistoryDay[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+	};
+}
+export interface HabitMonthSummary {
+	habit: Habit;
+	summary: HabitHistoryDay[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+		monthStart: string;
+		monthEnd: string;
+	};
+}
+export interface HabitYearSummary {
+	habit: Habit;
+	summary: HabitHistoryDay[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+		yearStart: string;
+		yearEnd: string;
+	};
+}

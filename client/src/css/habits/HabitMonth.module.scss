@@ -2,17 +2,9 @@
 @import "../../sass/mixins";
 @import "../../sass/custom";
 
-.HabitHistoryCalendar {
+.HabitMonth {
 	width: 100%;
-}
-
-.HabitCalendarMonth {
-	width: 100%;
-	display: grid;
-	grid-template-columns: repeat(7, 1fr);
-	grid-template-rows: 4rem;
-	place-items: center;
-	gap: 0.3rem 0.3rem;
+	height: auto;
 }
 
 %title {

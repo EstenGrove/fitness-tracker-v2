@@ -1,0 +1,34 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
+
+.HabitHistoryDateDetails {
+	width: 100%;
+	margin-top: 2rem;
+
+	&_header {
+		width: 100%;
+		text-align: left;
+		font-size: 1.8rem;
+		margin-bottom: 2rem;
+	}
+	&_summary {
+		font-size: 1.5rem;
+		@include flex_col(flex-start, flex-start);
+		gap: 1rem 0;
+
+		& b {
+			color: $accentBlue;
+		}
+	}
+}
+
+.ClearButton {
+	margin-top: 4rem;
+	padding: 0.5rem 1.5rem;
+	border-radius: 1rem;
+	background-color: transparent;
+	border: 1px solid $accentRed;
+	color: $accentRed;
+	margin-left: auto;
+}

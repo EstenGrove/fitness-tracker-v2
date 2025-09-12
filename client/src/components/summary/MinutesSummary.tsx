@@ -1,6 +1,5 @@
 import styles from "../../css/summary/MinutesSummary.module.scss";
 import { DailyMins, DailyMinsSummary } from "../../features/dashboard/types";
-import { NavLink } from "react-router";
 import { isSunday } from "date-fns";
 import NoData from "../ui/NoData";
 import DetailsCard from "../layout/DetailsCard";
@@ -8,17 +7,6 @@ import DailyMinsForWeek from "../dashboard/DailyMinsForWeek";
 
 type Props = {
 	minsSummary: DailyMinsSummary;
-};
-
-const getDetailsUrl = (type: string, date: string) => {
-	const basePath =
-		"/recent?" +
-		new URLSearchParams({
-			type: type,
-			date: date,
-		});
-
-	return basePath;
 };
 
 const isNewWeek = (data: DailyMins[]) => {
@@ -35,7 +23,7 @@ const MinutesSummary = ({ minsSummary }: Props) => {
 		<div className={styles.MinutesSummary}>
 			<div className={styles.MinutesSummary_card}>
 				<DetailsCard
-					to="details"
+					to="stats/mins"
 					title="Daily Mins."
 					icon="time"
 					color="var(--accent-blue)"

@@ -18,6 +18,17 @@ export interface MedLogBody {
 	loggedAt: Date | string;
 }
 
+export interface NewMedScheduleArgs {
+	startDate: string;
+	endDate: string;
+	dosage: number;
+	dosageDesc: string;
+	frequency: string;
+	quantity: number;
+	medID: number;
+	userID: string;
+}
+
 export interface MedLogVals {
 	userID: string;
 	medID: number;
@@ -49,6 +60,7 @@ export interface SummaryByDateParams {
 export interface MedsInfo {
 	activeMeds: Medication[];
 	activeSchedules: MedicationSchedule[];
+	allSchedules: MedicationSchedule[];
 }
 
 export interface MedDetails {
@@ -98,6 +110,21 @@ const fetchMedDetails = async (
 
 	try {
 		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const createNewMedSchedule = async (params: NewMedScheduleArgs) => {
+	const url = currentEnv.base + medicationApis.createMedSchedule;
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify(params),
+		});
 		const response = await request.json();
 		return response;
 	} catch (error) {
@@ -206,6 +233,7 @@ export {
 	fetchMedications,
 	fetchMedsInfo,
 	fetchMedDetails,
+	createNewMedSchedule,
 	// Utils
 	prepareMedLog,
 	processPillSummary,

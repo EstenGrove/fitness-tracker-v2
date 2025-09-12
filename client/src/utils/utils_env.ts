@@ -93,6 +93,9 @@ const API_ENDPOINTS = {
 		getMonthlyMinsSummary: "/stats/getMonthlyMinsSummary",
 		getYearlyMinsSummary: "/stats/getYearlyMinsSummary",
 		getMinsSummaryForRange: "/stats/getMinsSummaryForRange",
+		// mins
+		getMonthlyMinsForTheYear: "/stats/getMonthlyMinsForTheYear",
+		getTotalMinsBy: "/stats/getTotalMinsBy",
 	},
 	workouts: {
 		getAllUserWorkouts: "/workouts/getAllUserWorkouts",
@@ -142,6 +145,7 @@ const API_ENDPOINTS = {
 		getMedDetails: "/medications/getMedDetails",
 		getSelectedMed: "/medications/getSelectedMed",
 		getMedLogsByRange: "/medications/getMedLogsByRange",
+		createMedSchedule: "/medications/createMedSchedule",
 	},
 	shared: {
 		getSharedAppData: "/shared/getSharedAppData",
@@ -163,6 +167,8 @@ const API_ENDPOINTS = {
 		createHabit: "/habits/createHabit",
 		getRecentLogs: "/habits/getRecentHabitLogs",
 		getHabitHistory: "/habits/getHabitHistory",
+		getHabitHistorySummary: "/habits/getHabitHistorySummary",
+		getHabitHistoryForRange: "/habits/getHabitHistoryForRange",
 	},
 };
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import sprite from "../../assets/icons/habits.svg";
 import sprite2 from "../../assets/icons/main.svg";
 import styles from "../../css/dashboard/DashboardHabits.module.scss";
-import { HabitCard } from "../../features/habits/types";
+import { Habit, HabitCard } from "../../features/habits/types";
 import {
 	EHabitModalType,
 	habitIcons,
@@ -21,6 +21,7 @@ import QuickLogHabit from "../habits/QuickLogHabit";
 import { useAppDispatch } from "../../store/store";
 import { summaryApi } from "../../features/dashboard/summaryApi";
 import { useNavigate } from "react-router";
+import HabitHistoryModal from "../habits/HabitHistoryModal";
 
 type Props = {
 	habits: HabitCard[];
@@ -110,6 +111,12 @@ const HabitHeader = ({
 						onClick={() => handleAction(EHabitModalType.EDIT)}
 					>
 						View
+					</li>
+					<li
+						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.HISTORY)}
+					>
+						History
 					</li>
 					<li
 						className={styles.MenuItem}
@@ -261,6 +268,12 @@ const DashboardHabits = ({ habits }: Props) => {
 				<ModalSM onClose={closeModal}>
 					<DeleteHabit onCancel={closeModal} onConfirm={confirmDelete} />
 				</ModalSM>
+			)}
+
+			{modalType === EHabitModalType.HISTORY && selectedHabit && (
+				<ModalLG onClose={closeModal}>
+					<HabitHistoryModal habitID={selectedHabit.habitID} />
+				</ModalLG>
 			)}
 		</div>
 	);
