@@ -20,6 +20,7 @@ import { normalizeMedSummary } from "../modules/medications/medSummary.js";
 import { normalizeMedLog } from "../modules/medications/medLogs.js";
 import { getMedsInfo } from "../modules/medications/getMedsInfo.js";
 import { getMedDetails } from "../modules/medications/getMedDetails.js";
+import type { NewMedScheduleArgs } from "../services/MedicationsService.js";
 
 const app = new Hono();
 
@@ -175,6 +176,26 @@ app.get("/getMedLogsByRange", async (ctx: Context) => {
 	const resp = getResponseOk({
 		logs: medLogs,
 	});
+	return ctx.json(resp);
+});
+
+app.post("/createMedSchedule", async (ctx: Context) => {
+	const body = await ctx.req.json<NewMedScheduleArgs>();
+	console.log("body", body);
+
+	const result = await medicationsService.createMedSchedule(body);
+	console.log("result", result);
+
+	if (result instanceof Error) {
+		const errResp = getResponseError(result, {
+			endedSchedule: null,
+			newSchedule: null,
+			wasCreated: false,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(result);
 	return ctx.json(resp);
 });
 

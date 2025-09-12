@@ -8,6 +8,12 @@ import {
 } from "../modules/stats/postWorkoutStats.js";
 import type { Activity } from "../modules/types.js";
 import type { PostWorkoutParams } from "../modules/stats/types.js";
+import {
+	getTotalMinsBy,
+	type MinsTotals,
+	type MinsTotalsDB,
+	type RangeBy,
+} from "../modules/stats/getTotalMinsBy.js";
 
 const app = new Hono();
 
@@ -82,6 +88,29 @@ app.get("/getMinsSummaryForRange", async (ctx: Context) => {
 
 	//
 	//
+});
+
+app.get("/getTotalMinsBy", async (ctx: Context) => {
+	const { userID, targetDate, by } = ctx.req.query();
+	const range = by as RangeBy;
+
+	const totalMins = (await getTotalMinsBy(
+		userID,
+		targetDate,
+		range
+	)) as MinsTotals[];
+
+	if (totalMins instanceof Error) {
+		const errResp = getResponseError(totalMins, {
+			totalMins: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		totalMins: totalMins,
+	});
+	return ctx.json(resp);
 });
 
 export default app;

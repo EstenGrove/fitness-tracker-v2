@@ -90,3 +90,16 @@ export type PostWorkoutCardio = PostWorkoutOfType<PostWorkoutCardioHistory>;
 export type PostWorkoutWalk = PostWorkoutOfType<PostWorkoutWalkHistory>;
 export type PostWorkoutTimed = PostWorkoutOfType<PostWorkoutTimedHistory>;
 export type PostWorkoutOther = PostWorkoutOfType<PostWorkoutOtherHistory>;
+
+export interface DailyMinsStats {
+	startDate: string;
+	endDate: string;
+	mins: number;
+	date: string;
+}
+export interface YearlyMinsStats {
+	startDate: string;
+	endDate: string;
+	mins: number;
+	month: string;
+}

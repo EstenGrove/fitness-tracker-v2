@@ -1,6 +1,9 @@
 import type { Pool } from "pg";
 import type { Activity } from "../modules/types.js";
-import type { PostWorkoutParams } from "../modules/stats/types.js";
+import type {
+	PostWorkoutParams,
+	YearlyMinsStats,
+} from "../modules/stats/types.js";
 
 export interface MinSummaryParams {
 	userID: string;
@@ -173,7 +176,7 @@ class StatsService {
 	}
 	async getDailyMins(userID: string, targetDate: string) {
 		try {
-			const query = `SELECT * FROM get_daily_mins(
+			const query = `SELECT * FROM get_daily_mins_for_range(
 				$1,
 				$2
 			)`;
@@ -210,7 +213,10 @@ class StatsService {
 			return error;
 		}
 	}
-	async getYearlyMins(userID: string, targetDate: string) {
+	async getYearlyMins(
+		userID: string,
+		targetDate: string
+	): Promise<YearlyMinsStats[] | unknown> {
 		try {
 			const query = `SELECT * FROM get_yearly_mins(
 				$1,
@@ -218,7 +224,12 @@ class StatsService {
 			)`;
 			const results = await this.#db.query(query, [userID, targetDate]);
 			const rows = results?.rows;
-			return rows;
+			return rows?.map((row) => ({
+				mins: row.mins,
+				month: row.month,
+				startDate: row.start_date,
+				endDate: row.end_date,
+			}));
 		} catch (error) {
 			return error;
 		}

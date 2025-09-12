@@ -7,6 +7,9 @@ import type {
 	HabitHistoryDB,
 	HabitLogDB,
 	HabitLogValues,
+	HabitMonthSummary,
+	HabitWeekSummary,
+	HabitYearSummary,
 	NewHabitValues,
 	RecentHabitLogDB,
 } from "../modules/habits/types.js";
@@ -26,6 +29,8 @@ export type HabitCardsResp = Promise<HabitCardDB[] | unknown>;
 export type RecentHabitLogsResp = Promise<RecentHabitLogDB[] | unknown>;
 export type HabitItemResp = Promise<HabitDB | unknown>;
 export type HabitHistoryResp = Promise<HabitHistoryDB | unknown>;
+export type HabitWeekResp = Promise<HabitWeekSummary | unknown>;
+export type HabitMonthResp = Promise<HabitMonthSummary | unknown>;
 
 class HabitsService {
 	#db: Pool;
@@ -176,6 +181,105 @@ class HabitsService {
 			const results = await this.#db.query(query, [userID, habitID]);
 			const rows = results?.rows;
 			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getHabitWeek(
+		userID: string,
+		habitID: number,
+		targetDate: string
+	): HabitWeekResp {
+		try {
+			const query = `SELECT * FROM get_habit_week(
+				$1,
+				$2,
+				$3
+			)`;
+			const results = await this.#db.query(query, [
+				userID,
+				habitID,
+				targetDate,
+			]);
+			const data = results?.rows?.[0].data;
+			return data;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getHabitMonth(
+		userID: string,
+		habitID: number,
+		targetDate: string
+	): HabitMonthResp {
+		try {
+			const query = `SELECT * FROM get_habit_month(
+				$1,
+				$2,
+				$3
+			)`;
+			const results = await this.#db.query(query, [
+				userID,
+				habitID,
+				targetDate,
+			]);
+			const data = results?.rows?.[0].data;
+			return data;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getHabitYear(
+		userID: string,
+		habitID: number,
+		baseDate: string
+	): Promise<HabitYearSummary | unknown> {
+		try {
+			const query = `SELECT * FROM get_habit_year($1, $2, $3)`;
+			const results = await this.#db.query(query, [userID, habitID, baseDate]);
+			const data = results?.rows?.[0]?.data;
+			return data;
+		} catch (error) {
+			return error;
+		}
+	}
+	async getHabitYearSummary(
+		userID: string,
+		habitID: number,
+		year: number
+	): Promise<HabitYearSummary | unknown> {
+		try {
+			const query = `SELECT * FROM get_habit_year_summary($1, $2, $3)`;
+			const results = await this.#db.query(query, [userID, habitID, year]);
+			const data = results?.rows?.[0]?.get_habit_year_summary;
+			return data;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getHabitHistoryForRange(
+		userID: string,
+		habitID: number,
+		startDate: string,
+		endDate: string
+	) {
+		try {
+			const query = `SELECT * FROM get_habit_history_for_range(
+				$1,
+				$2,
+				$3,
+				$4
+			)`;
+			const results = await this.#db.query(query, [
+				userID,
+				habitID,
+				startDate,
+				endDate,
+			]);
+			const data = results?.rows?.[0]?.get_habit_history_for_range;
+			return data;
 		} catch (error) {
 			return error;
 		}

@@ -4,8 +4,10 @@ import type {
 	Habit,
 	HabitCard,
 	HabitHistory,
+	HabitHistoryForRange,
 	HabitLog,
 	HabitLogValues,
+	HabitYearSummary,
 	NewHabitValues,
 	RecentHabitLog,
 } from "../modules/habits/types.js";
@@ -17,6 +19,10 @@ import { getHabitCards } from "../modules/habits/getHabitCards.js";
 import { createHabit } from "../modules/habits/createHabit.js";
 import { getRecentHabitLogs } from "../modules/habits/getRecentHabitLogs.js";
 import { getHabitHistory } from "../modules/habits/getHabitHistory.js";
+import { habitsService } from "../services/index.js";
+import type { HabitWeekResp } from "../services/HabitsService.js";
+import { getHabitHistorySummary } from "../modules/habits/getHabitHistorySummary.js";
+import { getHabitHistoryForRange } from "../modules/habits/getHabitHistoryForRange.js";
 
 const app = new Hono();
 
@@ -183,6 +189,82 @@ app.get("/getHabitHistory", async (ctx: Context) => {
 	const resp = getResponseOk({
 		history: history,
 	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getHabitWeek", async (ctx: Context) => {
+	const { userID, habitID: id, targetDate } = ctx.req.query();
+	const habitID = Number(id);
+
+	const habitWeek = (await habitsService.getHabitWeek(
+		userID,
+		habitID,
+		targetDate
+	)) as HabitWeekResp;
+	if (habitWeek instanceof Error) {
+		const errResp = getResponseError(habitWeek, {
+			habit: {},
+			summary: [],
+			dateRange: {
+				startDate: null,
+				endDate: null,
+			},
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(habitWeek);
+	return ctx.json(resp);
+});
+
+// Fetches custom summary that compares goals, and total logged based off the goal at the time.
+app.get("/getHabitHistorySummary", async (ctx: Context) => {
+	const { userID, habitID: id, year } = ctx.req.query();
+	const targetYear = Number(year);
+	const habitID = Number(id);
+
+	const result = (await getHabitHistorySummary(
+		userID,
+		habitID,
+		targetYear
+	)) as HabitYearSummary;
+
+	if (result instanceof Error) {
+		const errResp = getResponseError(result, {
+			habit: null,
+			summary: null,
+			dateRange: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(result);
+
+	return ctx.json(resp);
+});
+
+app.get("/getHabitHistoryForRange", async (ctx: Context) => {
+	const { userID, habitID: id, startDate, endDate } = ctx.req.query();
+	const habitID = Number(id);
+
+	const historyData = (await getHabitHistoryForRange({
+		userID,
+		habitID,
+		startDate,
+		endDate,
+	})) as HabitHistoryForRange;
+
+	if (historyData instanceof Error) {
+		const errResp = getResponseError(historyData, {
+			habit: null,
+			history: null,
+			summary: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(historyData);
 
 	return ctx.json(resp);
 });

@@ -21,10 +21,12 @@ const getMedsInfo = async (userID: string, targetDate: string) => {
 
 	const activeMeds = normalizeUserMeds(rawInfo.activeMeds);
 	const activeSchedules = normalizeMedSchedules(rawInfo.activeSchedules);
+	const allSchedules = normalizeMedSchedules(rawInfo.allSchedules);
 
 	return {
 		activeMeds,
 		activeSchedules,
+		allSchedules,
 	};
 };
 

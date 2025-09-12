@@ -202,3 +202,62 @@ export interface HabitHistoryDayDB {
 
 export type HabitHistory = HabitHistoryDay[];
 export type HabitHistoryDB = HabitHistoryDayDB[];
+
+export type WeekDay =
+	| "Sunday"
+	| "Monday"
+	| "Tuesday"
+	| "Wednesday"
+	| "Thursday"
+	| "Friday"
+	| "Saturday";
+
+export interface HabitSummaryItem {
+	habitID: number;
+	metGoal: boolean;
+	weekDay: WeekDay;
+	loggedDate: string;
+	totalLogged: number;
+	goal: number;
+}
+
+export interface HabitWeekSummary {
+	habit: Habit;
+	summary: HabitSummaryItem[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+	};
+}
+export interface HabitMonthSummary {
+	habit: Habit;
+	summary: HabitSummaryItem[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+		monthStart: string;
+		monthEnd: string;
+	};
+}
+
+export interface HabitYearSummary {
+	habit: Habit;
+	summary: HabitSummaryItem[];
+	dateRange: {
+		startDate: string;
+		endDate: string;
+		yearStart: string;
+		yearEnd: string;
+	};
+}
+
+export interface HabitHistoryForRangeDB {
+	habit: HabitDB;
+	history: HabitLogDB[];
+	summary: Array<HabitSummaryItem[]>;
+}
+export interface HabitHistoryForRange {
+	habit: Habit;
+	history: HabitLog[];
+	summary: HabitSummaryItem[];
+}
