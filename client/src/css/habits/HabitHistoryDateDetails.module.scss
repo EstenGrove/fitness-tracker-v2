@@ -32,3 +32,16 @@
 	color: $accentRed;
 	margin-left: auto;
 }
+
+.HistorySummary {
+	font-size: 1.5rem;
+	@include flex_col(flex-start, flex-start);
+	gap: 1rem 0;
+}
+
+[data-id="total"] {
+	color: $accentBlue;
+}
+[data-id="goal"] {
+	color: var(--accent-orange);
+}

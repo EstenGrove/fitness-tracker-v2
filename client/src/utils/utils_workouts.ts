@@ -6,9 +6,12 @@ import {
 	parse,
 	secondsToMinutes,
 } from "date-fns";
-import { Activity, Effort } from "../features/shared/types";
+import { Activity, Effort, RepeatType } from "../features/shared/types";
 import { AsyncResponse } from "../features/types";
 import {
+	CreatedWorkoutData,
+	CreateWorkoutParams,
+	CreateWorkoutValues,
 	ExerciseSet,
 	StrengthSet,
 	TodaysWorkout,
@@ -110,6 +113,7 @@ export type WorkoutDetailsResp = AsyncResponse<WorkoutDetails>;
 export type AllWorkoutsResp = AsyncResponse<{ workouts: Workout[] }>;
 export type LoggedWorkoutResp = AsyncResponse<{ newLog: HistoryOfType }>;
 export type SkippedWorkoutResp = AsyncResponse<{ wasSkipped: boolean }>;
+export type CreatedWorkoutResp = AsyncResponse<CreatedWorkoutData>;
 
 const logWorkout = async (
 	userID: string,
@@ -268,7 +272,338 @@ const getLastWorkout = async (params: LastSessionParams) => {
 	}
 };
 
+const createNewWorkout = async (
+	userID: string,
+	params: CreateWorkoutParams
+): CreatedWorkoutResp => {
+	let url = currentEnv.base + workoutApis.createNewWorkout;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				userID: userID,
+				newWorkout: params,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
 // Utils
+
+const getRepsFromValues = (workoutSets: WorkoutSet[]) => {
+	if (!workoutSets || !workoutSets.length) return 0;
+	const sets = workoutSets.length;
+	const reps = Math.round(
+		workoutSets.reduce((perSet, entry) => (perSet += entry.reps), 0) / sets
+	);
+
+	return reps || 0;
+};
+
+const getWeightFromValues = (workoutSets: StrengthSet[]) => {
+	if (!workoutSets || !workoutSets.length) return 0;
+	const weight = workoutSets[0]?.weight ?? 0;
+	return weight;
+};
+
+export interface CreateWorkoutPrepareValues {
+	workoutSets: WorkoutSet[];
+	workoutInfo: CreateWorkoutValues;
+}
+
+const prepareNewWorkout = (
+	userID: string,
+	values: CreateWorkoutPrepareValues
+) => {
+	const { workoutSets, workoutInfo } = values;
+	const prepared = prepareNewWorkoutValues(workoutInfo, workoutSets);
+	const { workout: baseWorkout, schedule: baseSchedule } = prepared;
+
+	const workout: CreateWorkoutParams["workout"] = {
+		userID,
+		workoutName: baseWorkout.workoutName,
+		workoutDesc: baseWorkout.workoutDesc,
+		activityType: baseWorkout.activityType,
+		date: baseWorkout.startDate as string,
+		duration: baseWorkout.duration,
+		effort: baseWorkout.effort || "Easy",
+		reps: baseWorkout.reps,
+		sets: baseWorkout.sets,
+		weight: baseWorkout.weight,
+		steps: baseWorkout.steps,
+		miles: baseWorkout.miles,
+		pace: baseWorkout.pace,
+		equipment: baseWorkout.equipment,
+		tagColor: baseWorkout.tagColor,
+	};
+	const schedule: CreateWorkoutParams["schedule"] = {
+		userID,
+		activityType: baseWorkout.activityType,
+		startDate: baseSchedule.startDate as string,
+		endDate: baseSchedule.endDate as string,
+		startTime: baseSchedule.startTime,
+		endTime: baseSchedule.endTime,
+		interval: baseSchedule.interval,
+		frequency: baseSchedule.frequency,
+		byDay: baseSchedule.byDay,
+		byMonth: baseSchedule.byMonth,
+		byMonthDay: baseSchedule.byMonthDay,
+	};
+
+	return {
+		workout,
+		schedule,
+	};
+};
+
+const prepareNewWorkoutSchedule = (values: CreateWorkoutValues) => {
+	const {
+		isRecurring,
+		frequency,
+		startDate,
+		endDate,
+		startTime,
+		endTime,
+		duration,
+	} = values;
+	const repeatType = frequency as RepeatType;
+	const timeRanges = calculateStartAndEndTimes({
+		startTime,
+		endTime,
+		duration,
+	});
+
+	if (!isRecurring) {
+		return {
+			interval: 0,
+			frequency: "None",
+			startDate: startDate,
+			endDate: startDate,
+			startTime: timeRanges.startTime,
+			endTime: timeRanges.endTime,
+			byDay: [],
+			byMonth: null,
+			byMonthDay: null,
+			isRecurring: false,
+		};
+	}
+
+	switch (repeatType) {
+		case "Daily": {
+			return {
+				frequency: "Daily",
+				interval: values.interval,
+				isRecurring: true,
+				startDate: values.startDate,
+				endDate: endDate,
+				startTime: timeRanges.startTime,
+				endTime: timeRanges.endTime,
+				byDay: [],
+				byMonth: null,
+				byMonthDay: null,
+			};
+		}
+		case "Weekly": {
+			return {
+				frequency: "Weekly",
+				interval: values.interval,
+				isRecurring: true,
+				startDate: values.startDate,
+				endDate: endDate,
+				startTime: timeRanges.startTime,
+				endTime: timeRanges.endTime,
+				byDay: values.byDay,
+				byMonth: null,
+				byMonthDay: null,
+			};
+		}
+		case "Monthly": {
+			return {
+				frequency: "Monthly",
+				interval: values.interval,
+				isRecurring: true,
+				startDate: values.startDate,
+				endDate: endDate,
+				startTime: timeRanges.startTime,
+				endTime: timeRanges.endTime,
+				byDay: [],
+				byMonth: values.byMonth,
+				byMonthDay: values.byMonthDay,
+			};
+		}
+		case "Yearly": {
+			return {
+				frequency: "Yearly",
+				interval: values.interval,
+				isRecurring: true,
+				startDate: values.startDate,
+				endDate: endDate,
+				startTime: timeRanges.startTime,
+				endTime: timeRanges.endTime,
+				byDay: [],
+				byMonth: values.byMonth,
+				byMonthDay: values.byMonthDay,
+			};
+		}
+		case "None": {
+			return {
+				interval: 0,
+				frequency: "None",
+				startDate: startDate,
+				endDate: startDate,
+				startTime: timeRanges.startTime,
+				endTime: timeRanges.endTime,
+				byDay: [],
+				byMonth: null,
+				byMonthDay: null,
+			};
+		}
+
+		default:
+			throw new Error(`Invalid repeat type: ${repeatType}`);
+	}
+};
+
+const prepareNewWorkoutValues = (
+	values: CreateWorkoutValues,
+	workoutSets: WorkoutSet[]
+) => {
+	const { activityType } = values;
+	const type = activityType as Activity;
+	const schedule = prepareNewWorkoutSchedule(values);
+	const newValues = {
+		...values,
+		effort: "Easy",
+		workoutName: values.name,
+		workoutDesc: values.desc,
+		tagColor: values?.tagColor ?? "var(--blueGrey600)",
+	};
+
+	switch (type) {
+		case "Strength": {
+			const details = prepareNewStrengthSets(
+				workoutSets as unknown as PrepareSets<StrengthSet>
+			);
+			const workout = {
+				...newValues,
+				sets: details.sets,
+				reps: details.reps,
+				weight: details.weight,
+				equipment: details.equipment,
+			};
+			return {
+				workout: workout,
+				schedule,
+			};
+		}
+		case "Walk": {
+			const { steps = 0, miles = 0, pace, duration } = values;
+			const details = prepareNewWalk({
+				steps: steps as number,
+				miles: miles as number,
+				pace: pace as number,
+				duration: duration as number,
+			});
+
+			const workout = {
+				...newValues,
+				sets: null,
+				reps: null,
+				weight: null,
+				equipment: "None",
+				steps: details.steps,
+				miles: details.miles,
+				pace: details.pace,
+			};
+			return {
+				workout: workout,
+				schedule,
+			};
+		}
+		case "Cardio":
+		case "Timed":
+		case "Other":
+		case "Stretch": {
+			const details = prepareNewExerciseSets(
+				type,
+				workoutSets as unknown as PrepareSets<ExerciseSet>
+			);
+			const workout = {
+				...newValues,
+				weight: null,
+				sets: details.sets,
+				reps: details.reps,
+				equipment: details.equipment,
+				exercise: details.exercise,
+			};
+			return {
+				workout: workout,
+				schedule,
+			};
+		}
+		default:
+			throw new Error(`Invalid activity ${type}`);
+	}
+};
+
+interface PrepareSets<T extends object> {
+	workoutSets: T[];
+	equipment: string | null;
+}
+
+const prepareNewStrengthSets = (values: PrepareSets<StrengthSet>) => {
+	const { workoutSets, equipment } = values;
+	const reps = getRepsFromValues(workoutSets);
+	const weight = getWeightFromValues(workoutSets);
+
+	const data = {
+		sets: workoutSets.length ?? 0,
+		reps: Math.round(reps),
+		weight: weight,
+		exercise: "Strength",
+		equipment: !!equipment && equipment !== "" ? equipment : "None",
+	};
+
+	return data;
+};
+const prepareNewExerciseSets = (
+	activityType: Activity,
+	values: PrepareSets<ExerciseSet>
+) => {
+	const { workoutSets, equipment } = values;
+	const reps = getRepsFromValues(workoutSets);
+
+	const data = {
+		sets: workoutSets.length ?? 0,
+		reps: Math.round(reps),
+		exercise: activityType,
+		equipment: !!equipment && equipment !== "" ? equipment : "None",
+	};
+
+	return data;
+};
+
+const prepareNewWalk = (values: {
+	steps: number;
+	miles: number;
+	pace: number | null;
+	duration: number;
+}) => {
+	const { miles, duration } = values;
+	const metrics = calculateWalkMetrics({ miles, duration });
+
+	return {
+		steps: metrics.steps,
+		miles: miles,
+		pace: metrics.pace,
+	};
+};
 
 const getWorkoutsByStatus = (
 	status: WorkoutStatus,
@@ -575,8 +910,15 @@ export {
 	fetchAllWorkouts,
 	getLastWorkout,
 	markWorkoutAsDone,
+	createNewWorkout,
+	// utils
 	prepareLogWorkout,
 	prepareMarkAsDoneBody,
+	prepareNewWalk,
+	prepareNewWorkoutValues, // handles the specific values
+	prepareNewWorkout, // formats the 'handled' values into a specific shape for the payload
+	prepareNewExerciseSets,
+	prepareNewStrengthSets,
 	calculateStartAndEndTimes,
 	calculateWalkMetrics,
 	getWorkoutsByStatus,

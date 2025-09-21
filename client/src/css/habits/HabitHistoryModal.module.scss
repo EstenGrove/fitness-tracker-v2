@@ -8,4 +8,11 @@
 	max-width: 60rem;
 	display: block;
 	margin: 0 auto;
+
+	&_header {
+		width: 100%;
+		height: 10rem;
+		font-size: 2rem;
+		text-align: center;
+	}
 }

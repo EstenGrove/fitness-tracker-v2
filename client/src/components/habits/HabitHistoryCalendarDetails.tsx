@@ -51,6 +51,7 @@ const HabitHistoryCalendarDetails = ({ habitID }: Props) => {
 					history={historyData.summary}
 					dateRange={historyData.dateRange}
 					onSelect={onSelectDate}
+					selectedDate={selectedDate}
 				/>
 			)}
 			{isLoadingData && <Loader />}
@@ -60,6 +61,7 @@ const HabitHistoryCalendarDetails = ({ habitID }: Props) => {
 					history={targetHistory.history}
 					summary={targetHistory.summary}
 					onClear={clearSelectedDate}
+					selectedDate={selectedDate}
 				/>
 			)}
 		</div>

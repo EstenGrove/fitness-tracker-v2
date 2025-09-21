@@ -119,6 +119,7 @@ const API_ENDPOINTS = {
 		endWorkout: "/workouts/endWorkout",
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
+		createNewWorkout: "/workouts/createNewWorkout",
 	},
 	history: {
 		getHistoryDetails: "/history/getHistoryDetails",
@@ -170,6 +171,11 @@ const API_ENDPOINTS = {
 		getHabitHistorySummary: "/habits/getHabitHistorySummary",
 		getHabitHistoryForRange: "/habits/getHabitHistoryForRange",
 	},
+	summary: {
+		getWorkoutHistoryCalendar: "/summary/getWorkoutHistoryCalendar",
+		getWorkoutHistoryCalendarDetails:
+			"/summary/getWorkoutHistoryCalendarDetails",
+	},
 };
 
 export const {
@@ -184,6 +190,7 @@ export const {
 	meds: medicationApis,
 	dashboard: dashboardApis,
 	recentActivity: recentActivityApis,
+	summary: summaryApis,
 } = API_ENDPOINTS;
 
 export {

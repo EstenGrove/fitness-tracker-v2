@@ -16,7 +16,7 @@ type Props = {
 	onChange: (sets: ExerciseSet[]) => void;
 };
 
-type ExerciseWorkout =
+export type ExerciseWorkout =
 	| CardioWorkout
 	| StretchWorkout
 	| TimedWorkout

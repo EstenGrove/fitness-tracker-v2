@@ -8,12 +8,14 @@ import { MedicationsService } from "./MedicationsService.js";
 import { RecentActivityService } from "./RecentActivityService.js";
 import { StatsService } from "./StatsService.js";
 import { HabitsService } from "./HabitsService.js";
+import { SummaryService } from "./SummaryService.js";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);
 const statsService = new StatsService(db);
 const habitsService = new HabitsService(db);
 const historyService = new HistoryService(db);
+const summaryService = new SummaryService(db);
 const workoutsService = new WorkoutsService(db);
 const dashboardService = new DashboardService(db);
 const medicationsService = new MedicationsService(db);
@@ -25,6 +27,7 @@ const allServices = {
 	stats: statsService,
 	habits: habitsService,
 	history: historyService,
+	summary: summaryService,
 	workouts: workoutsService,
 	dashboard: dashboardService,
 	medications: medicationsService,
@@ -39,6 +42,7 @@ export {
 	medicationsService,
 	dashboardService,
 	workoutsService,
+	summaryService,
 	historyService,
 	habitsService,
 	statsService,

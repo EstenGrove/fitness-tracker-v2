@@ -3,6 +3,32 @@ import {
 	MinMaxRange,
 	SummaryItem,
 } from "../components/summary/types";
+import { WorkoutCalendarDay } from "../features/summary/types";
+import { AsyncResponse } from "../features/types";
+import { currentEnv, summaryApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
+
+export interface WorkoutCalendarData {
+	calendarData: WorkoutCalendarDay[];
+}
+
+export type WorkoutCalendarResp = AsyncResponse<WorkoutCalendarData>;
+
+const fetchWorkoutHistoryCalendar = async (
+	userID: string,
+	baseDate: string
+): WorkoutCalendarResp => {
+	let url = currentEnv.base + summaryApis.getWorkoutHistoryCalendar;
+	url += "?" + new URLSearchParams({ userID, baseDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
 
 // We use the max value as our true max & we calculate heights based off what percentage of our max a given value is
 const getScaledHeight = (value: number, range: MinMaxRange) => {
@@ -38,4 +64,11 @@ const defaultColors: GradientColors = [
 	"#004ee0",
 ];
 
-export { getScaledHeight, getHighAndLowRanges, defaultColors };
+export {
+	// Data fetching
+	fetchWorkoutHistoryCalendar,
+	// Utils
+	getScaledHeight,
+	getHighAndLowRanges,
+	defaultColors,
+};

@@ -2,25 +2,25 @@ import { useState } from "react";
 import sprite from "../../assets/icons/habits.svg";
 import sprite2 from "../../assets/icons/main.svg";
 import styles from "../../css/dashboard/DashboardHabits.module.scss";
-import { Habit, HabitCard } from "../../features/habits/types";
+import { type HabitCard } from "../../features/habits/types";
 import {
 	EHabitModalType,
 	habitIcons,
 	HabitModalType,
 } from "../../utils/utils_habits";
 import { addEllipsis, isEmptyArray } from "../../utils/utils_misc";
-import NoData from "../ui/NoData";
-import NumberCounter from "../ui/NumberCounter";
-import MenuDropdown from "../shared/MenuDropdown";
-import ModalSM from "../shared/ModalSM";
-import DeleteHabit from "../habits/DeleteHabit";
-import ChangeHabitGoal from "../habits/ChangeHabitGoal";
-import ModalWithFooter from "../shared/ModalWithFooter";
-import ModalLG from "../shared/ModalLG";
-import QuickLogHabit from "../habits/QuickLogHabit";
 import { useAppDispatch } from "../../store/store";
 import { summaryApi } from "../../features/dashboard/summaryApi";
 import { useNavigate } from "react-router";
+import NoData from "../ui/NoData";
+import ModalSM from "../shared/ModalSM";
+import ModalLG from "../shared/ModalLG";
+import DeleteHabit from "../habits/DeleteHabit";
+import NumberCounter from "../ui/NumberCounter";
+import MenuDropdown from "../shared/MenuDropdown";
+import QuickLogHabit from "../habits/QuickLogHabit";
+import ChangeHabitGoal from "../habits/ChangeHabitGoal";
+import ModalWithFooter from "../shared/ModalWithFooter";
 import HabitHistoryModal from "../habits/HabitHistoryModal";
 
 type Props = {
@@ -272,7 +272,7 @@ const DashboardHabits = ({ habits }: Props) => {
 
 			{modalType === EHabitModalType.HISTORY && selectedHabit && (
 				<ModalLG onClose={closeModal}>
-					<HabitHistoryModal habitID={selectedHabit.habitID} />
+					<HabitHistoryModal habit={selectedHabit} />
 				</ModalLG>
 			)}
 		</div>

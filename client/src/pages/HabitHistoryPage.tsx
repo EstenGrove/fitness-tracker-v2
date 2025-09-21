@@ -1,15 +1,19 @@
 import styles from "../css/pages/HabitHistoryPage.module.scss";
-import { useHabitHistorySummary } from "../hooks/useHabitHistorySummary";
 import PageContainer from "../components/layout/PageContainer";
-import HabitHistoryCalendar from "../components/habits/HabitHistoryCalendar";
 import { useState } from "react";
+import { useWorkoutHistoryCalendar } from "../hooks/useWorkoutHistoryCalendar";
+import { formatDate } from "../utils/utils_dates";
+import WorkoutHistoryCalendar from "../components/summary/WorkoutHistoryCalendar";
 
 const HabitHistoryPage = () => {
-	const habitID = 1;
-	const year = new Date().getFullYear();
-	const { data, isLoading } = useHabitHistorySummary(habitID, year);
-	const hasData = data?.summary && data?.habit;
+	const today = new Date();
+	const baseDate = formatDate(today, "db");
+	const { data, isLoading } = useWorkoutHistoryCalendar(baseDate);
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
+	const calendarData = data?.calendarData;
+
+	console.log("data", data);
+	console.log("calendarData", calendarData);
 
 	const onSelectDate = (date: string) => {
 		if (selectedDate === date) {
@@ -23,14 +27,21 @@ const HabitHistoryPage = () => {
 		<PageContainer>
 			<div className={styles.HabitHistoryPage}>
 				<div className={styles.HabitHistoryPage_main}>
-					{!isLoading && hasData && (
+					{calendarData && !isLoading && (
+						<WorkoutHistoryCalendar
+							data={calendarData}
+							onSelect={onSelectDate}
+							selectedDate={selectedDate}
+						/>
+					)}
+					{/* {!isLoading && hasData && (
 						<HabitHistoryCalendar
 							habit={data.habit}
 							history={data.summary}
 							dateRange={data.dateRange}
 							onSelect={onSelectDate}
 						/>
-					)}
+					)} */}
 				</div>
 			</div>
 		</PageContainer>

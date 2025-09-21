@@ -1,13 +1,14 @@
 import styles from "../../css/habits/HabitDay.module.scss";
 import { parseDate } from "../../utils/utils_dates";
 import { HabitHistoryDay } from "../../features/habits/types";
-import { getDate, isSameMonth } from "date-fns";
+import { getDate, isSameMonth, isToday } from "date-fns";
 import { CSSProperties } from "react";
 
 type Props = {
 	data: HabitHistoryDay;
 	goal: number;
 	targetDate: string;
+	isSelected: boolean;
 	onSelect: () => void;
 };
 
@@ -38,7 +39,7 @@ const getDayStyles = (
 ) => {
 	const exceeds100 = percent >= 100;
 	const fixedPercent = exceeds100 ? 100 : percent;
-	const color = metGoal ? "var(--greenBG)" : "var(--redBG)";
+	const color = metGoal || percent === 100 ? "var(--greenBG)" : "var(--redBG)";
 	const fill = {
 		height: fixedPercent + "%",
 		backgroundColor: color,
@@ -55,7 +56,18 @@ const getDayStyles = (
 	};
 };
 
-const HabitDay = ({ data, goal = 20, targetDate, onSelect }: Props) => {
+const isTodaysDate = (loggedDate: string) => {
+	const parsed = parseDate(loggedDate);
+	return isToday(parsed);
+};
+
+const HabitDay = ({
+	data,
+	goal = 20,
+	targetDate,
+	onSelect,
+	isSelected = false,
+}: Props) => {
 	const { totalLogged, loggedDate, metGoal } = data;
 	const day = getDay(loggedDate);
 	const inMonth = isInMonth(loggedDate, targetDate);
@@ -65,21 +77,23 @@ const HabitDay = ({ data, goal = 20, targetDate, onSelect }: Props) => {
 		inMonth,
 		metGoal
 	);
-
-	const handleSelect = () => {
-		console.log("Goal:", goal);
-
-		return onSelect && onSelect();
-	};
+	const today = isTodaysDate(loggedDate);
 
 	return (
 		<div
-			onClick={handleSelect}
-			// onClick={onSelect}
+			onClick={onSelect}
 			className={styles.HabitDay}
-			style={appliedStyles.main}
+			style={{
+				...appliedStyles.main,
+				borderColor: isSelected ? "var(--accent-blue)" : "",
+			}}
 		>
-			<div className={styles.HabitDay_day}>{day}</div>
+			<div
+				className={styles.HabitDay_day}
+				style={{ color: today ? "var(--accent-blue)" : "" }}
+			>
+				{day}
+			</div>
 			<div className={styles.HabitDay_container}>
 				<div
 					className={styles.HabitDay_container_fill}

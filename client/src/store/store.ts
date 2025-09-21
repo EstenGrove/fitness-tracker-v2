@@ -15,6 +15,7 @@ import sharedReducer from "../features/shared/sharedSlice";
 import historyReducer from "../features/history/historySlice";
 import workoutsReducer from "../features/workouts/workoutsSlice";
 import medicationsReducer from "../features/medications/medicationsSlice";
+import { customSummaryApi } from "../features/summary/summaryApi";
 
 const store = configureStore({
 	reducer: {
@@ -30,6 +31,7 @@ const store = configureStore({
 		[medicationsApi.reducerPath]: medicationsApi.reducer,
 		[todaysWorkoutsApi.reducerPath]: todaysWorkoutsApi.reducer,
 		[recentActivityApi.reducerPath]: recentActivityApi.reducer,
+		[customSummaryApi.reducerPath]: customSummaryApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => {
 		return getDefaultMiddleware()
@@ -39,7 +41,8 @@ const store = configureStore({
 			.concat(medicationsApi.middleware)
 			.concat(recentActivityApi.middleware)
 			.concat(statsApi.middleware)
-			.concat(habitsApi.middleware);
+			.concat(habitsApi.middleware)
+			.concat(customSummaryApi.middleware);
 	},
 });
 

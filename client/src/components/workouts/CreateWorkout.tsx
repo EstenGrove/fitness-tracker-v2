@@ -1,9 +1,23 @@
 import { useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/workouts/CreateWorkout.module.scss";
-import { Activity, RepeatType } from "../../features/shared/types";
+import { Activity } from "../../features/shared/types";
 import { ACTIVITIES as defaultTypes } from "../../utils/utils_activity";
 import { RecurringValues } from "../../utils/utils_recurring";
+import { formatDate, formatTime } from "../../utils/utils_dates";
+import {
+	CreateWorkoutValues,
+	ExerciseSet,
+	StrengthSet,
+} from "../../features/workouts/types";
+import {
+	calculateStartAndEndTimes,
+	prepareNewWorkout,
+	WorkoutSet,
+} from "../../utils/utils_workouts";
+import { useCreateWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
+import { addDays, addMinutes } from "date-fns";
+import { CurrentUser } from "../../features/user/types";
 import RecurringOptions from "../form/RecurringOptions";
 import CustomCheckbox from "../shared/CustomCheckbox";
 import DatePicker from "../shared/DatePicker";
@@ -12,34 +26,18 @@ import MultiStepModal, { StepItem } from "../shared/MultiStepModal";
 import TextArea from "../shared/TextArea";
 import TextInput from "../shared/TextInput";
 import EditStrengthSets from "../form/EditStrengthSets";
-import { formatDate } from "../../utils/utils_dates";
-import { ExerciseSet, StrengthSet } from "../../features/workouts/types";
-import EditWorkoutSets from "../form/EditWorkoutSets";
-import { WorkoutSet } from "../../utils/utils_workouts";
+import EditWorkoutSets, { ExerciseWorkout } from "../form/EditWorkoutSets";
+import TimePicker from "../shared/TimePicker";
+import { useCreateWorkout } from "../../hooks/useCreateWorkout";
 
 type Props = {
 	onClose: () => void;
+	currentUser: CurrentUser;
 };
-
-export interface CreateWorkoutValues {
-	activityType: Activity | string;
-	date: Date | string;
-	name: string;
-	desc: string;
-	duration: number;
-	effort: number;
-	isRecurring: boolean;
-	interval: number;
-	frequency: RepeatType;
-	byDay: string[];
-	byMonth: number | string;
-	byMonthDay: number | string;
-	startDate: Date | string;
-	endDate: Date | string;
-}
 
 type StepProps = {
 	values: CreateWorkoutValues;
+	sets?: WorkoutSet[];
 	onChecked: (name: string, value: boolean) => void;
 	onChange: (name: string, value: string | number) => void;
 	onSelect: (name: string, value: string | Date) => void;
@@ -196,6 +194,20 @@ const ScheduleStep = ({ values, onChange, onChecked, onSelect }: StepProps) => {
 						onSelect={onSelect}
 					/>
 				</div>
+				<div className={styles.ScheduleStep_main_time}>
+					<TimePicker
+						name="startTime"
+						id="startTime"
+						value={values.startTime}
+						onChange={onChange}
+					/>
+					<TimePicker
+						name="endTime"
+						id="endTime"
+						value={values.endTime}
+						onChange={onChange}
+					/>
+				</div>
 				<div className={styles.ScheduleStep_main_repeat}>
 					<CustomCheckbox
 						name="isRecurring"
@@ -235,10 +247,11 @@ const SummaryStep = ({ values }: StepProps) => {
 	);
 };
 
-const DetailsStep = ({ values, onSetChange }: StepProps) => {
+const DetailsStep = ({ values, sets = [], onSetChange }: StepProps) => {
 	const type = values.activityType as Activity;
 	const isStrength = type === "Strength";
 	const isExercise = ["Timed", "Cardio", "Other"].includes(type);
+	const baseSets = sets && sets.length ? sets : [];
 
 	return (
 		<div className={styles.DetailsStep}>
@@ -246,7 +259,7 @@ const DetailsStep = ({ values, onSetChange }: StepProps) => {
 			<div className={styles.DetailsStep_body}>
 				{isStrength && (
 					<EditStrengthSets
-						sets={4}
+						sets={baseSets?.length ?? 4}
 						reps={20}
 						weight={20}
 						onChange={onSetChange}
@@ -265,7 +278,26 @@ const DetailsStep = ({ values, onSetChange }: StepProps) => {
 	);
 };
 
-const CreateWorkout = ({ onClose }: Props) => {
+const generateSets = (
+	workout: Pick<ExerciseWorkout, "sets" | "reps" | "exercise">
+) => {
+	const { sets, reps, exercise } = workout;
+	const workoutSets: ExerciseSet[] = [];
+
+	for (let i = 0; i < sets; i++) {
+		const entry: ExerciseSet = {
+			id: i + 1,
+			reps: reps,
+			exercise: exercise || "",
+			sets: sets ?? 1,
+		};
+		workoutSets.push(entry);
+	}
+
+	return workoutSets;
+};
+
+const CreateWorkout = ({ currentUser, onClose }: Props) => {
 	const [values, setValues] = useState<CreateWorkoutValues>({
 		activityType: "",
 		date: formatDate(new Date(), "db"),
@@ -280,9 +312,24 @@ const CreateWorkout = ({ onClose }: Props) => {
 		byMonth: "",
 		byMonthDay: "",
 		startDate: formatDate(new Date(), "db"),
-		endDate: formatDate(new Date(), "db"),
+		endDate: formatDate(addDays(new Date(), 60), "db"),
+		startTime: formatTime(new Date(), "short"),
+		endTime: formatTime(addMinutes(new Date(), 30), "short"),
+		steps: 0,
+		miles: 0,
+		pace: 0,
+		exercise: "",
+		equipment: "",
+		tagColor: "var(--blueGrey600)",
 	});
-	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>([]);
+	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>(
+		generateSets({
+			sets: 4,
+			reps: 20,
+			exercise: values.activityType,
+		})
+	);
+	const { createWorkout, isLoading, error } = useCreateWorkout();
 
 	const onChecked = (name: string, value: boolean) => {
 		setValues({ ...values, [name]: value });
@@ -290,8 +337,19 @@ const CreateWorkout = ({ onClose }: Props) => {
 	const onChange = (name: string, value: string | number) => {
 		setValues({ ...values, [name]: value });
 	};
+
 	const onSelect = (name: string, value: string | Date) => {
-		setValues({ ...values, [name]: value });
+		if (name === "byDay") {
+			const { byDay } = values;
+			const newList = (
+				byDay.includes(value as string)
+					? [...byDay.filter((d) => d !== value)]
+					: [...byDay, value]
+			) as string[];
+			setValues({ ...values, byDay: newList });
+		} else {
+			setValues({ ...values, [name]: value });
+		}
 	};
 	const onSetChange = (sets: WorkoutSet[]) => {
 		setWorkoutSets(sets);
@@ -367,6 +425,7 @@ const CreateWorkout = ({ onClose }: Props) => {
 			content: (
 				<DetailsStep
 					values={values}
+					sets={workoutSets}
 					onSelect={onSelect}
 					onChange={onChange}
 					onChecked={onChecked}
@@ -394,9 +453,27 @@ const CreateWorkout = ({ onClose }: Props) => {
 		},
 	];
 
+	const saveNewWorkout = async () => {
+		const { userID } = currentUser;
+		const data = prepareNewWorkout(userID, {
+			workoutInfo: values,
+			workoutSets: workoutSets,
+		});
+		console.log({ workout: data.workout, schedule: data.schedule });
+
+		await createWorkout({
+			userID: userID,
+			newWorkout: data,
+		}).catch((err) => {
+			if (err instanceof Error) {
+				alert(JSON.stringify(error));
+			}
+		});
+	};
+
 	return (
 		<>
-			<MultiStepModal steps={steps} onClose={onClose} />
+			<MultiStepModal steps={steps} onClose={onClose} onSave={saveNewWorkout} />
 		</>
 	);
 };

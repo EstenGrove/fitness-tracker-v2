@@ -5,7 +5,12 @@ import {
 	HabitHistoryDay,
 } from "../../features/habits/types";
 import sprite from "../../assets/icons/calendar.svg";
-import { formatDate, MONTHS, WEEK_DAYS } from "../../utils/utils_dates";
+import {
+	formatDate,
+	MONTHS,
+	parseDate,
+	WEEK_DAYS,
+} from "../../utils/utils_dates";
 import { useMemo, useState } from "react";
 import { DateRange } from "../../features/types";
 import HabitDay from "./HabitDay";
@@ -15,30 +20,42 @@ type Props = {
 	habit: Habit;
 	history: HabitHistory;
 	dateRange: DateRange;
+	selectedDate: string | null;
 	onSelect: (date: string) => void;
 };
 
 type CalendarMonthProps = {
 	baseDate: string; // a date within our target month/year we can compare to
 	history: HabitHistory;
+	selectedDate: string | null;
 	onSelect: (date: string) => void;
+};
+
+const isSelected = (loggedDate: string, selectedDate: string | null) => {
+	if (!selectedDate) return false;
+	const parsed = parseDate(loggedDate);
+	const date = formatDate(parsed, "db");
+	return date === selectedDate;
 };
 
 const HabitCalendarMonth = ({
 	baseDate,
 	history,
 	onSelect,
+	selectedDate,
 }: CalendarMonthProps) => {
 	return (
 		<div className={styles.HabitCalendarMonth}>
 			{history &&
 				history.map((entry, idx) => {
+					const isDateSelected = isSelected(entry.loggedDate, selectedDate);
 					return (
 						<HabitDay
 							key={idx}
 							data={entry}
 							goal={entry.goal}
 							targetDate={baseDate} // date within the target month
+							isSelected={isDateSelected}
 							onSelect={() => onSelect(entry.loggedDate)}
 						/>
 					);
@@ -156,7 +173,7 @@ const filterHistoryBy = (
 	return monthHistory;
 };
 
-const HabitHistoryCalendar = ({ habit, history, onSelect }: Props) => {
+const HabitHistoryCalendar = ({ history, onSelect, selectedDate }: Props) => {
 	const today = new Date();
 	const [calendarState, setCalendarState] = useState<MonthAndYear>({
 		month: today.getMonth(),
@@ -211,6 +228,7 @@ const HabitHistoryCalendar = ({ habit, history, onSelect }: Props) => {
 				history={monthHistory}
 				baseDate={baseDate}
 				onSelect={selectDate}
+				selectedDate={selectedDate}
 			/>
 			{/*  */}
 			{/*  */}

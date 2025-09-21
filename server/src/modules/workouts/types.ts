@@ -185,3 +185,37 @@ export type WorkoutOfTypeDB =
 	| StrengthWorkoutDB
 	| WalkWorkoutDB
 	| ExerciseWorkoutDB;
+
+export interface CreateWorkoutParams {
+	workout: {
+		userID: string;
+		workoutName: string;
+		workoutDesc: string;
+		activityType: string;
+		date: string;
+		duration: number;
+		effort: string;
+		reps: number | null;
+		sets: number | null;
+		weight: number | null;
+		steps: number | null;
+		miles: number | null;
+		pace: number | null;
+		equipment: string;
+		tagColor: string;
+		isRecurring: boolean;
+	};
+	schedule: {
+		userID: string;
+		activityType: string;
+		startDate: string;
+		endDate: string;
+		startTime: string;
+		endTime: string;
+		interval: number;
+		frequency: string;
+		byDay: string[];
+		byMonth: number | string | null;
+		byMonthDay: number | string | null;
+	};
+}
