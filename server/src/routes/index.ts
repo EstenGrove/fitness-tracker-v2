@@ -1,6 +1,7 @@
 import userRoutes from "./userRoutes.js";
 import authRoutes from "./authRoutes.js";
 import habitRoutes from "./habitRoutes.js";
+import exportRoutes from "./exportRoutes.js";
 import statsRoutes from "./statsRoutes.js";
 import historyRoutes from "./historyRoutes.js";
 import workoutRoutes from "./workoutRoutes.js";
@@ -16,6 +17,7 @@ const allRoutes = {
 	workouts: workoutRoutes,
 	summary: summaryRoutes,
 	history: historyRoutes,
+	exports: exportRoutes,
 	habits: habitRoutes,
 	stats: statsRoutes,
 	auth: authRoutes,

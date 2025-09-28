@@ -254,22 +254,27 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 app.post("/createNewWorkout", async (ctx: Context) => {
 	const body = await ctx.req.json<CreateWorkoutParams>();
 
-	const results = await createWorkout(body);
+	console.log("body", body);
 
-	if (results instanceof Error) {
-		const errResp = getResponseError(results, {
-			workout: null,
-			schedule: null,
-		});
-		return ctx.json(errResp);
-	}
-
-	const resp = getResponseOk({
-		workout: results.workout,
-		schedule: results.schedule,
+	return ctx.json({
+		data: body,
 	});
+	// const results = await createWorkout(body);
 
-	return ctx.json(resp);
+	// if (results instanceof Error) {
+	// 	const errResp = getResponseError(results, {
+	// 		workout: null,
+	// 		schedule: null,
+	// 	});
+	// 	return ctx.json(errResp);
+	// }
+
+	// const resp = getResponseOk({
+	// 	workout: results.workout,
+	// 	schedule: results.schedule,
+	// });
+
+	// return ctx.json(resp);
 });
 
 export default app;

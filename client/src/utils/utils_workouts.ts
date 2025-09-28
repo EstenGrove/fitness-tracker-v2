@@ -296,7 +296,7 @@ const createNewWorkout = async (
 
 // Utils
 
-const getRepsFromValues = (workoutSets: WorkoutSet[]) => {
+const getRepsFromValues = (workoutSets: WorkoutSet[] | ExerciseSet[]) => {
 	if (!workoutSets || !workoutSets.length) return 0;
 	const sets = workoutSets.length;
 	const reps = Math.round(
@@ -341,6 +341,7 @@ const prepareNewWorkout = (
 		pace: baseWorkout.pace,
 		equipment: baseWorkout.equipment,
 		tagColor: baseWorkout.tagColor,
+		isRecurring: workoutInfo.isRecurring,
 	};
 	const schedule: CreateWorkoutParams["schedule"] = {
 		userID,
@@ -530,10 +531,11 @@ const prepareNewWorkoutValues = (
 		case "Timed":
 		case "Other":
 		case "Stretch": {
-			const details = prepareNewExerciseSets(
-				type,
-				workoutSets as unknown as PrepareSets<ExerciseSet>
-			);
+			const preparedData: PrepareSets<ExerciseSet> = {
+				workoutSets: workoutSets as ExerciseSet[],
+				equipment: values.equipment ?? "None",
+			};
+			const details = prepareNewExerciseSets(type, preparedData);
 			const workout = {
 				...newValues,
 				weight: null,
@@ -580,7 +582,7 @@ const prepareNewExerciseSets = (
 	const reps = getRepsFromValues(workoutSets);
 
 	const data = {
-		sets: workoutSets.length ?? 0,
+		sets: workoutSets?.length ?? 0,
 		reps: Math.round(reps),
 		exercise: activityType,
 		equipment: !!equipment && equipment !== "" ? equipment : "None",

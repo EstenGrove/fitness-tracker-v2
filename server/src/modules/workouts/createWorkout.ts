@@ -60,8 +60,9 @@ const createRecurringWorkout = async (
 };
 
 const createWorkout = async (payload: CreateWorkoutParams): NewWorkoutResp => {
-	const { workout } = payload;
-	const isRecurring = workout.isRecurring || false;
+	const { workout, schedule } = payload;
+	const frequency = schedule?.frequency ? schedule.frequency : "None";
+	const isRecurring = workout.isRecurring || frequency !== "None";
 
 	if (isRecurring) {
 		const results = await createRecurringWorkout(payload);

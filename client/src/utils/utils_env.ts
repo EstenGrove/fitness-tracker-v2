@@ -176,12 +176,18 @@ const API_ENDPOINTS = {
 		getWorkoutHistoryCalendarDetails:
 			"/summary/getWorkoutHistoryCalendarDetails",
 	},
+	exports: {
+		workoutHistory: "/exports/workout-history",
+		medicationHistory: "/exports/medication-history",
+		sessionHistory: "/exports/session-history",
+	},
 };
 
 export const {
 	auth: authApis,
 	user: userApis,
 	stats: statsApis,
+	exports: exportApis,
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,

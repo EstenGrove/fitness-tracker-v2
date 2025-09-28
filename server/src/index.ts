@@ -41,6 +41,7 @@ app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);
 app.route("stats", allRoutes.stats);
 app.route("habits", allRoutes.habits);
+app.route("exports", allRoutes.exports);
 app.route("history", allRoutes.history);
 app.route("summary", allRoutes.summary);
 app.route("workouts", allRoutes.workouts);

@@ -1,6 +1,6 @@
-@import "../../sass/variables";
-@import "../../sass/mixins";
-@import "../../sass/custom";
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
 
 .SettingsPage {
 	width: 100%;
@@ -9,5 +9,35 @@
 		width: 100%;
 		@include rowCenter();
 		font-size: 1.8rem;
+	}
+
+	&_main {
+		width: 100%;
+		padding: 2rem 0;
+		@include flex_col(center, flex-start, wrap);
+		gap: 2rem;
+	}
+}
+.ExportButton {
+	width: max-content;
+	height: auto;
+	padding: 0.8rem 1.8rem;
+	border-radius: 1rem;
+	background-color: transparent;
+	border: $border;
+	outline: none;
+	color: var(--blueGrey700);
+	font-size: 1.6rem;
+	@include rowCenter();
+	gap: 0 0.5rem;
+
+	&_icon {
+		width: 1.8rem;
+		height: 1.8rem;
+		fill: var(--blueGrey700);
+	}
+
+	&:hover {
+		cursor: pointer;
 	}
 }
