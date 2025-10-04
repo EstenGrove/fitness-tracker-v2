@@ -1,7 +1,3 @@
-@use "../../sass/variables" as *;
-@use "../../sass/mixins" as *;
-@use "../../sass/custom" as *;
-
 $badgeSize: 7.8rem;
 
 @mixin badge($size: 7.8rem) {

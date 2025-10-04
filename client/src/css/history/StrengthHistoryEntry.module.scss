@@ -1,11 +1,3 @@
-@use "../../sass/variables" as *;
-@use "../../sass/mixins" as *;
-@use "../../sass/custom" as *;
-
-@use "../../sass/variables" as *;
-@use "../../sass/mixins" as *;
-@use "../../sass/custom" as *;
-
 .WeightBadge {
 	$color: var(--blueGrey700);
 	width: max-content;

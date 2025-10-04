@@ -4,11 +4,11 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"dev": "SASS_QUIET_DEPRECATIONS=1 vite",
 		"build": "vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"local": "vite -- --host"
+		"local": "SASS_QUIET_DEPRECATIONS=1 vite -- --host"
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^2.6.1",
@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.21.0",
+		"@types/node": "^24.6.2",
 		"@types/react": "^19.0.10",
 		"@types/react-dom": "^19.0.4",
 		"@vitejs/plugin-react": "^4.3.4",

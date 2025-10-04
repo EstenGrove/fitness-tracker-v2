@@ -1,3 +1,6 @@
+@use "@sass/variables" as *;
+@use "@sass/custom" as *;
+
 @mixin scrollbar($color: var(--blueGrey400)) {
 	&::-webkit-scrollbar {
 		display: inline;
@@ -105,7 +108,6 @@ $modalRadius: 5rem;
 	bottom: 0;
 	left: 0;
 	transform: translate(-50%, -0%);
-
 	width: 100dvw;
 	height: 90dvh;
 	border-radius: $modalRadius $modalRadius 0 0;
@@ -139,6 +141,7 @@ $modalRadius: 5rem;
 		gap: 0 0.5rem;
 		margin-bottom: 1.5rem;
 		font-size: 1.8rem;
+
 		&_month {
 			font-weight: 700;
 			color: $text1;
@@ -153,13 +156,15 @@ $modalRadius: 5rem;
 		width: 100%;
 		@include flex_row(space-evenly, center);
 		gap: 0 1rem;
+	}
 
-		&_day {
-			font-size: 1.5rem;
-			color: $text2;
-		}
+	&_weekdays_day {
+		// flatten nested rule to avoid mixed declarations
+		font-size: 1.5rem;
+		color: $text2;
 	}
 }
+
 @mixin calendarBody() {
 	@include fill_container;
 	min-height: 40rem;
