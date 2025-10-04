@@ -26,3 +26,15 @@ export type Effort =
 export type RepeatType = "Daily" | "Weekly" | "Monthly" | "Yearly" | "None";
 
 export type WeekDayToken = "Su" | "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa";
+
+export interface UserRangeParams {
+	userID: string;
+	startDate: string;
+	endDate: string;
+}
+
+export interface MedRangeParams extends UserRangeParams {
+	medID: number;
+}
+
+export type ExportFormat = "CSV" | "JSON" | "TEXT";

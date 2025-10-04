@@ -93,6 +93,9 @@ const API_ENDPOINTS = {
 		getMonthlyMinsSummary: "/stats/getMonthlyMinsSummary",
 		getYearlyMinsSummary: "/stats/getYearlyMinsSummary",
 		getMinsSummaryForRange: "/stats/getMinsSummaryForRange",
+		// mins
+		getMonthlyMinsForTheYear: "/stats/getMonthlyMinsForTheYear",
+		getTotalMinsBy: "/stats/getTotalMinsBy",
 	},
 	workouts: {
 		getAllUserWorkouts: "/workouts/getAllUserWorkouts",
@@ -116,6 +119,7 @@ const API_ENDPOINTS = {
 		endWorkout: "/workouts/endWorkout",
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
+		createNewWorkout: "/workouts/createNewWorkout",
 	},
 	history: {
 		getHistoryDetails: "/history/getHistoryDetails",
@@ -142,6 +146,7 @@ const API_ENDPOINTS = {
 		getMedDetails: "/medications/getMedDetails",
 		getSelectedMed: "/medications/getSelectedMed",
 		getMedLogsByRange: "/medications/getMedLogsByRange",
+		createMedSchedule: "/medications/createMedSchedule",
 	},
 	shared: {
 		getSharedAppData: "/shared/getSharedAppData",
@@ -162,6 +167,19 @@ const API_ENDPOINTS = {
 		getHabitCards: "/habits/getHabitCards",
 		createHabit: "/habits/createHabit",
 		getRecentLogs: "/habits/getRecentHabitLogs",
+		getHabitHistory: "/habits/getHabitHistory",
+		getHabitHistorySummary: "/habits/getHabitHistorySummary",
+		getHabitHistoryForRange: "/habits/getHabitHistoryForRange",
+	},
+	summary: {
+		getWorkoutHistoryCalendar: "/summary/getWorkoutHistoryCalendar",
+		getWorkoutHistoryCalendarDetails:
+			"/summary/getWorkoutHistoryCalendarDetails",
+	},
+	exports: {
+		workoutHistory: "/exports/workout-history",
+		medicationHistory: "/exports/medication-history",
+		sessionHistory: "/exports/session-history",
 	},
 };
 
@@ -169,6 +187,7 @@ export const {
 	auth: authApis,
 	user: userApis,
 	stats: statsApis,
+	exports: exportApis,
 	activity: activityApis,
 	workouts: workoutApis,
 	shared: sharedApis,
@@ -177,6 +196,7 @@ export const {
 	meds: medicationApis,
 	dashboard: dashboardApis,
 	recentActivity: recentActivityApis,
+	summary: summaryApis,
 } = API_ENDPOINTS;
 
 export {

@@ -1,0 +1,93 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
+
+.HabitMonth {
+	width: 100%;
+	height: auto;
+}
+
+%title {
+	font-size: 2.5rem;
+	font-weight: 800;
+}
+
+.HabitHeader {
+	width: 100%;
+	display: block;
+
+	&_current {
+		width: 100%;
+		height: 100%;
+		@include flex_row(flex-start, center);
+		gap: 0 0.5rem;
+		margin-bottom: 1rem;
+
+		&_month {
+			@extend %title;
+			color: $text1;
+		}
+		&_year {
+			@extend %title;
+			color: $text3;
+		}
+	}
+	&_weekdays {
+		width: 100%;
+		height: 5rem;
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: 1;
+		place-items: center;
+		gap: 0 0.3rem;
+	}
+}
+
+.WeekDayLabel {
+	width: 100%;
+	height: 4rem;
+	@include rowCenter();
+
+	&_day {
+		font-size: 1.3rem;
+		color: $text1;
+		text-align: center;
+		font-weight: 700;
+	}
+}
+
+.HabitCalendarControls {
+	width: 100%;
+	height: 100%;
+	@include flex_row(flex-end, center);
+	gap: 0 2rem;
+
+	%btn {
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		outline: none;
+		border: 1px solid $text3;
+		background-color: transparent;
+		@include rowCenter();
+	}
+
+	&_prev {
+		@extend %btn;
+
+		&_icon {
+			width: 2rem;
+			height: 2rem;
+			fill: $text1;
+		}
+	}
+	&_next {
+		@extend %btn;
+
+		&_icon {
+			width: 2rem;
+			height: 2rem;
+			fill: $text1;
+		}
+	}
+}

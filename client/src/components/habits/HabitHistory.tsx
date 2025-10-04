@@ -1,36 +1,58 @@
+import { subDays } from "date-fns";
 import styles from "../../css/habits/HabitHistory.module.scss";
 import {
-	HabitHistoryDay as IHabitHistoryDay,
 	HabitHistory as IHabitHistory,
+	Habit,
 } from "../../features/habits/types";
+import { useHabitHistory } from "../../hooks/useHabitHistory";
+import ModalLG from "../shared/ModalLG";
+import HabitHistoryCalendar from "./HabitHistoryCalendar";
 
 type Props = {
-	history: IHabitHistory;
+	habit: Habit;
+	lastXDays?: number;
+	onClose: () => void;
 };
 
-type HistoryDayProps = {
-	historyDay: IHabitHistoryDay;
+const getRangeFromDays = (lastXDays: number) => {
+	const end = new Date();
+	const start = subDays(end, lastXDays);
+
+	return {
+		start,
+		end,
+	};
 };
 
-const HistoryDay = ({ historyDay }: HistoryDayProps) => {
-	console.log("historyDay", historyDay);
-	return (
-		<div className={styles.HistoryDay}>
-			{/*  */}
-			{/*  */}
-			{/*  */}
-		</div>
-	);
-};
+const HabitHistory = ({ habit, lastXDays = 60, onClose }: Props) => {
+	const dateRange = getRangeFromDays(lastXDays);
+	const { data, isLoading } = useHabitHistory(habit.habitID);
+	const history = data || ([] as IHabitHistory);
 
-const HabitHistory = ({ history }: Props) => {
 	console.log("history", history);
 	return (
-		<div className={styles.HabitHistory}>
-			{/*  */}
-			{/*  */}
-			{/*  */}
-		</div>
+		<ModalLG onClose={onClose}>
+			<div className={styles.HabitHistory}>
+				<div className={styles.HabitHistory_header}>
+					<h2>History (last {lastXDays} days) </h2>
+					{/* CONTROLS, DATE-RANGE, HEADER, CLOSE ICON */}
+					{/* CONTROLS, DATE-RANGE, HEADER, CLOSE ICON */}
+					{/* CONTROLS, DATE-RANGE, HEADER, CLOSE ICON */}
+				</div>
+				<div className={styles.HabitHistory_calendar}>
+					<HabitHistoryCalendar
+						habit={habit}
+						history={history}
+						dateRange={dateRange}
+					/>
+				</div>
+				<div className={styles.HabitHistory_footer}>
+					{/* CLOSE BUTTONS */}
+					{/* CLOSE BUTTONS */}
+					{/* CLOSE BUTTONS */}
+				</div>
+			</div>
+		</ModalLG>
 	);
 };
 

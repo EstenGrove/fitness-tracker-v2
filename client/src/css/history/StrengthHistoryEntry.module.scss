@@ -1,10 +1,10 @@
-@import "../../sass/variables";
-@import "../../sass/mixins";
-@import "../../sass/custom";
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
 
-@import "../../sass/variables";
-@import "../../sass/mixins";
-@import "../../sass/custom";
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
 
 .WeightBadge {
 	$color: var(--blueGrey700);

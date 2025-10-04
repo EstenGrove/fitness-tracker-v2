@@ -91,6 +91,12 @@ const HabitHeader = ({
 					</li>
 					<li
 						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.HISTORY)}
+					>
+						History
+					</li>
+					<li
+						className={styles.MenuItem}
 						onClick={() => handleAction(EHabitModalType.EDIT)}
 					>
 						Change Goal

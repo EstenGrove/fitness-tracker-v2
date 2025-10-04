@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import {
+	createNewMedSchedule,
 	fetchMedDetails,
 	fetchMedications,
 	fetchMedLogsByRange,
@@ -10,10 +11,16 @@ import {
 	MedLogBody,
 	MedLogOptions,
 	MedsInfo,
+	NewMedScheduleArgs,
 	saveMedicationLog,
 	SummaryParams,
 } from "../../utils/utils_medications";
-import { Medication, MedLogEntry, MedSummaryForDate } from "./types";
+import {
+	Medication,
+	MedicationSchedule,
+	MedLogEntry,
+	MedSummaryForDate,
+} from "./types";
 import { AwaitedResponse, DateRange } from "../types";
 
 interface NewMedLog {
@@ -34,10 +41,16 @@ interface DetailsParams {
 	medID: number;
 }
 
+export interface NewScheduleData {
+	endedSchedule: MedicationSchedule;
+	newSchedule: MedicationSchedule;
+	wasCreated: boolean;
+}
+
 export const medicationsApi = createApi({
 	reducerPath: "medicationsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
-	tagTypes: ["MedSummary", "MedLogs"],
+	tagTypes: ["MedSummary", "MedLogs", "MedDetails"],
 	endpoints: (builder) => ({
 		// Get all medications for a user
 		getMedications: builder.query({
@@ -72,7 +85,7 @@ export const medicationsApi = createApi({
 				const data = loggedMed.Data as NewMedLog;
 				return { data: data };
 			},
-			invalidatesTags: ["MedSummary", "MedLogs"],
+			invalidatesTags: ["MedSummary", "MedLogs", "MedDetails"],
 		}),
 		// Get medication summary by date
 		getMedSummaryByDate: builder.query<MedSummaryForDate, SummaryParams>({
@@ -113,6 +126,16 @@ export const medicationsApi = createApi({
 				return { data };
 			},
 		}),
+		createMedSchedule: builder.mutation<NewScheduleData, NewMedScheduleArgs>({
+			queryFn: async (params) => {
+				const response = (await createNewMedSchedule(
+					params
+				)) as AwaitedResponse<NewScheduleData>;
+				const data = response.Data as NewScheduleData;
+				return { data };
+			},
+			invalidatesTags: ["MedSummary", "MedDetails"],
+		}),
 	}),
 });
 
@@ -123,4 +146,5 @@ export const {
 	useGetMedDetailsQuery,
 	useLogMedicationMutation,
 	useGetMedSummaryByDateQuery,
+	useCreateMedScheduleMutation,
 } = medicationsApi;

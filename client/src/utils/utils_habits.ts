@@ -4,9 +4,12 @@ import {
 	HabitCard,
 	HabitDetails,
 	HabitFrequency,
+	HabitHistory,
+	HabitHistoryDay,
 	HabitIntent,
 	HabitLog,
 	HabitLogValues,
+	HabitYearSummary,
 	RecentHabitLog,
 } from "../features/habits/types";
 import { AsyncResponse } from "../features/types";
@@ -15,13 +18,20 @@ import { currentEnv, habitApis } from "./utils_env";
 import { provideFallbackStr } from "./utils_misc";
 import { fetchWithAuth } from "./utils_requests";
 
-export type HabitModalType = "CREATE" | "EDIT" | "DELETE" | "VIEW" | "LOG";
+export type HabitModalType =
+	| "CREATE"
+	| "EDIT"
+	| "DELETE"
+	| "VIEW"
+	| "LOG"
+	| "HISTORY";
 export enum EHabitModalType {
 	CREATE = "CREATE",
 	EDIT = "EDIT",
 	DELETE = "DELETE",
 	VIEW = "VIEW",
 	LOG = "LOG",
+	HISTORY = "HISTORY",
 }
 
 export interface HabitDetailParams {
@@ -53,6 +63,19 @@ export interface RecentHabitParams {
 	lastXDays: number;
 }
 
+export interface HabitHistoryByRangeParams {
+	userID: string;
+	habitID: number;
+	startDate: string;
+	endDate: string;
+}
+
+export interface HabitHistoryByRange {
+	habit: Habit;
+	summary: HabitHistoryDay[];
+	history: HabitLog[];
+}
+
 export type LoggedHabitResp = AsyncResponse<{ newLog: HabitLog }>;
 export type HabitsResp = AsyncResponse<{ habits: Habit[] }>;
 export type HabitLogsResp = AsyncResponse<{ logs: HabitLog[] }>;
@@ -62,6 +85,9 @@ export type NewHabitResp = AsyncResponse<{ newHabit: HabitCard }>;
 export type RecentHabitLogsResp = AsyncResponse<{
 	recentLogs: RecentHabitLog[];
 }>;
+export type HabitHistoryResp = AsyncResponse<{ history: HabitHistory }>;
+export type HabitHistorySummaryResp = AsyncResponse<HabitYearSummary>;
+export type HabitHistoryByRangeResp = AsyncResponse<HabitHistoryByRange>;
 
 const fetchHabitCards = async (
 	userID: string,
@@ -155,6 +181,63 @@ const fetchRecentHabitLogs = async (
 		return error;
 	}
 };
+const fetchHabitHistory = async (
+	userID: string,
+	habitID: number,
+	lastXDays: number = 60
+): HabitHistoryResp => {
+	let url = currentEnv.base + habitApis.getHabitHistory;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ habitID: String(habitID) });
+	url += "&" + new URLSearchParams({ lastXDays: String(lastXDays) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchHabitHistoryForRange = async (
+	userID: string,
+	params: HabitHistoryByRangeParams
+): HabitHistoryByRangeResp => {
+	const { habitID, startDate, endDate } = params;
+	let url = currentEnv.base + habitApis.getHabitHistoryForRange;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ habitID: String(habitID) });
+	url += "&" + new URLSearchParams({ startDate, endDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchHabitHistorySummary = async (
+	userID: string,
+	habitID: number,
+	year: number = new Date().getFullYear()
+): HabitHistorySummaryResp => {
+	let url = currentEnv.base + habitApis.getHabitHistorySummary;
+	url += "?" + new URLSearchParams({ userID });
+	url +=
+		"&" + new URLSearchParams({ year: String(year), habitID: String(habitID) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
 const logHabit = async (log: HabitLogValues): LoggedHabitResp => {
 	const url = currentEnv.base + habitApis.logHabit;
 
@@ -336,8 +419,11 @@ export {
 	fetchHabitLogs,
 	fetchHabitCards,
 	fetchHabitDetails,
+	fetchHabitHistory,
 	fetchHabitSummaries,
+	fetchHabitHistorySummary,
 	fetchRecentHabitLogs,
+	fetchHabitHistoryForRange,
 	logHabit,
 	logHabitsBatched,
 	// Habit Icons

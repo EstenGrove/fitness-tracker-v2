@@ -10,6 +10,17 @@ interface MedSummaryArgs {
 	targetDate: string;
 }
 
+export interface NewMedScheduleArgs {
+	startDate: string;
+	endDate: string;
+	dosage: number;
+	dosageDesc: string;
+	frequency: number;
+	quantity: number;
+	medID: number;
+	userID: string;
+}
+
 interface MedLogRangeArgs {
 	medID: number;
 	startDate: string;
@@ -156,6 +167,18 @@ class MedicationsService {
 			const results = await this.#db.query(query, [userID, medID, targetDate]);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async createMedSchedule(params: NewMedScheduleArgs) {
+		try {
+			const query = `SELECT * FROM create_med_schedule($1)`;
+			const results = await this.#db.query(query, [params]);
+			console.log("results", results);
+			const data = results?.rows?.[0]?.data;
+			return data;
 		} catch (error) {
 			return error;
 		}

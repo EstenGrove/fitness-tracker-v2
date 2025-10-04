@@ -8,6 +8,8 @@ import {
 } from "../features/medications/types";
 import { formatDate, parseDateStr } from "../utils/utils_dates";
 import { useMedSummary } from "../hooks/useMedSummary";
+import { useMedsInfo } from "../hooks/useMedsInfo";
+import { MedsInfo } from "../utils/utils_medications";
 import ModalLG from "../components/shared/ModalLG";
 import PageHeader from "../components/layout/PageHeader";
 import WeeklyHeader from "../components/layout/WeeklyHeader";
@@ -17,8 +19,6 @@ import LogMedication from "../components/medications/LogMedication";
 import Loader from "../components/layout/Loader";
 import TodaysDoses from "../components/medications/TodaysDoses";
 import LoggedMedsCard from "../components/medications/LoggedMedsCard";
-import { useMedsInfo } from "../hooks/useMedsInfo";
-import { MedsInfo } from "../utils/utils_medications";
 
 const LogMedButton = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -46,7 +46,7 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 3,
+	scheduleID: 7,
 };
 
 const MedicationsPage = () => {
@@ -61,12 +61,7 @@ const MedicationsPage = () => {
 	const medLogs = (data?.medicationLogs ?? []) as MedLogEntry[];
 	const userMedsInfo = medsInfo as MedsInfo;
 
-	const selectMed = (med: CurrentMed) => {
-		setSelectedMed(med);
-	};
-	const deSelectMed = () => {
-		setSelectedMed(null);
-	};
+	console.log("userMedsInfo", userMedsInfo);
 
 	const openModal = () => {
 		setShowLogMedModal(true);

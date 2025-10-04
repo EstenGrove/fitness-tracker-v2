@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 217 198" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+  xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+  <g transform="matrix(1,0,0,1,-358,-135)">
+    <path d="M575,184.5L575,283.5C575,310.82 552.82,333 525.5,333L407.5,333C380.18,333 358,310.82 358,283.5L358,184.5C358,157.18 380.18,135 407.5,135L525.5,135C552.82,135 575,157.18 575,184.5Z" style="fill:rgb(13,17,21);"/>
+    <g transform="matrix(0.810471,0,0,1.30158,153.157,16.7679)">
+      <g transform="matrix(182.475,0,0,182.475,484.237,233)">
+      </g>
+      <text x="393px" y="233px" style="font-family:'Broadway', fantasy;font-size:182.475px;fill:rgb(0,226,189);">&gt;</text>
+    </g>
+    <g transform="matrix(0.810471,0,0,1.30158,68.8679,18.0695)">
+      <g transform="matrix(182.475,0,0,182.475,484.237,233)">
+      </g>
+      <text x="393px" y="233px" style="font-family:'Broadway', fantasy;font-size:182.475px;fill:rgb(138,79,255);">&lt;</text>
+    </g>
+  </g>
+</svg>

@@ -102,10 +102,12 @@ export interface MedSummary {
 export interface MedsInfoDB {
 	activeMeds: MedicationDB[];
 	activeSchedules: MedicationScheduleDB[];
+	allSchedules: MedicationScheduleDB[];
 }
 export interface MedsInfo {
 	activeMeds: Medication[];
 	activeSchedules: MedicationSchedule[];
+	allSchedules: MedicationSchedule[];
 }
 
 export interface MedDetailsDB {

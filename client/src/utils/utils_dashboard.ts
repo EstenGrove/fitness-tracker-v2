@@ -28,7 +28,12 @@ const fetchDashboardSummaryByRange = async (
 	const { startDate, endDate } = dateRange;
 	let url = currentEnv.base + dashboardApis.getSummary;
 	url += "?" + new URLSearchParams({ userID });
-	url += "&" + new URLSearchParams({ startDate, endDate });
+	url +=
+		"&" +
+		new URLSearchParams({
+			startDate: startDate.toString(),
+			endDate: endDate.toString(),
+		});
 
 	try {
 		const request = await fetchWithAuth(url);

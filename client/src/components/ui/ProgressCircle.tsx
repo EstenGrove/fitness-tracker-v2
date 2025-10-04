@@ -5,7 +5,7 @@ type ColorType = "blue" | "purple" | "green" | "primary" | "blank";
 
 type Props = {
 	percentage: number;
-	size?: number;
+	size?: number | string;
 	color?: ColorType;
 	trackColor?: string;
 	showText?: boolean;

@@ -279,7 +279,7 @@ const WorkoutsPage = () => {
 
 			{/* QUICK ACTIONS */}
 			{quickAction === "CreateWorkout" && (
-				<CreateWorkout onClose={closeQuickAction} />
+				<CreateWorkout onClose={closeQuickAction} currentUser={currentUser} />
 			)}
 			{quickAction === "LogWorkout" && (
 				<LogWorkout

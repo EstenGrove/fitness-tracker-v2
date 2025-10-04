@@ -2,6 +2,7 @@ import { Hono, type Context } from "hono";
 import { getResponseError, getResponseOk } from "../utils/api.js";
 import { workoutsService } from "../services/index.js";
 import type {
+	CreateWorkoutParams,
 	LogWorkoutBody,
 	SkipWorkoutBody,
 	TodaysWorkoutClient,
@@ -21,6 +22,7 @@ import type { HistoryOfTypeDB } from "../modules/history/types.js";
 import { skipWorkout } from "../modules/workouts/skipWorkout.js";
 import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.js";
 import type { Activity } from "../modules/types.js";
+import { createWorkout } from "../modules/workouts/createWorkout.js";
 
 const app = new Hono();
 
@@ -247,6 +249,32 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 	const resp = getResponseOk(rawStats);
 
 	return ctx.json(resp);
+});
+
+app.post("/createNewWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<CreateWorkoutParams>();
+
+	console.log("body", body);
+
+	return ctx.json({
+		data: body,
+	});
+	// const results = await createWorkout(body);
+
+	// if (results instanceof Error) {
+	// 	const errResp = getResponseError(results, {
+	// 		workout: null,
+	// 		schedule: null,
+	// 	});
+	// 	return ctx.json(errResp);
+	// }
+
+	// const resp = getResponseOk({
+	// 	workout: results.workout,
+	// 	schedule: results.schedule,
+	// });
+
+	// return ctx.json(resp);
 });
 
 export default app;

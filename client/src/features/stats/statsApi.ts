@@ -2,10 +2,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import {
 	getMinsSummaryForRange,
+	getMonthlyMinsTotalsForTheYear,
 	getPostWorkoutDetails,
 	getPostWorkoutStats,
+	getTotalMinsBy,
 	getWorkoutStats,
+	MinsStatsData,
 	MinsSummaryRangeResp,
+	TotalMinsBy,
 } from "../../utils/utils_stats";
 import { AwaitedResponse } from "../types";
 import {
@@ -15,6 +19,10 @@ import {
 	WorkoutStats,
 	WorkoutStatsParams,
 	TimeKey,
+	MonthlyMinsStats,
+	ByYearParams,
+	MinsByParams,
+	StatsSummaryItem,
 } from "./types";
 import { getLastWorkout, LastSessionParams } from "../../utils/utils_workouts";
 import { HistoryOfType } from "../history/types";
@@ -78,6 +86,34 @@ export const statsApi = createApi({
 				return { data: data.summary };
 			},
 		}),
+		getMonthlyMinsTotalsForTheYear: builder.query<
+			MonthlyMinsStats[],
+			ByYearParams
+		>({
+			queryFn: async (params) => {
+				const { userID, targetYear = new Date().getFullYear() } = params;
+				const response = (await getMonthlyMinsTotalsForTheYear(
+					userID,
+					targetYear
+				)) as AwaitedResponse<MinsStatsData>;
+				const data = response.Data;
+				const byMonth = data.byMonth as MonthlyMinsStats[];
+				return { data: byMonth };
+			},
+		}),
+		getTotalMinsBy: builder.query<StatsSummaryItem[], MinsByParams>({
+			queryFn: async (params) => {
+				const { userID, targetDate, by } = params;
+				const response = await getTotalMinsBy(userID, {
+					targetDate,
+					by,
+				});
+				const data = response.Data;
+				const totalMins = data.totalMins;
+
+				return { data: totalMins };
+			},
+		}),
 	}),
 });
 
@@ -89,4 +125,6 @@ export const {
 	useLazyGetPostWorkoutStatsQuery,
 	useGetWorkoutStatsQuery,
 	useGetMinsSummaryForRangeQuery,
+	useGetMonthlyMinsTotalsForTheYearQuery,
+	useGetTotalMinsByQuery,
 } = statsApi;

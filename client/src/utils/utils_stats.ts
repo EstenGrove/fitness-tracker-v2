@@ -6,8 +6,11 @@ import {
 	WorkoutStatsParams,
 	MinsSummaryItem,
 	TimeKey,
+	StatsSummaryItem,
+	MonthlyMinsStats,
 } from "../features/stats/types";
 import { AsyncResponse } from "../features/types";
+import { formatDate } from "./utils_dates";
 import { currentEnv, statsApis } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
 
@@ -17,12 +20,31 @@ interface PostWorkoutParams {
 	activityType: Activity;
 }
 
+export interface MinsStatsData {
+	byMonth: MonthlyMinsStats[];
+}
+export interface TotalMinsData {
+	totalMins: TotalMinsBy[];
+}
+
 export type PostWorkoutResp = AsyncResponse<PostWorkoutStats>;
 export type WorkoutStatsResp = AsyncResponse<WorkoutStats>;
 export type PostWorkoutDetailsResp = AsyncResponse<PostWorkoutDetails>;
 export type MinsSummaryRangeResp<T extends TimeKey> = AsyncResponse<{
 	summary: MinsSummaryItem<T>[];
 }>;
+export type MonthlyMinsResp = AsyncResponse<MinsStatsData>;
+
+// Day: each day
+// Week: for a week at a time
+// Month: for a month
+// Year: for each month in the year
+export type RangeBy = "hour" | "day" | "week" | "month" | "year";
+
+export interface MinMaxRange {
+	min: number;
+	max: number;
+}
 
 const getPostWorkoutDetails = async (
 	params: PostWorkoutParams
@@ -160,10 +182,77 @@ const getMinsSummaryForRange = async (
 	}
 };
 
+const getMonthlyMinsTotalsForTheYear = async (
+	userID: string,
+	targetYear: number
+): MonthlyMinsResp => {
+	let url = currentEnv.base + statsApis.getMonthlyMinsForTheYear;
+	url += "?" + new URLSearchParams({ userID, targetYear: String(targetYear) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+export interface TotalMinsBy {
+	targetDate: string;
+	by: RangeBy;
+}
+
+const getTotalMinsBy = async (userID: string, params: TotalMinsBy) => {
+	const { targetDate = formatDate(new Date(), "db"), by = "year" } = params;
+	let url = currentEnv.base + statsApis.getTotalMinsBy;
+	url += "?" + new URLSearchParams({ userID, targetDate, by });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+// We use the max value as our true max & we calculate heights based off what percentage of our max a given value is
+const getScaledHeight = (value: number, range: MinMaxRange) => {
+	const { max } = range;
+	if (value === 0) return 0;
+	const newVal = value / max;
+
+	return newVal * 100;
+};
+
+// utils
+// max: is the highest number plus our min (since 'min' is our increment/step)
+const getHighAndLowRanges = (data: StatsSummaryItem[]) => {
+	const nonZeroNums: number[] = data
+		.map(({ value }) => Number(value))
+		.filter((num) => num > 0);
+	// get lowest non-zero value & highest value
+	const max: number = Math.max(...nonZeroNums);
+	const min: number = Math.min(...nonZeroNums);
+	const step: number = min;
+
+	return {
+		max: max + step,
+		min: min,
+		step: step,
+	};
+};
+
 export {
 	getPostWorkoutStats,
 	getWorkoutStats,
 	getPostWorkoutDetails,
 	getMonthlyMinsSummary,
 	getMinsSummaryForRange,
+	getMonthlyMinsTotalsForTheYear,
+	getTotalMinsBy,
+	// Utils
+	getHighAndLowRanges,
+	getScaledHeight,
 };

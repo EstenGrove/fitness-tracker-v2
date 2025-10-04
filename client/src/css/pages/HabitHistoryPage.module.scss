@@ -1,0 +1,21 @@
+@use "../../sass/variables" as *;
+@use "../../sass/mixins" as *;
+@use "../../sass/custom" as *;
+
+.HabitHistoryPage {
+	width: 100%;
+
+	& > h2 {
+		margin-bottom: 4rem;
+	}
+
+	&_body {
+		width: 100%;
+		// @include flex_row(space-evenly, center);
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		grid-template-rows: 4rem;
+		place-items: center;
+		gap: 0.3rem 0.3rem;
+	}
+}

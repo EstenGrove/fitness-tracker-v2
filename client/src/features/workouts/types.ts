@@ -124,3 +124,67 @@ export interface WorkoutDetails {
 	schedule: WorkoutSchedule;
 	history: HistoryOfType[];
 }
+
+export interface CreateWorkoutValues {
+	activityType: Activity | string;
+	date: Date | string;
+	name: string;
+	desc: string;
+	duration: number;
+	effort: number;
+	isRecurring: boolean;
+	interval: number;
+	frequency: RepeatType;
+	byDay: string[];
+	byMonth: number | string;
+	byMonthDay: number | string;
+	startDate: Date | string;
+	endDate: Date | string;
+	startTime: string;
+	endTime: string;
+	steps: number | null;
+	miles: number | null;
+	pace: number | null;
+	equipment: string | null;
+	tagColor: string | null;
+	exercise: string | null;
+}
+
+export interface CreateWorkoutParams {
+	workout: {
+		userID: string;
+		workoutName: string;
+		workoutDesc: string;
+		activityType: string;
+		date: string;
+		duration: number;
+		effort: string;
+		reps: number | null;
+		sets: number | null;
+		weight: number | null;
+		steps: number | null;
+		miles: number | null;
+		pace: number | null;
+		equipment: string;
+		tagColor: string;
+		isRecurring: boolean;
+	};
+	schedule: {
+		userID: string;
+		activityType: string;
+		startDate: string;
+		endDate: string;
+		startTime: string;
+		endTime: string;
+		interval: number;
+		frequency: string;
+		byDay: string[];
+		byMonth: number | string | null;
+		byMonthDay: number | string | null;
+	};
+}
+
+export interface CreatedWorkoutData {
+	workout: WorkoutByType;
+	schedule: WorkoutSchedule;
+}

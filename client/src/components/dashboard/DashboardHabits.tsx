@@ -2,24 +2,26 @@ import { useState } from "react";
 import sprite from "../../assets/icons/habits.svg";
 import sprite2 from "../../assets/icons/main.svg";
 import styles from "../../css/dashboard/DashboardHabits.module.scss";
-import { HabitCard } from "../../features/habits/types";
+import { type HabitCard } from "../../features/habits/types";
 import {
 	EHabitModalType,
 	habitIcons,
 	HabitModalType,
 } from "../../utils/utils_habits";
 import { addEllipsis, isEmptyArray } from "../../utils/utils_misc";
-import NoData from "../ui/NoData";
-import NumberCounter from "../ui/NumberCounter";
-import MenuDropdown from "../shared/MenuDropdown";
-import ModalSM from "../shared/ModalSM";
-import DeleteHabit from "../habits/DeleteHabit";
-import ChangeHabitGoal from "../habits/ChangeHabitGoal";
-import ModalWithFooter from "../shared/ModalWithFooter";
-import ModalLG from "../shared/ModalLG";
-import QuickLogHabit from "../habits/QuickLogHabit";
 import { useAppDispatch } from "../../store/store";
 import { summaryApi } from "../../features/dashboard/summaryApi";
+import { useNavigate } from "react-router";
+import NoData from "../ui/NoData";
+import ModalSM from "../shared/ModalSM";
+import ModalLG from "../shared/ModalLG";
+import DeleteHabit from "../habits/DeleteHabit";
+import NumberCounter from "../ui/NumberCounter";
+import MenuDropdown from "../shared/MenuDropdown";
+import QuickLogHabit from "../habits/QuickLogHabit";
+import ChangeHabitGoal from "../habits/ChangeHabitGoal";
+import ModalWithFooter from "../shared/ModalWithFooter";
+import HabitHistoryModal from "../habits/HabitHistoryModal";
 
 type Props = {
 	habits: HabitCard[];
@@ -112,6 +114,12 @@ const HabitHeader = ({
 					</li>
 					<li
 						className={styles.MenuItem}
+						onClick={() => handleAction(EHabitModalType.HISTORY)}
+					>
+						History
+					</li>
+					<li
+						className={styles.MenuItem}
 						onClick={() => handleAction(EHabitModalType.EDIT)}
 					>
 						Change Goal
@@ -143,6 +151,7 @@ const QuickLogButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
+	const navigate = useNavigate();
 	const { habitName, icon, iconColor, habitsLogged } = habit;
 	const iconName = habitIcons[icon];
 	const logged = habitsLogged;
@@ -153,6 +162,12 @@ const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 		return onAction && onAction(action, habit);
 	};
 
+	const handleGoTo = () => {
+		const id = habit.habitID;
+		const path = `/habits/${id}/tracker`;
+		navigate(path);
+	};
+
 	return (
 		<div className={styles.DashboardHabit}>
 			<div className={styles.DashboardHabit_top}>
@@ -160,7 +175,7 @@ const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 					icon={iconName}
 					name={habitName}
 					color={iconColor}
-					goTo={() => {}}
+					goTo={handleGoTo}
 					onAction={handleAction}
 				/>
 			</div>
@@ -253,6 +268,12 @@ const DashboardHabits = ({ habits }: Props) => {
 				<ModalSM onClose={closeModal}>
 					<DeleteHabit onCancel={closeModal} onConfirm={confirmDelete} />
 				</ModalSM>
+			)}
+
+			{modalType === EHabitModalType.HISTORY && selectedHabit && (
+				<ModalLG onClose={closeModal}>
+					<HabitHistoryModal habit={selectedHabit} />
+				</ModalLG>
 			)}
 		</div>
 	);

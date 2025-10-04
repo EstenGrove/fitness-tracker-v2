@@ -1,8 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import { AwaitedResponse, MarkAsDoneParams, UserDateParams } from "../types";
-import { TodaysWorkout, Workout } from "./types";
 import {
+	CreatedWorkoutData,
+	CreateWorkoutParams,
+	TodaysWorkout,
+	Workout,
+} from "./types";
+import {
+	createNewWorkout,
 	fetchAllUserWorkouts,
 	fetchAllWorkouts,
 	fetchSkippedWorkouts,
@@ -41,6 +47,11 @@ export interface MarkAsDoneValues {
 
 export interface LoggedWorkoutResponse {
 	newLog: HistoryOfType;
+}
+
+export interface NewWorkoutParams {
+	userID: string;
+	newWorkout: CreateWorkoutParams;
 }
 
 export const todaysWorkoutsApi = createApi({
@@ -144,6 +155,19 @@ export const todaysWorkoutsApi = createApi({
 			},
 			invalidatesTags: ["TodaysWorkouts"],
 		}),
+		createWorkout: builder.mutation<CreatedWorkoutData, NewWorkoutParams>({
+			queryFn: async (params) => {
+				const { userID, newWorkout } = params;
+				const response = (await createNewWorkout(
+					userID,
+					newWorkout
+				)) as AwaitedResponse<CreatedWorkoutData>;
+				const data = response.Data as CreatedWorkoutData;
+
+				return { data };
+			},
+			invalidatesTags: ["TodaysWorkouts"],
+		}),
 	}),
 });
 
@@ -155,4 +179,5 @@ export const {
 	useGetAllWorkoutsQuery,
 	useLogWorkoutMutation,
 	useSkipWorkoutMutation,
+	useCreateWorkoutMutation,
 } = todaysWorkoutsApi;

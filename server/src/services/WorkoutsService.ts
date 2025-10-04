@@ -225,6 +225,27 @@ class WorkoutsService {
 			return error;
 		}
 	}
+
+	async createRecurringWorkout(data: object) {
+		try {
+			const query = `SELECT * FROM create_recurring_workout($1)`;
+			const results = await this.#db.query(query, [data]);
+			const rows = results?.rows?.[0]?.create_recurring_workout;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	async createOneTimeWorkout(data: object) {
+		try {
+			const query = `SELECT * FROM create_single_workout($1)`;
+			const results = await this.#db.query(query, [data]);
+			const rows = results?.rows?.[0]?.create_single_workout;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
 }
 
 export { WorkoutsService };

@@ -5,12 +5,12 @@ import {
 	getMonthDaySuffix,
 	RecurringValues,
 	REPEAT_TYPE_OPTIONS,
-	REPEAT_TYPES,
 } from "../../utils/utils_recurring";
 import { MONTHS, WEEK_DAYS } from "../../utils/utils_dates";
 import Select from "../shared/Select";
 import NumberInput from "../shared/NumberInput";
 import DatePicker from "../shared/DatePicker";
+import { CreateWorkoutValues } from "../../features/workouts/types";
 
 type Props = {
 	onChange: (name: string, value: string | number) => void;
@@ -37,38 +37,13 @@ type FreqOptionsProps = {
 // ['Su', 'Mo', ...]
 const weekDays = [...WEEK_DAYS].map((day) => day.slice(0, 2));
 // { value, label}
-const freqOptions = [...REPEAT_TYPES].map((opt) => ({
-	value: opt,
-	label: opt,
-}));
+
 // { value, label}
 const monthOpts = MONTHS.map((month, idx) => ({
 	value: String(idx),
 	label: month,
 }));
 
-const DailyOptions = ({ values, onChange }: FreqOptionsProps) => {
-	return (
-		<div className={styles.DailyOptions}>
-			<span>Every</span>
-			<NumberInput
-				name="interval"
-				id="interval"
-				value={values.interval as unknown as string}
-				onChange={onChange}
-				style={{ width: "5ch" }}
-			/>
-			<Select
-				name="frequency"
-				id="frequency"
-				value={values.frequency as unknown as string}
-				onChange={onChange}
-				options={freqOptions}
-				style={{ width: "12rem" }}
-			/>
-		</div>
-	);
-};
 const WeeklyOptions = ({ values, onSelect }: FreqOptionsProps) => {
 	return (
 		<div className={styles.WeeklyOptions}>
@@ -201,6 +176,7 @@ const WeekDay = ({ day, onClick, isSelected = false }: WeekDayProps) => {
 // After => after X occurrences
 // Never => no end date
 type EndsOnType = "On date" | "After" | "Never";
+
 const EndsOn = ({ values, onSelect, onChange }: FreqOptionsProps) => {
 	const [endsOn, setEndsOn] = useState<EndsOnType>("Never");
 	const [afterXOcurrences, setAfterXOccurrences] = useState<number>(1);
@@ -275,15 +251,6 @@ const RecurringOptions = ({ values, onChange, onSelect }: Props) => {
 				/>
 			</div>
 			<div className={styles.RecurringOptions_options}>
-				{frequency === "Daily" && (
-					<>
-						<DailyOptions
-							values={values}
-							onChange={onChange}
-							onSelect={onSelect}
-						/>
-					</>
-				)}
 				{frequency === "Weekly" && (
 					<WeeklyOptions
 						values={values}
