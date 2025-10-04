@@ -1,3 +1,6 @@
+@use "@sass/variables" as *;
+@use "@sass/custom" as *;
+
 @mixin scrollbar($color: var(--blueGrey400)) {
 	&::-webkit-scrollbar {
 		display: inline;
@@ -105,7 +108,6 @@ $modalRadius: 5rem;
 	bottom: 0;
 	left: 0;
 	transform: translate(-50%, -0%);
-
 	width: 100dvw;
 	height: 90dvh;
 	border-radius: $modalRadius $modalRadius 0 0;

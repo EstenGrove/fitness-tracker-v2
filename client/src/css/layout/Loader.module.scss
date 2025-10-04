@@ -1,13 +1,11 @@
-@use "../../sass/variables" as *;
-@use "../../sass/mixins" as *;
-@use "../../sass/custom" as *;
+@use "@sass/variables" as *;
 
 $size: 48px;
 
 .Loader {
 	width: 100%;
 	height: auto;
-	@include colCenter;
+	@include colCenter();
 
 	&_inner {
 		width: max-content;
