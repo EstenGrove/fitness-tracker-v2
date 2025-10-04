@@ -4,11 +4,11 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"dev": "SASS_QUIET_DEPRECATIONS=1 vite",
 		"build": "vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"local": "vite -- --host"
+		"local": "SASS_QUIET_DEPRECATIONS=1 vite -- --host"
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^2.6.1",

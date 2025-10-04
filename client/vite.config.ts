@@ -18,10 +18,11 @@ export default defineConfig({
 		preprocessorOptions: {
 			scss: {
 				additionalData: `
-          @use "@sass/variables" as *;
-          @use "@sass/mixins" as *;
-          @use "@sass/custom" as *;
+				@use "@sass/variables" as *;
+				@use "@sass/mixins" as *;
+				@use "@sass/custom" as *;
         `,
+				quietDeps: true,
 			},
 		},
 	},
