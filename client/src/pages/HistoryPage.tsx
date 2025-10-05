@@ -15,6 +15,13 @@ import ModalLG from "../components/shared/ModalLG";
 import HistoryTabs from "../components/history/HistoryTabs";
 import DateRangeCalendar from "../components/calendars/DateRangeCalendar";
 import { useSelector } from "react-redux";
+import AIChatInput from "../components/ai/AIChatInput";
+
+const isMobile = () => {
+	const width = window.innerWidth;
+	const height = window.innerHeight;
+	return width <= 800;
+};
 
 const CalendarIcon = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -60,6 +67,8 @@ const HistoryPage = () => {
 				<div className={styles.HistoryPage_main}>
 					<Outlet />
 				</div>
+
+				{!isMobile() && <AIChatInput />}
 			</div>
 
 			{showRangeCalendar && (

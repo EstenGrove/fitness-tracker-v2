@@ -1,0 +1,72 @@
+$inputBG: var(--inputBG);
+
+.AIChatInput {
+	position: fixed; // keep it pinned to the viewport bottom
+	left: 50%;
+	bottom: 2rem;
+	transform: translateX(-50%);
+	width: 95%;
+	max-width: 800px;
+	padding: 0.5rem 1rem;
+	display: flex;
+	align-items: flex-end; // <— ensures textarea grows upward
+	background-color: $inputBG;
+	border: 1px solid var(--blueGrey900);
+	border-radius: 2.5rem;
+	z-index: 9999;
+	gap: 1rem;
+}
+
+.AIChatInput_inputWrapper {
+	flex: 1;
+	display: flex;
+	align-items: flex-end; // anchor textarea to bottom
+}
+
+.AIChatInput_inputWrapper_input {
+	width: 100%;
+	min-height: 3rem;
+	max-height: 20rem;
+	padding: 0.8rem 1.2rem;
+	border: none;
+	outline: none;
+	border-radius: 2rem;
+	background-color: $inputBG;
+	color: $text1;
+	font-size: 1.6rem;
+	font-weight: 500;
+	resize: none;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: #aaa transparent;
+	transition: height 0.2s ease;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: #ccc;
+		border-radius: 3px;
+	}
+	&::-webkit-scrollbar-thumb:hover {
+		background: #999;
+	}
+}
+
+.SendButton {
+	width: 3.5rem;
+	height: 3.5rem;
+	border: none;
+	border-radius: 50%;
+	background-color: black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+
+	&_icon {
+		width: 2.2rem;
+		height: 2.2rem;
+		fill: grey;
+	}
+}
