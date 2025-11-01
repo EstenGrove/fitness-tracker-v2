@@ -1,14 +1,12 @@
 .ChatWindow {
 	position: relative;
 	@include fill_container;
-	padding-top: 4rem;
-	// border: 1px solid green;
+	// border: 1px solid red;
 
 	&_messages {
 		position: relative;
 		width: 100%;
 		height: 90%;
-		// border: 1px solid yellow;
 	}
 	&_input {
 		position: absolute;
@@ -17,7 +15,6 @@
 		width: 100%;
 		height: 10%;
 		@include rowCenter();
-		// border: 1px solid pink;
 	}
 }
 

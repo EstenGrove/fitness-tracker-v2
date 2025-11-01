@@ -17,10 +17,12 @@ type Props = {
 	duration: number;
 	onEnd: (info: TimeInfo) => void;
 	onSkip: () => void;
+	onReset?: () => void;
 };
 
 type ButtonProps = {
 	onClick: () => void;
+	isDisabled?: boolean;
 };
 
 type TimerControlProps = {
@@ -43,6 +45,10 @@ const TimerControls = ({
 	const showStart =
 		status === ETimerStatus.IDLE || status === ETimerStatus.PAUSED;
 	const isPaused = status === ETimerStatus.PAUSED;
+	const hasStarted =
+		status === ETimerStatus.ACTIVE ||
+		status === ETimerStatus.PAUSED ||
+		status === ETimerStatus.STOPPED;
 
 	const startOrResume = () => {
 		return isPaused ? resume() : start();
@@ -56,41 +62,61 @@ const TimerControls = ({
 			) : (
 				<PauseButton onClick={pause} />
 			)}
-			<SkipButton onClick={skip} />
+			<SkipButton onClick={skip} isDisabled={hasStarted} />
 		</div>
 	);
 };
 
-const StartButton = ({ onClick }: ButtonProps) => {
+const StartButton = ({ onClick, isDisabled = false }: ButtonProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.StartButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			disabled={isDisabled}
+			className={styles.StartButton}
+		>
 			<svg className={styles.StartButton_icon}>
 				<use xlinkHref={`${sprite}#icon-play`}></use>
 			</svg>
 		</button>
 	);
 };
-const PauseButton = ({ onClick }: ButtonProps) => {
+const PauseButton = ({ onClick, isDisabled = false }: ButtonProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.PauseButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			disabled={isDisabled}
+			className={styles.PauseButton}
+		>
 			<svg className={styles.PauseButton_icon}>
 				<use xlinkHref={`${sprite}#icon-pause`}></use>
 			</svg>
 		</button>
 	);
 };
-const EndWorkoutButton = ({ onClick }: ButtonProps) => {
+const EndWorkoutButton = ({ onClick, isDisabled = false }: ButtonProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.EndWorkoutButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			disabled={isDisabled}
+			className={styles.EndWorkoutButton}
+		>
 			<svg className={styles.EndWorkoutButton_icon}>
 				<use xlinkHref={`${sprite}#icon-stop`}></use>
 			</svg>
 		</button>
 	);
 };
-const SkipButton = ({ onClick }: ButtonProps) => {
+const SkipButton = ({ onClick, isDisabled = false }: ButtonProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.SkipButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			disabled={isDisabled}
+			className={styles.SkipButton}
+		>
 			<span>Skip</span>
 		</button>
 	);
@@ -172,6 +198,8 @@ const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 			return;
 		}
 		timer.reset();
+
+		return onReset && onReset();
 	};
 	const pause = () => {
 		timer.pause();

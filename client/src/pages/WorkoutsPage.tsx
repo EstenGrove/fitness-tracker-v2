@@ -1,9 +1,11 @@
-import { format } from "date-fns";
 import sprite from "../assets/icons/main.svg";
 import sprite2 from "../assets/icons/calendar.svg";
 import sprite3 from "../assets/icons/dashboard.svg";
 import styles from "../css/pages/WorkoutsPage.module.scss";
-import { ReactNode, useRef, useState } from "react";
+import { useAppDispatch } from "../store/store";
+import { summaryApi } from "../features/dashboard/summaryApi";
+import { sortByCompleted } from "../utils/utils_workouts";
+import { useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
@@ -16,23 +18,24 @@ import ModalLG from "../components/shared/ModalLG";
 import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
-import { useAppDispatch } from "../store/store";
-import { summaryApi } from "../features/dashboard/summaryApi";
-
-const getTodaysDate = (date?: Date | string) => {
-	if (!date) {
-		const now = new Date();
-		const today = format(now, "EEE, MMM do");
-
-		return today;
-	} else {
-		const today = format(date, "EEE, MMM do");
-		return today;
-	}
-};
+import PageHeader from "../components/layout/PageHeader";
 
 type ActionBtnProps = {
 	onClick: () => void;
+};
+type QuickAction = "CreateWorkout" | "LogWorkout";
+type HeaderActionProps = {
+	selectAction: (action: QuickAction) => void;
+	onClose: () => void;
+};
+type ActionItemProps = {
+	icon: string;
+	label: string;
+	onClick: () => void;
+};
+type PanelAction = "Goals" | "Calendar" | "Search" | "Trends";
+type ActionsPanelProps = {
+	onAction: (action: PanelAction) => void;
 };
 
 const SearchButton = ({ onClick }: ActionBtnProps) => {
@@ -72,11 +75,6 @@ const TrendsButton = ({ onClick }: ActionBtnProps) => {
 	);
 };
 
-type PanelAction = "Goals" | "Calendar" | "Search" | "Trends";
-type ActionsPanelProps = {
-	onAction: (action: PanelAction) => void;
-};
-
 const ActionsPanel = ({ onAction }: ActionsPanelProps) => {
 	return (
 		<div className={styles.ActionsPanel}>
@@ -87,13 +85,6 @@ const ActionsPanel = ({ onAction }: ActionsPanelProps) => {
 		</div>
 	);
 };
-
-type ActionItemProps = {
-	icon: string;
-	label: string;
-	onClick: () => void;
-};
-
 const ActionItem = ({ icon, onClick, label }: ActionItemProps) => {
 	return (
 		<button type="button" onClick={onClick} className={styles.ActionItem}>
@@ -104,7 +95,6 @@ const ActionItem = ({ icon, onClick, label }: ActionItemProps) => {
 		</button>
 	);
 };
-
 const ActionButton = ({ onClick }: { onClick: () => void }) => {
 	return (
 		<button type="button" onClick={onClick} className={styles.ActionButton}>
@@ -115,12 +105,6 @@ const ActionButton = ({ onClick }: { onClick: () => void }) => {
 		</button>
 	);
 };
-type QuickAction = "CreateWorkout" | "LogWorkout";
-type HeaderActionProps = {
-	selectAction: (action: QuickAction) => void;
-	onClose: () => void;
-};
-
 const HeaderActions = ({ selectAction, onClose }: HeaderActionProps) => {
 	const headerRef = useRef<HTMLDivElement>(null);
 	useOutsideClick(headerRef, onClose);
@@ -144,51 +128,6 @@ const HeaderActions = ({ selectAction, onClose }: HeaderActionProps) => {
 			</div>
 		</div>
 	);
-};
-
-const WorkoutHeader = ({
-	title,
-	children,
-}: {
-	title: string;
-	children?: ReactNode;
-}) => {
-	const today = getTodaysDate();
-	return (
-		<div className={styles.WorkoutHeader}>
-			<div className={styles.WorkoutHeader_main}>
-				<div className={styles.WorkoutHeader_main_today}>{today}</div>
-				<h2 className={styles.WorkoutHeader_main_label}>{title}</h2>
-			</div>
-			<div className={styles.WorkoutHeader_actions}>{children}</div>
-		</div>
-	);
-};
-
-const sortByCompleted = (workouts: TodaysWorkout[]) => {
-	if (!workouts || !workouts.length) return [];
-
-	const isDone = (workout: TodaysWorkout) => {
-		const status = workout.workoutStatus;
-
-		switch (status) {
-			case "COMPLETE":
-				return 1;
-			case "IN-PROGRESS":
-				return 1.5;
-			case "NOT-COMPLETE":
-				return 0;
-			case "SKIPPED":
-				return 2;
-
-			default:
-				return 0;
-		}
-	};
-
-	return [...workouts]?.sort((a, b) => {
-		return isDone(a) - isDone(b);
-	});
 };
 
 const WorkoutsPage = () => {
@@ -240,7 +179,7 @@ const WorkoutsPage = () => {
 	return (
 		<div className={styles.WorkoutsPage}>
 			<div className={styles.WorkoutsPage_header}>
-				<WorkoutHeader title="Workouts">
+				<PageHeader title="Workouts" styles={{ padding: "2rem 2.5rem" }}>
 					<ActionButton onClick={openQuickActions} />
 
 					{showQuickActions && (
@@ -249,7 +188,7 @@ const WorkoutsPage = () => {
 							onClose={closeQuickActions}
 						/>
 					)}
-				</WorkoutHeader>
+				</PageHeader>
 			</div>
 			<div className={styles.WorkoutsPage_main}>
 				<div className={styles.WorkoutsPage_main_top}>

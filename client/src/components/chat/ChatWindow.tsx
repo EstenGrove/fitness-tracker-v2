@@ -115,11 +115,13 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 	};
 
 	// Smooth scroll to most recent message
+	// ##TODO:
+	// - This scrolls to the bottom on page load & other times which isn't desired
 	useEffect(() => {
 		if (recentMsgRef.current) {
 			scrollToView(recentMsgRef as RefObject<HTMLElement>);
 		}
-	}, [messages]);
+	}, []);
 
 	return (
 		<div className={styles.ChatWindow}>

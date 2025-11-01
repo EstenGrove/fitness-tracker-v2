@@ -3,7 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"dev": "tsx --env-file=.env watch src/index.ts",
+		"dev": "tsx watch --env-file=.env src/index.ts",
 		"start": "node --env-file=.env dist/index.js",
 		"local": "node --env-file=.env dist/index.ts"
 	},

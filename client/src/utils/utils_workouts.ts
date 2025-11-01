@@ -902,6 +902,32 @@ const formatElapsedTime = (mins: number, secs: number) => {
 	return newTime;
 };
 
+const sortByCompleted = (workouts: TodaysWorkout[]): TodaysWorkout[] => {
+	if (!workouts || !workouts.length) return [];
+
+	const isDone = (workout: TodaysWorkout) => {
+		const status = workout.workoutStatus;
+
+		switch (status) {
+			case "COMPLETE":
+				return 1;
+			case "IN-PROGRESS":
+				return 1.5;
+			case "NOT-COMPLETE":
+				return 0;
+			case "SKIPPED":
+				return 2;
+
+			default:
+				return 0;
+		}
+	};
+
+	return [...workouts]?.sort((a, b) => {
+		return isDone(a) - isDone(b);
+	});
+};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -929,4 +955,5 @@ export {
 	calculateDurationFromEndedTimes,
 	formatElapsedTime,
 	getElapsedWorkoutTime,
+	sortByCompleted,
 };
