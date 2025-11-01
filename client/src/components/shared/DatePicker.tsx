@@ -240,8 +240,6 @@ const DatePicker = ({
 		return formatDate(value.toString(), "long");
 	}, [value]);
 
-	console.log("value", value);
-	console.log("selectedDate", selectedDate);
 	const [datePicker, setDatePicker] = useState<DatePickerState>({
 		monthStart: startOfMonth(value).toString(),
 		monthEnd: endOfMonth(value).toString(),

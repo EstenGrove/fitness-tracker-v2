@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const useCountdown = (interval: number = 5, onEnd?: () => void) => {
-	const timerRef = useRef<number | null>(null);
+	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const [count, setCount] = useState<number>(interval);
 	const [isCounting, setIsCounting] = useState<boolean>(false);
 

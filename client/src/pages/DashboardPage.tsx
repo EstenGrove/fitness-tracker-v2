@@ -48,7 +48,7 @@ const DashboardPage = () => {
 	const header = useWeekHeader(baseDate.toString());
 	const currentUser = useSelector(selectCurrentUser);
 	const { data, isLoading } = useDashboardSummary(header.selectedDate);
-	const summary = data as DashboardSummary;
+	const summary: DashboardSummary = data;
 
 	return (
 		<PageContainer padding="1rem 2rem">
@@ -77,14 +77,14 @@ const DashboardPage = () => {
 							<Spacer margin="1rem 0" />
 							<CardsSection title={habitInfo.title} to={habitInfo.path}>
 								<DashboardHabits
-									habits={summary?.habitProgress?.todaysSummaries}
+									habits={summary.habitProgress.todaysSummaries}
 								/>
 							</CardsSection>
 
 							{/* LOGS (WORKOUT & HABITS) */}
 							<RecentHistoryTabs
-								recentWorkouts={summary?.recentWorkouts}
-								recentHabitLogs={summary?.habitProgress?.todaysLogs}
+								recentWorkouts={summary.recentWorkouts}
+								recentHabitLogs={summary.habitProgress?.todaysLogs}
 							/>
 						</>
 					) : (

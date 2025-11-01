@@ -11,13 +11,12 @@ type StatsRouteParams = { category: StatsCategory };
 const StatsPage = () => {
 	const navigate = useNavigate();
 	const { category } = useParams<StatsRouteParams>();
-	// const currentUser = useSelector(selectCurrentUser);
+	const currentUser = useSelector(selectCurrentUser);
 
 	const backToDashboard = () => {
 		navigate("/");
 	};
 
-	console.log("category", category);
 	return (
 		<PageContainer>
 			<div className={styles.StatsPage}>

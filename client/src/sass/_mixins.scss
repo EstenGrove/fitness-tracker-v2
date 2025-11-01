@@ -122,6 +122,8 @@ $modalRadius: 5rem;
 
 	&_main {
 		@include fill_container;
+		overflow-y: auto;
+		padding-bottom: 4rem;
 	}
 }
 

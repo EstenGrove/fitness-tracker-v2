@@ -77,6 +77,7 @@ type EndWorkoutVals = Omit<EndedWorkoutValues, "sets" | "exercise">;
 const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 	const [logWorkout] = useLogWorkoutMutation();
 	const [skipWorkout] = useSkipWorkoutMutation();
+
 	const [hasEnded, setHasEnded] = useState<boolean>(false);
 	const [workoutInfo, setWorkoutInfo] = useState<TotalInfo | null>(null);
 	const [showAddDetails, setShowAddDetails] = useState<boolean>(false);
@@ -90,7 +91,7 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 		startTime: "",
 		endTime: "",
 		duration: workout.duration,
-		effort: "None",
+		effort: "Easy",
 		steps: 0,
 		miles: 0,
 		pace: 0,

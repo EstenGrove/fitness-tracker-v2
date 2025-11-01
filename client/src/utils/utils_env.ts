@@ -181,11 +181,20 @@ const API_ENDPOINTS = {
 		medicationHistory: "/exports/medication-history",
 		sessionHistory: "/exports/session-history",
 	},
+	chat: {
+		conversations: "/chat/conversations",
+		messages: "/chat/messages",
+		general: "/chat/general",
+		summary: "/chat/summary",
+		info: "/chat/info",
+		ping: "/chat/ping",
+	},
 };
 
 export const {
 	auth: authApis,
 	user: userApis,
+	chat: chatApis,
 	stats: statsApis,
 	exports: exportApis,
 	activity: activityApis,

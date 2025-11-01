@@ -146,7 +146,7 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 	);
 };
 
-const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
+const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 	const timer = usePersistentTimer(duration, {
 		onEnd(info) {
 			return onEnd(info);
@@ -166,6 +166,11 @@ const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
 		timer.end();
 	};
 	const reset = () => {
+		const statuses: TimerStatus[] = ["ACTIVE", "PAUSED"];
+		if (statuses.includes(timerStatus)) {
+			alert("Workout is IN-PROGRESS!");
+			return;
+		}
 		timer.reset();
 	};
 	const pause = () => {
@@ -177,8 +182,6 @@ const WorkoutTimer = ({ duration, onEnd, onSkip }: Props) => {
 	const skip = () => {
 		return onSkip && onSkip();
 	};
-
-	// console.log("timer", timer);
 
 	return (
 		<div className={styles.WorkoutTimer}>

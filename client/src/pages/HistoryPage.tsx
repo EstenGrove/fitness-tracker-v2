@@ -8,13 +8,13 @@ import {
 import { DateRange } from "../features/types";
 import { useAppDispatch } from "../store/store";
 import { formatDate } from "../utils/utils_dates";
+import { useSelector } from "react-redux";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import styles from "../css/pages/HistoryPage.module.scss";
 import ModalLG from "../components/shared/ModalLG";
 import HistoryTabs from "../components/history/HistoryTabs";
 import DateRangeCalendar from "../components/calendars/DateRangeCalendar";
-import { useSelector } from "react-redux";
 
 const CalendarIcon = ({ onClick }: { onClick: () => void }) => {
 	return (

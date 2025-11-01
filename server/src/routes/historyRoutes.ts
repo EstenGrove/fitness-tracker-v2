@@ -19,6 +19,8 @@ import {
 	type LastSessionParams,
 } from "../modules/history/getLastWorkout.js";
 import { normalizeHistoryDetails } from "../modules/history/historyDetails.js";
+import type { UpdateHistoryData } from "../services/HistoryService.js";
+import { editWorkoutHistory } from "../modules/history/editWorkoutHistory.js";
 
 const app = new Hono();
 
@@ -126,6 +128,30 @@ app.get("/getHistoryDetails", async (ctx: Context) => {
 	}
 	const historyDetails = normalizeHistoryDetails(history);
 	const resp = getResponseOk(historyDetails);
+	return ctx.json(resp);
+});
+app.post("/editWorkoutHistory", async (ctx: Context) => {
+	const body = await ctx.req.json<{ newData: UpdateHistoryData }>();
+	const newValues = body.newData as UpdateHistoryData;
+
+	// ##TODO:
+	// - Add module fn
+	// - Handle normalization
+	// - Add error handling
+
+	const result = await editWorkoutHistory(newValues);
+
+	if (result instanceof Error) {
+		const errResp = getResponseError(result, {
+			updatedEntry: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		updatedEntry: result,
+	});
+
 	return ctx.json(resp);
 });
 
