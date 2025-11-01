@@ -150,6 +150,12 @@ const QuickLogButton = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
+const LastLogged = () => {
+	return (
+		<div className="LastLogged">{/* Show the 'last logged' date here. */}</div>
+	);
+};
+
 const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 	const navigate = useNavigate();
 	const { habitName, icon, iconColor, habitsLogged } = habit;

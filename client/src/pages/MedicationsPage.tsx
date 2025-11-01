@@ -46,7 +46,7 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 7,
+	scheduleID: 8,
 };
 
 const MedicationsPage = () => {
@@ -60,8 +60,6 @@ const MedicationsPage = () => {
 	const pillSummary = data?.pillSummary as IPillSummary;
 	const medLogs = (data?.medicationLogs ?? []) as MedLogEntry[];
 	const userMedsInfo = medsInfo as MedsInfo;
-
-	console.log("userMedsInfo", userMedsInfo);
 
 	const openModal = () => {
 		setShowLogMedModal(true);

@@ -122,8 +122,6 @@ const HistoryDetails = ({ history }: Props) => {
 	const name = addEllipsis(workout?.workoutName, 20);
 	const isExercise = isExerciseType(activityType);
 
-	console.log("details", details);
-
 	useEffect(() => {
 		let isMounted = true;
 		if (!isMounted) return;

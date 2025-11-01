@@ -4,11 +4,16 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import Loader from "./components/layout/Loader";
+import { AppProviders } from "./context/AppProviders";
+import OfflineIndicator from "./components/offline/OfflineIndicator";
 
 const NotFound = lazy(() => import("./pages/NotFoundPage"));
 // Signup/Login
 const Login = lazy(() => import("./pages/LoginPage"));
 const CreateAccount = lazy(() => import("./pages/CreateAccountPage"));
+
+// AI Chats
+const AIChatPage = lazy(() => import("./pages/AIChatPage"));
 
 const User = lazy(() => import("./pages/UserPage"));
 const Goals = lazy(() => import("./pages/GoalsPage"));
@@ -51,254 +56,266 @@ const StrengthHistory = lazy(() => import("./views/StrengthHistory"));
 function App() {
 	return (
 		<Provider store={store}>
-			<Router>
-				<div className="App">
-					<div className="App_main">
-						<Routes>
-							{/* MARK: LOGIN */}
-							<Route
-								path="/login"
-								element={
-									<Suspense fallback={<Loader />}>
-										<Login />
-									</Suspense>
-								}
-							/>
-							<Route
-								path="/account"
-								element={
-									<Suspense fallback={<Loader />}>
-										<CreateAccount />
-									</Suspense>
-								}
-							/>
-							{/* MARK: MAIN ROUTES */}
-							<Route
-								path="/"
-								element={
-									<Suspense fallback={<Loader />}>
-										<DashboardLayout />
-									</Suspense>
-								}
-							>
-								<Route index element={<Dashboard />} />
-
+			<AppProviders>
+				<Router>
+					<div className="App">
+						<div className="App_main">
+							<OfflineIndicator />
+							<Routes>
+								{/* MARK: LOGIN */}
 								<Route
-									path="/stats/*"
+									path="/login"
 									element={
 										<Suspense fallback={<Loader />}>
-											<Stats />
+											<Login />
+										</Suspense>
+									}
+								/>
+								<Route
+									path="/account"
+									element={
+										<Suspense fallback={<Loader />}>
+											<CreateAccount />
+										</Suspense>
+									}
+								/>
+								{/* MARK: MAIN ROUTES */}
+								<Route
+									path="/"
+									element={
+										<Suspense fallback={<Loader />}>
+											<DashboardLayout />
 										</Suspense>
 									}
 								>
-									<Route path="mins" element={<MinsStats />} />
-									<Route path="steps" element={<StepsStats />} />
-									<Route path="workouts" element={<WorkoutsStats />} />
-									<Route path="activity" element={<ActivityStats />} />
+									<Route index element={<Dashboard />} />
+
+									<Route
+										path="/ai/*"
+										element={
+											<Suspense fallback={<Loader />}>
+												<AIChatPage />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="/stats/*"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Stats />
+											</Suspense>
+										}
+									>
+										<Route path="mins" element={<MinsStats />} />
+										<Route path="steps" element={<StepsStats />} />
+										<Route path="workouts" element={<WorkoutsStats />} />
+										<Route path="activity" element={<ActivityStats />} />
+									</Route>
+
+									{/* DUMMY PAGE FOR NOW! */}
+									<Route
+										path="/habit-history"
+										element={
+											<Suspense fallback={<Loader />}>
+												<HabitHistory />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="/habits"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Habits />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="/habits/:id/tracker"
+										element={
+											<Suspense fallback={<Loader />}>
+												<HabitTracker />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="/habits/recents"
+										element={
+											<Suspense fallback={<Loader />}>
+												<RecentHabitHistory />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="active/:id"
+										element={
+											<Suspense fallback={<Loader />}>
+												<ActiveWorkout />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="workouts"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Workouts />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="workouts/all"
+										element={
+											<Suspense fallback={<Loader />}>
+												<AllWorkouts />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="/meds"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Medications />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="/meds/details/:id"
+										element={
+											<Suspense fallback={<Loader />}>
+												<MedicationDetails />
+											</Suspense>
+										}
+									/>
+
+									{/* MARK: HISTORY */}
+									<Route
+										path="/history"
+										element={
+											<Suspense fallback={<Loader />}>
+												<History />
+											</Suspense>
+										}
+									>
+										<Route
+											index
+											element={
+												<Suspense fallback={<Loader />}>
+													<AllHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="strength"
+											element={
+												<Suspense fallback={<Loader />}>
+													<StrengthHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="cardio"
+											element={
+												<Suspense fallback={<Loader />}>
+													<CardioHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="walk"
+											element={
+												<Suspense fallback={<Loader />}>
+													<WalkHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="stretch"
+											element={
+												<Suspense fallback={<Loader />}>
+													<StretchHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="timed"
+											element={
+												<Suspense fallback={<Loader />}>
+													<TimedHistory />
+												</Suspense>
+											}
+										/>
+										<Route
+											path="other"
+											element={
+												<Suspense fallback={<Loader />}>
+													<OtherHistory />
+												</Suspense>
+											}
+										/>
+									</Route>
+
+									<Route
+										path="goals"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Goals />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="trends"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Trends />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="activity"
+										element={
+											<Suspense fallback={<Loader />}>
+												<RecentActivity />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="/user"
+										element={
+											<Suspense fallback={<Loader />}>
+												<User />
+											</Suspense>
+										}
+									/>
+
+									<Route
+										path="/settings"
+										element={
+											<Suspense fallback={<Loader />}>
+												<Settings />
+											</Suspense>
+										}
+									/>
 								</Route>
 
-								{/* DUMMY PAGE FOR NOW! */}
 								<Route
-									path="/habit-history"
+									path="*"
 									element={
 										<Suspense fallback={<Loader />}>
-											<HabitHistory />
+											<NotFound />
 										</Suspense>
 									}
 								/>
-
-								<Route
-									path="/habits"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Habits />
-										</Suspense>
-									}
-								/>
-								<Route
-									path="/habits/:id/tracker"
-									element={
-										<Suspense fallback={<Loader />}>
-											<HabitTracker />
-										</Suspense>
-									}
-								/>
-								<Route
-									path="/habits/recents"
-									element={
-										<Suspense fallback={<Loader />}>
-											<RecentHabitHistory />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="active/:id"
-									element={
-										<Suspense fallback={<Loader />}>
-											<ActiveWorkout />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="workouts"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Workouts />
-										</Suspense>
-									}
-								/>
-								<Route
-									path="workouts/all"
-									element={
-										<Suspense fallback={<Loader />}>
-											<AllWorkouts />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="/meds"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Medications />
-										</Suspense>
-									}
-								/>
-								<Route
-									path="/meds/details/:id"
-									element={
-										<Suspense fallback={<Loader />}>
-											<MedicationDetails />
-										</Suspense>
-									}
-								/>
-
-								{/* MARK: HISTORY */}
-								<Route
-									path="/history"
-									element={
-										<Suspense fallback={<Loader />}>
-											<History />
-										</Suspense>
-									}
-								>
-									<Route
-										index
-										element={
-											<Suspense fallback={<Loader />}>
-												<AllHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="strength"
-										element={
-											<Suspense fallback={<Loader />}>
-												<StrengthHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="cardio"
-										element={
-											<Suspense fallback={<Loader />}>
-												<CardioHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="walk"
-										element={
-											<Suspense fallback={<Loader />}>
-												<WalkHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="stretch"
-										element={
-											<Suspense fallback={<Loader />}>
-												<StretchHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="timed"
-										element={
-											<Suspense fallback={<Loader />}>
-												<TimedHistory />
-											</Suspense>
-										}
-									/>
-									<Route
-										path="other"
-										element={
-											<Suspense fallback={<Loader />}>
-												<OtherHistory />
-											</Suspense>
-										}
-									/>
-								</Route>
-
-								<Route
-									path="goals"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Goals />
-										</Suspense>
-									}
-								/>
-								<Route
-									path="trends"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Trends />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="activity"
-									element={
-										<Suspense fallback={<Loader />}>
-											<RecentActivity />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="/user"
-									element={
-										<Suspense fallback={<Loader />}>
-											<User />
-										</Suspense>
-									}
-								/>
-
-								<Route
-									path="/settings"
-									element={
-										<Suspense fallback={<Loader />}>
-											<Settings />
-										</Suspense>
-									}
-								/>
-							</Route>
-
-							<Route
-								path="*"
-								element={
-									<Suspense fallback={<Loader />}>
-										<NotFound />
-									</Suspense>
-								}
-							/>
-						</Routes>
+							</Routes>
+						</div>
 					</div>
-				</div>
-			</Router>
+				</Router>
+			</AppProviders>
 		</Provider>
 	);
 }

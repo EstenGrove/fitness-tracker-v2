@@ -310,7 +310,7 @@ const parseTime = (
 ): Date => {
 	const baseDate: Date = new Date();
 	const token = TIME_TOKENS[formatToken as keyof object] || "hh:mm a";
-	const parsed = parse(timeStr, token, baseDate);
+	const parsed: Date = parse(timeStr, token, baseDate);
 
 	return parsed;
 };

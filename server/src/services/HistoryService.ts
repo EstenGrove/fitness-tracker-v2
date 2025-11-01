@@ -1,12 +1,26 @@
 import type { Pool } from "pg";
 import type { Activity, DateRange } from "../modules/types.js";
 import type { HistoryOfTypeDB } from "../modules/history/types.js";
+import type { WorkoutSet } from "../modules/workouts/types.js";
 
 interface LastSessionParams {
 	userID: string;
 	workoutID: number;
 	activityType: string;
 	targetDate: string;
+}
+
+export interface UpdateHistoryData {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+	startTime?: string;
+	endTime?: string;
+	duration?: number;
+	sets?: WorkoutSet[];
+	steps?: number;
+	miles?: number;
+	pace?: number;
 }
 
 export type HistoryResp = Promise<HistoryOfTypeDB[] | unknown>;
@@ -121,6 +135,18 @@ class HistoryService {
 			const rows = results?.rows?.[0]?.data;
 			console.log("rows", rows);
 			return rows.history;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	// Returns JSONB data from the PROC/Fn
+	async updateWorkoutHistoryEntry(newData: UpdateHistoryData) {
+		try {
+			const query = `SELECT * FROM edit_workout_history_entry($1)`;
+			const result = await this.#db.query(query, [newData]);
+			const rows = result?.rows?.[0]?.edit_workout_history_entry;
+			return rows;
 		} catch (error) {
 			return error;
 		}

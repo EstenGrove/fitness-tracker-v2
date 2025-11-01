@@ -11,6 +11,9 @@ interface AIPromptBody {
 app.post("/workout-history-chat", async (ctx: Context) => {
 	const body = await ctx.req.json<AIPromptBody>();
 	const { prompt, message } = body;
+	// Create prompt using user's 'message'
+	// Query the AI API
+	// Stream the results back to the client
 
 	const resp = getResponseOk({
 		message: "AI Chat response",

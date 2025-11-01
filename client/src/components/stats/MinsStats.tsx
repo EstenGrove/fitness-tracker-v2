@@ -14,8 +14,6 @@ const MinsStats = ({}: Props) => {
 	const { data, isLoading, refetch } = useTotalMins(base, rangeType);
 	const summary = data as StatsSummaryItem[];
 
-	console.log("data", data);
-
 	return (
 		<div className={styles.MinsStats}>
 			{data && <StatsSummary summary={summary} />}

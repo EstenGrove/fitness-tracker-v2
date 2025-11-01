@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { LocalStorage } from "../utils/utils_storage";
+import { JsonValue, LocalStorage } from "../utils/utils_storage";
 import { formatDateTime } from "../utils/utils_dates";
 
 export type TimerMode = "COUNTDOWN" | "TIMER" | "ELAPSED" | "IDLE";
@@ -78,6 +78,7 @@ export const getPersistedInfo = (key: string = "TIMER_KEY") => {
 
 const getAdjustedTime = () => {
 	const origin = getPersistedInfo();
+
 	if (origin && !!origin.pausedAt) {
 		const diff = Date.now() - origin.pausedAt;
 		const minusDiff = origin.startedAt - diff;
@@ -93,6 +94,7 @@ interface HookParams {
 }
 
 const defaultOpts: HookParams = {
+	onStart() {},
 	onEnd() {},
 };
 
@@ -109,7 +111,6 @@ const usePersistentTimer = (
 		storedInfo?.status ?? ETimerStatus.IDLE
 	);
 	const isActive = status === ETimerStatus.ACTIVE;
-	// console.log("status(inTimer):", status);
 
 	const start = () => {
 		const now = Date.now();
@@ -151,7 +152,7 @@ const usePersistentTimer = (
 				status: ETimerStatus.ACTIVE,
 				intervalInSecs: minsToSecs(durInMins),
 			};
-			storage.set(key, info);
+			storage.set(key, info as unknown as JsonValue);
 			setStatus(ETimerStatus.ACTIVE);
 			setMode(ETimerMode.TIMER);
 			setTimer(minsToSecs(durInMins));
@@ -188,7 +189,7 @@ const usePersistentTimer = (
 			intervalInSecs: timer,
 		};
 		setStatus(ETimerStatus.PAUSED);
-		storage.set(key, info);
+		storage.set(key, info as unknown as JsonValue);
 	};
 
 	const resume = () => {
@@ -201,11 +202,10 @@ const usePersistentTimer = (
 			intervalInSecs: timer,
 		};
 		const adjusted = getAdjustedTime();
-		console.log("adjusted", adjusted);
+		console.log("[ADJUSTED]:", adjusted);
 		setTimer(timer);
 		setStatus(ETimerStatus.ACTIVE);
-		storage.set(key, info);
-		console.log("timer(Resume):", timer);
+		storage.set(key, info as unknown as JsonValue);
 	};
 
 	const end = () => {

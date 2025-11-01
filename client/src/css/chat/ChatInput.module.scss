@@ -1,0 +1,117 @@
+.ChatInput {
+	width: 100%;
+	height: 100%;
+	max-width: 80rem;
+	min-height: 4rem;
+	display: block;
+	margin: 0 auto;
+	padding: 0.5rem 1rem;
+	@include flex_row(flex-start, center);
+	gap: 0 1rem;
+
+	&_wrapper {
+		width: 100%;
+		height: max-content;
+		flex: 1;
+		@include flex_row(flex-start, center);
+		padding: 0 0.3rem;
+		gap: 0 0;
+		border: $border;
+		border-radius: 5rem;
+		background-color: var(--inputBG);
+
+		&_input {
+			width: calc(100% - 4.6rem);
+			height: 100%;
+			height: 4rem;
+			border-radius: 5rem;
+			padding: 1rem;
+			padding-left: 1rem;
+			background-color: var(--bg-input);
+			border: none;
+			outline: none;
+			color: $text1;
+			resize: none;
+			font-size: 1.6rem;
+			caret-color: $accent;
+		}
+	}
+}
+
+.SendButton {
+	width: 3.5rem;
+	height: 3.5rem;
+	border: none;
+	outline: none;
+	border-radius: 50%;
+	background-color: black;
+	@include rowCenter();
+	flex-shrink: 0;
+	z-index: 99;
+	cursor: pointer;
+	margin-left: auto;
+	&:focus-within &_icon {
+		fill: $accent;
+	}
+
+	&_icon {
+		$icon: 2rem;
+		width: $icon;
+		height: $icon;
+		min-width: $icon;
+		min-height: $icon;
+		fill: grey;
+	}
+}
+.StopButton {
+	width: 3.5rem;
+	height: 3.5rem;
+	border: none;
+	border-radius: 50%;
+	background-color: black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	cursor: pointer;
+
+	&_icon {
+		$icon: 2rem;
+		width: $icon;
+		height: $icon;
+		min-width: $icon;
+		min-height: $icon;
+		// fill: grey;
+		fill: $accentRed;
+	}
+}
+.AddButton {
+	$size: 3.5rem;
+	width: $size;
+	height: $size;
+	min-width: $size;
+	min-height: $size;
+	max-width: $size;
+	max-height: $size;
+	align-self: center;
+	border: none;
+	border-radius: 50%;
+	background-color: black;
+	@include rowCenter();
+	cursor: pointer;
+
+	&_icon {
+		$icon: 2.5rem;
+		width: $icon;
+		height: $icon;
+		min-width: $icon;
+		min-height: $icon;
+		fill: grey;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.ChatInput {
+		padding: 0.5rem 0.5rem;
+	}
+}

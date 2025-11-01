@@ -7,15 +7,15 @@ type Props = {
 	name?: string;
 	onChange?: (name: string, value: string) => void;
 	onSend: (value: string) => void; // optional send callback
+	onCancel: () => void;
 };
 
-const SendButton = ({
-	onClick,
-	isExpanded = false,
-}: {
+type SendProps = {
 	isExpanded: boolean;
 	onClick?: () => void;
-}) => {
+};
+
+const SendButton = ({ onClick, isExpanded = false }: SendProps) => {
 	const rotateStyles = {
 		transform: "rotate(-90deg)",
 		transition: "all .3s ease-in-out",
@@ -35,20 +35,50 @@ const SendButton = ({
 	);
 };
 
+type StopProps = {
+	onClick: () => void;
+};
+
+const StopButton = ({ onClick }: StopProps) => {
+	return (
+		<button className={styles.StopButton} onClick={onClick} type="button">
+			<svg className={styles.StopButton_icon}>
+				<use xlinkHref={`${sprite}#icon-controller-stop`} />
+				{/* <use xlinkHref={`${sprite}#icon-stop`} /> */}
+			</svg>
+		</button>
+	);
+};
+
 const AIChatInput = ({
 	id = "chat",
 	name = "chat",
 	onChange,
 	onSend,
+	onCancel,
 }: Props) => {
+	const [text, setText] = useState<string>("");
 	const inputRef = useRef<HTMLTextAreaElement | null>(null);
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
-	const [text, setText] = useState<string>("");
+	const [isSending, setIsSending] = useState<boolean>(false);
 
 	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 		setText(value);
+
 		return onChange && onChange(name, value);
+	};
+
+	const submitSend = () => {
+		if (onSend) onSend(text);
+		setIsSending(true);
+		setText("");
+	};
+
+	const cancelSend = () => {
+		setIsSending(false);
+		setText("");
+		return onCancel && onCancel();
 	};
 
 	// Optional: handle Enter to send, Shift+Enter for newline
@@ -61,7 +91,10 @@ const AIChatInput = ({
 				setText("");
 				if (onSend) onSend(localText);
 				if (onChange) onChange(name, ""); // reset value
+				setIsSending(true);
 			}
+		} else {
+			setIsExpanded(false);
 		}
 	};
 
@@ -111,9 +144,10 @@ const AIChatInput = ({
 				/>
 			</div>
 
-			{!!text && (
-				<SendButton onClick={() => onSend(text)} isExpanded={isExpanded} />
+			{!!text && !isSending && (
+				<SendButton onClick={submitSend} isExpanded={isExpanded} />
 			)}
+			{isSending && <StopButton onClick={cancelSend} />}
 		</div>
 	);
 };

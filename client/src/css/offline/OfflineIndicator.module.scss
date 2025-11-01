@@ -1,0 +1,13 @@
+.OfflineIndicator {
+	position: fixed;
+	display: block;
+	width: max-content;
+	top: 2rem;
+	left: 50%;
+	transform: translate(-50%, 0);
+	padding: 0.8rem 1.6rem;
+	color: $accentRed;
+	border: 2px solid $accentRed;
+	border-radius: 5rem;
+	z-index: 9999;
+}

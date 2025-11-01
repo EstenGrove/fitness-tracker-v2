@@ -1,0 +1,67 @@
+.AIFloatingInput {
+	position: fixed; // keep it pinned to the viewport bottom
+	left: 50%;
+	bottom: 8rem;
+	transform: translateX(-50%);
+	width: 100%;
+	padding: 0 1rem;
+	// @include flex_row(flex-start, center);
+	@include flex_row(center, center);
+	z-index: 10;
+}
+
+.AddInputButton {
+	width: 3.5rem;
+	height: 3.5rem;
+	border: none;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	background-color: $inputBG;
+	border: 1px solid var(--blueGrey900);
+	cursor: pointer;
+
+	&_icon {
+		width: 2.2rem;
+		height: 2.2rem;
+		fill: grey;
+	}
+}
+
+.AddSourceModal {
+	position: absolute;
+	bottom: 4.5rem;
+	left: 1rem;
+	display: block;
+	width: 22rem;
+	height: 17rem;
+	padding: 2rem 0.5rem;
+	border-radius: 1rem;
+	background-color: black;
+
+	&_options {
+		width: 100%;
+		height: 100%;
+		list-style: none;
+		@include flex_col(flex-start, flex-start);
+		gap: 1rem 0;
+
+		&_item {
+			width: 100%;
+			padding: 0.6rem 1rem;
+			color: grey;
+			font-size: 1.5rem;
+			@include flex_row(flex-start, center);
+			gap: 0 0.5rem;
+			cursor: pointer;
+
+			&_icon {
+				width: 1.6rem;
+				height: 1.6rem;
+				fill: grey;
+			}
+		}
+	}
+}

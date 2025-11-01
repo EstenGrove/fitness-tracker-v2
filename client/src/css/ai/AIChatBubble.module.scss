@@ -1,0 +1,34 @@
+.AIChatBubble {
+	width: max-content;
+	height: max-content;
+	align-self: flex-end;
+	display: block;
+
+	&_bubble {
+		width: 35rem;
+		height: auto;
+		border-radius: 3rem;
+		padding: 2rem;
+		background-color: var(--bg-foreground-dark);
+		border: 1px solid grey;
+
+		&_text {
+			display: inline-block;
+			font-size: 1.5rem;
+			color: $text1;
+			font-weight: 600;
+			word-wrap: break-word;
+			white-space: pre-wrap;
+			line-height: 1.4;
+		}
+	}
+
+	&_timestamp {
+		font-size: 1.3rem;
+		font-weight: 500;
+		color: $text2;
+		padding-left: 1rem;
+		padding-right: 1.5rem;
+		text-align: right;
+	}
+}

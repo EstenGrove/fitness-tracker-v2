@@ -1,0 +1,58 @@
+.ChatWindow {
+	position: relative;
+	@include fill_container;
+	padding-top: 4rem;
+	// border: 1px solid green;
+
+	&_messages {
+		position: relative;
+		width: 100%;
+		height: 90%;
+		// border: 1px solid yellow;
+	}
+	&_input {
+		position: absolute;
+		bottom: 0;
+		padding: 1.5rem 0;
+		width: 100%;
+		height: 10%;
+		@include rowCenter();
+		// border: 1px solid pink;
+	}
+}
+
+.ScrollToBottom {
+	position: absolute;
+	bottom: -1rem;
+	left: 50%;
+	transform: translate(-50%, -2rem);
+	width: 4rem;
+	height: 4rem;
+	border-radius: 50%;
+	background-color: #000;
+	@include rowCenter();
+	border: 1px solid grey;
+	cursor: pointer;
+	z-index: 999;
+
+	&_icon {
+		width: 3rem;
+		height: 3rem;
+		fill: grey;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.ChatWindow {
+		position: relative;
+		@include fill_container;
+
+		&_messages {
+			width: 100%;
+		}
+
+		&_input {
+			width: 100%;
+		}
+	}
+}

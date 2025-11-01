@@ -117,7 +117,7 @@ export const habitsApi = createApi({
 				const data = response.Data as { newLog: HabitLog };
 				return { data: data.newLog };
 			},
-			invalidatesTags: ["HabitCards", "HabitLogs"],
+			invalidatesTags: ["HabitCards", "HabitLogs", "HabitDetails"],
 		}),
 		getHabitHistory: builder.query<HabitHistory, HabitHistoryParams>({
 			queryFn: async (params) => {

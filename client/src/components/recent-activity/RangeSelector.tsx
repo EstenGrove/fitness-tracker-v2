@@ -52,9 +52,6 @@ const RangeSelector = ({
 }: Props) => {
 	const [selection, setSelection] = useState<string>(value);
 
-	console.log("value", value);
-	console.log("selection", selection);
-
 	const selectOption = (type: string) => {
 		setSelection(type);
 

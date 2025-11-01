@@ -77,6 +77,11 @@ const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 							Habits
 						</NavLink>
 					</li>
+					<li className={styles.SidePanelItem} onClick={onSelect}>
+						<NavLink to="ai" className={isActiveRoute}>
+							AI Chat
+						</NavLink>
+					</li>
 				</ul>
 			</div>
 			<div className={styles.SidePanel_bottom}>{/*  */}</div>
