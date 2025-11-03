@@ -120,6 +120,7 @@ const API_ENDPOINTS = {
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
 		createNewWorkout: "/workouts/createNewWorkout",
+		deleteWorkoutDate: "/workouts/deleteWorkoutDate",
 	},
 	history: {
 		getHistoryDetails: "/history/getHistoryDetails",

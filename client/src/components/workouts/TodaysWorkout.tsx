@@ -15,6 +15,7 @@ import { useAppDispatch } from "../../store/store";
 import { setActiveWorkout } from "../../features/workouts/workoutsSlice";
 import {
 	MarkAsDoneValues,
+	useDeleteWorkoutMutation,
 	useMarkAsDoneMutation,
 	useSkipWorkoutMutation,
 } from "../../features/workouts/todaysWorkoutsApi";
@@ -33,6 +34,7 @@ import ModalSM from "../shared/ModalSM";
 import SkipWorkout from "./SkipWorkout";
 import UnskipWorkout from "./UnskipWorkout";
 import ViewPostWorkout from "../details/ViewPostWorkout";
+import DeleteWorkout from "./DeleteWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -241,6 +243,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 	const { workoutName, activityType, duration, recordedDuration } = workout;
 	const [updateWorkout] = useMarkAsDoneMutation();
 	const [skipWorkout] = useSkipWorkoutMutation();
+	const [deleteWorkoutDate] = useDeleteWorkoutMutation();
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [modalType, setModalType] = useState<ModalType | null>(null);
 	const borderStyles = getBorderStyles(workout);
@@ -319,6 +322,21 @@ const TodaysWorkout = ({ workout }: Props) => {
 		closeModal();
 	};
 
+	const confirmDeleteToday = async () => {
+		const workoutDate = formatDate(new Date(), "db");
+		const { userID, workoutID, activityType } = workout;
+		await deleteWorkoutDate({
+			userID,
+			workoutID,
+			activityType,
+			workoutDate,
+		});
+	};
+
+	const cancelDeleteToday = () => {
+		closeModal();
+	};
+
 	return (
 		<div className={borderStyles}>
 			<div className={styles.TodaysWorkout_top}>
@@ -394,6 +412,15 @@ const TodaysWorkout = ({ workout }: Props) => {
 						onConfirm={confirmMarkAsDone}
 					/>
 				</ModalLG>
+			)}
+
+			{modalType === EModalType.DELETE && (
+				<ModalSM onClose={closeModal}>
+					<DeleteWorkout
+						onCancel={cancelDeleteToday}
+						onConfirm={confirmDeleteToday}
+					/>
+				</ModalSM>
 			)}
 		</div>
 	);

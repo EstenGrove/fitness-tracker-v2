@@ -44,7 +44,7 @@
 	border: none;
 	outline: none;
 	border-radius: 50%;
-	background-color: black;
+	background-color: var(--sendBtn);
 	@include rowCenter();
 	flex-shrink: 0;
 	z-index: 99;
@@ -61,6 +61,7 @@
 		min-width: $icon;
 		min-height: $icon;
 		fill: grey;
+		// fill: $accent;
 	}
 }
 .StopButton {
@@ -94,9 +95,10 @@
 	max-width: $size;
 	max-height: $size;
 	align-self: center;
-	border: none;
+	border: $border;
 	border-radius: 50%;
 	background-color: black;
+	background-color: var(--inputBG);
 	@include rowCenter();
 	cursor: pointer;
 

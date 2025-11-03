@@ -9,8 +9,6 @@ const getAIWorkoutSummary = async (userID: string, range: DateRange) => {
 		endDate
 	);
 
-	// normalize the data????
-
 	return data;
 };
 

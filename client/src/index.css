@@ -338,6 +338,8 @@
 	--habitMinus: #000;
 
 	--iconBG: var(--blueGrey200);
+
+	--sendBtn: black;
 }
 
 *,
@@ -403,6 +405,8 @@ body {
 	--lightBorder: var(--blueGrey400);
 
 	--iconBG: var(--blueGrey200);
+
+	--sendBtn: var(--bg-body);
 }
 
 :root[data-theme="dark"] {
@@ -437,6 +441,8 @@ body {
 	--pageHeader: 12rem;
 	--bottomNav: 7rem;
 	--topNav: 4rem;
+	--sendBtn: #000;
+	/* --sendBtn: var(--bg-foreground); */
 }
 
 input {

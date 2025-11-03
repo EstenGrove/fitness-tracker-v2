@@ -61,11 +61,18 @@ const ChatInput = ({ onSend, onCancel, isSending }: Props) => {
 	};
 
 	const handleSend = () => {
-		onSend(value);
+		blurInput();
 		setValue("");
+		onSend(value);
 	};
 	const handleCancel = () => {
 		onCancel();
+	};
+
+	const blurInput = () => {
+		if (inputRef.current) {
+			inputRef.current.blur();
+		}
 	};
 
 	// Smooth auto-expanding textarea
@@ -107,6 +114,9 @@ const ChatInput = ({ onSend, onCancel, isSending }: Props) => {
 					className={styles.ChatInput_wrapper_input}
 					placeholder="Ask anything"
 					rows={1}
+					style={{
+						borderRadius: isExpanded ? ".5rem" : "5rem",
+					}}
 				></textarea>
 				{!!value && <SendButton onClick={handleSend} />}
 				{isSending && <StopButton onClick={handleCancel} />}

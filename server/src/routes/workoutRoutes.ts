@@ -3,10 +3,12 @@ import { getResponseError, getResponseOk } from "../utils/api.js";
 import { workoutsService } from "../services/index.js";
 import type {
 	CreateWorkoutParams,
+	DeleteWorkoutDateParams,
 	LogWorkoutBody,
 	SkipWorkoutBody,
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
+	WasWorkoutDateDeleted,
 	Workout,
 	WorkoutDB,
 	WorkoutDetailsDB,
@@ -275,6 +277,26 @@ app.post("/createNewWorkout", async (ctx: Context) => {
 	// });
 
 	// return ctx.json(resp);
+});
+
+// Deletes a workout instance (eg. a date); not the workout itself
+app.post("/deleteWorkoutDate", async (ctx: Context) => {
+	const body = await ctx.req.json<DeleteWorkoutDateParams>();
+	const deleted = (await workoutsService.deleteWorkoutDate(
+		body
+	)) as WasWorkoutDateDeleted;
+
+	if (deleted instanceof Error) {
+		const errResp = getResponseError(deleted, {
+			wasDeleted: false,
+			error: deleted,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk(deleted);
+
+	return ctx.json(resp);
 });
 
 export default app;

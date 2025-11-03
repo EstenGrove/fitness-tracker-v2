@@ -39,6 +39,7 @@ app.use(cors(corsConfig));
 
 app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);
+app.route("chat", allRoutes.chat);
 app.route("stats", allRoutes.stats);
 app.route("habits", allRoutes.habits);
 app.route("exports", allRoutes.exports);

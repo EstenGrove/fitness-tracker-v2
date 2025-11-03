@@ -1,6 +1,7 @@
 import type { Pool } from "pg";
 import type { Activity, Effort } from "../modules/types.js";
 import type {
+	DeleteWorkoutDateParams,
 	LogWorkoutBody,
 	SkippedWorkoutDB,
 	SkipWorkoutBody,
@@ -30,6 +31,19 @@ class WorkoutsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async deleteWorkoutDate(params: DeleteWorkoutDateParams) {
+		const { userID, workoutID, activityType, workoutDate } = params;
+		try {
+			const queryParams = [userID, workoutID, activityType, workoutDate];
+			const query = `SELECT * FROM delete_workout_instance($1, $2, $3, $4)`;
+			const results = await this.#db.query(query, queryParams);
+			const rows = results?.rows?.[0]?.delete_workout_instance;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async skipWorkout(userID: string, values: SkipWorkoutBody): SkippedResp {

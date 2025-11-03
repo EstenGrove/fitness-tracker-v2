@@ -121,7 +121,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 		if (recentMsgRef.current) {
 			scrollToView(recentMsgRef as RefObject<HTMLElement>);
 		}
-	}, []);
+	}, [messages]);
 
 	return (
 		<div className={styles.ChatWindow}>

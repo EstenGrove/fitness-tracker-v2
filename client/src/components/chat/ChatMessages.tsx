@@ -1,6 +1,5 @@
 import type { RefObject } from "react";
 import styles from "../../css/chat/ChatMessages.module.scss";
-import type { ChatMessage } from "../../features/types";
 import ReactMarkdown from "react-markdown";
 import {
 	getTextFromMessageParts,
@@ -9,6 +8,7 @@ import {
 	isUserMessage,
 } from "../../utils/utils_chat";
 import type { UIMessage } from "ai";
+import { ChatMessage } from "../../features/chat/types";
 
 type Props = {
 	onScroll: () => void;
