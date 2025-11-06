@@ -8,7 +8,10 @@ const defaultOpts: FetchOptions = {
 	method: "GET",
 };
 
-const fetchWithAuth = (url: string, options: FetchOptions = defaultOpts) => {
+const fetchWithAuth = (
+	url: string | URL,
+	options: FetchOptions | RequestInit = defaultOpts
+) => {
 	return fetch(url, {
 		...(options as RequestInit),
 		credentials: "include",

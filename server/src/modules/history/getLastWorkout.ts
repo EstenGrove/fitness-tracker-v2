@@ -13,7 +13,6 @@ const getLastWorkoutByDate = async (
 ): Promise<WorkoutHistoryDB | unknown> => {
 	try {
 		const data = await historyService.getMostRecentSession(params);
-		console.log("data", data);
 		const lastSession = data;
 
 		return lastSession;

@@ -20,7 +20,6 @@ class RecentActivityService {
 		}
 	}
 	async getWeeklyActivity(userID: string, targetDate: string) {
-		console.log("targetDate", targetDate);
 		try {
 			const query = `SELECT * FROM get_weekly_activity_summary(
         $1,

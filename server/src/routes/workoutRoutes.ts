@@ -53,7 +53,6 @@ app.get("/getAllUserWorkouts", async (ctx: Context) => {
 
 app.get("/getAllWorkouts", async (ctx: Context) => {
 	const { userID } = ctx.req.query();
-	console.log("userID", userID);
 
 	const workouts = (await workoutsService.getAllWorkouts(
 		userID
@@ -160,8 +159,6 @@ app.post("/markWorkoutAsDone", async (ctx: Context) => {
 	// const updatedWorkout = new Error("Not implemented yet");
 	const updatedWorkout = await workoutsService.markWorkoutAsDone(details);
 
-	console.log("updatedWorkout", updatedWorkout);
-
 	if (updatedWorkout instanceof Error) {
 		const errResp = getResponseError(updatedWorkout, {
 			updatedWorkout: null,
@@ -198,9 +195,6 @@ app.post("/logWorkout", async (ctx: Context) => {
 	}
 
 	const newLog = normalizeWorkoutLog(rawLog);
-
-	console.log("newLog", newLog);
-
 	const resp = getResponseOk({
 		newLog: newLog,
 	});
@@ -246,8 +240,6 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	console.log("rawStats", rawStats);
-
 	const resp = getResponseOk(rawStats);
 
 	return ctx.json(resp);
@@ -255,8 +247,6 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 
 app.post("/createNewWorkout", async (ctx: Context) => {
 	const body = await ctx.req.json<CreateWorkoutParams>();
-
-	console.log("body", body);
 
 	return ctx.json({
 		data: body,

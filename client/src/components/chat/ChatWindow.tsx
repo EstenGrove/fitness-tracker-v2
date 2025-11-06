@@ -2,12 +2,10 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import sprite from "../../assets/icons/chat.svg";
 import styles from "../../css/chat/ChatWindow.module.scss";
 import type { ChatMessage, QuickPrompt } from "../../features/chat/types";
-import { DefaultChatTransport } from "ai";
-import { currentEnv } from "../../utils/utils_env";
-import { useChat } from "@ai-sdk/react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatQuickPrompts from "./ChatQuickPrompts";
+import { useAIChat } from "../../hooks/useAIChat";
 
 type Props = {
 	endpoint: string;
@@ -32,48 +30,12 @@ const ScrollToBottom = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
-const fake: ChatMessage[] = [
-	{
-		parts: [
-			{
-				type: "text",
-				text: "Whats the capitol of tennesse",
-			},
-		],
-		id: "Kl0D6yFjo7sbjdZW",
-		role: "user",
-		metadata: {
-			createdAt: "10/26/2025 10:23:39.661 AM",
-		},
-	},
-	{
-		id: "m7CtEJ8YOYIYiYLK",
-		metadata: {
-			createdAt: "10/26/2025 10:23:39.697 AM",
-		},
-		role: "assistant",
-		parts: [
-			{
-				type: "step-start",
-			},
-			{
-				type: "text",
-				text: "The capital of Tennessee is **Nashville**.",
-				state: "done",
-			},
-		],
-	},
-];
-
 const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 	const recentMsgRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
-	const { messages, sendMessage, stop, status } = useChat({
-		messages: [...fake],
-		transport: new DefaultChatTransport({
-			api: currentEnv.base + endpoint,
-		}),
+	const { messages, sendMessage, stop, status } = useAIChat({
+		endpoint: endpoint,
 	});
 	const hasSuggestions = quickPrompts && quickPrompts?.length > 0;
 
@@ -127,7 +89,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 		<div className={styles.ChatWindow}>
 			<div className={styles.ChatWindow_messages}>
 				<ChatMessages
-					messages={messages}
+					messages={messages as ChatMessage[]}
 					messageEndRef={recentMsgRef}
 					containerRef={containerRef}
 					onScroll={onScroll}

@@ -17,7 +17,7 @@ const NewChatButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const chatOpts = {
-	endpoint: chatApis.general,
+	endpoint: chatApis.summary,
 };
 
 const AIChatPage = () => {

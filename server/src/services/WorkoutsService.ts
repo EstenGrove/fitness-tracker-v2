@@ -61,7 +61,6 @@ class WorkoutsService {
 				activityType,
 				workoutDate,
 			]);
-			console.log("[RESULTS]:\n\n", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -87,7 +86,6 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [values]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return { ...rows, activity_type: "Stretch" };
 		} catch (error) {
@@ -149,9 +147,7 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [userID]);
-			console.log("[RESULTS]", results);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -163,9 +159,7 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [userID]);
-			console.log("[RESULTS]", results);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -180,7 +174,6 @@ class WorkoutsService {
       ) as data`;
 			const results = await this.#db.query(query, [userID, targetDate]);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -217,7 +210,6 @@ class WorkoutsService {
 				workoutID,
 				activityType,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {
@@ -226,13 +218,11 @@ class WorkoutsService {
 	}
 
 	async markWorkoutAsDone(details: MarkAsDoneBody) {
-		console.log("details(inPG):", details);
 		try {
 			const query = `SELECT * FROM mark_workout_as_done(
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [details]);
-			console.log("results", results);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {

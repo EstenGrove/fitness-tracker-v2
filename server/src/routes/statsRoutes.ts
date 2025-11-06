@@ -20,7 +20,6 @@ const app = new Hono();
 app.get("/getPostWorkoutDetails", async (ctx: Context) => {
 	const data = ctx.req.query();
 	const params = data as unknown as PostWorkoutParams;
-	console.log("params", params);
 
 	const postWorkout = await getPostWorkoutDetails({
 		...params,
@@ -74,8 +73,6 @@ app.get("/getPostWorkoutStats", async (ctx: Context) => {
 		workoutID: Number(workoutID),
 		activityType: activityType as Activity,
 	});
-
-	console.log("stats", stats);
 
 	return ctx.json({
 		stats: stats,

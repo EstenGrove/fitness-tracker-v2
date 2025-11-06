@@ -98,7 +98,6 @@ class MedicationsService {
       )`;
 			const values = [userID, medID, scheduleID, loggedAt, amountTaken, action];
 			const results = await this.#db.query(query, values);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -176,7 +175,6 @@ class MedicationsService {
 		try {
 			const query = `SELECT * FROM create_med_schedule($1)`;
 			const results = await this.#db.query(query, [params]);
-			console.log("results", results);
 			const data = results?.rows?.[0]?.data;
 			return data;
 		} catch (error) {

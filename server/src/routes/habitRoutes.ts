@@ -150,12 +150,7 @@ app.post("/logHabit", async (ctx: Context) => {
 app.post("/logHabitsBatched", async (ctx: Context) => {
 	const body = await ctx.req.json<{ newLogs: HabitLogValues[] }>();
 	const newLogs: HabitLogValues[] = body.newLogs;
-
-	console.log("newLogs", newLogs);
-
 	const habitLogs = (await logHabitsBatched(newLogs)) as HabitLog[];
-
-	console.log("habitLogs", habitLogs);
 
 	if (habitLogs instanceof Error) {
 		const errResp = getResponseError(habitLogs, {

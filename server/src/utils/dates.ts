@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 
 export interface DateFormats {
 	date: {
@@ -49,6 +49,50 @@ const formatCustomDate = (
 
 const formatTimestamp = (date: Date | string = new Date()) => {
 	return formatCustomDate(date, "timestamp");
+};
+
+const getDateRangeFromInput = (input: string) => {
+	const lastRegex =
+		/((?<last>last) (?<count>\d{1,}) (?<unit>days|weeks|months))/gm;
+	const thisRegex = /(?<this>this) (?<unit>week|month|quarter|year)/gm;
+
+	const endDate = new Date();
+
+	const getUnit = (unit: "days" | "weeks" | "months") => {
+		switch (unit) {
+			case "days": {
+				return 1;
+			}
+			case "weeks": {
+				return 7;
+			}
+			case "months": {
+				return 30;
+			}
+
+			default:
+				return 1;
+		}
+	};
+
+	let matches: RegExpMatchArray | null;
+	if ((matches = lastRegex.exec(input))) {
+		const { groups } = matches;
+		const { last, count, unit } = groups;
+		const start = subDays(endDate, count * getUnit(unit));
+		return {
+			startDate: start,
+			endDate: endDate,
+		};
+	}
+
+	if (matches = thisRegex.exec(input)) {
+		const { groups } = matches;
+		const { this, count, unit } = groups;
+		return {
+			endDate: endDate
+		}
+	}
 };
 
 export {

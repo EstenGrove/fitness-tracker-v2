@@ -36,11 +36,7 @@ app.get("/getLastWorkout", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	console.log("type", type);
-	console.log("last", last);
 	const lastSession: HistoryOfType = normalizeHistoryEntryByType(type, last);
-
-	console.log("lastSession", lastSession);
 
 	const resp = getResponseOk({
 		lastSession: lastSession,
@@ -55,8 +51,6 @@ app.get("/getHistoryByRange", async (ctx: Context) => {
 		startDate,
 		endDate,
 	})) as AllHistoryDB;
-
-	console.log("raw", raw);
 
 	if (raw instanceof Error) {
 		const errResp = getResponseError(raw, {
@@ -99,8 +93,6 @@ app.get("/getHistoryByRangeAndType", async (ctx: Context) => {
 
 	const history: HistoryOfType[] = normalizeHistoryByType(type, records);
 
-	console.log("records", records);
-
 	const resp = getResponseOk({
 		history: history,
 	});
@@ -110,15 +102,12 @@ app.get("/getHistoryByRangeAndType", async (ctx: Context) => {
 app.get("/getHistoryDetails", async (ctx: Context) => {
 	const { userID, historyID, activityType } = ctx.req.query();
 	const type = activityType as Activity;
-	console.log("type", type);
 
 	const history = (await historyService.getHistoryDetails(
 		userID,
 		Number(historyID),
 		type
 	)) as HistoryDetailsDB;
-
-	console.log("history", history);
 
 	if (history instanceof Error) {
 		const errResp = getResponseError(history, {

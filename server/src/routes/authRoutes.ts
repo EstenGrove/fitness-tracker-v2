@@ -61,8 +61,6 @@ app.post("/login", async (ctx: Context) => {
 });
 app.post("/logout", async (ctx: Context) => {
 	const { userID, sessionID } = await ctx.req.json<LogoutParams>();
-	console.log("userID", userID);
-	console.log("sessionID", sessionID);
 
 	if (!userID || !sessionID) {
 		const err = new Error("Missing userID or sessionID");
@@ -73,8 +71,6 @@ app.post("/logout", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 	const logoutData = await logout(userID, sessionID);
-
-	console.log("logoutData", logoutData);
 
 	if (logoutData instanceof Error) {
 		const errResp = getResponseError(logoutData, {
@@ -117,7 +113,6 @@ app.get("/refresh", async (ctx: Context) => {
 
 	const refreshedAuth = (await refreshAuth(accessCookie)) as RefreshResponse;
 	const newToken = refreshedAuth.token;
-	console.log("refreshedAuth", refreshedAuth);
 
 	setAccessToken(ctx, newToken);
 

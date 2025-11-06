@@ -1,19 +1,43 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { getAIWorkoutSummary } from "./utils.js";
+import { getAICaloriesSummary, getAIWorkoutSummary } from "./utils.js";
 
-const TOOLS = {
-	getWorkoutSummary: tool({
-		description: "Gets workout history for a given range for a given user.",
-		inputSchema: z.object({
-			userID: z.string().uuid().describe("The target user id"),
-			startDate: z.string().describe("Start date of the given range"),
-			endDate: z.string().describe("End date of the given range"),
+const isoDate = z
+	.string()
+	.regex(/^\d{4}-\d{2}-\d{2}$/, "Must be in YYYY-MM-DD format");
+
+const createTools = (userID: string) => {
+	return {
+		getWorkoutSummary: tool({
+			description: "Gets workout history for a given range for a given user.",
+			inputSchema: z.object({
+				startDate: isoDate.describe("Start date of the given range."),
+				endDate: isoDate.describe("End date of the given range."),
+			}),
+			execute: async ({ startDate, endDate }) => {
+				const results = await getAIWorkoutSummary(userID, {
+					startDate,
+					endDate,
+				});
+				return JSON.stringify(results, null, 2);
+			},
 		}),
-		execute: async ({ userID, startDate, endDate }) => {
-			return getAIWorkoutSummary(userID, { startDate, endDate });
-		},
-	}),
+		getCaloriesSummary: tool({
+			description:
+				"Gets a calories summary by activity type for a given range & user.",
+			inputSchema: z.object({
+				startDate: isoDate.describe("Start date of the given range."),
+				endDate: isoDate.describe("End date of the given range."),
+			}),
+			execute: async ({ startDate, endDate }) => {
+				const results = await getAICaloriesSummary(userID, {
+					startDate,
+					endDate,
+				});
+				return JSON.stringify(results, null, 2);
+			},
+		}),
+	};
 };
 
-export { TOOLS };
+export { createTools };

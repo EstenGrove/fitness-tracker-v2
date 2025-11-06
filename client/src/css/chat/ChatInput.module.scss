@@ -69,11 +69,14 @@
 	height: 3.5rem;
 	border: none;
 	border-radius: 50%;
-	background-color: black;
+	// background-color: black;
+	// background-color: var(--sendBtn);
+	background-color: var(--blueGrey200);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
+	margin-left: auto;
 	cursor: pointer;
 
 	&_icon {
@@ -82,7 +85,6 @@
 		height: $icon;
 		min-width: $icon;
 		min-height: $icon;
-		// fill: grey;
 		fill: $accentRed;
 	}
 }

@@ -52,7 +52,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -75,7 +74,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -98,7 +96,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -121,7 +118,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -144,7 +140,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -167,7 +162,6 @@ class StatsService {
 				historyID,
 				type,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {

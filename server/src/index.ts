@@ -1,10 +1,17 @@
 import dotenv from "dotenv";
-import { Hono, type Context } from "hono";
+import { Hono, type Context, type Next } from "hono";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { allRoutes } from "./routes/index.js";
 import { getServer, isRemote } from "./utils/env.js";
+import {
+	getUserIDFromToken,
+	verifyAccessToken,
+	withAuth,
+} from "./modules/auth/utils.js";
+import { getResponseError } from "./utils/api.js";
+import { getCookie } from "hono/cookie";
 dotenv.config();
 
 const target = getServer("local");
@@ -15,7 +22,8 @@ const SERVER = {
 	port: target.port,
 };
 const CLIENT = {
-	host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
+	host: "localhost",
+	// host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
 	port: Number(process.env.CLIENT_HTTP_PORT),
 };
 
@@ -34,8 +42,20 @@ const corsConfig = {
 
 const app = new Hono().basePath("/api/v1");
 
+const ENABLE_MIDDLEWARE = false;
+
 app.use(logger());
 app.use(cors(corsConfig));
+app.use("*", async (ctx: Context, next: Next) => {
+	if (!ENABLE_MIDDLEWARE) return await next();
+
+	const path = ctx.req.path;
+	if (path.includes("/auth/login") || path.includes("/user")) {
+		return await next();
+	}
+
+	return await withAuth(ctx, next);
+});
 
 app.route("user", allRoutes.user);
 app.route("auth", allRoutes.auth);

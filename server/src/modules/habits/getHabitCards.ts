@@ -7,8 +7,6 @@ const getHabitCards = async (userID: string, targetDate: string) => {
 		targetDate
 	)) as HabitCardDB[];
 
-	console.log("cards", cards);
-
 	if (cards instanceof Error) {
 		return cards;
 	}
