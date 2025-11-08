@@ -2,6 +2,7 @@
 	width: 100%;
 	height: 100%;
 	min-height: 100%;
+	// overflow-y: hidden;
 
 	&_messages {
 		width: 100%;
@@ -11,7 +12,7 @@
 		flex: 1;
 		@include flex_col(flex-start, flex-start);
 		gap: 3rem 0;
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: hidden;
 
 		&::-webkit-scrollbar {
@@ -82,14 +83,28 @@
 	margin: 0 auto;
 
 	&_content {
-		display: inline-block;
+		display: block;
 		font-size: 1.6rem;
 		color: $text1;
 		font-weight: 600;
 		word-wrap: break-word;
 		white-space: pre-wrap;
 		line-height: 1.4;
+		overflow-wrap: anywhere;
 	}
+}
+
+/* handle markdown code blocks */
+.AIMessage_content pre {
+	white-space: pre-wrap; /* ✅ allows wrapping in <pre> */
+	word-break: break-word;
+	overflow-x: auto; /* ✅ allows scroll for truly long code */
+}
+
+/* inline code */
+.AIMessage_content code {
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .UserMessage {
@@ -105,7 +120,7 @@
 		height: auto;
 		border-radius: 3rem;
 		padding: 2rem;
-		background-color: var(--bg-foreground-dark);
+		background-color: var(--bg-foreground);
 		border: 1px solid grey;
 
 		&_content {

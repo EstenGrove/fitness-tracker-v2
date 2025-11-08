@@ -22,8 +22,6 @@ const userExists = async (
 		password
 	)) as UserExistsDB;
 
-	console.log("existsResp", existsResp);
-
 	return {
 		isActiveUser: existsResp.is_active_user,
 		userNotFound: existsResp.user_not_found,

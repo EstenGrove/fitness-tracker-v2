@@ -68,7 +68,6 @@ class HistoryService {
 				workoutID,
 				activityType,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0]?.data;
 			return rows?.lastWorkout;
 		} catch (error) {
@@ -133,7 +132,6 @@ class HistoryService {
 				endDate,
 			]);
 			const rows = results?.rows?.[0]?.data;
-			console.log("rows", rows);
 			return rows.history;
 		} catch (error) {
 			return error;

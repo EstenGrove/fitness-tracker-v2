@@ -16,6 +16,7 @@ const SERVERS = {
 	local: {
 		prefix: defaultPrefix,
 		ip: process.env.API_HOST,
+		// ip: "localhost",
 		port: Number(process.env.API_PORT) || defaultPort,
 	},
 	remote: {

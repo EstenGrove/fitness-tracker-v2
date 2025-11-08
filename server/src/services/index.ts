@@ -11,6 +11,7 @@ import { HabitsService } from "./HabitsService.js";
 import { SummaryService } from "./SummaryService.js";
 import { ExportService } from "./ExportService.js";
 import { ChatDataService } from "./ChatDataService.js";
+import { ChatSuggestionsService } from "./ChatSuggestionsService.js";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);
@@ -24,6 +25,7 @@ const workoutsService = new WorkoutsService(db);
 const dashboardService = new DashboardService(db);
 const medicationsService = new MedicationsService(db);
 const recentActivityService = new RecentActivityService(db);
+const chatSuggestionsService = new ChatSuggestionsService(db);
 
 const allServices = {
 	user: userService,
@@ -38,12 +40,14 @@ const allServices = {
 	dashboard: dashboardService,
 	medications: medicationsService,
 	recentActivity: recentActivityService,
+	chatSuggestions: chatSuggestionsService,
 };
 
 export {
 	// ALL SERVICES
 	allServices,
 	// INDIVIDUAL SERVICES
+	chatSuggestionsService,
 	recentActivityService,
 	medicationsService,
 	dashboardService,

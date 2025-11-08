@@ -9,6 +9,9 @@ import {
 } from "./types";
 import {
 	createNewWorkout,
+	DeletedWorkoutDateData,
+	deleteWorkoutDate,
+	DeleteWorkoutDateParams,
 	fetchAllUserWorkouts,
 	fetchAllWorkouts,
 	fetchSkippedWorkouts,
@@ -155,6 +158,19 @@ export const todaysWorkoutsApi = createApi({
 			},
 			invalidatesTags: ["TodaysWorkouts"],
 		}),
+		deleteWorkout: builder.mutation<
+			DeletedWorkoutDateData,
+			DeleteWorkoutDateParams
+		>({
+			queryFn: async (params) => {
+				const response = (await deleteWorkoutDate(
+					params
+				)) as AwaitedResponse<DeletedWorkoutDateData>;
+				const data = response.Data as DeletedWorkoutDateData;
+
+				return { data };
+			},
+		}),
 		createWorkout: builder.mutation<CreatedWorkoutData, NewWorkoutParams>({
 			queryFn: async (params) => {
 				const { userID, newWorkout } = params;
@@ -180,4 +196,5 @@ export const {
 	useLogWorkoutMutation,
 	useSkipWorkoutMutation,
 	useCreateWorkoutMutation,
+	useDeleteWorkoutMutation,
 } = todaysWorkoutsApi;

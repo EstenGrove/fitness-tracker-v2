@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import sprite from "../../assets/icons/chat.svg";
 import styles from "../../css/chat/ChatWindow.module.scss";
-import type { ChatMessage, QuickPrompt } from "../../features/chat/types";
-import { DefaultChatTransport } from "ai";
-import { currentEnv } from "../../utils/utils_env";
-import { useChat } from "@ai-sdk/react";
+import type { ChatMessage, ChatSuggestion } from "../../features/chat/types";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatQuickPrompts from "./ChatQuickPrompts";
+import { useAIChat } from "../../hooks/useAIChat";
 
 type Props = {
 	endpoint: string;
-	quickPrompts?: QuickPrompt[];
+	initialMessages?: ChatMessage[];
+	quickPrompts?: ChatSuggestion[];
 };
 
 const scrollToView = (
@@ -32,54 +31,26 @@ const ScrollToBottom = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
-const fake: ChatMessage[] = [
-	{
-		parts: [
-			{
-				type: "text",
-				text: "Whats the capitol of tennesse",
-			},
-		],
-		id: "Kl0D6yFjo7sbjdZW",
-		role: "user",
-		metadata: {
-			createdAt: "10/26/2025 10:23:39.661 AM",
-		},
-	},
-	{
-		id: "m7CtEJ8YOYIYiYLK",
-		metadata: {
-			createdAt: "10/26/2025 10:23:39.697 AM",
-		},
-		role: "assistant",
-		parts: [
-			{
-				type: "step-start",
-			},
-			{
-				type: "text",
-				text: "The capital of Tennessee is **Nashville**.",
-				state: "done",
-			},
-		],
-	},
-];
+const SHOW_SUGGESTIONS = true;
 
-const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
+const ChatWindow = ({
+	endpoint,
+	initialMessages = [],
+	quickPrompts = [],
+}: Props) => {
 	const recentMsgRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
-	const { messages, sendMessage, stop, status } = useChat({
-		messages: [...fake],
-		transport: new DefaultChatTransport({
-			api: currentEnv.base + endpoint,
-		}),
+	const { messages, sendMessage, stop, status } = useAIChat({
+		initialMessages: initialMessages,
+		endpoint: endpoint,
 	});
 	const hasSuggestions = quickPrompts && quickPrompts?.length > 0;
 
 	const hasMessages = useMemo(() => {
 		return messages && messages?.length > 0;
 	}, [messages]);
+	const showSuggestions = hasSuggestions && !hasMessages && SHOW_SUGGESTIONS;
 
 	const handleSend = (value: string) => {
 		sendMessage({
@@ -95,7 +66,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 		console.log("msgID", msgID);
 	};
 
-	const selectSuggestion = (option: QuickPrompt) => {
+	const selectSuggestion = (option: ChatSuggestion) => {
 		const { prompt } = option;
 		handleSend(prompt);
 	};
@@ -115,6 +86,8 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 	};
 
 	// Smooth scroll to most recent message
+	// ##TODO:
+	// - This scrolls to the bottom on page load & other times which isn't desired
 	useEffect(() => {
 		if (recentMsgRef.current) {
 			scrollToView(recentMsgRef as RefObject<HTMLElement>);
@@ -125,7 +98,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 		<div className={styles.ChatWindow}>
 			<div className={styles.ChatWindow_messages}>
 				<ChatMessages
-					messages={messages}
+					messages={messages as ChatMessage[]}
 					messageEndRef={recentMsgRef}
 					containerRef={containerRef}
 					onScroll={onScroll}
@@ -135,13 +108,15 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 					<ScrollToBottom onClick={scrollToBottom} />
 				)}
 			</div>
-			<div className={styles.ChatWindow_input}>
-				{hasSuggestions && (
+			<div className={styles.ChatWindow_suggestions}>
+				{showSuggestions && (
 					<ChatQuickPrompts
 						quickPrompts={quickPrompts}
 						onSelect={selectSuggestion}
 					/>
 				)}
+			</div>
+			<div className={styles.ChatWindow_input}>
 				<ChatInput
 					onSend={handleSend}
 					onCancel={handleCancel}

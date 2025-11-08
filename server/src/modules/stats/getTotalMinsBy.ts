@@ -65,7 +65,6 @@ const getTotalMinsBy = async (
 				userID,
 				targetDate
 			)) as YearMinsDB[];
-			console.log("response", response);
 			const data = normalizeYearlyMins(response);
 			return data;
 		}

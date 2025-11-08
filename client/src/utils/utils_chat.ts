@@ -3,6 +3,7 @@ import {
 	ChatConversations,
 	ChatInfo,
 	ChatMessage,
+	ChatSuggestion,
 } from "../features/chat/types";
 import { AsyncResponse } from "../features/types";
 import { chatApis, currentEnv } from "./utils_env";
@@ -17,9 +18,14 @@ export interface ChatInfoData {
 export interface ConversationData {
 	chats: ChatConversations;
 }
+export interface SuggestionsData {
+	suggestions: QuickPrompt[];
+}
+
 export type ChatMessagesResp = AsyncResponse<ChatMessagesData>;
 export type ChatInfoResp = AsyncResponse<ChatInfoData>;
 export type ConversationsResp = AsyncResponse<ConversationData>;
+export type SuggestionsResp = AsyncResponse<SuggestionsData>;
 
 const fetchChatMessages = async (
 	userID: string,
@@ -45,6 +51,19 @@ const fetchChatInfo = async (userID: string, chatID: string): ChatInfoResp => {
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response.Data;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchChatSuggestions = async (userID: string): SuggestionsResp => {
+	let url = currentEnv.base + chatApis.suggestions;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
 	} catch (error) {
 		return error;
 	}
@@ -84,9 +103,12 @@ const getTextFromMessageParts = (message: UIMessage): string => {
 };
 
 export {
+	// STATIC VARIABLES
+	// DEFAULT_SUGGESTIONS,
 	// Chat Request handlers
 	fetchChatMessages,
 	fetchChatInfo,
+	fetchChatSuggestions,
 	fetchChatConversations,
 	// Chat Message & UI utils
 	isSystemMessage,

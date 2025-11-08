@@ -3,19 +3,24 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"dev": "tsx --env-file=.env watch src/index.ts",
+		"dev": "tsx watch --env-file=.env src/index.ts",
 		"start": "node --env-file=.env dist/index.js",
 		"local": "node --env-file=.env dist/index.ts"
 	},
 	"dependencies": {
+		"@ai-sdk/google": "^2.0.26",
 		"@hono/node-server": "^1.14.1",
+		"ai": "^5.0.86",
 		"bcrypt": "^5.1.1",
 		"date-fns": "^4.1.0",
 		"dotenv": "^16.5.0",
 		"hono": "^4.7.6",
 		"json2csv": "^6.0.0-alpha.2",
 		"jsonwebtoken": "^9.0.2",
-		"pg": "^8.14.1"
+		"ollama": "^0.6.2",
+		"ollama-ai-provider-v2": "^1.5.2",
+		"pg": "^8.14.1",
+		"zod": "^4.1.12"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.2",

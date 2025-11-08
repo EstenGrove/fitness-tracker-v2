@@ -1,20 +1,19 @@
 .ChatQuickPrompts {
 	width: 100%;
-	height: 6rem;
+	height: 100%;
+	@include colCenter();
 
 	&_inner {
 		@include fill_container;
-		padding: 0 1rem;
-		overflow-x: auto;
+		@include flex_col(flex-start, center);
+		gap: 2rem 1rem;
+		padding: 1rem;
 	}
 }
 
-.ChatPrompt {
+.QuickPromptButton {
 	width: max-content;
 	font-size: 1.5rem;
-	color: $text3;
-	padding: 0.2rem 0.5rem;
-	border-radius: 5rem;
 	border: none;
 	outline: none;
 	cursor: pointer;

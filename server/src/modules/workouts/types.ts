@@ -219,3 +219,18 @@ export interface CreateWorkoutParams {
 		byMonthDay: number | string | null;
 	};
 }
+
+export interface DeleteWorkoutDateParams {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutDate: string;
+}
+
+export interface WasWorkoutDateDeleted {
+	workoutID: number;
+	activityType: Activity;
+	targetDate: string;
+	scheduleID: string | null;
+	wasDeleted: boolean;
+}

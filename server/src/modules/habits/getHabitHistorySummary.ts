@@ -12,8 +12,6 @@ const getHabitHistorySummary = async (
 		year
 	)) as HabitYearSummary;
 
-	console.log("summary", summary);
-
 	if (summary instanceof Error) {
 		return summary;
 	}

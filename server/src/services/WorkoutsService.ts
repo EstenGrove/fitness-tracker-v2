@@ -1,6 +1,7 @@
 import type { Pool } from "pg";
 import type { Activity, Effort } from "../modules/types.js";
 import type {
+	DeleteWorkoutDateParams,
 	LogWorkoutBody,
 	SkippedWorkoutDB,
 	SkipWorkoutBody,
@@ -32,6 +33,19 @@ class WorkoutsService {
 		this.#db = db;
 	}
 
+	async deleteWorkoutDate(params: DeleteWorkoutDateParams) {
+		const { userID, workoutID, activityType, workoutDate } = params;
+		try {
+			const queryParams = [userID, workoutID, activityType, workoutDate];
+			const query = `SELECT * FROM delete_workout_instance($1, $2, $3, $4)`;
+			const results = await this.#db.query(query, queryParams);
+			const rows = results?.rows?.[0]?.delete_workout_instance;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async skipWorkout(userID: string, values: SkipWorkoutBody): SkippedResp {
 		const { workoutID, activityType, workoutDate } = values;
 		try {
@@ -47,7 +61,6 @@ class WorkoutsService {
 				activityType,
 				workoutDate,
 			]);
-			console.log("[RESULTS]:\n\n", results);
 			const rows = results?.rows?.[0];
 			return rows;
 		} catch (error) {
@@ -73,7 +86,6 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [values]);
-			console.log("results", results);
 			const rows = results?.rows?.[0];
 			return { ...rows, activity_type: "Stretch" };
 		} catch (error) {
@@ -135,9 +147,7 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [userID]);
-			console.log("[RESULTS]", results);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -149,9 +159,7 @@ class WorkoutsService {
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [userID]);
-			console.log("[RESULTS]", results);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -166,7 +174,6 @@ class WorkoutsService {
       ) as data`;
 			const results = await this.#db.query(query, [userID, targetDate]);
 			const rows = results?.rows;
-			console.log("results.rows", results.rows);
 			return rows;
 		} catch (error) {
 			return error;
@@ -203,7 +210,6 @@ class WorkoutsService {
 				workoutID,
 				activityType,
 			]);
-			console.log("results", results);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {
@@ -212,13 +218,11 @@ class WorkoutsService {
 	}
 
 	async markWorkoutAsDone(details: MarkAsDoneBody) {
-		console.log("details(inPG):", details);
 		try {
 			const query = `SELECT * FROM mark_workout_as_done(
 				$1
 			) as data`;
 			const results = await this.#db.query(query, [details]);
-			console.log("results", results);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {

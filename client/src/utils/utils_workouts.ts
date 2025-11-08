@@ -56,6 +56,12 @@ export interface MarkAsDoneBody {
 	sets?: WorkoutSet[];
 }
 
+export interface DeleteWorkoutDateParams {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutDate: string;
+}
 export interface SkipWorkoutParams {
 	userID: string;
 	workoutID: number;
@@ -106,6 +112,14 @@ export interface LogWorkoutValues {
 	sets: WorkoutSet[];
 }
 
+export interface DeletedWorkoutDateData {
+	workoutID: number;
+	activityType: Activity;
+	targetDate: string;
+	scheduleID: string | null;
+	wasDeleted: boolean;
+}
+
 export type TodaysWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
 export type AllUserWorkoutsResp = AsyncResponse<{ workouts: TodaysWorkout[] }>;
 export type SkippedWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
@@ -114,6 +128,7 @@ export type AllWorkoutsResp = AsyncResponse<{ workouts: Workout[] }>;
 export type LoggedWorkoutResp = AsyncResponse<{ newLog: HistoryOfType }>;
 export type SkippedWorkoutResp = AsyncResponse<{ wasSkipped: boolean }>;
 export type CreatedWorkoutResp = AsyncResponse<CreatedWorkoutData>;
+export type DeletedWorkoutDateResp = AsyncResponse<DeletedWorkoutDateData>;
 
 const logWorkout = async (
 	userID: string,
@@ -248,6 +263,24 @@ const skipWorkout = async (
 		const request = await fetchWithAuth(url, {
 			method: "POST",
 			body: JSON.stringify(details),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const deleteWorkoutDate = async (
+	params: DeleteWorkoutDateParams
+): DeletedWorkoutDateResp => {
+	let url = currentEnv.base + workoutApis.deleteWorkoutDate;
+	url += "?" + new URLSearchParams({ userID: params.userID });
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify(params),
 		});
 		const response = await request.json();
 		return response;
@@ -902,9 +935,36 @@ const formatElapsedTime = (mins: number, secs: number) => {
 	return newTime;
 };
 
+const sortByCompleted = (workouts: TodaysWorkout[]): TodaysWorkout[] => {
+	if (!workouts || !workouts.length) return [];
+
+	const isDone = (workout: TodaysWorkout) => {
+		const status = workout.workoutStatus;
+
+		switch (status) {
+			case "COMPLETE":
+				return 1;
+			case "IN-PROGRESS":
+				return 1.5;
+			case "NOT-COMPLETE":
+				return 0;
+			case "SKIPPED":
+				return 2;
+
+			default:
+				return 0;
+		}
+	};
+
+	return [...workouts]?.sort((a, b) => {
+		return isDone(a) - isDone(b);
+	});
+};
+
 export {
 	logWorkout,
 	skipWorkout,
+	deleteWorkoutDate,
 	fetchAllUserWorkouts,
 	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
@@ -929,4 +989,5 @@ export {
 	calculateDurationFromEndedTimes,
 	formatElapsedTime,
 	getElapsedWorkoutTime,
+	sortByCompleted,
 };

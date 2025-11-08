@@ -120,6 +120,7 @@ const API_ENDPOINTS = {
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
 		createNewWorkout: "/workouts/createNewWorkout",
+		deleteWorkoutDate: "/workouts/deleteWorkoutDate",
 	},
 	history: {
 		getHistoryDetails: "/history/getHistoryDetails",
@@ -185,7 +186,8 @@ const API_ENDPOINTS = {
 		conversations: "/chat/conversations",
 		messages: "/chat/messages",
 		general: "/chat/general",
-		summary: "/chat/summary",
+		summary: "/chat/summarize",
+		suggestions: "/chat/suggestions",
 		info: "/chat/info",
 		ping: "/chat/ping",
 	},
