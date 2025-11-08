@@ -9,3 +9,8 @@
 
 ./certs
 ./certs/*
+./certs/cert.pem
+./certs/key.pem
+
+cert.pem
+key.pem
