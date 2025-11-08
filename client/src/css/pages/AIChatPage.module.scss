@@ -1,7 +1,6 @@
 .AIChatPage {
 	flex: 1;
 	@include fill_container;
-	// overflow-y: hidden;
 
 	&_header {
 		width: 100%;
@@ -14,7 +13,6 @@
 			100% - var(--pageHeader) - var(--topNav) - var(--bottomNav) + 5rem
 		);
 		@include flex_col(flex-start, flex-start);
-		// border: 1px solid blue;
 	}
 }
 
@@ -25,6 +23,22 @@
 	background-color: transparent;
 	border: $border;
 	color: $text3;
+}
+
+@mixin suggestionBtn($color: $accentBlue) {
+	padding: 0.8rem 1.3rem;
+	border-radius: 0.5rem;
+	color: $color;
+	outline: none;
+	background-color: transparent;
+	border: 1px solid $color;
+}
+
+.SummarizeSuggestion {
+	@include suggestionBtn();
+}
+.GeneratePlanSuggestion {
+	@include suggestionBtn($accentGreen);
 }
 
 @media only screen and (max-width: 800px) {

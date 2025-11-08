@@ -1,29 +1,44 @@
 import styles from "../../css/chat/ChatQuickPrompts.module.scss";
-import type { QuickPrompt } from "../../features/types";
+import { ChatSuggestion } from "../../features/chat/types";
 
 type Props = {
-	quickPrompts: QuickPrompt[];
-	onSelect: (suggestion: QuickPrompt) => void;
+	quickPrompts: ChatSuggestion[];
+	onSelect: (suggestion: ChatSuggestion) => void;
 };
 
-type ChatPromptProps = {
-	quickPrompt: QuickPrompt;
-	onSelect: () => void;
+type QuickPromptButtonProps = {
+	quickPrompt: ChatSuggestion;
+	onSelect: (suggestion?: ChatSuggestion) => void;
 };
 
-const ChatPrompt = ({ quickPrompt, onSelect }: ChatPromptProps) => {
-	const { label, categories } = quickPrompt;
-	const title = label.length > 6 ? label.slice(0, 6) + "..." : label;
-	const categoryOpts = categories?.join(", ");
+const QuickPromptButton = ({
+	quickPrompt,
+	onSelect,
+}: QuickPromptButtonProps) => {
+	const { content } = quickPrompt;
+
+	const onClick = async () => {
+		if (quickPrompt?.onBeforeSend) {
+			const result = await quickPrompt?.onBeforeSend(quickPrompt);
+			const newPrompt = result ? result : quickPrompt.prompt;
+			return (
+				onSelect &&
+				onSelect({
+					...quickPrompt,
+					prompt: newPrompt,
+				})
+			);
+		}
+
+		return onSelect && onSelect(quickPrompt);
+	};
+
 	return (
-		<button
-			type="button"
-			onClick={onSelect}
-			className={styles.ChatPrompt}
-			data-categories={categoryOpts}
-		>
-			{title}
-		</button>
+		<div className={styles.QuickPromptButton} onClick={onClick}>
+			{content}
+			{/*  */}
+			{/*  */}
+		</div>
 	);
 };
 
@@ -36,7 +51,7 @@ const ChatQuickPrompts = ({ quickPrompts, onSelect }: Props) => {
 						const { promptID } = suggestion;
 						const key = `${promptID}-${idx}`;
 						return (
-							<ChatPrompt
+							<QuickPromptButton
 								key={key}
 								quickPrompt={suggestion}
 								onSelect={() => onSelect(suggestion)}

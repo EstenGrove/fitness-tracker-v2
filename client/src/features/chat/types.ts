@@ -1,4 +1,5 @@
 import { UIMessage } from "ai";
+import { JSX, ReactNode } from "react";
 
 export interface ChatMessage extends UIMessage {
 	metadata: {
@@ -22,9 +23,10 @@ export interface ChatParams {
 	chatID: string;
 }
 
-export interface QuickPrompt {
+export interface ChatSuggestion {
 	promptID: number;
 	prompt: string;
-	label: string;
+	content: ReactNode | JSX.Element | string;
 	categories?: string[];
+	onBeforeSend?: (suggestion: ChatSuggestion) => Promise<string | null>;
 }

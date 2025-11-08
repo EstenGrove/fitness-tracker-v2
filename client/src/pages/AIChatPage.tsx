@@ -6,7 +6,36 @@ import styles from "../css/pages/AIChatPage.module.scss";
 import { chatApis } from "../utils/utils_env";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
-// import { useNavGuard } from "../hooks/useNavGuard";
+import { ChatSuggestion } from "../features/chat/types";
+
+// DEFAULT SUGGESTIONS
+const SummarizeSuggestion = () => {
+	return (
+		<button className={styles.SummarizeSuggestion}>Summarize Workouts</button>
+	);
+};
+const GeneratePlanSuggestion = () => {
+	return (
+		<button className={styles.GeneratePlanSuggestion}>
+			Generate Workout Plan
+		</button>
+	);
+};
+
+const DEFAULT_SUGGESTIONS: ChatSuggestion[] = [
+	{
+		promptID: 1,
+		prompt: "Summarize my workout history for the last 60 days",
+		content: <SummarizeSuggestion />,
+		categories: ["workouts", "history", "summary"],
+	},
+	{
+		promptID: 2,
+		prompt: "Generate a workout plan based off my recent workout history",
+		content: <GeneratePlanSuggestion />,
+		categories: ["workouts", "history", "plan"],
+	},
+];
 
 const NewChatButton = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -23,14 +52,6 @@ const chatOpts = {
 const AIChatPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const [isNewChat, setIsNewChat] = useState<boolean>(false);
-	// useNavGuard({
-	// 	when: true,
-	// 	block: { route: true, close: true, unload: true },
-	// 	onIntercept: ({ type, proceed, reset }) => {
-	// 		console.log("type:", type);
-	// 		return reset && reset();
-	// 	},
-	// });
 
 	const onNewChat = () => {
 		setIsNewChat(true);
@@ -49,7 +70,7 @@ const AIChatPage = () => {
 						currentUser={currentUser}
 						endpoint={chatOpts.endpoint}
 						isNewChat={isNewChat}
-						suggestions={[]}
+						suggestions={DEFAULT_SUGGESTIONS}
 					/>
 				</div>
 			</div>

@@ -5,13 +5,7 @@ import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { allRoutes } from "./routes/index.js";
 import { getServer, isRemote } from "./utils/env.js";
-import {
-	getUserIDFromToken,
-	verifyAccessToken,
-	withAuth,
-} from "./modules/auth/utils.js";
-import { getResponseError } from "./utils/api.js";
-import { getCookie } from "hono/cookie";
+import { withAuth } from "./modules/auth/utils.js";
 dotenv.config();
 
 const target = getServer("local");
@@ -22,8 +16,8 @@ const SERVER = {
 	port: target.port,
 };
 const CLIENT = {
-	host: "localhost",
-	// host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
+	// host: "localhost",
+	host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
 	port: Number(process.env.CLIENT_HTTP_PORT),
 };
 

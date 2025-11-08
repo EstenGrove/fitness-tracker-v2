@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import sprite from "../../assets/icons/chat.svg";
 import styles from "../../css/chat/ChatWindow.module.scss";
-import type { ChatMessage, QuickPrompt } from "../../features/chat/types";
+import type { ChatMessage, ChatSuggestion } from "../../features/chat/types";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import ChatQuickPrompts from "./ChatQuickPrompts";
@@ -9,7 +9,8 @@ import { useAIChat } from "../../hooks/useAIChat";
 
 type Props = {
 	endpoint: string;
-	quickPrompts?: QuickPrompt[];
+	initialMessages?: ChatMessage[];
+	quickPrompts?: ChatSuggestion[];
 };
 
 const scrollToView = (
@@ -30,11 +31,18 @@ const ScrollToBottom = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
-const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
+const SHOW_SUGGESTIONS = true;
+
+const ChatWindow = ({
+	endpoint,
+	initialMessages = [],
+	quickPrompts = [],
+}: Props) => {
 	const recentMsgRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
 	const { messages, sendMessage, stop, status } = useAIChat({
+		initialMessages: initialMessages,
 		endpoint: endpoint,
 	});
 	const hasSuggestions = quickPrompts && quickPrompts?.length > 0;
@@ -42,6 +50,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 	const hasMessages = useMemo(() => {
 		return messages && messages?.length > 0;
 	}, [messages]);
+	const showSuggestions = hasSuggestions && !hasMessages && SHOW_SUGGESTIONS;
 
 	const handleSend = (value: string) => {
 		sendMessage({
@@ -57,7 +66,7 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 		console.log("msgID", msgID);
 	};
 
-	const selectSuggestion = (option: QuickPrompt) => {
+	const selectSuggestion = (option: ChatSuggestion) => {
 		const { prompt } = option;
 		handleSend(prompt);
 	};
@@ -99,13 +108,15 @@ const ChatWindow = ({ endpoint, quickPrompts = [] }: Props) => {
 					<ScrollToBottom onClick={scrollToBottom} />
 				)}
 			</div>
-			<div className={styles.ChatWindow_input}>
-				{hasSuggestions && (
+			<div className={styles.ChatWindow_suggestions}>
+				{showSuggestions && (
 					<ChatQuickPrompts
 						quickPrompts={quickPrompts}
 						onSelect={selectSuggestion}
 					/>
 				)}
+			</div>
+			<div className={styles.ChatWindow_input}>
 				<ChatInput
 					onSend={handleSend}
 					onCancel={handleCancel}

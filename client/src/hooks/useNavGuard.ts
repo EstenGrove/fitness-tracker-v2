@@ -40,6 +40,15 @@ export interface GuardOptions {
  *     }
  *   }
  * })
+ * @example
+ * 	useNavGuard({
+ * 		when: true,
+ * 		block: { route: true, close: true, unload: true },
+ * 		onIntercept: ({ type, proceed, reset }) => {
+ * 			console.log("type:", type);
+ * 			return reset && reset();
+ * 		},
+ * });
  */
 
 const useNavGuard = (options: GuardOptions) => {

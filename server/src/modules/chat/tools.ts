@@ -19,7 +19,7 @@ const createTools = (userID: string) => {
 					startDate,
 					endDate,
 				});
-				return JSON.stringify(results, null, 2);
+				return results;
 			},
 		}),
 		getCaloriesSummary: tool({
@@ -34,7 +34,7 @@ const createTools = (userID: string) => {
 					startDate,
 					endDate,
 				});
-				return JSON.stringify(results, null, 2);
+				return results;
 			},
 		}),
 	};

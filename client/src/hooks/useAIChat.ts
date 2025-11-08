@@ -12,19 +12,23 @@ interface HookOpts {
 
 const useAIChat = ({ endpoint, initialMessages = [] }: HookOpts) => {
 	const currentUser = useSelector(selectCurrentUser);
-	const { messages, sendMessage, stop, status } = useChat({
-		messages: initialMessages,
-		transport: new DefaultChatTransport({
-			api: currentEnv.base + endpoint,
-			body: { userID: currentUser.userID },
-		}),
-	});
+	const { messages, sendMessage, stop, status, error, addToolResult } = useChat(
+		{
+			messages: initialMessages,
+			transport: new DefaultChatTransport({
+				api: currentEnv.base + endpoint,
+				body: { userID: currentUser?.userID },
+			}),
+		}
+	);
 
 	return {
 		messages,
 		sendMessage,
-		stop,
 		status,
+		error,
+		addToolResult,
+		stop,
 	};
 };
 

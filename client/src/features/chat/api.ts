@@ -7,8 +7,16 @@ import {
 	fetchChatInfo,
 	fetchChatConversations,
 	ConversationData,
+	fetchChatSuggestions,
+	SuggestionsData,
 } from "../../utils/utils_chat";
-import { ChatConversations, ChatInfo, ChatMessage, ChatParams } from "./types";
+import {
+	ChatConversations,
+	ChatInfo,
+	ChatMessage,
+	ChatParams,
+	QuickPrompt,
+} from "./types";
 import { AwaitedResponse } from "../types";
 
 export const chatApi = createApi({
@@ -47,6 +55,19 @@ export const chatApi = createApi({
 				return { data: chats };
 			},
 		}),
+		getChatSuggestions: builder.query<
+			QuickPrompt[],
+			Pick<ChatParams, "userID">
+		>({
+			queryFn: async (params) => {
+				const { userID } = params;
+				const response = (await fetchChatSuggestions(
+					userID
+				)) as AwaitedResponse<SuggestionsData>;
+				const { suggestions } = response.Data as SuggestionsData;
+				return { data: suggestions };
+			},
+		}),
 	}),
 });
 
@@ -54,4 +75,5 @@ export const {
 	useGetChatInfoQuery,
 	useGetChatMessagesQuery,
 	useGetConversationsQuery,
+	useGetChatSuggestionsQuery,
 } = chatApi;
