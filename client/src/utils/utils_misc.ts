@@ -48,6 +48,7 @@ const groupByFn = <T extends object>(
 	list: T[],
 	fn: (item: T) => string | number
 ) => {
+	if (!list || !list.length) return {};
 	const grouped = {} as TRecord<T>;
 
 	for (let i = 0; i < list.length; i++) {

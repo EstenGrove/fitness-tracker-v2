@@ -25,6 +25,7 @@ import { skipWorkout } from "../modules/workouts/skipWorkout.js";
 import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.js";
 import type { Activity } from "../modules/types.js";
 import { createWorkout } from "../modules/workouts/createWorkout.js";
+import { getScheduledWorkouts } from "../modules/workouts/getScheduledWorkouts.js";
 
 const app = new Hono();
 
@@ -150,6 +151,28 @@ app.get("/getWorkoutDetails", async (ctx: Context) => {
 		schedule: workoutDetails.schedule,
 		history: workoutDetails.history,
 	});
+	return ctx.json(resp);
+});
+// Gets all scheduled workouts within a given range
+app.get("/getScheduledWorkoutsForRange", async (ctx: Context) => {
+	const { userID, startDate, endDate } = ctx.req.query();
+
+	const scheduledWorkouts = (await getScheduledWorkouts(userID, {
+		startDate,
+		endDate,
+	})) as TodaysWorkoutClient[];
+
+	if (scheduledWorkouts instanceof Error) {
+		const errResp = getResponseError(scheduledWorkouts, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		workouts: scheduledWorkouts,
+	});
+
 	return ctx.json(resp);
 });
 

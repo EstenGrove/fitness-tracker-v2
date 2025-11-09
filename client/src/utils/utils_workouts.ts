@@ -7,12 +7,13 @@ import {
 	secondsToMinutes,
 } from "date-fns";
 import { Activity, Effort, RepeatType } from "../features/shared/types";
-import { AsyncResponse } from "../features/types";
+import { AsyncResponse, RangeParams } from "../features/types";
 import {
 	CreatedWorkoutData,
 	CreateWorkoutParams,
 	CreateWorkoutValues,
 	ExerciseSet,
+	ScheduledWorkout,
 	StrengthSet,
 	TodaysWorkout,
 	Workout,
@@ -120,6 +121,15 @@ export interface DeletedWorkoutDateData {
 	wasDeleted: boolean;
 }
 
+export interface ScheduledWorkoutsData {
+	workouts: ScheduledWorkout[];
+}
+
+export type ScheduledWorkoutsGrouped = Record<string, ScheduledWorkout[]>;
+export interface GroupedScheduledWorkouts {
+	workouts: ScheduledWorkoutsGrouped;
+}
+
 export type TodaysWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
 export type AllUserWorkoutsResp = AsyncResponse<{ workouts: TodaysWorkout[] }>;
 export type SkippedWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
@@ -129,6 +139,9 @@ export type LoggedWorkoutResp = AsyncResponse<{ newLog: HistoryOfType }>;
 export type SkippedWorkoutResp = AsyncResponse<{ wasSkipped: boolean }>;
 export type CreatedWorkoutResp = AsyncResponse<CreatedWorkoutData>;
 export type DeletedWorkoutDateResp = AsyncResponse<DeletedWorkoutDateData>;
+export type ScheduledWorkoutsResp = AsyncResponse<ScheduledWorkoutsData>;
+export type ScheduledWorkoutsByDateResp =
+	AsyncResponse<GroupedScheduledWorkouts>;
 
 const logWorkout = async (
 	userID: string,
@@ -246,6 +259,43 @@ const fetchSkippedWorkouts = async (
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchScheduledWorkouts = async (
+	userID: string,
+	dateRange: RangeParams
+): ScheduledWorkoutsResp => {
+	const { startDate, endDate } = dateRange;
+
+	let url = currentEnv.base + workoutApis.getScheduledWorkoutsForRange;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ startDate, endDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+const fetchScheduledWorkoutsByDate = async (
+	userID: string,
+	dateRange: RangeParams
+): ScheduledWorkoutsByDateResp => {
+	const { startDate, endDate } = dateRange;
+
+	let url = currentEnv.base + workoutApis.getScheduledWorkoutsByDate;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ startDate, endDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
 		return response;
 	} catch (error) {
 		return error;
@@ -970,6 +1020,8 @@ export {
 	fetchTodaysWorkouts,
 	fetchWorkoutDetails,
 	fetchAllWorkouts,
+	fetchScheduledWorkouts,
+	fetchScheduledWorkoutsByDate,
 	getLastWorkout,
 	markWorkoutAsDone,
 	createNewWorkout,

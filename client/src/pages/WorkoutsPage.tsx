@@ -19,6 +19,7 @@ import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
 import PageHeader from "../components/layout/PageHeader";
+import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -207,7 +208,7 @@ const WorkoutsPage = () => {
 			)}
 			{panelAction === "Calendar" && (
 				<ModalLG onClose={closePanelActions}>
-					<div>Calendar</div>
+					<ScheduledWorkoutsCalendar />
 				</ModalLG>
 			)}
 			{panelAction === "Search" && (

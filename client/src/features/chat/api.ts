@@ -15,7 +15,7 @@ import {
 	ChatInfo,
 	ChatMessage,
 	ChatParams,
-	QuickPrompt,
+	ChatSuggestion,
 } from "./types";
 import { AwaitedResponse } from "../types";
 
@@ -56,7 +56,7 @@ export const chatApi = createApi({
 			},
 		}),
 		getChatSuggestions: builder.query<
-			QuickPrompt[],
+			ChatSuggestion[],
 			Pick<ChatParams, "userID">
 		>({
 			queryFn: async (params) => {

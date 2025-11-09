@@ -1,13 +1,13 @@
 import styles from "../../css/ai/AIChat.module.scss";
 import ChatWindow from "../chat/ChatWindow";
 import { CurrentUser } from "../../features/user/types";
-import { QuickPrompt } from "../../features/chat/types";
+import { ChatSuggestion } from "../../features/chat/types";
 
 type Props = {
 	isNewChat: boolean;
 	endpoint: string;
 	currentUser: CurrentUser;
-	suggestions: QuickPrompt[];
+	suggestions: ChatSuggestion[];
 };
 
 const AIChat = ({

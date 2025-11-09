@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import type { Activity, Effort } from "../modules/types.js";
+import type { Activity, DateRange, Effort } from "../modules/types.js";
 import type {
 	DeleteWorkoutDateParams,
 	LogWorkoutBody,
@@ -31,6 +31,32 @@ class WorkoutsService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async getScheduledWorkouts(userID: string, dateRange: DateRange) {
+		const { startDate, endDate } = dateRange;
+
+		try {
+			const query = `SELECT * FROM get_scheduled_workouts_for_range($1, $2, $3)`;
+			const results = await this.#db.query(query, [userID, startDate, endDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+	// Returns scheduled workouts grouped by date
+	async getScheduledWorkoutsGrouped(userID: string, dateRange: DateRange) {
+		const { startDate, endDate } = dateRange;
+
+		try {
+			const query = `SELECT * FROM get_scheduled_workouts_json_by_date($1, $2, $3)`;
+			const results = await this.#db.query(query, [userID, startDate, endDate]);
+			const rows = results?.rows?.[0]?.get_scheduled_workouts_json_by_date;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async deleteWorkoutDate(params: DeleteWorkoutDateParams) {

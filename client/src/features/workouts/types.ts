@@ -43,6 +43,10 @@ export interface TodaysWorkout {
 	tagColor?: string | null;
 }
 
+export interface ScheduledWorkout extends TodaysWorkout {
+	workoutDate: string;
+}
+
 export interface WorkoutSchedule {
 	userID: string;
 	scheduleID: number;

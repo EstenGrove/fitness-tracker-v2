@@ -106,6 +106,8 @@ const API_ENDPOINTS = {
 		getOpen: "/workouts/getOpenWorkouts",
 		getUserWorkouts: "/workouts/getUserWorkouts",
 		getUserWorkoutsByDate: "/workouts/getUserWorkoutsByDate",
+		getScheduledWorkoutsForRange: "/workouts/getScheduledWorkoutsForRange",
+		getScheduledWorkoutsByDate: "/workouts/getScheduledWorkoutsByDate",
 		getWorkoutDetails: "/workouts/getWorkoutDetails",
 		getCategories: "/workouts/getWorkoutCategories",
 		getWorkoutPlan: "/workouts/getWorkoutPlan",

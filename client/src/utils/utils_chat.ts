@@ -19,7 +19,7 @@ export interface ConversationData {
 	chats: ChatConversations;
 }
 export interface SuggestionsData {
-	suggestions: QuickPrompt[];
+	suggestions: ChatSuggestion[];
 }
 
 export type ChatMessagesResp = AsyncResponse<ChatMessagesData>;
