@@ -8,6 +8,7 @@ import historyRoutes from "./historyRoutes.js";
 import workoutRoutes from "./workoutRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
 import summaryRoutes from "./summaryRoutes.js";
+import settingsRoutes from "./settingsRoutes.js";
 import medicationRoutes from "./medicationRoutes.js";
 import recentActivityRoutes from "./recentActivityRoutes.js";
 
@@ -16,6 +17,7 @@ const allRoutes = {
 	medications: medicationRoutes,
 	dashboard: dashboardRoutes,
 	workouts: workoutRoutes,
+	settings: settingsRoutes,
 	summary: summaryRoutes,
 	history: historyRoutes,
 	exports: exportRoutes,

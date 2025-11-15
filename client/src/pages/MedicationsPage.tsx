@@ -5,6 +5,7 @@ import { useWeekHeader } from "../hooks/useWeekHeader";
 import {
 	MedLogEntry,
 	PillSummary as IPillSummary,
+	MedicationSchedule,
 } from "../features/medications/types";
 import { formatDate, parseDateStr } from "../utils/utils_dates";
 import { useMedSummary } from "../hooks/useMedSummary";
@@ -19,6 +20,7 @@ import LogMedication from "../components/medications/LogMedication";
 import Loader from "../components/layout/Loader";
 import TodaysDoses from "../components/medications/TodaysDoses";
 import LoggedMedsCard from "../components/medications/LoggedMedsCard";
+import { isWithinInterval } from "date-fns";
 
 const LogMedButton = ({ onClick }: { onClick: () => void }) => {
 	return (
@@ -46,7 +48,22 @@ const prepareTargetDate = (date: string) => {
 const myMed = {
 	medID: 1,
 	name: "Buprenorphine",
-	scheduleID: 8,
+	scheduleID: 9,
+};
+
+const getActiveSchedule = (medsInfo: MedsInfo): MedicationSchedule => {
+	if (medsInfo?.activeSchedules && medsInfo?.activeSchedules?.length > 0) {
+		const now = new Date();
+		const match =
+			medsInfo?.activeSchedules?.find((s) => {
+				const start = new Date(s.startDate);
+				const end = new Date(s.endDate);
+				return isWithinInterval(now, { start, end });
+			}) ?? medsInfo?.activeSchedules?.[0];
+
+		return match;
+	}
+	return { ...myMed } as unknown as MedicationSchedule;
 };
 
 const MedicationsPage = () => {
@@ -60,6 +77,9 @@ const MedicationsPage = () => {
 	const pillSummary = data?.pillSummary as IPillSummary;
 	const medLogs = (data?.medicationLogs ?? []) as MedLogEntry[];
 	const userMedsInfo = medsInfo as MedsInfo;
+	const activeSchedule = getActiveSchedule(userMedsInfo);
+
+	// console.log("activeSchedule", activeSchedule);
 
 	const openModal = () => {
 		setShowLogMedModal(true);
@@ -120,7 +140,12 @@ const MedicationsPage = () => {
 						logs={medLogs}
 						onSave={onSave}
 						selectedDate={baseDate}
-						medication={selectedMed as CurrentMed}
+						medication={
+							{
+								...selectedMed,
+								scheduleID: activeSchedule.scheduleID,
+							} as CurrentMed
+						}
 						summary={pillSummary as IPillSummary}
 					/>
 				</ModalLG>

@@ -1,0 +1,18 @@
+.SettingsSection {
+	width: 100%;
+	max-width: 90rem;
+	display: block;
+	margin-bottom: 1rem;
+
+	&_header {
+		width: 100%;
+		height: auto;
+		font-size: 1.8rem;
+		font-weight: 600;
+		color: $text2;
+	}
+	&_options {
+		width: 100%;
+		height: 100%;
+	}
+}

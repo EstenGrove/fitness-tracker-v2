@@ -1,49 +1,42 @@
-import { useState } from "react";
-import sprite from "../assets/icons/exports.svg";
-import PageContainer from "../components/layout/PageContainer";
 import styles from "../css/pages/SettingsPage.module.scss";
-import ModalSM from "../components/shared/ModalSM";
+import { SettingCategory, SettingOption } from "../utils/utils_settings";
+import { useNavigate } from "react-router";
+import { useAppDispatch } from "../store/store";
+import { setSelectedSetting } from "../features/settings/slice";
+import { useSettingsNavItems } from "../hooks/useSettingsNavItems";
+import { groupBy, isEmptyObj } from "../utils/utils_misc";
+import PageContainer from "../components/layout/PageContainer";
+import SettingsSection from "../components/settings/SettingsSection";
+import SettingsOptions from "../components/settings/SettingsOptions";
 
 // REQUIREMENTS:
 // - Show accordion sections for:
 // - User, Workouts, Medications, History, Dashboard etc.
 
-const ExportButton = ({
-	onClick,
-	text = "Export",
-}: {
-	text: string;
-	onClick: () => void;
-}) => {
-	return (
-		<button type="button" onClick={onClick} className={styles.ExportButton}>
-			<svg className={styles.ExportButton_icon}>
-				<use xlinkHref={`${sprite}#icon-file_present`}></use>
-			</svg>
-			<span> {text} </span>
-		</button>
-	);
+type SettingsByCategory = Record<SettingCategory, SettingOption[]>;
+
+const groupSettingsBy = (
+	items: SettingOption[],
+	by: "category" | "label" | "route" = "category"
+) => {
+	if (!items || !items.length) return {} as SettingsByCategory;
+
+	return groupBy(by, items) as SettingsByCategory;
 };
 
-type ExportQueryType =
-	| "workout-history"
-	| "medication-history"
-	| "session-history";
-
 const SettingsPage = () => {
-	const [exportType, setExportType] = useState<ExportQueryType | null>(null);
-	const [showExportModal, setShowExportModal] = useState<boolean>(false);
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const { data } = useSettingsNavItems();
 
-	const openExportModal = (type: ExportQueryType) => {
-		setExportType(type);
-		openModal();
-	};
+	const settingsItems = data?.settingsItems ?? [];
+	const settingsByCategory = groupSettingsBy(settingsItems);
 
-	const openModal = () => {
-		setShowExportModal(true);
-	};
-	const closeModal = () => {
-		setShowExportModal(false);
+	const onSelect = (option: SettingOption) => {
+		if (option?.route) {
+			dispatch(setSelectedSetting(option));
+			navigate(option?.route);
+		}
 	};
 
 	return (
@@ -53,28 +46,19 @@ const SettingsPage = () => {
 					<h2>Settings</h2>
 				</div>
 				<div className={styles.SettingsPage_main}>
-					<ExportButton
-						onClick={() => openExportModal("workout-history")}
-						text="Export Workouts"
-					/>
-					<ExportButton
-						onClick={() => openExportModal("medication-history")}
-						text="Export Meds"
-					/>
-					<ExportButton
-						onClick={() => openExportModal("session-history")}
-						text="Export Sessions"
-					/>
+					{!isEmptyObj(settingsByCategory) &&
+						Object.keys(settingsByCategory).map((category, idx) => {
+							const key = `${category}-${idx}`;
+							const settings = settingsByCategory[category as keyof object];
+
+							return (
+								<SettingsSection key={key} title={category}>
+									<SettingsOptions options={settings} onSelect={onSelect} />
+								</SettingsSection>
+							);
+						})}
 				</div>
 			</div>
-
-			{showExportModal && (
-				<ModalSM onClose={closeModal}>
-					<h2>Export: {exportType && exportType.toUpperCase()}</h2>
-					{/*  */}
-					{/*  */}
-				</ModalSM>
-			)}
 		</PageContainer>
 	);
 };

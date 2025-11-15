@@ -193,6 +193,15 @@ const API_ENDPOINTS = {
 		info: "/chat/info",
 		ping: "/chat/ping",
 	},
+	settings: {
+		navItems: "/settings/getNavItems",
+		all: "/settings",
+		jobs: "/settings/jobs",
+		profile: "/settings/profile",
+	},
+	jobs: {
+		summary: "/jobs/getSummary",
+	},
 };
 
 export const {
@@ -200,6 +209,7 @@ export const {
 	user: userApis,
 	chat: chatApis,
 	stats: statsApis,
+	jobs: jobsApis,
 	exports: exportApis,
 	activity: activityApis,
 	workouts: workoutApis,
@@ -208,6 +218,7 @@ export const {
 	history: historyApis,
 	meds: medicationApis,
 	dashboard: dashboardApis,
+	settings: settingsApis,
 	recentActivity: recentActivityApis,
 	summary: summaryApis,
 } = API_ENDPOINTS;

@@ -11,6 +11,16 @@ const isEmptyArray = (arr: Array<unknown>) => {
 	return Array.isArray(arr) && arr.length <= 0;
 };
 
+const isEmptyObj = (obj: object | Record<string, unknown>) => {
+	if (!obj) return true;
+	return Object.keys(obj).length <= 0;
+};
+
+const isEmptyStr = (str: string) => {
+	if (!str) return true;
+	return str === "" || str.length === 0;
+};
+
 const formatThousand = (num: number) => {
 	if (num >= 1000) {
 		return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
@@ -116,8 +126,12 @@ const sortByDateOrder = <T extends object>(
 };
 
 export {
-	addEllipsis,
+	// Data checkers
+	isEmptyStr,
 	isEmptyArray,
+	isEmptyObj,
+	// Format utils
+	addEllipsis,
 	formatThousand,
 	formatLargeNumber,
 	groupBy,

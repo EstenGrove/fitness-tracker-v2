@@ -1,7 +1,9 @@
+import { addDays } from "date-fns";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/medications/PillSummary.module.scss";
 import { addEllipsis } from "../../utils/utils_misc";
 import DetailsCard from "../layout/DetailsCard";
+import { formatDate } from "../../utils/utils_dates";
 
 type Props = {
 	title: string;
@@ -26,6 +28,7 @@ type MainItemProps = {
 	label: string;
 	icon: string;
 	color?: string;
+	title?: string;
 };
 
 const getPillsLeftColor = (pillCounts: PillsAndDaysLeft) => {
@@ -56,9 +59,10 @@ const MainItem = ({
 	label,
 	icon,
 	color = "var(--blueGrey600)",
+	title = "",
 }: MainItemProps) => {
 	return (
-		<div className={styles.MainItem}>
+		<div className={styles.MainItem} title={title}>
 			<div className={styles.MainItem_label}>
 				<svg className={styles.MainItem_label_icon} style={{ fill: color }}>
 					<use xlinkHref={`${sprite}#icon-${icon}`} />
@@ -107,6 +111,8 @@ const PillSummary = ({
 		pillsLeft,
 		daysLeft,
 	});
+	const endsOn = formatDate(addDays(new Date(), daysLeft), "db");
+
 	return (
 		<DetailsCard
 			to={to}
@@ -127,6 +133,7 @@ const PillSummary = ({
 						label="Days Left"
 						icon="installment-plan"
 						color="orange"
+						title={endsOn}
 					/>
 				</div>
 				<div className={styles.PillSummary_bottom}>

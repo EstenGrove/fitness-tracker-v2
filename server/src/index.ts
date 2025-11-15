@@ -59,6 +59,7 @@ app.route("habits", allRoutes.habits);
 app.route("exports", allRoutes.exports);
 app.route("history", allRoutes.history);
 app.route("summary", allRoutes.summary);
+app.route("settings", allRoutes.settings);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);
 app.route("medications", allRoutes.medications);

@@ -52,6 +52,8 @@ const OtherHistory = lazy(() => import("./views/OtherHistory"));
 const CardioHistory = lazy(() => import("./views/CardioHistory"));
 const StretchHistory = lazy(() => import("./views/StretchHistory"));
 const StrengthHistory = lazy(() => import("./views/StrengthHistory"));
+// Settings Page(s)
+const SettingsOption = lazy(() => import("./pages/SettingsOptionPage"));
 
 function App() {
 	return (
@@ -302,6 +304,14 @@ function App() {
 										element={
 											<Suspense fallback={<Loader />}>
 												<Settings />
+											</Suspense>
+										}
+									/>
+									<Route
+										path="/settings/:id"
+										element={
+											<Suspense fallback={<Loader />}>
+												<SettingsOption />
 											</Suspense>
 										}
 									/>
