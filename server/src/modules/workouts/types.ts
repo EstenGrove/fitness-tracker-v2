@@ -234,3 +234,10 @@ export interface WasWorkoutDateDeleted {
 	scheduleID: string | null;
 	wasDeleted: boolean;
 }
+
+export interface ScheduledWorkoutDB extends TodaysWorkoutDB {
+	workout_date: string;
+}
+export interface ScheduledWorkoutClient extends TodaysWorkoutClient {
+	workoutDate: string;
+}

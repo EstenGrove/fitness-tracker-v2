@@ -1,0 +1,70 @@
+.ScheduledWorkoutsCalendar {
+	@include fill_container;
+
+	&_workouts {
+		width: 100%;
+		padding: 1rem 3rem;
+		@include colCenter();
+		gap: 1rem 0;
+	}
+}
+
+.DateControls {
+	width: 100%;
+	height: 10rem;
+	padding: 0 2rem;
+	@include flex_row(space-between, center);
+	// border: 1px solid green;
+
+	&_current {
+		margin: 0 auto;
+		text-align: center;
+
+		&_weekday {
+			font-size: 3rem;
+			font-weight: 800;
+			color: $accentBlue;
+		}
+		&_date {
+			font-size: 2rem;
+			font-weight: 700;
+			line-height: 1.5;
+			color: $text1;
+			// color: $accentOrange;
+
+			[data-desc="year"] {
+				color: $text2;
+			}
+		}
+		&_desc {
+			font-size: 1.6rem;
+			color: $text2;
+			line-height: 1.8;
+		}
+	}
+
+	&_btn {
+		$size: 3.5rem;
+		width: $size;
+		height: $size;
+		min-width: $size;
+		max-width: $size;
+		min-height: $size;
+		max-height: $size;
+		@include rowCenter();
+		border: $border;
+		outline: none;
+		border-radius: 50%;
+		background-color: var(--bg-foreground);
+		background-color: #000;
+		cursor: pointer;
+		align-self: flex-start;
+
+		&_icon {
+			$icon: 2.2rem;
+			width: $icon;
+			height: $icon;
+			fill: $text3;
+		}
+	}
+}

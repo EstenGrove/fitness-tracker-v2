@@ -108,14 +108,14 @@ const ChatWindow = ({
 					<ScrollToBottom onClick={scrollToBottom} />
 				)}
 			</div>
-			<div className={styles.ChatWindow_suggestions}>
-				{showSuggestions && (
+			{showSuggestions && (
+				<div className={styles.ChatWindow_suggestions}>
 					<ChatQuickPrompts
 						quickPrompts={quickPrompts}
 						onSelect={selectSuggestion}
 					/>
-				)}
-			</div>
+				</div>
+			)}
 			<div className={styles.ChatWindow_input}>
 				<ChatInput
 					onSend={handleSend}

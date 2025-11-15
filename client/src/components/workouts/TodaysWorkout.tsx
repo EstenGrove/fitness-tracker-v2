@@ -331,6 +331,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 			activityType,
 			workoutDate,
 		});
+		closeModal();
 	};
 
 	const cancelDeleteToday = () => {

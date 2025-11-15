@@ -7,6 +7,8 @@ import { chatApis } from "../utils/utils_env";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { ChatSuggestion } from "../features/chat/types";
+import { subDays } from "date-fns";
+import { formatDate } from "../utils/utils_dates";
 
 // DEFAULT SUGGESTIONS
 const SummarizeSuggestion = () => {
@@ -22,10 +24,22 @@ const GeneratePlanSuggestion = () => {
 	);
 };
 
+const getLastXDaysRange = (lastXDays: number = 60) => {
+	const today = new Date();
+	const start = subDays(today, lastXDays);
+
+	return {
+		startDate: formatDate(start, "db"),
+		endDate: formatDate(today, "db"),
+	};
+};
+
+const last60 = getLastXDaysRange(60);
+
 const DEFAULT_SUGGESTIONS: ChatSuggestion[] = [
 	{
 		promptID: 1,
-		prompt: "Summarize my workout history for the last 60 days",
+		prompt: `What was my workout history from ${last60.startDate} to ${last60.endDate}`,
 		content: <SummarizeSuggestion />,
 		categories: ["workouts", "history", "summary"],
 	},

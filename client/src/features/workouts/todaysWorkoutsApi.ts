@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
-import { AwaitedResponse, MarkAsDoneParams, UserDateParams } from "../types";
+import {
+	AwaitedResponse,
+	MarkAsDoneParams,
+	UserDateParams,
+	UserRangeParams,
+} from "../types";
 import {
 	CreatedWorkoutData,
 	CreateWorkoutParams,
@@ -14,11 +19,16 @@ import {
 	DeleteWorkoutDateParams,
 	fetchAllUserWorkouts,
 	fetchAllWorkouts,
+	fetchScheduledWorkouts,
+	fetchScheduledWorkoutsByDate,
 	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
+	GroupedScheduledWorkouts,
 	logWorkout,
 	LogWorkoutParams,
 	markWorkoutAsDone,
+	ScheduledWorkoutsData,
+	ScheduledWorkoutsGrouped,
 	skipWorkout,
 	SkipWorkoutParams,
 	WorkoutSet,
@@ -92,6 +102,36 @@ export const todaysWorkoutsApi = createApi({
 				return { data };
 			},
 			invalidatesTags: ["TodaysWorkouts"],
+		}),
+		getScheduledWorkouts: builder.query<TodaysWorkout[], UserRangeParams>({
+			queryFn: async (params) => {
+				const { userID, startDate, endDate } = params;
+				const response = (await fetchScheduledWorkouts(userID, {
+					startDate,
+					endDate,
+				})) as AwaitedResponse<ScheduledWorkoutsData>;
+				const data = response.Data as ScheduledWorkoutsData;
+				const { workouts } = data;
+
+				return { data: workouts };
+			},
+		}),
+		getScheduledWorkoutsGrouped: builder.query<
+			ScheduledWorkoutsGrouped,
+			UserRangeParams
+		>({
+			queryFn: async (params) => {
+				const { userID, startDate, endDate } = params;
+				const response = (await fetchScheduledWorkoutsByDate(userID, {
+					startDate,
+					endDate,
+				})) as AwaitedResponse<GroupedScheduledWorkouts>;
+				const data = response.Data as GroupedScheduledWorkouts;
+				const { workouts } = data;
+
+				// { "2025-11-08": [...], "2025-11-09": [...], ...rest }
+				return { data: workouts };
+			},
 		}),
 		getAllWorkouts: builder.query<Workout[], Pick<UserDateParams, "userID">>({
 			queryFn: async ({ userID }) => {
@@ -170,6 +210,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data };
 			},
+			invalidatesTags: ["TodaysWorkouts"],
 		}),
 		createWorkout: builder.mutation<CreatedWorkoutData, NewWorkoutParams>({
 			queryFn: async (params) => {
@@ -197,4 +238,6 @@ export const {
 	useSkipWorkoutMutation,
 	useCreateWorkoutMutation,
 	useDeleteWorkoutMutation,
+	useGetScheduledWorkoutsQuery,
+	useGetScheduledWorkoutsGroupedQuery,
 } = todaysWorkoutsApi;

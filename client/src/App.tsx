@@ -3,8 +3,8 @@ import { lazy, Suspense } from "react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { Route, BrowserRouter as Router, Routes } from "react-router";
-import Loader from "./components/layout/Loader";
 import { AppProviders } from "./context/AppProviders";
+import Loader from "./components/layout/Loader";
 import OfflineIndicator from "./components/offline/OfflineIndicator";
 
 const NotFound = lazy(() => import("./pages/NotFoundPage"));
@@ -52,6 +52,8 @@ const OtherHistory = lazy(() => import("./views/OtherHistory"));
 const CardioHistory = lazy(() => import("./views/CardioHistory"));
 const StretchHistory = lazy(() => import("./views/StretchHistory"));
 const StrengthHistory = lazy(() => import("./views/StrengthHistory"));
+// Settings Page(s)
+const SettingsOption = lazy(() => import("./pages/SettingsOptionPage"));
 
 function App() {
 	return (
@@ -90,6 +92,7 @@ function App() {
 								>
 									<Route index element={<Dashboard />} />
 
+									{/* MARK: AI */}
 									<Route
 										path="/ai/*"
 										element={
@@ -98,7 +101,7 @@ function App() {
 											</Suspense>
 										}
 									/>
-
+									{/* MARK: STATS */}
 									<Route
 										path="/stats/*"
 										element={
@@ -113,7 +116,7 @@ function App() {
 										<Route path="activity" element={<ActivityStats />} />
 									</Route>
 
-									{/* DUMMY PAGE FOR NOW! */}
+									{/* MARK: HABITS */}
 									<Route
 										path="/habit-history"
 										element={
@@ -122,7 +125,6 @@ function App() {
 											</Suspense>
 										}
 									/>
-
 									<Route
 										path="/habits"
 										element={
@@ -148,6 +150,7 @@ function App() {
 										}
 									/>
 
+									{/* MARK: WORKOUTS */}
 									<Route
 										path="active/:id"
 										element={
@@ -156,7 +159,6 @@ function App() {
 											</Suspense>
 										}
 									/>
-
 									<Route
 										path="workouts"
 										element={
@@ -174,6 +176,7 @@ function App() {
 										}
 									/>
 
+									{/* MARK: MEDS */}
 									<Route
 										path="/meds"
 										element={
@@ -258,6 +261,7 @@ function App() {
 										/>
 									</Route>
 
+									{/* MARK: GOALS */}
 									<Route
 										path="goals"
 										element={
@@ -284,6 +288,7 @@ function App() {
 										}
 									/>
 
+									{/* MARK: USER */}
 									<Route
 										path="/user"
 										element={
@@ -293,6 +298,7 @@ function App() {
 										}
 									/>
 
+									{/* MARK: SETTINGS */}
 									<Route
 										path="/settings"
 										element={
@@ -301,8 +307,17 @@ function App() {
 											</Suspense>
 										}
 									/>
+									<Route
+										path="/settings/:id"
+										element={
+											<Suspense fallback={<Loader />}>
+												<SettingsOption />
+											</Suspense>
+										}
+									/>
 								</Route>
 
+								{/* MARK: 404 */}
 								<Route
 									path="*"
 									element={
