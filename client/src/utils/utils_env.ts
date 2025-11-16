@@ -71,6 +71,8 @@ const API_ENDPOINTS = {
 		login: "/auth/login",
 		logout: "/auth/logout",
 		refresh: "/auth/refresh",
+		googleLogin: "/auth/google/signin",
+		googleSignup: "/auth/google/signup",
 	},
 	user: {
 		userExists: "/user/getUserExists",

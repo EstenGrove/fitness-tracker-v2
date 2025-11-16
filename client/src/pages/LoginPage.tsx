@@ -12,6 +12,8 @@ import { sleep } from "../utils/utils_requests";
 import FadeIn from "../components/ui/FadeIn";
 import LoginForm from "../components/login/LoginForm";
 import SelfDestruct from "../components/ui/SelfDestruct";
+import { AuthProvider } from "../features/auth/types";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 // ##TODO:
 // - Update 'isSubmitting' handling to use 'useTransition'
@@ -80,6 +82,21 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { signin: googleSignIn } = useGoogleAuth({
+		onSuccess: async (token) => {
+			console.log("token", token);
+			// send to '/auth/google'
+			// then navigate to '/'
+			setAccessTokenCookie(token);
+			navigate("/");
+		},
+		onError: (err) => {
+			setError({
+				error: err?.toString(),
+				key: error.key + 1,
+			});
+		},
+	});
 
 	const [error, setError] = useState<ErrorInfo>({
 		error: null,
@@ -147,6 +164,20 @@ const LoginPage = () => {
 		}
 	};
 
+	const onProviderLogin = (provider: AuthProvider) => {
+		switch (provider) {
+			case "google": {
+				return googleSignIn();
+			}
+			case "apple": {
+				throw new Error("Apple Sign-In not implemented yet!");
+			}
+
+			default:
+				break;
+		}
+	};
+
 	return (
 		<div className={styles.LoginPage}>
 			<div className={styles.LoginPage_header}>
@@ -161,7 +192,8 @@ const LoginPage = () => {
 					onChange={onChange}
 					onSubmit={onSubmit}
 					isLoading={isSubmitting}
-					goTo={() => navigate("/account")}
+					goTo={() => navigate("/signup")}
+					onProviderLogin={onProviderLogin}
 				/>
 			</div>
 		</div>

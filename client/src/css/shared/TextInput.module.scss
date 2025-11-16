@@ -14,11 +14,11 @@
 		border: $border;
 		color: $text1;
 		&:hover {
-			border-color: var(--accent);
+			border-color: var(--accent-blue);
 			cursor: pointer;
 		}
 		&:focus-within {
-			border-color: var(--accent);
+			border-color: var(--accent-blue);
 			cursor: pointer;
 		}
 
@@ -34,6 +34,12 @@
 		&:-webkit-autofill:focus,
 		&:-webkit-autofill:active {
 			background-color: var(--input-bg) !important;
+		}
+		&:invalid {
+			border-color: var(--accent-red);
+		}
+		[aria-invalid="true"] {
+			border-color: var(--accent-red);
 		}
 	}
 }
@@ -66,4 +72,10 @@ input::-webkit-autofill:active {
 }
 input::-webkit-autofill:focus-within {
 	background-color: $foreground !important;
+}
+input[aria-invalid="true"] {
+	border-color: var(--accent-red);
+}
+input[aria-invalid="true"] {
+	border-color: var(--accent-red);
 }

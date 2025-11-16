@@ -24,6 +24,17 @@ class UserService {
 		}
 	}
 
+	async getUserByGoogleID(googleID: string): UserDBResp {
+		try {
+			const query = `SELECT * FROM get_user_by_google_id($1)`;
+			const results = await this.#db.query(query, [googleID]);
+			const rows = results?.rows?.[0];
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async getUserByLogin(username: string, password: string): UserDBResp {
 		try {
 			const query = `SELECT * FROM users WHERE username = $1 AND password = $2`;

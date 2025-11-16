@@ -74,7 +74,7 @@ function App() {
 									}
 								/>
 								<Route
-									path="/account"
+									path="/signup"
 									element={
 										<Suspense fallback={<Loader />}>
 											<CreateAccount />

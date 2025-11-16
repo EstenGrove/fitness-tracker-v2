@@ -14,6 +14,8 @@ interface InputProps {
 	onChange: (name: string, value: string) => void;
 	inputRef?: RefObject<HTMLInputElement | null>;
 	placeholder?: string;
+	isDisabled?: boolean;
+	isInvalid?: boolean;
 }
 
 // @ts-expect-error: this is fine
@@ -28,6 +30,8 @@ const PasswordInput = ({
 	value,
 	onChange,
 	placeholder = "",
+	isDisabled = false,
+	isInvalid = false,
 	...rest
 }: Props) => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -52,6 +56,8 @@ const PasswordInput = ({
 				onChange={handleChange}
 				placeholder={placeholder}
 				className={styles.PasswordInput_input}
+				disabled={isDisabled}
+				aria-invalid={isInvalid}
 				{...rest}
 			/>
 			<div className={styles.PasswordInput_wrapper} onClick={toggleShow}>

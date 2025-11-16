@@ -6,7 +6,7 @@ import type {
 	LogoutParams,
 	RefreshResponse,
 } from "../modules/auth/types.js";
-import { login } from "../modules/auth/login.js";
+import { login, type LoginDataDB } from "../modules/auth/login.js";
 import { normalizeLoginData } from "../modules/auth/normalize.js";
 import { getCookie, setCookie } from "hono/cookie";
 import { normalizeSession } from "../modules/user/user.js";
@@ -15,6 +15,12 @@ import type { SessionDB } from "../modules/user/types.js";
 import { isLocalEnv } from "../utils/env.js";
 import { getUserIDFromToken, setAccessToken } from "../modules/auth/utils.js";
 import { refreshAuth } from "../modules/auth/refresh.js";
+import {
+	verifyGoogleToken,
+	type GooglePayload,
+} from "../modules/auth/googleAuth.js";
+import { loginWithGoogle } from "../modules/auth/loginWithGoogle.js";
+import type { TokenPayload } from "google-auth-library";
 
 const app = new Hono();
 
@@ -35,7 +41,7 @@ app.post("/login", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const loginData = await login(username, password);
+	const loginData = (await login(username, password)) as LoginDataDB;
 
 	if (loginData instanceof Error) {
 		const errResp = getResponseError(loginData, {
@@ -122,6 +128,64 @@ app.get("/refresh", async (ctx: Context) => {
 	});
 
 	return ctx.json(resp);
+});
+app.post("/google/signin", async (ctx: Context) => {
+	const body = await ctx.req.json<{ token: string }>();
+	const { token } = body;
+
+	const googlePayload = (await verifyGoogleToken(token)) as GooglePayload;
+
+	if (googlePayload instanceof Error) {
+		const err = new Error("Google Auth: Could not verify google token");
+
+		const errResp = getResponseError(err, {
+			token: null,
+			error: err.message,
+		});
+		return ctx.json(errResp);
+	}
+
+	const googleID = googlePayload.googleID;
+	const loginData = (await loginWithGoogle(googleID)) as LoginDataDB;
+
+	if (loginData instanceof Error) {
+		const err = new Error("Google Auth: Login attempt failed");
+		const errResp = getResponseError(err, {
+			token: null,
+			currentUser: null,
+			currentSession: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const { currentUser, currentSession }: LoggedIn =
+		normalizeLoginData(loginData);
+
+	const resp = getResponseOk({
+		token: token,
+		user: currentUser,
+		session: currentSession,
+	});
+
+	setAccessToken(ctx, token);
+
+	return ctx.json(resp);
+});
+app.post("/google/signup", async (ctx: Context) => {
+	const body = await ctx.req.json<{ token: string }>();
+	const { token } = body;
+
+	const googlePayload = await verifyGoogleToken(token);
+
+	if (googlePayload instanceof Error) {
+		const err = new Error("Google Auth: failed to discover user payload!");
+
+		const errResp = getResponseError(err, {
+			token: null,
+			error: err.message,
+		});
+		return ctx.json(errResp);
+	}
 });
 
 export default app;

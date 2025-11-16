@@ -1,18 +1,12 @@
 import { authService, userService } from "../../services/index.js";
 import type { UserDB } from "../user/types.js";
+import type { LoginDataDB, LoginRespDB } from "./login.js";
 import type { LoggedInDB } from "./types.js";
 import { generateAccessToken } from "./utils.js";
 
-export interface LoginDataDB extends LoggedInDB {
-	token: string;
-}
-
-export type LoginRespDB = Promise<LoginDataDB | unknown>;
-
-const login = async (username: string, password: string): LoginRespDB => {
-	const existingUser = (await userService.getUserByLogin(
-		username,
-		password
+const loginWithGoogle = async (googleID: string): LoginRespDB => {
+	const existingUser = (await userService.getUserByGoogleID(
+		googleID
 	)) as UserDB;
 
 	if (!existingUser || existingUser instanceof Error) {
@@ -20,6 +14,8 @@ const login = async (username: string, password: string): LoginRespDB => {
 	}
 
 	const userID = existingUser.user_id;
+	const password = existingUser.password;
+	const username = existingUser.username;
 	const token = (await generateAccessToken({ userID })) as string;
 
 	const loginData = (await authService.login(
@@ -35,4 +31,4 @@ const login = async (username: string, password: string): LoginRespDB => {
 	} as LoginDataDB;
 };
 
-export { login };
+export { loginWithGoogle };
