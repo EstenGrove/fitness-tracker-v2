@@ -146,14 +146,17 @@ app.post("/google/signin", async (ctx: Context) => {
 	}
 
 	const googleID = googlePayload.googleID;
+
+	console.log("[GOOGLE-ID]", googleID);
+
 	const loginData = (await loginWithGoogle(googleID)) as LoginDataDB;
 
 	if (loginData instanceof Error) {
 		const err = new Error("Google Auth: Login attempt failed");
 		const errResp = getResponseError(err, {
 			token: null,
-			currentUser: null,
-			currentSession: null,
+			user: null,
+			session: null,
 		});
 		return ctx.json(errResp);
 	}

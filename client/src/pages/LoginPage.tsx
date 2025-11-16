@@ -4,16 +4,16 @@ import sprite from "../assets/icons/calendar.svg";
 import { LoginValues } from "../features/user/types";
 import { useNavigate } from "react-router";
 import { useAppDispatch } from "../store/store";
-import { loginUser } from "../features/user/operations";
+import { loginUser, loginUserWithGoogle } from "../features/user/operations";
 import { fetchUserExists, UserExistsResponse } from "../utils/utils_user";
 import { AwaitedResponse } from "../features/types";
 import { setAccessTokenCookie } from "../utils/utils_cookies";
 import { sleep } from "../utils/utils_requests";
+import { AuthProvider } from "../features/auth/types";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 import FadeIn from "../components/ui/FadeIn";
 import LoginForm from "../components/login/LoginForm";
 import SelfDestruct from "../components/ui/SelfDestruct";
-import { AuthProvider } from "../features/auth/types";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 // ##TODO:
 // - Update 'isSubmitting' handling to use 'useTransition'
@@ -84,11 +84,16 @@ const LoginPage = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const { signin: googleSignIn } = useGoogleAuth({
 		onSuccess: async (token) => {
-			console.log("token", token);
-			// send to '/auth/google'
-			// then navigate to '/'
-			setAccessTokenCookie(token);
-			navigate("/");
+			const loginData = await dispatch(loginUserWithGoogle({ token })).unwrap();
+
+			if (loginData && loginData?.user) {
+				const userToken =
+					loginData.token || (loginData.session?.token as string);
+				setAccessTokenCookie(userToken);
+				navigate("/");
+			} else {
+				console.log("❌ [ERROR]: ", loginData?.error);
+			}
 		},
 		onError: (err) => {
 			setError({

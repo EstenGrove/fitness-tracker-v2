@@ -16,7 +16,6 @@ const SERVER = {
 	port: target.port,
 };
 const CLIENT = {
-	// host: "localhost",
 	host: isRemote ? process.env.REMOTE_IP : process.env.CLIENT_HOST,
 	port: Number(process.env.CLIENT_HTTP_PORT),
 };
@@ -30,7 +29,8 @@ const ORIGIN = {
 const origin = ORIGIN.prefix + CLIENT.host + ":" + CLIENT.port;
 
 const corsConfig = {
-	origin: origin,
+	origin: [origin, "http://localhost:5175"],
+	// origin: "http://localhost:5175",
 	credentials: true,
 };
 

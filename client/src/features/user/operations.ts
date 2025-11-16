@@ -14,10 +14,15 @@ import {
 	UserResponse,
 } from "../../utils/utils_user";
 import { AwaitedResponse } from "../types";
+import { loginWithGoogle } from "../../utils/utils_auth";
 
 interface LoginParams {
 	username: string;
 	password: string;
+}
+
+interface LoginWithGoogleParams {
+	token: string;
 }
 interface SessionParams {
 	userID: string;
@@ -37,11 +42,23 @@ const loginUser = createAsyncThunk(
 	"user/loginUser",
 	async (params: LoginParams) => {
 		const { username, password } = params;
-		const logoutResp = (await login(
+		const loginResp = (await login(
 			username,
 			password
 		)) as AwaitedResponse<LoginResponse>;
-		const data = logoutResp.Data as LoginResponse;
+		const data = loginResp.Data as LoginResponse;
+		return data as LoginResponse;
+	}
+);
+
+const loginUserWithGoogle = createAsyncThunk(
+	"user/loginUserWithGoogle",
+	async (params: LoginWithGoogleParams) => {
+		const { token } = params;
+		const loginResp = (await loginWithGoogle(
+			token
+		)) as AwaitedResponse<LoginResponse>;
+		const data = loginResp.Data as LoginResponse;
 		return data as LoginResponse;
 	}
 );
@@ -109,4 +126,5 @@ export {
 	getUserByLogin,
 	getUserByID,
 	userExists,
+	loginUserWithGoogle,
 };

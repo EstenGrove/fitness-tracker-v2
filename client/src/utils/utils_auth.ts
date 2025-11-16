@@ -4,6 +4,7 @@ import { authApis, currentEnv } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
 
 export interface AuthData {
+	token: string;
 	user: CurrentUser;
 	session: CurrentSession;
 }
@@ -22,7 +23,8 @@ const loginWithGoogle = async (token: string): AuthResp => {
 			}),
 		});
 		const response = await request.json();
-		return response.Data;
+		console.log("RESPONSE:", response);
+		return response as AuthData;
 	} catch (error) {
 		return error;
 	}
