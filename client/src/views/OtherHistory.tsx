@@ -18,15 +18,15 @@ import { selectHistoryRange } from "../features/history/historySlice";
 
 const OtherHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
+	const { data } = useHistoryForRangeAndType<OtherLog>({
+		startDate: startDate,
+		endDate: endDate,
+		activityType: "Other",
+	});
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<OtherLog>({
-		startDate: startDate,
-		endDate: endDate,
-		activityType: "Timed",
-	});
 	const history = data as OtherLog[];
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
@@ -43,7 +43,7 @@ const OtherHistory = () => {
 	return (
 		<div className={styles.OtherHistory}>
 			<div className={styles.OtherHistory_header}>
-				<h2 className={styles.OtherHistory_header_title}>Stretch History</h2>
+				<h2 className={styles.OtherHistory_header_title}>Other History</h2>
 				<div className={styles.OtherHistory_header_total}>
 					Total: {totalMins} mins.
 				</div>

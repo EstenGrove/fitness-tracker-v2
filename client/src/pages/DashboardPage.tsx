@@ -77,7 +77,7 @@ const DashboardPage = () => {
 							<Spacer margin="1rem 0" />
 							<CardsSection title={habitInfo.title} to={habitInfo.path}>
 								<DashboardHabits
-									habits={summary.habitProgress.todaysSummaries}
+									habits={summary.habitProgress?.todaysSummaries}
 								/>
 							</CardsSection>
 

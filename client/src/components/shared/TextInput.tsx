@@ -7,12 +7,23 @@ interface InputProps {
 	value: string;
 	onChange: (name: string, value: string) => void;
 	inputRef?: RefObject<HTMLInputElement>;
+	isDisabled?: boolean;
+	isInvalid?: boolean;
 }
 
 // @ts-expect-error: Extends input's props to support forwarding via ...rest
 interface Props extends InputProps, ComponentPropsWithRef<"input"> {}
 
-const TextInput = ({ name, id, value, onChange, inputRef, ...rest }: Props) => {
+const TextInput = ({
+	name,
+	id,
+	value,
+	onChange,
+	inputRef,
+	isDisabled = false,
+	isInvalid = false,
+	...rest
+}: Props) => {
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const value: string = e.target.value;
 		onChange(name, value);
@@ -31,6 +42,8 @@ const TextInput = ({ name, id, value, onChange, inputRef, ...rest }: Props) => {
 				onFocus={(ref) => ref.currentTarget.select()}
 				className={styles.TextInput_input}
 				autoComplete="on"
+				disabled={isDisabled}
+				aria-invalid={isInvalid}
 				{...rest}
 			/>
 		</div>

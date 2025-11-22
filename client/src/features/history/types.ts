@@ -1,3 +1,4 @@
+import { WorkoutSet } from "../../utils/utils_workouts";
 import { Activity, Effort } from "../shared/types";
 import { ExerciseSet, StrengthSet, WorkoutByType } from "../workouts/types";
 
@@ -32,6 +33,7 @@ export interface StretchHistory extends WorkoutHistory {
 export interface CardioHistory extends WorkoutHistory {
 	reps: number;
 	exercise: string;
+	sets: WorkoutSet[];
 }
 export interface TimedHistory extends WorkoutHistory {
 	reps: number;

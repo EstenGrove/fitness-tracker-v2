@@ -1,0 +1,152 @@
+.EditWorkout {
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	&_header {
+		width: 100%;
+		padding: 0 2rem;
+		font-size: 1.8rem;
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	&_content {
+		width: 100%;
+		height: 100%;
+		padding: 1rem 2rem;
+	}
+}
+
+.EditTabs {
+	width: 100%;
+	height: 10rem;
+	@include flex_row(center, center);
+	gap: 0 0.5rem;
+
+	&_tab {
+		padding: 0.7rem 1rem;
+		font-size: 1.5rem;
+		color: $text1;
+		background-color: var(--bg-input);
+		border-radius: 0.5rem;
+		border: $borderLight;
+	}
+}
+button[data-selected="true"] {
+	background-color: $accentBlue;
+	color: #fff;
+}
+
+.EditWorkoutInfo {
+	width: 100%;
+
+	&_main {
+		width: 100%;
+		padding: 0 2rem;
+
+		&_row {
+			width: 100%;
+			margin: 2rem 0;
+			margin-bottom: 3rem;
+		}
+		label {
+			font-size: 1.5rem;
+			color: $text3;
+		}
+	}
+}
+
+.WeekDay {
+	width: 3.2rem;
+	height: 3.2rem;
+	border-radius: 50%;
+	border: $borderLight;
+	outline: none;
+	cursor: pointer;
+	background-color: $foreground;
+	color: #fff;
+	font-size: 1.2rem;
+	@include rowCenter();
+}
+.WeeklyOptions {
+	width: 100%;
+	@include flex_row(flex-start, center);
+	gap: 0 2rem;
+	margin-bottom: 4rem;
+	padding: 0 1rem;
+	& span {
+		font-size: 1.6rem;
+	}
+
+	&_days {
+		width: 100%;
+		@include flex_row(space-between, center);
+		gap: 0 0.5rem;
+	}
+}
+.EditWorkoutSchedule {
+	width: 100%;
+
+	&_main {
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+		padding: 0 1rem;
+
+		&_time {
+			width: 100%;
+			padding: 1rem 0;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			grid-template-rows: repeat(2, auto);
+			font-size: 1.5rem;
+			gap: 0.5rem auto;
+		}
+
+		&_repeat {
+			width: 100%;
+			margin: 2rem 0;
+		}
+		&_options {
+			width: 100%;
+			margin-top: 2rem;
+
+			&_end {
+				font-size: 1.5rem;
+				color: $text3;
+				margin-top: 4rem;
+			}
+		}
+	}
+}
+
+.Footer {
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 1rem 2rem;
+	@include flex_row(flex-end, center);
+	gap: 0 3rem;
+
+	&_btn {
+		padding: 1rem 1.5rem;
+		border-radius: 1rem;
+		background-color: $accentBlue;
+		color: #fff;
+		font-size: 1.6rem;
+		border: none;
+		outline: none;
+	}
+	&_cancelBtn {
+		padding: 1rem 1.5rem;
+		border-radius: 1rem;
+		background-color: transparent;
+		color: #fff;
+		font-size: 1.6rem;
+		border: none;
+		outline: none;
+	}
+}

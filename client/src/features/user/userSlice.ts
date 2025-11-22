@@ -5,8 +5,11 @@ import { RootState } from "../../store/store";
 import {
 	getUserByLogin,
 	loginUser,
+	loginUserWithGoogle,
 	logoutUser,
 	refreshAuth,
+	signupUser,
+	signupUserWithGoogle,
 } from "./operations";
 import { LoginResponse, UserResponse } from "../../utils/utils_user";
 
@@ -98,7 +101,57 @@ const userSlice = createSlice({
 				}
 			);
 
-		// CHECK IF USER EXISTS
+		// GOOGLE AUTH (SIGN-IN & SIGN-UP)
+		builder
+			.addCase(loginUserWithGoogle.pending, (state: UserSlice) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(
+				loginUserWithGoogle.fulfilled,
+				(state: UserSlice, action: PayloadAction<LoginResponse>) => {
+					state.status = ETStatus.FULFILLED;
+					state.currentUser = action.payload.user;
+					state.currentSession = action.payload.session;
+					state.error = action.payload?.error;
+				}
+			)
+			.addCase(loginUserWithGoogle.rejected, (state: UserSlice) => {
+				state.status = ETStatus.REJECTED;
+				state.error = new Error("Google Sign-in failed").message;
+			});
+		// SIGNUP WITH GOOGLE
+		builder
+			.addCase(signupUserWithGoogle.pending, (state: UserSlice) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(
+				signupUserWithGoogle.fulfilled,
+				(state: UserSlice, action: PayloadAction<LoginResponse>) => {
+					state.status = ETStatus.FULFILLED;
+					state.currentUser = action.payload.user;
+					state.currentSession = action.payload.session;
+					state.error = action.payload?.error;
+				}
+			)
+			.addCase(signupUserWithGoogle.rejected, (state: UserSlice) => {
+				state.status = ETStatus.REJECTED;
+				state.error = new Error("Google Sign-in failed").message;
+			});
+
+		// SIGNUP
+		builder
+			.addCase(signupUser.pending, (state: UserSlice) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(
+				signupUser.fulfilled,
+				(state: UserSlice, action: PayloadAction<LoginResponse>) => {
+					state.status = ETStatus.FULFILLED;
+					state.currentUser = action.payload.user;
+					state.currentSession = action.payload.session;
+					state.error = action.payload?.error;
+				}
+			);
 	},
 });
 

@@ -43,7 +43,7 @@ const TimedHistory = () => {
 	return (
 		<div className={styles.TimedHistory}>
 			<div className={styles.TimedHistory_header}>
-				<h2 className={styles.TimedHistory_header_title}>Stretch History</h2>
+				<h2 className={styles.TimedHistory_header_title}>Timed History</h2>
 				<div className={styles.TimedHistory_header_total}>
 					Total: {totalMins} mins.
 				</div>

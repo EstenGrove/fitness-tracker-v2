@@ -6,6 +6,7 @@ import {
 	login,
 	LoginResponse,
 	logout,
+	signup,
 	UserExistsResponse,
 } from "../../utils/utils_user";
 import {
@@ -14,15 +15,39 @@ import {
 	UserResponse,
 } from "../../utils/utils_user";
 import { AwaitedResponse } from "../types";
+import { loginWithGoogle, signupWithGoogle } from "../../utils/utils_auth";
+import { CreateAccountValues } from "./types";
 
 interface LoginParams {
 	username: string;
 	password: string;
 }
+
+interface LoginWithGoogleParams {
+	token: string;
+}
 interface SessionParams {
 	userID: string;
 	sessionID: string;
 }
+
+const signupUser = createAsyncThunk(
+	"user/signupUser",
+	async (params: CreateAccountValues) => {
+		const response = await signup(params);
+		const data = response.Data;
+		return data;
+	}
+);
+const signupUserWithGoogle = createAsyncThunk(
+	"user/signupUserWithGoogle",
+	async (params: LoginWithGoogleParams) => {
+		const { token } = params;
+		const response = await signupWithGoogle(token);
+		const data = response.Data;
+		return data;
+	}
+);
 
 const logoutUser = createAsyncThunk(
 	"user/logoutUser",
@@ -37,11 +62,23 @@ const loginUser = createAsyncThunk(
 	"user/loginUser",
 	async (params: LoginParams) => {
 		const { username, password } = params;
-		const logoutResp = (await login(
+		const loginResp = (await login(
 			username,
 			password
 		)) as AwaitedResponse<LoginResponse>;
-		const data = logoutResp.Data as LoginResponse;
+		const data = loginResp.Data as LoginResponse;
+		return data as LoginResponse;
+	}
+);
+
+const loginUserWithGoogle = createAsyncThunk(
+	"user/loginUserWithGoogle",
+	async (params: LoginWithGoogleParams) => {
+		const { token } = params;
+		const loginResp = (await loginWithGoogle(
+			token
+		)) as AwaitedResponse<LoginResponse>;
+		const data = loginResp.Data as LoginResponse;
 		return data as LoginResponse;
 	}
 );
@@ -109,4 +146,7 @@ export {
 	getUserByLogin,
 	getUserByID,
 	userExists,
+	signupUser,
+	signupUserWithGoogle,
+	loginUserWithGoogle,
 };

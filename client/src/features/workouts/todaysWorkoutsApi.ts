@@ -22,6 +22,7 @@ import {
 	fetchScheduledWorkouts,
 	fetchScheduledWorkoutsByDate,
 	fetchSkippedWorkouts,
+	fetchTodaysUnscheduledWorkouts,
 	fetchTodaysWorkouts,
 	GroupedScheduledWorkouts,
 	logWorkout,
@@ -85,6 +86,22 @@ export const todaysWorkoutsApi = createApi({
 			},
 			providesTags: () => [{ type: "TodaysWorkouts" }],
 		}),
+		getTodaysUnscheduledWorkouts: builder.query<
+			TodaysWorkout[],
+			UserDateParams
+		>({
+			queryFn: async (params) => {
+				const { userID, targetDate } = params;
+				const response = (await fetchTodaysUnscheduledWorkouts(
+					userID,
+					targetDate
+				)) as AwaitedResponse<{ workouts: TodaysWorkout[] }>;
+				const workouts = response.Data.workouts as TodaysWorkout[];
+
+				return { data: workouts || [] };
+			},
+		}),
+
 		markAsDone: builder.mutation<MarkAsDonePayload, MarkAsDoneParams>({
 			queryFn: async (params) => {
 				const { userID, details } = params;
@@ -240,4 +257,5 @@ export const {
 	useDeleteWorkoutMutation,
 	useGetScheduledWorkoutsQuery,
 	useGetScheduledWorkoutsGroupedQuery,
+	useGetTodaysUnscheduledWorkoutsQuery,
 } = todaysWorkoutsApi;

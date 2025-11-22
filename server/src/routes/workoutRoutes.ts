@@ -26,6 +26,7 @@ import { getPostWorkoutStats } from "../modules/stats/postWorkoutStats.js";
 import type { Activity } from "../modules/types.js";
 import { createWorkout } from "../modules/workouts/createWorkout.js";
 import { getScheduledWorkouts } from "../modules/workouts/getScheduledWorkouts.js";
+import { getTodaysUnscheduled } from "../modules/workouts/getTodaysUnscheduled.js";
 
 const app = new Hono();
 
@@ -120,6 +121,28 @@ app.get("/getSkippedWorkouts", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		workouts: todaysWorkouts,
+	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getTodaysUnscheduled", async (ctx: Context) => {
+	const { userID, targetDate } = ctx.req.query();
+
+	const todaysUnscheduled = (await getTodaysUnscheduled(
+		userID,
+		targetDate
+	)) as TodaysWorkoutClient[];
+
+	if (todaysUnscheduled instanceof Error) {
+		const errResp = getResponseError(todaysUnscheduled, {
+			workouts: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		workouts: todaysUnscheduled,
 	});
 
 	return ctx.json(resp);

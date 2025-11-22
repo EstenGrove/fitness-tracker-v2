@@ -195,7 +195,6 @@ const AllWorkouts = ({ workouts }: Props) => {
 	const countDesc = `${selectedFilters.length || 0}/${filters.length || 0}`;
 	const filteredWorkouts = useMemo(() => {
 		// filter & search
-
 		return searchAndFilter(workouts, {
 			search: searchValue,
 			filters: selectedFilters,

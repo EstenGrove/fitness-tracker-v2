@@ -1,13 +1,16 @@
 import styles from "../../css/login/LoginForm.module.scss";
+import { AuthProvider } from "../../features/auth/types";
 import { LoginValues } from "../../features/user/types";
 import PasswordInput from "../shared/PasswordInput";
 import TextInput from "../shared/TextInput";
+import GoogleAuthButton from "../third-party/GoogleAuthButton";
 
 type Props = {
 	values: LoginValues;
 	onChange: (name: string, value: string) => void;
 	onSubmit: () => void;
 	goTo: () => void;
+	onProviderLogin: (provider: AuthProvider) => void;
 	isLoading: boolean;
 };
 
@@ -39,6 +42,7 @@ const LoginForm = ({
 	onSubmit,
 	goTo,
 	isLoading = false,
+	onProviderLogin,
 }: Props) => {
 	const canSubmit = enableLoginBtn(values);
 	return (
@@ -79,9 +83,12 @@ const LoginForm = ({
 				>
 					Create Account
 				</button>
-				{/*  */}
-				{/*  */}
-				{/*  */}
+			</div>
+			<div className={styles.LoginForm_actions}>OR</div>
+			<div className={styles.LoginForm_actions}>
+				<GoogleAuthButton onClick={() => onProviderLogin("google")}>
+					Sign-in with Google
+				</GoogleAuthButton>
 			</div>
 		</form>
 	);

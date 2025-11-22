@@ -86,8 +86,6 @@ const ViewWorkout = ({ workout }: Props) => {
 		};
 	}, [getDetails]);
 
-	console.log("workout", workout);
-
 	if (isLoading) {
 		return (
 			<div className={styles.ViewWorkout}>

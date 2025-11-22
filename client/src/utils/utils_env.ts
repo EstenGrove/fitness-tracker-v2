@@ -68,9 +68,12 @@ const API_ENDPOINTS = {
 		getTypes: "/activity/getActivityTypes",
 	},
 	auth: {
+		signup: "/auth/signup",
 		login: "/auth/login",
 		logout: "/auth/logout",
 		refresh: "/auth/refresh",
+		googleLogin: "/auth/google/signin",
+		googleSignup: "/auth/google/signup",
 	},
 	user: {
 		userExists: "/user/getUserExists",
@@ -118,6 +121,7 @@ const API_ENDPOINTS = {
 		getActiveWorkout: "/workouts/getActiveWorkout",
 		getTodaysWorkouts: "/workouts/getTodaysWorkouts",
 		getSkippedWorkouts: "/workouts/getSkippedWorkouts",
+		getTodaysUnscheduled: "/workouts/getTodaysUnscheduled",
 		endWorkout: "/workouts/endWorkout",
 		markAsDone: "/workouts/markWorkoutAsDone",
 		undoMarkAsDone: "/workouts/undoMarkAsDone",

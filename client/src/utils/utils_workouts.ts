@@ -178,6 +178,22 @@ const fetchTodaysWorkouts = async (
 		return error;
 	}
 };
+const fetchTodaysUnscheduledWorkouts = async (
+	userID: string,
+	targetDate: string
+): TodaysWorkoutsResp => {
+	let url = currentEnv.base + workoutApis.getTodaysUnscheduled;
+	url += "?" + new URLSearchParams({ userID, targetDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
 
 const fetchAllUserWorkouts = async (userID: string): AllUserWorkoutsResp => {
 	let url = currentEnv.base + workoutApis.getAllUserWorkouts;
@@ -1022,6 +1038,7 @@ export {
 	fetchAllWorkouts,
 	fetchScheduledWorkouts,
 	fetchScheduledWorkoutsByDate,
+	fetchTodaysUnscheduledWorkouts,
 	getLastWorkout,
 	markWorkoutAsDone,
 	createNewWorkout,

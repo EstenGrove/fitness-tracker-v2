@@ -11,6 +11,7 @@ import TodaysWorkout from "./TodaysWorkout";
 import { useNavigate } from "react-router";
 
 type Props = {
+	title?: string;
 	isLoading: boolean;
 	workouts: ITodaysWorkout[];
 };
@@ -136,7 +137,11 @@ const getSkippedWorkouts = (workouts: ITodaysWorkout[]) => {
 	return skipped;
 };
 
-const TodaysWorkouts = ({ workouts, isLoading }: Props) => {
+const TodaysWorkouts = ({
+	title = "Today's Workouts",
+	workouts,
+	isLoading,
+}: Props) => {
 	const navigate = useNavigate();
 	const noWorkouts = !isLoading && (!workouts || !workouts.length);
 	const skipped = getSkippedWorkouts(workouts);
@@ -149,7 +154,7 @@ const TodaysWorkouts = ({ workouts, isLoading }: Props) => {
 		<div className={styles.TodaysWorkouts}>
 			<div className={styles.TodaysWorkouts_heading}>
 				<h3 className={styles.TodaysWorkouts_heading_title}>
-					<span>Today's Workouts</span>
+					<span>{title}</span>
 					<Totals workouts={workouts} skippedWorkouts={skipped} />
 				</h3>
 				<div

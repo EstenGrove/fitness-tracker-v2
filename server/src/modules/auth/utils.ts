@@ -60,11 +60,13 @@ const getUserIDFromToken = async (token: string) => {
 
 const setAccessToken = (ctx: Context, accessToken: string) => {
 	const isSecure = isLocalEnv ? false : true;
+	const sameSite = isLocalEnv ? "Lax" : "Strict";
 	setCookie(ctx, "access_token", accessToken, {
 		httpOnly: true,
 		path: "/",
-		secure: isSecure,
-		sameSite: "Strict",
+		secure: isSecure, // must be true for SameSite=None
+		sameSite: sameSite, // allow cross-site cookies (previously 'Strict')
+		// sameSite: "Strict", // allow cross-site cookies (previously 'Strict')
 	});
 };
 

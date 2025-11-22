@@ -3,7 +3,13 @@ import type { UserDB } from "../user/types.js";
 import type { LoggedInDB } from "./types.js";
 import { generateAccessToken } from "./utils.js";
 
-const login = async (username: string, password: string) => {
+export interface LoginDataDB extends LoggedInDB {
+	token: string;
+}
+
+export type LoginRespDB = Promise<LoginDataDB | unknown>;
+
+const login = async (username: string, password: string): LoginRespDB => {
 	const existingUser = (await userService.getUserByLogin(
 		username,
 		password
@@ -26,7 +32,7 @@ const login = async (username: string, password: string) => {
 		token: token,
 		currentUser: loginData.currentUser,
 		currentSession: loginData.currentSession,
-	};
+	} as LoginDataDB;
 };
 
 export { login };

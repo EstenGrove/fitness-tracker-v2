@@ -1,0 +1,16 @@
+.GoogleAuthButton {
+	padding: 0.5rem 1.6rem;
+	border-radius: 0.5rem;
+	background-color: var(--input-bg);
+	color: $text1;
+	font-size: 1.6rem;
+	@include flex_row(center, center);
+	gap: 0 1rem;
+	border: $borderLight;
+	outline: none;
+}
+
+.GoogleIcon {
+	width: 2.5rem;
+	height: 2.5rem;
+}

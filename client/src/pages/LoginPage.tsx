@@ -4,11 +4,13 @@ import sprite from "../assets/icons/calendar.svg";
 import { LoginValues } from "../features/user/types";
 import { useNavigate } from "react-router";
 import { useAppDispatch } from "../store/store";
-import { loginUser } from "../features/user/operations";
+import { loginUser, loginUserWithGoogle } from "../features/user/operations";
 import { fetchUserExists, UserExistsResponse } from "../utils/utils_user";
 import { AwaitedResponse } from "../features/types";
 import { setAccessTokenCookie } from "../utils/utils_cookies";
 import { sleep } from "../utils/utils_requests";
+import { AuthProvider } from "../features/auth/types";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 import FadeIn from "../components/ui/FadeIn";
 import LoginForm from "../components/login/LoginForm";
 import SelfDestruct from "../components/ui/SelfDestruct";
@@ -81,6 +83,28 @@ const LoginPage = () => {
 	const dispatch = useAppDispatch();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	const { signin: googleSignIn } = useGoogleAuth({
+		onSuccess: async (token) => {
+			const loginData = await dispatch(loginUserWithGoogle({ token })).unwrap();
+
+			if (loginData && loginData?.user) {
+				const userToken = loginData.token as string;
+				setAccessTokenCookie(userToken);
+				setIsSubmitting(false);
+				navigate("/");
+			} else {
+				console.log("❌ [ERROR]: ", loginData?.error);
+			}
+		},
+		onError: (err) => {
+			setIsSubmitting(false);
+			setError({
+				error: err?.toString(),
+				key: error.key + 1,
+			});
+		},
+	});
+
 	const [error, setError] = useState<ErrorInfo>({
 		error: null,
 		key: 0,
@@ -138,12 +162,29 @@ const LoginPage = () => {
 		const loginData = await dispatch(loginUser(values)).unwrap();
 
 		if (loginData) {
-			setAccessTokenCookie(loginData.token as string);
+			const userToken = loginData.token as string;
+			setAccessTokenCookie(userToken);
 			navigate("/");
 		} else {
 			setError(loginData);
 			resetForm();
 			setIsSubmitting(false);
+		}
+	};
+
+	const onProviderLogin = (provider: AuthProvider) => {
+		setIsSubmitting(true);
+
+		switch (provider) {
+			case "google": {
+				return googleSignIn();
+			}
+			case "apple": {
+				throw new Error("Apple Sign-In not implemented yet!");
+			}
+
+			default:
+				break;
 		}
 	};
 
@@ -161,7 +202,8 @@ const LoginPage = () => {
 					onChange={onChange}
 					onSubmit={onSubmit}
 					isLoading={isSubmitting}
-					goTo={() => navigate("/account")}
+					goTo={() => navigate("/signup")}
+					onProviderLogin={onProviderLogin}
 				/>
 			</div>
 		</div>

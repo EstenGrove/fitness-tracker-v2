@@ -17,7 +17,6 @@ const createNewLog = (
 	userID: string,
 	logs: HabitLogValues[]
 ): HabitLogValues => {
-	console.log("logs", logs);
 	const sample = logs[0];
 	const total = logs.reduce((final, item) => {
 		return (final += Number(item.loggedAmount));

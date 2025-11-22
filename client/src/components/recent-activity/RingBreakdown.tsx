@@ -1,6 +1,7 @@
 import styles from "../../css/recent-activity/RingBreakdown.module.scss";
 import { Segment } from "../../features/recent-activity/types";
 import { extractHrsAndMins } from "../../utils/utils_formatter";
+import { addEllipsis } from "../../utils/utils_misc";
 import RingSegments from "../ui/RingSegments";
 
 type Props = { segments: Segment[] };
@@ -22,6 +23,7 @@ const getMinsAndHrs = (totalMins: number) => {
 const SegmentLabel = ({ segment }: SegmentLabelProps) => {
 	const { mins, percent, label, color } = segment;
 	const labelCss = { color };
+	const normedLabel = addEllipsis(label, 8);
 	const duration = getMinsAndHrs(mins);
 	return (
 		<div className={styles.SegmentLabel}>
@@ -30,7 +32,7 @@ const SegmentLabel = ({ segment }: SegmentLabelProps) => {
 				<span>%</span>
 			</div>
 			<div className={styles.SegmentLabel_label} style={labelCss}>
-				<span>{label}</span>
+				<span>{normedLabel}</span>
 			</div>
 			<div className={styles.SegmentLabel_mins}>
 				<span>{duration}</span>

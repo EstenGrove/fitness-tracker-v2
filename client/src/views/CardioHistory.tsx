@@ -12,9 +12,9 @@ import { getTotalMins } from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
-import HistoryEntry from "../components/history/HistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import CardioHistoryEntry from "../components/history/CardioHistoryEntry";
 
 const CardioHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -58,13 +58,11 @@ const CardioHistory = () => {
 							const key = `${entry.historyID}-${delay}-${idx}`;
 							return (
 								<FadeSlideIn duration={delay} key={key}>
-									{/* <div key={key} className={styles.HistoryWrapper}> */}
-									<HistoryEntry
+									<CardioHistoryEntry
 										key={entry.historyID}
 										entry={entry}
 										onMenuAction={onMenuAction}
 									/>
-									{/* </div> */}
 								</FadeSlideIn>
 							);
 						})}
