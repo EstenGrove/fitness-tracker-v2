@@ -8,6 +8,8 @@ import {
 	loginUserWithGoogle,
 	logoutUser,
 	refreshAuth,
+	signupUser,
+	signupUserWithGoogle,
 } from "./operations";
 import { LoginResponse, UserResponse } from "../../utils/utils_user";
 
@@ -117,8 +119,39 @@ const userSlice = createSlice({
 				state.status = ETStatus.REJECTED;
 				state.error = new Error("Google Sign-in failed").message;
 			});
+		// SIGNUP WITH GOOGLE
+		builder
+			.addCase(signupUserWithGoogle.pending, (state: UserSlice) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(
+				signupUserWithGoogle.fulfilled,
+				(state: UserSlice, action: PayloadAction<LoginResponse>) => {
+					state.status = ETStatus.FULFILLED;
+					state.currentUser = action.payload.user;
+					state.currentSession = action.payload.session;
+					state.error = action.payload?.error;
+				}
+			)
+			.addCase(signupUserWithGoogle.rejected, (state: UserSlice) => {
+				state.status = ETStatus.REJECTED;
+				state.error = new Error("Google Sign-in failed").message;
+			});
 
-		// CHECK IF USER EXISTS
+		// SIGNUP
+		builder
+			.addCase(signupUser.pending, (state: UserSlice) => {
+				state.status = ETStatus.PENDING;
+			})
+			.addCase(
+				signupUser.fulfilled,
+				(state: UserSlice, action: PayloadAction<LoginResponse>) => {
+					state.status = ETStatus.FULFILLED;
+					state.currentUser = action.payload.user;
+					state.currentSession = action.payload.session;
+					state.error = action.payload?.error;
+				}
+			);
 	},
 });
 

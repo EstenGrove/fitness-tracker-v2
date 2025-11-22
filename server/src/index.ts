@@ -27,9 +27,17 @@ const ORIGIN = {
 };
 
 const origin = ORIGIN.prefix + CLIENT.host + ":" + CLIENT.port;
+const localOrigin = ORIGIN.prefix + "localhost" + ":" + CLIENT.port;
+const originOptions = [origin, localOrigin];
 
 const corsConfig = {
-	origin: [origin, "http://localhost:5175"],
+	// origin: [origin, localOrigin],
+	origin: (origin: string) => {
+		if (originOptions.includes(origin)) {
+			return true;
+		}
+		return "";
+	},
 	// origin: "http://localhost:5175",
 	credentials: true,
 };
@@ -39,7 +47,18 @@ const app = new Hono().basePath("/api/v1");
 const ENABLE_MIDDLEWARE = false;
 
 app.use(logger());
-app.use(cors(corsConfig));
+app.use(
+	cors({
+		// origin: [origin, localOrigin],
+		origin: (origin: string) => {
+			if (originOptions.includes(origin)) {
+				return origin;
+			}
+			return "";
+		},
+		credentials: true,
+	})
+);
 app.use("*", async (ctx: Context, next: Next) => {
 	if (!ENABLE_MIDDLEWARE) return await next();
 

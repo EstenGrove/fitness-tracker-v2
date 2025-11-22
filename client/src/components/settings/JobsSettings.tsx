@@ -114,7 +114,6 @@ const BatchSummary = ({ batchSummary }: BatchSummaryProps) => {
 const JobsSettings = () => {
 	const { data } = useBackgroundJobsSummary();
 	const summaries = data?.summaries as JobsSummary[];
-	console.log("data", data);
 
 	return (
 		<div className={styles.JobsSettings}>

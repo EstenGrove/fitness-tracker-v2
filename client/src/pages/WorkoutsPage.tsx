@@ -20,6 +20,7 @@ import CreateWorkout from "../components/workouts/CreateWorkout";
 import LogWorkout from "../components/history/LogWorkout";
 import PageHeader from "../components/layout/PageHeader";
 import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
+import { useTodaysUnscheduledWorkouts } from "../hooks/useTodaysUnscheduledWorkouts";
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -138,6 +139,7 @@ const WorkoutsPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useAllWorkouts();
 	const { data, isLoading } = useTodaysWorkouts(targetDate);
+	const { data: completedToday } = useTodaysUnscheduledWorkouts(targetDate);
 
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
@@ -155,17 +157,18 @@ const WorkoutsPage = () => {
 		dispatch(summaryApi.util.invalidateTags([{ type: "DashboardSummary" }]));
 	};
 
-	// Closes quick action modal
+	// [SPECIAL]: Closes quick action modal (eg. 'New' button)
 	const closeQuickAction = () => {
 		setQuickAction(null);
 		invalidateCaches();
 	};
-
+	// the 'New' button (CreateWorkout | LogWorkout)
 	const selectAction = (action: QuickAction) => {
 		setQuickAction(action);
 		closeQuickActions();
 	};
 
+	// circle buttons
 	const selectPanelAction = (action: PanelAction) => {
 		if (action === "Trends") {
 			navigate("/trends");
@@ -196,7 +199,11 @@ const WorkoutsPage = () => {
 					<ActionsPanel onAction={selectPanelAction} />
 				</div>
 				<div className={styles.WorkoutsPage_main_list}>
-					<TodaysWorkouts workouts={todaysWorkouts} isLoading={isLoading} />
+					<TodaysWorkouts
+						title="Today's Workouts"
+						workouts={todaysWorkouts}
+						isLoading={isLoading}
+					/>
 				</div>
 			</div>
 

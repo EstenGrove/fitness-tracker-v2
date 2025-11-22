@@ -4,6 +4,7 @@ import styles from "../../css/third-party/GoogleAuthButton.module.scss";
 type Props = {
 	onClick: () => void;
 	children?: ReactNode;
+	isDisabled?: boolean;
 };
 
 const GoogleIcon = () => {
@@ -37,9 +38,14 @@ const GoogleIcon = () => {
 	);
 };
 
-const GoogleAuthButton = ({ onClick, children }: Props) => {
+const GoogleAuthButton = ({ onClick, isDisabled = false, children }: Props) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.GoogleAuthButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			className={styles.GoogleAuthButton}
+			disabled={isDisabled}
+		>
 			<GoogleIcon />
 			<span>{children}</span>
 		</button>

@@ -25,7 +25,7 @@ const OtherHistory = () => {
 	const { data, isLoading } = useHistoryForRangeAndType<OtherLog>({
 		startDate: startDate,
 		endDate: endDate,
-		activityType: "Timed",
+		activityType: "Other",
 	});
 	const history = data as OtherLog[];
 	const hasHistory = !isEmptyArray(history);
@@ -43,7 +43,7 @@ const OtherHistory = () => {
 	return (
 		<div className={styles.OtherHistory}>
 			<div className={styles.OtherHistory_header}>
-				<h2 className={styles.OtherHistory_header_title}>Stretch History</h2>
+				<h2 className={styles.OtherHistory_header_title}>Other History</h2>
 				<div className={styles.OtherHistory_header_total}>
 					Total: {totalMins} mins.
 				</div>

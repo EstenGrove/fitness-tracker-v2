@@ -14,7 +14,7 @@ const SelfDestruct = ({ children, expiry, duration = 500 }: Props) => {
 		const startFadeOutTimeout = setTimeout(() => {
 			setVisible(false); // start fading out
 			setTimeout(() => {
-				setShouldRender(false); // unmount after fade-out finishes
+				setShouldRender(false); // unmount after fade-out finishes (resets the timer for another instance)
 			}, duration);
 		}, expiry);
 

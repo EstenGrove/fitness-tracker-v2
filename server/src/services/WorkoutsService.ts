@@ -220,6 +220,17 @@ class WorkoutsService {
 		}
 	}
 
+	async getTodaysUnscheduled(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM get_todays_unscheduled_workouts($1, $2)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows ?? [];
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async getWorkoutDetails(
 		userID: string,
 		workoutID: number,

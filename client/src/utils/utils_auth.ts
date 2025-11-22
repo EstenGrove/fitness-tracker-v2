@@ -30,4 +30,20 @@ const loginWithGoogle = async (token: string): AuthResp => {
 	}
 };
 
-export { loginWithGoogle };
+const signupWithGoogle = async (token: string) => {
+	const url = currentEnv.base + authApis.googleSignup;
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				token: token,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+export { loginWithGoogle, signupWithGoogle };

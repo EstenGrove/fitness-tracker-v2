@@ -35,6 +35,7 @@ import SkipWorkout from "./SkipWorkout";
 import UnskipWorkout from "./UnskipWorkout";
 import ViewPostWorkout from "../details/ViewPostWorkout";
 import DeleteWorkout from "./DeleteWorkout";
+import EditWorkout from "./EditWorkout";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -401,8 +402,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 			)}
 			{modalType === EModalType.EDIT && (
 				<ModalLG onClose={closeModal}>
-					{/*  */}
-					{/*  */}
+					<EditWorkout workout={workout} onClose={closeModal} />
 				</ModalLG>
 			)}
 			{modalType === EModalType.COMPLETE && (

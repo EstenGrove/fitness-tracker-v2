@@ -74,7 +74,7 @@ const getSetsSummary = (sets: WorkoutSet[]) => {
 	return setDescs;
 };
 
-const getTotalReps = (sets: StrengthSet[]): number => {
+const getTotalReps = (sets: StrengthSet[] | WorkoutSet[]): number => {
 	if (!sets || !sets.length) return 0;
 	const total = sets.reduce((total, set) => (total += Number(set.reps)), 0);
 

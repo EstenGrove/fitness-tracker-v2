@@ -23,8 +23,6 @@ const verifyGoogleToken = async (
 
 	const payload = ticket.getPayload() as TokenPayload;
 
-	console.log("[GOOGLE-PAYLOAD]: ", payload);
-
 	if (!payload) {
 		return new Error("No payload from google ticket!");
 	}

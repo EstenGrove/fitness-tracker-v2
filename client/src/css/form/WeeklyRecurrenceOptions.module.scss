@@ -1,0 +1,30 @@
+.WeeklyRecurrenceOptions {
+	width: 100%;
+	color: $text3;
+	font-size: 1.5rem;
+	display: block;
+	text-align: left;
+
+	&_every {
+		margin-bottom: 1rem;
+	}
+
+	&_days {
+		width: 100%;
+		@include flex_row(space-between, center);
+		gap: 0 0.5rem;
+	}
+}
+
+.WeekDay {
+	width: 3.2rem;
+	height: 3.2rem;
+	border-radius: 50%;
+	border: $borderLight;
+	outline: none;
+	cursor: pointer;
+	background-color: $foreground;
+	color: #fff;
+	font-size: 1.2rem;
+	@include rowCenter();
+}

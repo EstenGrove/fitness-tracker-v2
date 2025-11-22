@@ -10,14 +10,10 @@ import {
 	ExerciseSet,
 	StrengthSet,
 } from "../../features/workouts/types";
-import {
-	calculateStartAndEndTimes,
-	prepareNewWorkout,
-	WorkoutSet,
-} from "../../utils/utils_workouts";
-import { useCreateWorkoutMutation } from "../../features/workouts/todaysWorkoutsApi";
+import { prepareNewWorkout, WorkoutSet } from "../../utils/utils_workouts";
 import { addDays, addMinutes } from "date-fns";
 import { CurrentUser } from "../../features/user/types";
+import { useCreateWorkout } from "../../hooks/useCreateWorkout";
 import RecurringOptions from "../form/RecurringOptions";
 import CustomCheckbox from "../shared/CustomCheckbox";
 import DatePicker from "../shared/DatePicker";
@@ -28,7 +24,6 @@ import TextInput from "../shared/TextInput";
 import EditStrengthSets from "../form/EditStrengthSets";
 import EditWorkoutSets, { ExerciseWorkout } from "../form/EditWorkoutSets";
 import TimePicker from "../shared/TimePicker";
-import { useCreateWorkout } from "../../hooks/useCreateWorkout";
 
 type Props = {
 	onClose: () => void;
@@ -329,7 +324,7 @@ const CreateWorkout = ({ currentUser, onClose }: Props) => {
 			exercise: values.activityType,
 		})
 	);
-	const { createWorkout, isLoading, error } = useCreateWorkout();
+	const { createWorkout, error } = useCreateWorkout();
 
 	const onChecked = (name: string, value: boolean) => {
 		setValues({ ...values, [name]: value });

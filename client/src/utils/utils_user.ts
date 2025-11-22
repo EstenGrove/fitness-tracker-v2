@@ -1,5 +1,9 @@
 import { AsyncResponse } from "../features/types";
-import { CurrentSession, CurrentUser } from "../features/user/types";
+import {
+	CreateAccountValues,
+	CurrentSession,
+	CurrentUser,
+} from "../features/user/types";
 import { apiEndpoints, currentEnv, authApis, userApis } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
 
@@ -59,6 +63,23 @@ const logout = async (userID: string, sessionID: string) => {
 			body: JSON.stringify({
 				userID,
 				sessionID,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const signup = async (values: CreateAccountValues) => {
+	const url = currentEnv.base + authApis.signup;
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				data: values,
 			}),
 		});
 		const response = await request.json();
@@ -140,6 +161,7 @@ const fetchUserByID = async (userID: string): AsyncResponse<UserResponse> => {
 export {
 	logout,
 	login,
+	signup,
 	getRefreshAuth,
 	fetchUserByLogin,
 	fetchUserByID,

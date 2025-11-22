@@ -82,20 +82,22 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	const { signin: googleSignIn } = useGoogleAuth({
 		onSuccess: async (token) => {
 			const loginData = await dispatch(loginUserWithGoogle({ token })).unwrap();
 
 			if (loginData && loginData?.user) {
-				const userToken =
-					loginData.token || (loginData.session?.token as string);
+				const userToken = loginData.token as string;
 				setAccessTokenCookie(userToken);
+				setIsSubmitting(false);
 				navigate("/");
 			} else {
 				console.log("❌ [ERROR]: ", loginData?.error);
 			}
 		},
 		onError: (err) => {
+			setIsSubmitting(false);
 			setError({
 				error: err?.toString(),
 				key: error.key + 1,
@@ -160,7 +162,8 @@ const LoginPage = () => {
 		const loginData = await dispatch(loginUser(values)).unwrap();
 
 		if (loginData) {
-			setAccessTokenCookie(loginData.token as string);
+			const userToken = loginData.token as string;
+			setAccessTokenCookie(userToken);
 			navigate("/");
 		} else {
 			setError(loginData);
@@ -170,6 +173,8 @@ const LoginPage = () => {
 	};
 
 	const onProviderLogin = (provider: AuthProvider) => {
+		setIsSubmitting(true);
+
 		switch (provider) {
 			case "google": {
 				return googleSignIn();

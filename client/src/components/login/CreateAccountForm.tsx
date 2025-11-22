@@ -12,6 +12,7 @@ type Props = {
 	onSubmit: () => void;
 	onProviderSignup: (provider: AuthProvider) => void;
 	goTo: () => void;
+	isSubmitting: boolean;
 };
 
 const inputCss = {
@@ -88,6 +89,7 @@ const CreateAccountForm = ({
 	onSubmit,
 	onProviderSignup,
 	goTo,
+	isSubmitting = false,
 }: Props) => {
 	const isValidated = useMemo(() => {
 		const isFilled = formIsFilled(values, [
@@ -147,10 +149,10 @@ const CreateAccountForm = ({
 				<button
 					type="button"
 					onClick={onSubmit}
-					disabled={!isValid}
+					disabled={!isValid || isSubmitting}
 					className={styles.CreateAccountForm_actions_login}
 				>
-					Create Account
+					{isSubmitting ? "Submitting..." : "Create Account"}
 				</button>
 				<div className={styles.CreateAccountForm_actions_haveAccount}>
 					Already have an account?

@@ -22,7 +22,7 @@ const StrengthHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<StrengthLog>({
+	const { data } = useHistoryForRangeAndType<StrengthLog>({
 		startDate: startDate,
 		endDate: endDate,
 		activityType: "Strength",
