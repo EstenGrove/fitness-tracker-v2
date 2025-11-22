@@ -25,12 +25,16 @@
 	gap: 0 0.5rem;
 
 	&_percent {
-		width: 20%;
-		min-width: max-content;
+		// width: 20%;
+		// min-width: max-content;
+		width: 4.5ch;
+		max-width: 4.5ch;
+		min-width: 4.5ch;
 		height: 100%;
 		font-size: 1.4rem;
 		text-align: left;
 		color: $text3;
+		// border: 1px solid red;
 	}
 	&_label {
 		width: 60%;
