@@ -139,6 +139,11 @@ button[data-selected="true"] {
 		font-size: 1.6rem;
 		border: none;
 		outline: none;
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
 	}
 	&_cancelBtn {
 		padding: 1rem 1.5rem;

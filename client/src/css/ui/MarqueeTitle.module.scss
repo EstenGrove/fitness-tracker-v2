@@ -1,0 +1,43 @@
+.container {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.text {
+	display: inline-block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	max-width: 100%;
+	font-size: 3.2rem;
+}
+
+/* When marquee is active, disable ellipsis */
+.container[data-overflow="true"] .text {
+	text-overflow: clip;
+}
+
+/* Marquee animation */
+.marquee {
+	animation: marquee var(--speed) linear infinite;
+	padding-right: 2rem;
+}
+
+/* Clone sits right after the first text for seamless loop */
+.clone {
+	position: absolute;
+	left: 100%;
+	top: 0;
+}
+
+@keyframes marquee {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-100%);
+	}
+}

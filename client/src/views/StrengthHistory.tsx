@@ -15,6 +15,7 @@ import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const StrengthHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -77,13 +78,12 @@ const StrengthHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
-			{modalType === EMenuAction.EDIT && (
+			{selectedEntry && modalType === EMenuAction.EDIT && (
 				<ModalLG onClose={closeActionModal}>
 					{/*  */}
 					{/*  */}

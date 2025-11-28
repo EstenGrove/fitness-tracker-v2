@@ -11,7 +11,7 @@
 .SelectWorkoutStep {
 	width: 100%;
 	padding: 0 1rem;
-	@include colCenter();
+	@include flex_col(flex-start, center);
 
 	&_filters {
 		width: 100%;

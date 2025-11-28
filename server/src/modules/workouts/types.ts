@@ -241,3 +241,53 @@ export interface ScheduledWorkoutDB extends TodaysWorkoutDB {
 export interface ScheduledWorkoutClient extends TodaysWorkoutClient {
 	workoutDate: string;
 }
+
+export interface EditWorkoutParams {
+	// INFO
+	activityType: Activity;
+	name: string;
+	desc: string;
+	duration: number;
+	// GOALS
+	sets: number;
+	reps: number;
+	weight: number;
+	exercise: string;
+	steps: number;
+	miles: number;
+	pace: number;
+	// SCHEDULE
+	isRecurring: boolean;
+	frequency: RepeatType | string;
+	interval: 1;
+	byDay: string[];
+	byMonth: string | number;
+	byMonthDay: string | number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+}
+
+export interface WorkoutDateDB {
+	id: number;
+	dates: string[];
+	schedule_id: number;
+	last_updated: string;
+}
+export interface WorkoutDate {
+	id: number;
+	dates: string[];
+	scheduleID: number;
+	lastUpdated: string;
+}
+export interface RecurringScheduleAndDates {
+	schedule: WorkoutSchedule;
+	dates: WorkoutDate[];
+}
+
+export interface WorkoutDetailsInfo {
+	workout: WorkoutOfType;
+	schedule: WorkoutSchedule;
+	history: HistoryOfType[];
+}

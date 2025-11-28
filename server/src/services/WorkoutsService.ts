@@ -2,9 +2,11 @@ import type { Pool } from "pg";
 import type { Activity, DateRange, Effort } from "../modules/types.js";
 import type {
 	DeleteWorkoutDateParams,
+	EditWorkoutParams,
 	LogWorkoutBody,
 	SkippedWorkoutDB,
 	SkipWorkoutBody,
+	WorkoutScheduleDB,
 	WorkoutSet,
 } from "../modules/workouts/types.js";
 import type { HistoryOfTypeDB } from "../modules/history/types.js";
@@ -94,6 +96,17 @@ class WorkoutsService {
 		}
 	}
 
+	async editWorkout(values: EditWorkoutParams) {
+		try {
+			const query = `SELECT * FROM edit_workout($1)`;
+			const results = await this.#db.query(query, [values]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async logStrength(values: object): LoggedWorkoutResp {
 		try {
 			const query = `SELECT * FROM log_strength_workout(
@@ -162,6 +175,25 @@ class WorkoutsService {
 			const results = await this.#db.query(query, [values]);
 			const rows = results?.rows?.[0];
 			return { ...rows, activity_type: "Other" };
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getWorkoutScheduleByWorkout(
+		userID: string,
+		workoutID: number,
+		activityType: Activity
+	) {
+		try {
+			const query = `SELECT * FROM get_workout_schedule_by_workout($1, $2, $3)`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+			]);
+			const rows = results?.rows?.[0] as WorkoutScheduleDB;
+			return rows;
 		} catch (error) {
 			return error;
 		}
@@ -254,6 +286,25 @@ class WorkoutsService {
 		}
 	}
 
+	async getRecurringWorkoutInfo(
+		userID: string,
+		workoutID: number,
+		activityType: string
+	) {
+		try {
+			const query = `SELECT * FROM get_recurring_data_by_workout($1, $2, $3) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+			]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async markWorkoutAsDone(details: MarkAsDoneBody) {
 		try {
 			const query = `SELECT * FROM mark_workout_as_done(
@@ -282,6 +333,25 @@ class WorkoutsService {
 			const query = `SELECT * FROM create_single_workout($1)`;
 			const results = await this.#db.query(query, [data]);
 			const rows = results?.rows?.[0]?.create_single_workout;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getAllWorkoutDetails(
+		userID: string,
+		workoutID: number,
+		activityType: Activity
+	) {
+		try {
+			const query = `SELECT * FROM get_all_workout_details($1, $2, $3) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				workoutID,
+				activityType,
+			]);
+			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {
 			return error;

@@ -118,7 +118,7 @@ const EditWorkoutSets = ({ sets, reps, exercise, onChange }: Props) => {
 
 	const addNewSet = () => {
 		const lastItem = workoutSets[workoutSets.length - 1];
-		const lastID = lastItem.id;
+		const lastID = lastItem?.id ?? 1;
 		const newEntry = {
 			id: lastID + 1,
 			sets: base.sets,
@@ -135,10 +135,7 @@ const EditWorkoutSets = ({ sets, reps, exercise, onChange }: Props) => {
 	const updateSet = (idx: number, set: ExerciseSet) => {
 		const newSets = [...workoutSets].map((entry, i) => {
 			if (i === idx) {
-				return {
-					...entry,
-					...set,
-				};
+				return { ...entry, ...set };
 			} else {
 				return entry;
 			}

@@ -15,6 +15,7 @@ import { selectHistoryRange } from "../features/history/historySlice";
 import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const WalkHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -22,7 +23,7 @@ const WalkHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<WalkLog>({
+	const { data } = useHistoryForRangeAndType<WalkLog>({
 		startDate: startDate,
 		endDate: endDate,
 		activityType: "Walk",
@@ -74,10 +75,9 @@ const WalkHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

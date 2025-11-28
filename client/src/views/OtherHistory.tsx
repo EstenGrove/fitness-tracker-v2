@@ -15,6 +15,7 @@ import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const OtherHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -73,10 +74,9 @@ const OtherHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

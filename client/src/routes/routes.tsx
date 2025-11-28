@@ -39,6 +39,7 @@ const DashboardLayout = lazy(
 // Workouts Pages
 const ActiveWorkout = lazy(() => import("../pages/ActiveWorkoutPage"));
 const AllWorkouts = lazy(() => import("../pages/AllWorkoutsPage"));
+const WorkoutDetails = lazy(() => import("../pages/WorkoutDetailsPage"));
 
 // History Views
 const AllHistory = lazy(() => import("../views/AllHistory"));
@@ -83,25 +84,26 @@ export const router = createBrowserRouter([
 				],
 			},
 
-			/* HABITS */
+			/* MARK: HABITS */
 			{ path: "habit-history", element: load(<HabitHistory />) },
 			{ path: "habits", element: load(<Habits />) },
 			{ path: "habits/:id/tracker", element: load(<HabitTracker />) },
 			{ path: "habits/recents", element: load(<RecentHabitHistory />) },
 
-			/* WORKOUTS */
+			/* MARK: WORKOUTS */
 			{ path: "active/:id", element: load(<ActiveWorkout />) },
 			{ path: "workouts", element: load(<Workouts />) },
 			{ path: "workouts/all", element: load(<AllWorkouts />) },
+			{ path: "workouts/details/:id", element: load(<WorkoutDetails />) },
 
-			/* MEDS */
+			/* MARK: MEDS */
 			{ path: "meds", element: load(<Medications />) },
 			{
 				path: "meds/details/:id",
 				element: load(<MedicationDetails />),
 			},
 
-			/* HISTORY */
+			/* MARK: HISTORY */
 			{
 				path: "history",
 				element: load(<History />),

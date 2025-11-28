@@ -3,7 +3,7 @@ import sprite from "../../assets/icons/dashboard.svg";
 import styles from "../../css/workouts/AllWorkouts.module.scss";
 import { TodaysWorkout as ITodaysWorkouts } from "../../features/workouts/types";
 import { groupBy, isEmptyArray } from "../../utils/utils_misc";
-import TodaysWorkout from "./TodaysWorkout";
+import UserWorkout from "./UserWorkout";
 
 type Props = { workouts: ITodaysWorkouts[] };
 
@@ -246,7 +246,7 @@ const AllWorkouts = ({ workouts }: Props) => {
 				{filteredWorkouts &&
 					filteredWorkouts.map((workout, idx) => {
 						const key = `${idx}-${workout.workoutID}`;
-						return <TodaysWorkout key={key} workout={workout} />;
+						return <UserWorkout key={key} workout={workout} />;
 					})}
 			</div>
 		</div>

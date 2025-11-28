@@ -21,6 +21,8 @@ import LogWorkout from "../components/history/LogWorkout";
 import PageHeader from "../components/layout/PageHeader";
 import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 import { useTodaysUnscheduledWorkouts } from "../hooks/useTodaysUnscheduledWorkouts";
+import { TagDescription } from "@reduxjs/toolkit/query";
+import SearchWorkouts from "../components/workouts/SearchWorkouts";
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -132,6 +134,10 @@ const HeaderActions = ({ selectAction, onClose }: HeaderActionProps) => {
 	);
 };
 
+const cacheTags: TagDescription<"DashboardSummary">[] = [
+	{ type: "DashboardSummary" },
+];
+
 const WorkoutsPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -154,7 +160,7 @@ const WorkoutsPage = () => {
 
 	const invalidateCaches = () => {
 		// Add more state Api's to invalidate, if needed
-		dispatch(summaryApi.util.invalidateTags([{ type: "DashboardSummary" }]));
+		dispatch(summaryApi.util.invalidateTags(cacheTags));
 	};
 
 	// [SPECIAL]: Closes quick action modal (eg. 'New' button)
@@ -178,6 +184,11 @@ const WorkoutsPage = () => {
 	};
 	const closePanelActions = () => {
 		setPanelAction(null);
+	};
+
+	const onLoggedWorkout = () => {
+		closeQuickAction();
+		navigate("/history");
 	};
 
 	return (
@@ -220,7 +231,7 @@ const WorkoutsPage = () => {
 			)}
 			{panelAction === "Search" && (
 				<ModalLG onClose={closePanelActions}>
-					<div>Search</div>
+					<SearchWorkouts onClose={closePanelActions} />
 				</ModalLG>
 			)}
 
@@ -232,6 +243,7 @@ const WorkoutsPage = () => {
 				<LogWorkout
 					currentUser={currentUser}
 					onClose={closeQuickAction}
+					onConfirm={onLoggedWorkout}
 					allWorkouts={allWorkouts as Workout[]}
 				/>
 			)}

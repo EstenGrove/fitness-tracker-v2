@@ -15,6 +15,7 @@ import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const StretchHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -22,7 +23,7 @@ const StretchHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<StretchLog>({
+	const { data } = useHistoryForRangeAndType<StretchLog>({
 		startDate: startDate,
 		endDate: endDate,
 		activityType: "Stretch",
@@ -74,10 +75,9 @@ const StretchHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

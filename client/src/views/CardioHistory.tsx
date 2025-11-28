@@ -15,6 +15,7 @@ import { selectHistoryRange } from "../features/history/historySlice";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import CardioHistoryEntry from "../components/history/CardioHistoryEntry";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const CardioHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -75,10 +76,9 @@ const CardioHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

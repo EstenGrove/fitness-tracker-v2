@@ -35,6 +35,33 @@ import { LocalStorage } from "./utils_storage";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
 
+export interface EditWorkoutValues {
+	// INFO
+	activityType: Activity;
+	name: string;
+	desc: string;
+	duration: number;
+	// GOALS
+	// sets: number;
+	// reps: number;
+	// weight: number;
+	exercise: string;
+	steps: number;
+	miles: number;
+	pace: number;
+	// SCHEDULE
+	isRecurring: boolean;
+	frequency: RepeatType | string;
+	interval: number;
+	byDay: string[];
+	byMonth: string | number;
+	byMonthDay: string | number;
+	startDate: string;
+	endDate: string;
+	startTime: string;
+	endTime: string;
+}
+
 export interface LastSessionParams {
 	userID: string;
 	workoutID: number;
@@ -129,7 +156,6 @@ export type ScheduledWorkoutsGrouped = Record<string, ScheduledWorkout[]>;
 export interface GroupedScheduledWorkouts {
 	workouts: ScheduledWorkoutsGrouped;
 }
-
 export type TodaysWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
 export type AllUserWorkoutsResp = AsyncResponse<{ workouts: TodaysWorkout[] }>;
 export type SkippedWorkoutsResp = AsyncResponse<TodaysWorkout[]>;
@@ -222,6 +248,25 @@ const fetchWorkoutDetails = async (
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const fetchAllWorkoutDetails = async (
+	userID: string,
+	workoutID: number,
+	activityType: Activity
+): WorkoutDetailsResp => {
+	let url = currentEnv.base + workoutApis.getAllWorkoutDetails;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ activityType });
+	url += "&" + new URLSearchParams({ workoutID: String(workoutID) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
 		return response;
 	} catch (error) {
 		return error;
@@ -386,6 +431,42 @@ const createNewWorkout = async (
 				newWorkout: params,
 			}),
 		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const editWorkout = async (userID: string, data: EditWorkoutValues) => {
+	let url = currentEnv.base + workoutApis.editWorkout;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				workoutData: data,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+const getRecurringWorkoutData = async (
+	userID: string,
+	params: { workoutID: number; activityType: Activity }
+) => {
+	const { workoutID, activityType } = params;
+	let url = currentEnv.base + workoutApis.getRecurringWorkoutData;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ workoutID: String(workoutID) });
+	url += "&" + new URLSearchParams({ activityType: activityType });
+
+	try {
+		const request = await fetchWithAuth(url);
 		const response = await request.json();
 		return response;
 	} catch (error) {
@@ -1034,14 +1115,17 @@ export {
 	fetchAllUserWorkouts,
 	fetchSkippedWorkouts,
 	fetchTodaysWorkouts,
+	fetchAllWorkoutDetails,
 	fetchWorkoutDetails,
 	fetchAllWorkouts,
 	fetchScheduledWorkouts,
 	fetchScheduledWorkoutsByDate,
 	fetchTodaysUnscheduledWorkouts,
 	getLastWorkout,
+	getRecurringWorkoutData,
 	markWorkoutAsDone,
 	createNewWorkout,
+	editWorkout,
 	// utils
 	prepareLogWorkout,
 	prepareMarkAsDoneBody,

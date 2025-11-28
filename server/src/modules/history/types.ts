@@ -139,3 +139,6 @@ export interface HistoryDetails {
 	history: HistoryOfType;
 	activityType: Activity;
 }
+
+export type HistoryByTypeDB<T> = HistoryOfTypeDB & T;
+export type HistoryByType<T> = HistoryOfType & T;

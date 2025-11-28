@@ -16,6 +16,11 @@ export interface WorkoutsSlice {
 	workouts: Workout[];
 	selected: SelectedWorkoutDetails | null;
 	active: TodaysWorkout | null;
+	details: DetailsForWorkout | null;
+}
+
+interface DetailsForWorkout {
+	workout: TodaysWorkout;
 }
 
 interface SelectedWorkoutDetails {
@@ -29,6 +34,7 @@ const initialState: WorkoutsSlice = {
 	workouts: [],
 	selected: null,
 	active: null,
+	details: null,
 };
 
 const workoutsSlice = createSlice({
@@ -40,6 +46,18 @@ const workoutsSlice = createSlice({
 			action: PayloadAction<TodaysWorkout>
 		) {
 			state.active = action.payload;
+		},
+		resetActiveWorkout(state: WorkoutsSlice) {
+			state.active = null;
+		},
+		setWorkoutDetails(
+			state: WorkoutsSlice,
+			action: PayloadAction<DetailsForWorkout>
+		) {
+			state.details = action.payload;
+		},
+		resetWorkoutDetails(state: WorkoutsSlice) {
+			state.details = null;
 		},
 	},
 	extraReducers(builder) {
@@ -56,7 +74,12 @@ const workoutsSlice = createSlice({
 	},
 });
 
-export const { setActiveWorkout } = workoutsSlice.actions;
+export const {
+	setActiveWorkout,
+	setWorkoutDetails,
+	resetActiveWorkout,
+	resetWorkoutDetails,
+} = workoutsSlice.actions;
 
 export const selectIsLoadingWorkout = (state: RootState) => {
 	return state.workouts.status === ETStatus.PENDING;
