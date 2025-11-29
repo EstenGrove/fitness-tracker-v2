@@ -15,6 +15,7 @@ import MenuDropdown from "../shared/MenuDropdown";
 
 type Props = {
 	workout: ITodaysWorkout;
+	onActionSelect?: () => void;
 };
 
 const getDurationDesc = (info: {
@@ -213,7 +214,7 @@ const hasStatus = (workout: ITodaysWorkout) => {
 	return hasMins || hasUpdate;
 };
 
-const UserWorkout = ({ workout }: Props) => {
+const UserWorkout = ({ workout, onActionSelect }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const triggerRef = useRef<HTMLDivElement>(null);
@@ -254,12 +255,12 @@ const UserWorkout = ({ workout }: Props) => {
 			case EActionType.VIEW: {
 				navigate(`/workouts/details/${id}?type=${type}`);
 				closeMenu();
-				return;
+				break;
 			}
 			case EActionType.EDIT: {
 				navigate(`/workouts/details/${id}?type=${type}`);
 				closeMenu();
-				return;
+				break;
 			}
 			case EActionType.DELETE: {
 				return;
@@ -267,6 +268,8 @@ const UserWorkout = ({ workout }: Props) => {
 			default:
 				break;
 		}
+
+		return onActionSelect && onActionSelect();
 	};
 
 	return (

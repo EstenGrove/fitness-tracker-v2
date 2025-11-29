@@ -1,23 +1,17 @@
-import { useParams, useSearchParams } from "react-router";
+import { useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import sprite from "../assets/icons/edit.svg";
+import alt from "../assets/icons/calendar.svg";
 import styles from "../css/pages/WorkoutDetailsPage.module.scss";
 import { Activity } from "../features/shared/types";
+import { HistoryOfType } from "../features/history/types";
 import { useWorkoutDetails } from "../hooks/useWorkoutDetails";
-import {
-	CardioWorkout,
-	OtherWorkout,
-	StrengthWorkout,
-	TimedWorkout,
-	WalkWorkout,
-	WorkoutByType,
-} from "../features/workouts/types";
+import { WorkoutByType } from "../features/workouts/types";
 import { ACTIVITY_STYLES } from "../utils/utils_activity";
+import SearchWorkouts from "../components/workouts/SearchWorkouts";
+import WorkoutDetails from "../components/details/WorkoutDetails";
+import ModalLG from "../components/shared/ModalLG";
 import Loader from "../components/layout/Loader";
-import CardioDetails from "../components/details/CardioDetails";
-import WalkDetails from "../components/details/WalkDetails";
-import StrengthDetails from "../components/details/StrengthDetails";
-import TimedDetails from "../components/details/TimedDetails";
-import OtherDetails from "../components/details/OtherDetails";
 
 type HeaderProps = {
 	workout: WorkoutByType;
@@ -26,7 +20,7 @@ type HeaderProps = {
 const getTypeColor = (type: Activity) => {
 	return ACTIVITY_STYLES[type].color;
 };
-type ActionType = "EDIT" | "DELETE";
+type ActionType = "EDIT" | "DELETE" | "SEARCH" | "BACK";
 
 type ActionProps = {
 	onAction: (action: ActionType) => void;
@@ -35,24 +29,47 @@ type ActionProps = {
 const HeaderActions = ({ onAction }: ActionProps) => {
 	return (
 		<div className={styles.HeaderActions}>
-			<button
-				type="button"
-				onClick={() => onAction("EDIT")}
-				className={styles.HeaderActions_edit}
-			>
-				<svg className={styles.HeaderActions_edit_icon}>
-					<use xlinkHref={`${sprite}#icon-edit-3`}></use>
-				</svg>
-			</button>
-			<button
-				type="button"
-				onClick={() => onAction("DELETE")}
-				className={styles.HeaderActions_delete}
-			>
-				<svg className={styles.HeaderActions_delete_icon}>
-					<use xlinkHref={`${sprite}#icon-delete_outline`}></use>
-				</svg>
-			</button>
+			<div className={styles.HeaderActions_left}>
+				<button
+					type="button"
+					onClick={() => onAction("BACK")}
+					className={styles.HeaderActions_back}
+				>
+					<svg className={styles.HeaderActions_back_icon}>
+						<use xlinkHref={`${alt}#icon-arrow_left`}></use>
+					</svg>
+					<span>Back</span>
+				</button>
+			</div>
+			<div className={styles.HeaderActions_right}>
+				<button
+					type="button"
+					onClick={() => onAction("SEARCH")}
+					className={styles.HeaderActions_search}
+				>
+					<svg className={styles.HeaderActions_search_icon}>
+						<use xlinkHref={`${alt}#icon-search`}></use>
+					</svg>
+				</button>
+				<button
+					type="button"
+					onClick={() => onAction("EDIT")}
+					className={styles.HeaderActions_edit}
+				>
+					<svg className={styles.HeaderActions_edit_icon}>
+						<use xlinkHref={`${sprite}#icon-edit-3`}></use>
+					</svg>
+				</button>
+				<button
+					type="button"
+					onClick={() => onAction("DELETE")}
+					className={styles.HeaderActions_delete}
+				>
+					<svg className={styles.HeaderActions_delete_icon}>
+						<use xlinkHref={`${sprite}#icon-delete_outline`}></use>
+					</svg>
+				</button>
+			</div>
 		</div>
 	);
 };
@@ -74,11 +91,24 @@ const Header = ({ workout }: HeaderProps) => {
 const WorkoutDetailsPage = () => {
 	const { id } = useParams();
 	const [params] = useSearchParams();
+	const navigate = useNavigate();
 	const activityType = params.get("type") as Activity;
 	const { data, isLoading } = useWorkoutDetails({
 		workoutID: Number(id),
 		activityType: activityType,
 	});
+	const workout = data?.workout as WorkoutByType;
+	const schedule = data?.schedule ?? null;
+	const history = data?.history as HistoryOfType[];
+	const hasDetails = data && data?.workout && !isLoading;
+	const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
+
+	const openSearchModal = () => {
+		setShowSearchModal(true);
+	};
+	const closeSearchModal = () => {
+		setShowSearchModal(false);
+	};
 
 	const onAction = (action: ActionType) => {
 		switch (action) {
@@ -87,6 +117,13 @@ const WorkoutDetailsPage = () => {
 			}
 			case "DELETE": {
 				return;
+			}
+			case "SEARCH": {
+				openSearchModal();
+				return;
+			}
+			case "BACK": {
+				return navigate("/workouts");
 			}
 			default:
 				break;
@@ -102,25 +139,23 @@ const WorkoutDetailsPage = () => {
 				</div>
 			)}
 			<HeaderActions onAction={onAction} />
-			{data && !isLoading && <Header workout={data?.workout} />}
+			{hasDetails && <Header workout={workout} />}
 
 			<div className={styles.WorkoutDetailsPage_main}>
-				{data && activityType === "Cardio" && (
-					<CardioDetails entry={data.workout as CardioWorkout} />
-				)}
-				{data && activityType === "Walk" && (
-					<WalkDetails entry={data.workout as WalkWorkout} />
-				)}
-				{data && activityType === "Strength" && (
-					<StrengthDetails entry={data.workout as StrengthWorkout} />
-				)}
-				{data && activityType === "Timed" && (
-					<TimedDetails entry={data.workout as TimedWorkout} />
-				)}
-				{data && activityType === "Other" && (
-					<OtherDetails entry={data.workout as OtherWorkout} />
+				{hasDetails && (
+					<WorkoutDetails
+						workout={workout}
+						schedule={schedule}
+						history={history}
+					/>
 				)}
 			</div>
+
+			{showSearchModal && (
+				<ModalLG onClose={closeSearchModal}>
+					<SearchWorkouts onClose={closeSearchModal} />
+				</ModalLG>
+			)}
 		</div>
 	);
 };
