@@ -115,7 +115,7 @@ const AllHistory = () => {
 			<div className={styles.AllHistory_header}>
 				<h2 className={styles.AllHistory_header_title}>All History</h2>
 				<div className={styles.AllHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{isLoading ? (

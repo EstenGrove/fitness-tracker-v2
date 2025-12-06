@@ -27,7 +27,9 @@ const SearchWorkouts = ({ onClose }: Props) => {
 						</Loader>
 					</div>
 				)}
-				{!isLoading && !!allWorkouts && <AllWorkouts workouts={allWorkouts} />}
+				{!isLoading && !!allWorkouts && (
+					<AllWorkouts workouts={allWorkouts} onClose={onClose} />
+				)}
 			</div>
 		</div>
 	);

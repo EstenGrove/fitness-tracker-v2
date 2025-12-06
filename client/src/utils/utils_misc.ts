@@ -75,6 +75,29 @@ const groupByFn = <T extends object>(
 	return grouped;
 };
 
+const sortByNumberOrder = <T extends object>(
+	key: TKey<T>,
+	list: T[],
+	order: "ASC" | "DESC" = "ASC"
+) => {
+	if (!list || !list.length) return [];
+	switch (order) {
+		case "ASC": {
+			return list.sort((a, b) => {
+				return Number(a[key]) - Number(b[key]);
+			});
+		}
+		case "DESC": {
+			return list.sort((a, b) => {
+				return Number(b[key]) - Number(a[key]);
+			});
+		}
+
+		default:
+			return list;
+	}
+};
+
 const sortByDate = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 	if (!list || !list.length) return [];
 
@@ -139,5 +162,6 @@ export {
 	sortByDate,
 	sortByDateDesc,
 	sortByDateOrder,
+	sortByNumberOrder,
 	provideFallbackStr,
 };

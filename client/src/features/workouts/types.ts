@@ -119,6 +119,13 @@ export type WorkoutByType =
 	| TimedWorkout
 	| OtherWorkout;
 
+export type WorkoutWithSets =
+	| StrengthWorkout
+	| StretchWorkout
+	| CardioWorkout
+	| TimedWorkout
+	| OtherWorkout;
+
 export interface WorkoutDetails {
 	workout: WorkoutByType;
 	schedule: WorkoutSchedule;

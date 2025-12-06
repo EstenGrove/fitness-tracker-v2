@@ -48,7 +48,7 @@ const CardioHistory = () => {
 			<div className={styles.CardioHistory_header}>
 				<h2 className={styles.CardioHistory_header_title}>Strength History</h2>
 				<div className={styles.CardioHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (

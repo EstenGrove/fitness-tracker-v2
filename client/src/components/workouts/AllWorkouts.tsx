@@ -5,7 +5,7 @@ import { TodaysWorkout as ITodaysWorkouts } from "../../features/workouts/types"
 import { groupBy, isEmptyArray } from "../../utils/utils_misc";
 import UserWorkout from "./UserWorkout";
 
-type Props = { workouts: ITodaysWorkouts[] };
+type Props = { workouts: ITodaysWorkouts[]; onClose?: () => void };
 
 const getFiltersFromWorkouts = (workouts: ITodaysWorkouts[]) => {
 	if (!workouts || !workouts.length) return [];
@@ -188,7 +188,7 @@ const SearchInput = ({ value, onSearch, clearSearch }: InputProps) => {
 	);
 };
 
-const AllWorkouts = ({ workouts }: Props) => {
+const AllWorkouts = ({ workouts, onClose }: Props) => {
 	const filters = getFiltersFromWorkouts(workouts);
 	const [searchValue, setSearchValue] = useState<string>("");
 	const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -223,6 +223,10 @@ const AllWorkouts = ({ workouts }: Props) => {
 		setSearchValue("");
 	};
 
+	const onWorkoutAction = () => {
+		return onClose && onClose();
+	};
+
 	return (
 		<div className={styles.AllWorkouts}>
 			<div className={styles.AllWorkouts_header}>
@@ -246,7 +250,13 @@ const AllWorkouts = ({ workouts }: Props) => {
 				{filteredWorkouts &&
 					filteredWorkouts.map((workout, idx) => {
 						const key = `${idx}-${workout.workoutID}`;
-						return <UserWorkout key={key} workout={workout} />;
+						return (
+							<UserWorkout
+								key={key}
+								workout={workout}
+								onActionSelect={onWorkoutAction}
+							/>
+						);
 					})}
 			</div>
 		</div>

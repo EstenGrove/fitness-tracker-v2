@@ -1108,6 +1108,91 @@ const sortByCompleted = (workouts: TodaysWorkout[]): TodaysWorkout[] => {
 	});
 };
 
+// converts '5.43' mins => '05:25'
+const minsToTimer = (decimalMins: number): string => {
+	if (!decimalMins) return "00:00.000";
+	const totalSecs = Math.round(decimalMins * 60);
+	const mins = Math.floor(totalSecs / 60);
+	const secs = totalSecs % 60;
+
+	const mm = String(mins).padStart(2, "0");
+	const ss = String(secs).padStart(2, "0");
+
+	return `${mm}:${ss}`;
+};
+// converts '5.43' mins => '05:25.799'
+const minsToTimerWithMs = (decimalMins: number): string => {
+	if (!decimalMins) return "00:00.000";
+	// Convert decimal minutes → total milliseconds
+	const totalMs = decimalMins * 60 * 1000;
+
+	const mins = Math.floor(totalMs / 60000);
+	const secs = Math.floor((totalMs % 60000) / 1000);
+	const ms = Math.floor(totalMs % 1000);
+
+	const mm = String(mins).padStart(2, "0");
+	const ss = String(secs).padStart(2, "0");
+	const mss = String(ms).padStart(3, "0");
+
+	return `${mm}:${ss}.${mss}`;
+};
+
+function minsToTimerHHMMSSms(decimalMins: number): string {
+	// Convert decimal minutes → total milliseconds
+	const totalMs = Math.round(decimalMins * 60 * 1000);
+
+	const hours = Math.floor(totalMs / 3_600_000);
+	const minutes = Math.floor((totalMs % 3_600_000) / 60_000);
+	const seconds = Math.floor((totalMs % 60_000) / 1000);
+	const milliseconds = totalMs % 1000;
+
+	const HH = String(hours).padStart(2, "0");
+	const MM = String(minutes).padStart(2, "0");
+	const SS = String(seconds).padStart(2, "0");
+	const MS = String(milliseconds).padStart(3, "0");
+
+	return `${HH}:${MM}:${SS}.${MS}`;
+}
+
+export type DurationTarget =
+	| "HH:mm:ss"
+	| "HH:mm:ss.mss"
+	| "mm:ss"
+	| "mm:ss.mss";
+
+const durationTo = (durInMins: number, to: DurationTarget = "mm:ss") => {
+	// Convert minutes → ms with full precision
+	const totalMs = Math.round(durInMins * 60 * 1000);
+
+	const hours = Math.floor(totalMs / 3_600_000);
+	const minutes = Math.floor((totalMs % 3_600_000) / 60_000);
+	const seconds = Math.floor((totalMs % 60_000) / 1000);
+	const milliseconds = totalMs % 1000;
+
+	const HH = String(hours).padStart(2, "0");
+	const mm = String(minutes).padStart(2, "0");
+	const ss = String(seconds).padStart(2, "0");
+	const mss = String(milliseconds).padStart(3, "0");
+
+	switch (to) {
+		case "HH:mm:ss.mss": {
+			return `${HH}:${mm}:${ss}.${mss}`;
+		}
+		case "HH:mm:ss": {
+			return `${HH}:${mm}:${ss}`;
+		}
+		case "mm:ss.mss": {
+			return `${mm}:${ss}.${mss}`;
+		}
+		case "mm:ss": {
+			return `${mm}:${ss}`;
+		}
+
+		default:
+			throw new Error(`Unrecognized duration target: ${to}`);
+	}
+};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -1143,4 +1228,9 @@ export {
 	formatElapsedTime,
 	getElapsedWorkoutTime,
 	sortByCompleted,
+	// Time/Duration Formatting
+	minsToTimer,
+	minsToTimerWithMs,
+	minsToTimerHHMMSSms,
+	durationTo,
 };

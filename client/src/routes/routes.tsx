@@ -52,6 +52,9 @@ const StrengthHistory = lazy(() => import("../views/StrengthHistory"));
 
 const SettingsOption = lazy(() => import("../pages/SettingsOptionPage"));
 
+// Demo Page
+const Demo = lazy(() => import("../pages/DemoPage"));
+
 // Lazy-load helper fn; passes the <Loader/> to our <Suspense/> component as a fallback
 const load = (el: JSX.Element) => (
 	<Suspense fallback={<Loader />}>{el}</Suspense>
@@ -68,6 +71,8 @@ export const router = createBrowserRouter([
 		element: load(<DashboardLayout />),
 		children: [
 			{ index: true, element: <Dashboard /> },
+
+			{ path: "demo", element: load(<Demo />) },
 
 			/* AI */
 			{ path: "ai/*", element: load(<AIChatPage />) },

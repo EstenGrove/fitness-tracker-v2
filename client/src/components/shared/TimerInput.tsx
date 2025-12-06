@@ -111,7 +111,7 @@ const TimerInput = ({ name, value, onChange }: Props) => {
 					value={timer.mins}
 					onChange={handleMins}
 					className={styles.TimerInput_mins_input}
-					inputMode="numeric"
+					inputMode="decimal"
 					onClick={selectTextOnFocus}
 				/>
 				<span>mins.</span>

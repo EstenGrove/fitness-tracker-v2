@@ -47,7 +47,7 @@ const StretchHistory = () => {
 			<div className={styles.StretchHistory_header}>
 				<h2 className={styles.StretchHistory_header_title}>Stretch History</h2>
 				<div className={styles.StretchHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (

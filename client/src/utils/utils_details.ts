@@ -1,7 +1,7 @@
 import { StrengthHistory } from "../features/history/types";
 import { PostWorkoutHistory } from "../features/stats/types";
 import { StrengthSet, StrengthWorkout } from "../features/workouts/types";
-import { WorkoutSet } from "./utils_workouts";
+import { durationTo, WorkoutSet } from "./utils_workouts";
 
 const formatDuration = (duration: number) => {
 	const secs = ":00";
@@ -11,7 +11,7 @@ const formatDuration = (duration: number) => {
 };
 
 const getTotalDetailMins = (entry: PostWorkoutHistory) => {
-	return entry.duration;
+	return durationTo(entry.duration, "mm:ss");
 };
 
 const getReps = (entry: StrengthHistory | StrengthWorkout) => {

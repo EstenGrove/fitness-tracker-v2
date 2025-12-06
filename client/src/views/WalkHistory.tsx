@@ -6,9 +6,13 @@ import {
 } from "../features/history/types";
 import { isEmptyArray } from "../utils/utils_misc";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { EMenuAction } from "../features/types";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
@@ -28,7 +32,12 @@ const WalkHistory = () => {
 		endDate: endDate,
 		activityType: "Walk",
 	});
-	const history = data as WalkLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "workoutDate", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as WalkLog[];
+		console.log(sorted.map((x) => x.workoutDate));
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 
@@ -47,7 +56,7 @@ const WalkHistory = () => {
 			<div className={styles.WalkHistory_header}>
 				<h2 className={styles.WalkHistory_header_title}>Walk History</h2>
 				<div className={styles.WalkHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (

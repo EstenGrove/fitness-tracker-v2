@@ -50,7 +50,7 @@ const StrengthHistory = () => {
 					Strength History
 				</h2>
 				<div className={styles.StrengthHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (

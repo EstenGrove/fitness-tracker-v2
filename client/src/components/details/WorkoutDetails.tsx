@@ -1,6 +1,16 @@
 import styles from "../../css/details/WorkoutDetails.module.scss";
 import sprite from "../../assets/icons/main.svg";
-import { WorkoutByType, WorkoutSchedule } from "../../features/workouts/types";
+import {
+	CardioWorkout,
+	OtherWorkout,
+	StrengthWorkout,
+	StretchWorkout,
+	TimedWorkout,
+	WalkWorkout,
+	WorkoutByType,
+	WorkoutSchedule,
+	WorkoutWithSets,
+} from "../../features/workouts/types";
 import { HistoryOfType } from "../../features/history/types";
 
 import { formatDuration as formatDurationDF } from "date-fns";
@@ -8,6 +18,8 @@ import { formatTime, parseAnyTime } from "../../utils/utils_dates";
 import Icon from "../ui/Icon";
 import { IconKey } from "../../utils/utils_icons";
 import { ReactNode } from "react";
+import { isExerciseType, isSetsActivity } from "../../utils/utils_activity";
+import { formatThousand } from "../../utils/utils_misc";
 
 type Props = {
 	workout: WorkoutByType;
@@ -50,9 +62,6 @@ const InfoRow = ({
 	const iconCss = { width: "2.2rem", height: "2.2rem" };
 	return (
 		<div className={styles.InfoRow}>
-			{/* <svg className={styles.InfoRow_icon} style={iconCss}>
-				<use xlinkHref={`${sprite}#icon-${icon}`}></use>
-			</svg> */}
 			<Icon style={iconCss} icon={icon} color={iconColor} />
 			<span>
 				{label}
@@ -79,7 +88,59 @@ const Section = ({ children }: { children?: ReactNode }) => {
 	return <div className={styles.Section}>{children}</div>;
 };
 
+type StepsInfoProps = {
+	workout: WalkWorkout;
+	history: HistoryOfType[];
+};
+const StepsInfo = ({ workout, history }: StepsInfoProps) => {
+	const steps = formatThousand(workout.steps);
+	return (
+		<>
+			<InfoRow
+				value={workout?.miles + "mi."}
+				icon="run"
+				iconColor="var(--blueGrey700)"
+			/>
+			<InfoRow
+				value={steps + " steps"}
+				icon="steps"
+				// iconColor="var(--accent-orange)"
+				iconColor="var(--blueGrey700)"
+			/>
+			<InfoRow
+				value={workout?.pace + "'/sec"}
+				icon="cardio"
+				// iconColor="var(--accent-red)"
+				iconColor="var(--blueGrey700)"
+			/>
+		</>
+	);
+};
+
+type SetsInfoProps = {
+	workout: WorkoutWithSets;
+	history: HistoryOfType[];
+};
+const SetsInfo = ({ workout, history }: SetsInfoProps) => {
+	return (
+		<>
+			<InfoRow
+				value={"Equipment: " + (workout?.equipment ?? "None")}
+				icon="effort"
+				iconColor="var(--accent-orange)"
+			/>
+			<InfoRow
+				value={workout?.reps + " reps"}
+				icon="cardio"
+				iconColor="var(--accent-orange)"
+			/>
+		</>
+	);
+};
+
 const WorkoutDetails = ({ workout, schedule, history = [] }: Props) => {
+	const hasSteps = workout.activityType === "Walk";
+	const hasSets = isSetsActivity(workout.activityType);
 	const duration = formatDur(workout.duration);
 	const range = getTimeRange(schedule);
 	const repeatsOn = getRepeatsOn(schedule);
@@ -96,18 +157,16 @@ const WorkoutDetails = ({ workout, schedule, history = [] }: Props) => {
 					iconColor="var(--accent-orange)"
 				/>
 			</Section>
-			<Section>
-				<InfoRow
-					value={"Equipment: " + (workout?.equipment ?? "None")}
-					icon="effort"
-					iconColor="var(--accent-orange)"
-				/>
-				<InfoRow
-					value={workout?.reps}
-					icon="effort"
-					iconColor="var(--accent-orange)"
-				/>
-			</Section>
+			{hasSets && (
+				<Section>
+					<SetsInfo workout={workout as WorkoutWithSets} history={history} />
+				</Section>
+			)}
+			{hasSteps && (
+				<Section>
+					<StepsInfo workout={workout as WalkWorkout} history={history} />
+				</Section>
+			)}
 		</div>
 	);
 };

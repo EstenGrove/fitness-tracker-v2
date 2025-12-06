@@ -14,7 +14,6 @@ import {
 	SkipWorkoutBody,
 	WorkoutSet,
 } from "../../utils/utils_workouts";
-import { secondsToMinutes } from "date-fns/fp";
 import { formatDate } from "../../utils/utils_dates";
 import EndedWorkout from "./EndedWorkout";
 import WorkoutTimer from "./WorkoutTimer";
@@ -165,7 +164,8 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 		const { userID } = currentUser;
 
 		if (workoutInfo) {
-			const mins = secondsToMinutes(workoutInfo.totalSecs);
+			// const mins = secondsToMinutes(workoutInfo.totalSecs);
+			const mins = workoutInfo.totalSecs / 60;
 			const preparedWorkout = prepareEndedWorkout(userID, {
 				...workoutValues,
 				startTime: workoutInfo?.startTime,

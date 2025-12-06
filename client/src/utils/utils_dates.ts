@@ -254,7 +254,7 @@ const parseAnyDate = (dateStr: string) => {
 	// Remove invalid chars like spaces & commas
 	const tokens = [
 		"MM-dd-yyyy",
-		"yyyy-dd-MM",
+		"yyyy-MM-dd",
 		"MM/dd/yyyy",
 		"MM/dd/yy",
 		"M/d/yyyy",

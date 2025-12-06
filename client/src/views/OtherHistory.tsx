@@ -46,7 +46,7 @@ const OtherHistory = () => {
 			<div className={styles.OtherHistory_header}>
 				<h2 className={styles.OtherHistory_header_title}>Other History</h2>
 				<div className={styles.OtherHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {totalMins.toFixed(2)} mins.
 				</div>
 			</div>
 			{hasHistory && (
