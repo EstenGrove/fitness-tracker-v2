@@ -21,3 +21,24 @@
 		}
 	}
 }
+
+@media only screen and (min-width: $bp-SM) {
+	.CardsCarousel {
+		position: relative;
+		width: 100%;
+		height: auto;
+		padding: 1rem 0;
+
+		&_inner {
+			width: 100%;
+			gap: 0 2rem;
+			padding: 0 1rem;
+
+			&_card {
+				min-width: clamp(260px, 30vw, 360px);
+				border-radius: 1rem;
+				scroll-snap-align: start;
+			}
+		}
+	}
+}

@@ -36,3 +36,12 @@
 		}
 	}
 }
+
+@media only screen and (min-width: $bp-SM) {
+	.DashboardPage {
+		width: 100%;
+		max-width: 90rem;
+		display: block;
+		margin: 0 auto;
+	}
+}

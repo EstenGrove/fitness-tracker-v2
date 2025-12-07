@@ -45,6 +45,7 @@ const Spacer = ({
 const DashboardPage = () => {
 	const baseDate = new Date();
 	const cardsRef = useRef<HTMLDivElement>(null);
+	const habitsRef = useRef<HTMLDivElement>(null);
 	const header = useWeekHeader(baseDate.toString());
 	const currentUser = useSelector(selectCurrentUser);
 	const { data, isLoading } = useDashboardSummary(header.selectedDate);
@@ -76,9 +77,11 @@ const DashboardPage = () => {
 							{/* HABITS PROGRESS */}
 							<Spacer margin="1rem 0" />
 							<CardsSection title={habitInfo.title} to={habitInfo.path}>
-								<DashboardHabits
-									habits={summary.habitProgress?.todaysSummaries}
-								/>
+								<CardsCarousel containerRef={habitsRef}>
+									<DashboardHabits
+										habits={summary.habitProgress?.todaysSummaries}
+									/>
+								</CardsCarousel>
 							</CardsSection>
 
 							{/* LOGS (WORKOUT & HABITS) */}
