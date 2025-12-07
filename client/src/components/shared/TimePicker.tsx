@@ -7,7 +7,7 @@ import {
 } from "react";
 import sprite from "../../assets/icons/calendar.svg";
 import styles from "../../css/shared/TimePicker.module.scss";
-import { parseTime } from "../../utils/utils_dates";
+import { parseAnyTime } from "../../utils/utils_dates";
 import { format, getHours, getMinutes } from "date-fns";
 
 type TodVals = "AM" | "PM";
@@ -96,7 +96,7 @@ const TodInput = ({ value, onChange, inputRef }: SelectProps) => {
 				onChange={handleChange}
 				className={styles.TodInput_select}
 				ref={inputRef}
-				// onContextMenu={(e) => e.preventDefault()}
+				onContextMenu={(e) => e.preventDefault()}
 			>
 				<option value="AM" className={styles.TodInput_select_option}>
 					AM
@@ -118,7 +118,7 @@ const getTimeFromState = (time: TimeVals) => {
 };
 
 const getInitialState = (initialTime: string): TimeVals => {
-	const parsed = parseTime(initialTime);
+	const parsed = parseAnyTime(initialTime);
 	const formatted = format(parsed, "h:mm a");
 
 	const hrs = getHours(parsed);

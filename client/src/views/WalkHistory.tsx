@@ -6,15 +6,20 @@ import {
 } from "../features/history/types";
 import { isEmptyArray } from "../utils/utils_misc";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { EMenuAction } from "../features/types";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
 import WalkHistoryEntry from "../components/history/WalkHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const WalkHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -22,12 +27,16 @@ const WalkHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<WalkLog>({
+	const { data } = useHistoryForRangeAndType<WalkLog>({
 		startDate: startDate,
 		endDate: endDate,
 		activityType: "Walk",
 	});
-	const history = data as WalkLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as WalkLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 
@@ -46,7 +55,7 @@ const WalkHistory = () => {
 			<div className={styles.WalkHistory_header}>
 				<h2 className={styles.WalkHistory_header_title}>Walk History</h2>
 				<div className={styles.WalkHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (
@@ -74,10 +83,9 @@ const WalkHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

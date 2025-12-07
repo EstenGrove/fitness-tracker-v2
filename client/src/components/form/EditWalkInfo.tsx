@@ -4,7 +4,6 @@ import { milesToSteps } from "../../utils/utils_steps";
 
 type Props = {
 	miles: number;
-	duration: number;
 	onChange: (name: string, value: string | number) => void;
 };
 

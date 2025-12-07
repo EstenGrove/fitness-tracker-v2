@@ -225,3 +225,15 @@ $modalRadius: 5rem;
 		cursor: pointer;
 	}
 }
+
+// Creates a truncated text container that adds an ellipsis for cut-off text
+// 'Weekly Pushup Bars (3x/week)' => 'Weekly Pushup Bars (3x...'
+@mixin ellipsis($size: 2.8rem) {
+	width: 100%;
+	display: inline-block;
+	font-size: $size;
+	margin-bottom: 0.5rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}

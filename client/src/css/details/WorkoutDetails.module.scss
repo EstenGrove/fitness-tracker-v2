@@ -1,0 +1,31 @@
+.WorkoutDetails {
+	width: 100%;
+}
+
+.MainBlock {
+	width: 100%;
+	height: auto;
+}
+
+.Section {
+	width: 100%;
+	margin-bottom: 2rem;
+}
+
+.InfoRow {
+	width: auto;
+	padding: 0.5rem 0;
+	border-radius: 0.5rem;
+	@include flex_row(flex-start, center);
+	gap: 0 1rem;
+	font-size: 1.6rem;
+	color: $text1;
+	font-family: $fontPrimary;
+
+	&_icon {
+		$icon: 2.2rem;
+		width: $icon;
+		height: $icon;
+		fill: $text3;
+	}
+}

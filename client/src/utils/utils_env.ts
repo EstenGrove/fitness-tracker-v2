@@ -101,6 +101,7 @@ const API_ENDPOINTS = {
 		getTotalMinsBy: "/stats/getTotalMinsBy",
 	},
 	workouts: {
+		getRecurringWorkoutData: "/workouts/getRecurringWorkoutData",
 		getAllUserWorkouts: "/workouts/getAllUserWorkouts",
 		getLastWorkout: "/workouts/getLastWorkout",
 		skipWorkout: "/workouts/skipWorkout",
@@ -112,6 +113,7 @@ const API_ENDPOINTS = {
 		getScheduledWorkoutsForRange: "/workouts/getScheduledWorkoutsForRange",
 		getScheduledWorkoutsByDate: "/workouts/getScheduledWorkoutsByDate",
 		getWorkoutDetails: "/workouts/getWorkoutDetails",
+		getAllWorkoutDetails: "/workouts/getAllWorkoutDetails",
 		getCategories: "/workouts/getWorkoutCategories",
 		getWorkoutPlan: "/workouts/getWorkoutPlan",
 		getWorkoutHistory: "/workouts/getWorkoutHistory",
@@ -127,6 +129,7 @@ const API_ENDPOINTS = {
 		undoMarkAsDone: "/workouts/undoMarkAsDone",
 		createNewWorkout: "/workouts/createNewWorkout",
 		deleteWorkoutDate: "/workouts/deleteWorkoutDate",
+		editWorkout: "/workouts/editWorkout",
 	},
 	history: {
 		getHistoryDetails: "/history/getHistoryDetails",

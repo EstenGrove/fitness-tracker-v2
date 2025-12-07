@@ -27,6 +27,7 @@ export interface Workout {
 	endTime: string;
 	isRecurring: boolean;
 	status: WorkoutStatus;
+	equipment?: string;
 }
 
 export interface TodaysWorkout {
@@ -83,16 +84,14 @@ export interface StrengthWorkout extends Workout {
 	reps: number;
 	sets: number;
 	weight: number;
-	equipment: string | null;
 }
 export interface StretchWorkout extends Workout {
 	sets: number;
 	reps: number;
 	exercise: string | null;
-	equipment: string | null;
 }
 export interface WalkWorkout extends Workout {
-	steos: number;
+	steps: number;
 	miles: string;
 	pace: string;
 }
@@ -100,25 +99,29 @@ export interface CardioWorkout extends Workout {
 	sets: number;
 	reps: number;
 	exercise: string | null;
-	equipment: string | null;
 }
 export interface TimedWorkout extends Workout {
 	sets: number;
 	reps: number;
 	exercise: string | null;
-	equipment: string | null;
 }
 export interface OtherWorkout extends Workout {
 	sets: number;
 	reps: number;
 	exercise: string | null;
-	equipment: string | null;
 }
 
 export type WorkoutByType =
 	| StrengthWorkout
 	| StretchWorkout
 	| WalkWorkout
+	| CardioWorkout
+	| TimedWorkout
+	| OtherWorkout;
+
+export type WorkoutWithSets =
+	| StrengthWorkout
+	| StretchWorkout
 	| CardioWorkout
 	| TimedWorkout
 	| OtherWorkout;
@@ -191,4 +194,36 @@ export interface CreateWorkoutParams {
 export interface CreatedWorkoutData {
 	workout: WorkoutByType;
 	schedule: WorkoutSchedule;
+}
+
+export interface WorkoutDateDB {
+	id: number;
+	dates: string[];
+	schedule_id: number;
+	last_updated: string;
+}
+export interface WorkoutDate {
+	id: number;
+	dates: string[];
+	scheduleID: number;
+	lastUpdated: string;
+}
+// This comes from the 'v_active_workouts' VIEW & gets converted to this format
+export interface ActiveWorkout {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+	workoutName: string;
+	workoutDesc: string;
+	duration: number;
+	isRecurring: boolean;
+	equipment: string;
+	tagColor: string | null;
+	isActive: boolean;
+	createdDate: string;
+}
+export interface RecurringWorkoutData {
+	workout: ActiveWorkout;
+	schedule: WorkoutSchedule;
+	dates: WorkoutDate[];
 }

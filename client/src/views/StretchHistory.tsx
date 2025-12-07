@@ -1,3 +1,6 @@
+import { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { selectHistoryRange } from "../features/history/historySlice";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/StretchHistory.module.scss";
 import {
@@ -6,15 +9,17 @@ import {
 } from "../features/history/types";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { isEmptyArray } from "../utils/utils_misc";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
 import { EMenuAction } from "../features/types";
 import HistoryEntry from "../components/history/HistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
-import { useSelector } from "react-redux";
-import { selectHistoryRange } from "../features/history/historySlice";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const StretchHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -22,12 +27,16 @@ const StretchHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const { data, isLoading } = useHistoryForRangeAndType<StretchLog>({
+	const { data } = useHistoryForRangeAndType<StretchLog>({
 		startDate: startDate,
 		endDate: endDate,
 		activityType: "Stretch",
 	});
-	const history = data as StretchLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as StretchLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 
@@ -46,7 +55,7 @@ const StretchHistory = () => {
 			<div className={styles.StretchHistory_header}>
 				<h2 className={styles.StretchHistory_header_title}>Stretch History</h2>
 				<div className={styles.StretchHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (
@@ -74,10 +83,9 @@ const StretchHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

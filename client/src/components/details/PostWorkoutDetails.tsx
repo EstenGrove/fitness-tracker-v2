@@ -49,7 +49,7 @@ const DetailsSet = <T extends PostWorkoutHistory>({
 	const kcals = getTotalDetailsCalories(entry);
 	return (
 		<div className={styles.DetailsSet}>
-			<DetailsBlock type="Duration" label="Duration" value={mins + "min."} />
+			<DetailsBlock type="Duration" label="Duration" value={mins + ""} />
 			<DetailsBlock type="Effort" label="Effort" value={effort} />
 			<DetailsBlock type="Calories" label="kcals" value={kcals} />
 			{children}

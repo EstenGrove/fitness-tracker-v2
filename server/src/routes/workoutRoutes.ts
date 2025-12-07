@@ -4,7 +4,9 @@ import { workoutsService } from "../services/index.js";
 import type {
 	CreateWorkoutParams,
 	DeleteWorkoutDateParams,
+	EditWorkoutParams,
 	LogWorkoutBody,
+	RecurringScheduleAndDates,
 	SkipWorkoutBody,
 	TodaysWorkoutClient,
 	TodaysWorkoutDB,
@@ -27,6 +29,10 @@ import type { Activity } from "../modules/types.js";
 import { createWorkout } from "../modules/workouts/createWorkout.js";
 import { getScheduledWorkouts } from "../modules/workouts/getScheduledWorkouts.js";
 import { getTodaysUnscheduled } from "../modules/workouts/getTodaysUnscheduled.js";
+import {
+	getAllWorkoutDetails,
+	type WorkoutDetailsInfo,
+} from "../modules/workouts/getAllWorkoutDetails.js";
 
 const app = new Hono();
 
@@ -143,6 +149,35 @@ app.get("/getTodaysUnscheduled", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		workouts: todaysUnscheduled,
+	});
+
+	return ctx.json(resp);
+});
+
+app.get("/getAllWorkoutDetails", async (ctx: Context) => {
+	const { userID, workoutID: id, activityType: type } = ctx.req.query();
+	const workoutID = Number(id);
+	const activityType = type as Activity;
+
+	const details = (await getAllWorkoutDetails(
+		userID,
+		workoutID,
+		activityType
+	)) as WorkoutDetailsInfo;
+
+	if (details instanceof Error) {
+		const errResp = getResponseError(details, {
+			workout: null,
+			schedule: null,
+			history: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		workout: details.workout,
+		schedule: details.schedule,
+		history: details.history,
 	});
 
 	return ctx.json(resp);
@@ -331,6 +366,36 @@ app.post("/deleteWorkoutDate", async (ctx: Context) => {
 	}
 
 	const resp = getResponseOk(deleted);
+
+	return ctx.json(resp);
+});
+
+app.post("/editWorkout", async (ctx: Context) => {
+	const body = await ctx.req.json<{ workoutData: EditWorkoutParams }>();
+	const workoutData = body.workoutData;
+});
+
+app.get("/getRecurringWorkoutData", async (ctx: Context) => {
+	const { userID, workoutID: id, activityType } = ctx.req.query();
+	const workoutID = Number(id);
+	const data = (await workoutsService.getRecurringWorkoutInfo(
+		userID,
+		workoutID,
+		activityType
+	)) as RecurringScheduleAndDates;
+
+	if (data instanceof Error) {
+		const errResp = getResponseError(data, {
+			schedule: null,
+			dates: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		schedule: data.schedule,
+		dates: data.dates,
+	});
 
 	return ctx.json(resp);
 });

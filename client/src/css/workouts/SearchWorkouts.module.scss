@@ -1,0 +1,22 @@
+.SearchWorkouts {
+	width: 100%;
+
+	&_header {
+		width: 100%;
+		font-size: 2rem;
+		font-weight: 700;
+		color: $text1;
+		text-align: center;
+		height: auto;
+		background-color: $background;
+
+		& b {
+			font-size: 2.5rem;
+			color: $text3;
+		}
+	}
+	&_main {
+		width: 100%;
+		padding: 0 3rem;
+	}
+}

@@ -28,6 +28,8 @@ interface DatePickerProps {
 	onChange?: (name: string, value: string) => void;
 	onSelect: (name: string, value: Date) => void;
 	enableFocusMode?: boolean;
+	isDisabled?: boolean;
+	isInvalid?: boolean | ((value: Date | string) => boolean);
 }
 type CalendarProps = {
 	dates: Date[];
@@ -226,6 +228,19 @@ const DatePickerCalendar = ({
 // @ts-expect-error: this is fine
 interface Props extends DatePickerProps, ComponentPropsWithoutRef<"input"> {}
 
+const getInvalid = (
+	selectedDate: Date | string,
+	invalidProp?: boolean | ((date: Date | string) => boolean)
+): boolean => {
+	if (invalidProp) {
+		const isFn = typeof invalidProp === "function";
+
+		return isFn ? invalidProp(selectedDate) : invalidProp;
+	} else {
+		return false;
+	}
+};
+
 const DatePicker = ({
 	name,
 	id,
@@ -233,6 +248,8 @@ const DatePicker = ({
 	onSelect,
 	onChange,
 	enableFocusMode = true,
+	isDisabled = false,
+	isInvalid = false,
 	...rest
 }: Props) => {
 	const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -259,6 +276,7 @@ const DatePicker = ({
 	};
 
 	const selectDay = (day: Date) => {
+		if (isDisabled) return;
 		return onSelect && onSelect(name, day);
 	};
 
@@ -294,6 +312,8 @@ const DatePicker = ({
 					value={selectedDate}
 					onChange={handleDateChange}
 					className={styles.DatePicker_inputWrapper_input}
+					disabled={isDisabled}
+					aria-invalid={getInvalid(selectedDate, isInvalid)}
 					{...rest}
 				/>
 				<button

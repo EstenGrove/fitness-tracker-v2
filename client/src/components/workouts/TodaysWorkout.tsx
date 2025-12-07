@@ -47,14 +47,16 @@ const getDurationDesc = (info: {
 }) => {
 	const { duration, recorded } = info;
 	const isOpen = Number(duration) === 0;
+	const dur = Math.round(duration);
+	const recordedDur = Math.round(recorded || 0);
 	if (isOpen) {
 		return "Open";
 	}
 
 	if (!recorded) {
-		return duration + "min.";
+		return dur + "min.";
 	} else {
-		return recorded + " of " + duration + "min.";
+		return recordedDur + " of " + dur + "min.";
 	}
 };
 

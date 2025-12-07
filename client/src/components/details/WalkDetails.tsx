@@ -16,7 +16,6 @@ const WalkDetails = ({ entry }: Props) => {
 	const walkPace = pace + `'/sec`;
 	return (
 		<div className={styles.WalkDetails}>
-			<div className={styles.WalkDetails_title}>Workout Details:</div>
 			<div className={styles.WalkDetails_details}>
 				<DetailsBlock type="Duration" label="Duration" value={mins} />
 				<DetailsBlock type="Effort" label="Effort" value="Moderate" />

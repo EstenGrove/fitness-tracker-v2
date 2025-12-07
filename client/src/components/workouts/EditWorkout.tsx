@@ -1,23 +1,40 @@
 import styles from "../../css/workouts/EditWorkout.module.scss";
-import { useState } from "react";
-import { addDays, addMinutes } from "date-fns";
-import { WorkoutSet } from "../../utils/utils_workouts";
-import { RepeatType } from "../../features/shared/types";
+import { useMemo, useRef, useState } from "react";
+import { addDays, isBefore } from "date-fns";
+import { EditWorkoutValues, WorkoutSet } from "../../utils/utils_workouts";
 import { RecurringValues } from "../../utils/utils_recurring";
-import { TodaysWorkout } from "../../features/workouts/types";
-import { formatDate, formatTime } from "../../utils/utils_dates";
+import {
+	ActiveWorkout,
+	RecurringWorkoutData,
+	TodaysWorkout,
+	WorkoutSchedule,
+} from "../../features/workouts/types";
+import {
+	formatDate,
+	formatTime,
+	parseAnyDate,
+	parseAnyTime,
+} from "../../utils/utils_dates";
 import WeeklyRecurrenceOptions from "../form/WeeklyRecurrenceOptions";
+import EditWorkoutGoals from "../form/EditWorkoutGoals";
 import CustomCheckbox from "../shared/CustomCheckbox";
+import NumberInput from "../shared/NumberInput";
 import DatePicker from "../shared/DatePicker";
 import TimePicker from "../shared/TimePicker";
 import TextInput from "../shared/TextInput";
 import TextArea from "../shared/TextArea";
-import NumberInput from "../shared/NumberInput";
+import { useGetRecurringWorkoutData } from "../../hooks/useGetRecurringWorkoutData";
+import Loader from "../layout/Loader";
 
 type Props = {
 	workout: TodaysWorkout;
 	onClose: () => void;
 };
+
+interface EditedData {
+	values: EditWorkoutValues;
+	sets: WorkoutSet[];
+}
 
 // EDIT WORKOUT TABS/SECTIONS:
 // - Edit Goals (eg, target sets/reps, target steps, target reps etc)
@@ -68,29 +85,6 @@ type EditInfoProps = {
 	values: EditWorkoutValues;
 	onChange: (name: string, value: string | number) => void;
 };
-
-interface EditWorkoutValues {
-	// INFO
-	name: string;
-	desc: string;
-	duration: number;
-	// GOALS
-	sets: WorkoutSet[];
-	steps: number;
-	miles: number;
-	pace: number;
-	// SCHEDULE
-	isRecurring: boolean;
-	frequency: RepeatType | string;
-	interval: 1;
-	byDay: string[];
-	byMonth: string | number;
-	byMonthDay: string | number;
-	startDate: string;
-	endDate: string;
-	startTime: string;
-	endTime: string;
-}
 
 const EditWorkoutInfo = ({ values, onChange }: EditInfoProps) => {
 	return (
@@ -184,6 +178,10 @@ const EditWorkoutSchedule = ({
 								value={values.endDate as string}
 								onSelect={onSelect}
 								onChange={onChange}
+								isInvalid={(date) => {
+									if (!date) return true;
+									return isBefore(date, new Date());
+								}}
 							/>
 						</div>
 					</div>
@@ -192,34 +190,13 @@ const EditWorkoutSchedule = ({
 		</div>
 	);
 };
-
-type EditGoalsProps = {
-	values: EditWorkoutValues;
-	onChange: (name: string, value: string | number) => void;
-	onChecked: (name: string, value: boolean) => void;
-	onSelect: (name: string, value: string | number | Date) => void;
-};
-
-const EditWorkoutGoals = ({
-	values,
-	onChange,
-	onSelect,
-	onChecked,
-}: EditGoalsProps) => {
-	return (
-		<div className={styles.EditWorkoutGoals}>
-			{/*  */}
-			{/*  */}
-		</div>
-	);
-};
-
 type FooterProps = {
 	onCancel: () => void;
 	onSave: () => void;
+	isDisabled: boolean;
 };
 
-const Footer = ({ onCancel, onSave }: FooterProps) => {
+const Footer = ({ onCancel, onSave, isDisabled = false }: FooterProps) => {
 	return (
 		<section className={styles.Footer}>
 			<button
@@ -229,39 +206,43 @@ const Footer = ({ onCancel, onSave }: FooterProps) => {
 			>
 				Cancel
 			</button>
-			<button type="button" onClick={onSave} className={styles.Footer_btn}>
+			<button
+				type="button"
+				disabled={isDisabled}
+				onClick={onSave}
+				className={styles.Footer_btn}
+			>
 				Save All
 			</button>
 		</section>
 	);
 };
 
-const EditWorkout = ({ workout, onClose }: Props) => {
-	const [activeTab, setActiveTab] = useState<EActiveSection>(
-		EActiveSection.INFO
-	);
-	const [values, setValues] = useState<EditWorkoutValues>({
-		name: workout?.workoutName,
-		desc: "",
-		duration: 30,
-		isRecurring: false,
-		interval: 1,
-		frequency: "Daily",
-		byDay: [],
-		byMonth: "",
-		byMonthDay: "",
-		startDate: formatDate(new Date(), "db"),
-		endDate: formatDate(addDays(new Date(), 60), "db"),
-		startTime: formatTime(new Date(), "short"),
-		endTime: formatTime(addMinutes(new Date(), 30), "short"),
-		steps: 0,
-		miles: 0,
-		pace: 0,
-		sets: [],
-	});
+type ContentProps = {
+	activeTab: EActiveSection;
+	onClose: () => void;
+	onSave: ({ values, sets }: EditedData) => void;
+	onCancel: () => void;
+	workout: TodaysWorkout;
+	recurringData: RecurringWorkoutData;
+};
 
-	const onTabChange = (tab: EActiveSection) => {
-		setActiveTab(tab);
+const EditWorkoutContent = ({
+	activeTab,
+	workout,
+	recurringData,
+	onClose,
+	onSave,
+	onCancel,
+}: ContentProps) => {
+	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>([]);
+	const [values, setValues] = useState<EditWorkoutValues>({
+		...getInitialValues(workout, recurringData),
+	});
+	const hasChanges = useRef<boolean>(false);
+
+	const onSetChange = (sets: WorkoutSet[]) => {
+		setWorkoutSets(sets);
 	};
 
 	const onChange = (name: string, value: string | number) => {
@@ -269,6 +250,7 @@ const EditWorkout = ({ workout, onClose }: Props) => {
 			...values,
 			[name]: value,
 		});
+		hasChanges.current = true;
 	};
 
 	const onChecked = (name: string, value: boolean) => {
@@ -276,25 +258,162 @@ const EditWorkout = ({ workout, onClose }: Props) => {
 			...values,
 			[name]: value,
 		});
+		hasChanges.current = true;
 	};
 	const onSelect = (name: string, value: string | number | Date) => {
 		if (name === "byDay") {
-			const { byDay } = values;
-			const newList = (
-				byDay.includes(value as string)
-					? [...byDay.filter((d) => d !== value)]
-					: [...byDay, value]
-			) as string[];
+			const newDay = value as string; // 'Su', 'Mo', 'Tu' etc.
+			const newList = handleByDay(newDay);
 			setValues({ ...values, byDay: newList });
 		} else {
 			setValues({ ...values, [name]: value });
 		}
 	};
 
+	const handleByDay = (value: string): string[] => {
+		const { byDay } = values;
+		const isAlreadySelected = byDay.includes(value);
+		hasChanges.current = true;
+		if (isAlreadySelected) {
+			const newList = [...byDay.filter((d) => d !== value)];
+			return newList;
+		} else {
+			const newList = [...byDay, value];
+			return newList;
+		}
+	};
+
 	const saveChanges = async () => {
 		// do stuff
+		// prepare edit workout values for server
 
-		return onClose && onClose();
+		// return onClose && onClose();
+
+		if (onSave) {
+			return onSave({
+				values,
+				sets: workoutSets,
+			});
+		}
+	};
+
+	const cancelChanges = () => {
+		if (onCancel) onCancel();
+
+		return onClose();
+	};
+	return (
+		<>
+			{activeTab === EActiveSection.INFO && (
+				<EditWorkoutInfo values={values} onChange={onChange} />
+			)}
+			{activeTab === EActiveSection.GOALS && (
+				<EditWorkoutGoals
+					values={values}
+					onChange={onChange}
+					onSetChange={onSetChange}
+				/>
+			)}
+			{activeTab === EActiveSection.SCHEDULE && (
+				<EditWorkoutSchedule
+					values={values}
+					onChange={onChange}
+					onSelect={onSelect}
+					onChecked={onChecked}
+				/>
+			)}
+			<Footer
+				onSave={saveChanges}
+				onCancel={cancelChanges}
+				isDisabled={!hasChanges.current}
+			/>
+		</>
+	);
+};
+
+const getInitialValues = (
+	workout: TodaysWorkout,
+	recurringData: RecurringWorkoutData
+) => {
+	const { activityType, isRecurring, duration, workoutName } = workout;
+	const workoutInfo: ActiveWorkout = recurringData?.workout;
+	const schedule: WorkoutSchedule = recurringData?.schedule;
+	const baseVals: EditWorkoutValues = {
+		activityType: activityType,
+		name: workoutName,
+		desc: workoutInfo?.workoutDesc ?? "",
+		duration: Number(duration),
+		isRecurring: isRecurring ?? false,
+		interval: 1,
+		frequency: "Weekly",
+		byDay: [],
+		byMonth: "",
+		byMonthDay: "",
+		startDate: formatDate(new Date(), "db"),
+		endDate: formatDate(addDays(new Date(), 60), "db"),
+		startTime: formatTime(new Date(), "db"),
+		endTime: formatTime(new Date(), "db"),
+		steps: 0,
+		miles: 0.0,
+		pace: 0.0,
+		exercise: activityType,
+	};
+
+	if (!schedule || !isRecurring) {
+		return baseVals;
+	} else {
+		const parsedStart = parseAnyDate(schedule.startDate);
+		const parsedEnd = parseAnyDate(schedule.endDate);
+		const parsedStartTime = parseAnyTime(schedule.startTime);
+		const parsedEndTime = parseAnyTime(schedule.endTime);
+		const newStartDate = formatDate(parsedStart, "db");
+		const newEndDate = formatDate(parsedEnd, "db");
+		const newStartTime = formatTime(parsedStartTime, "db");
+		const newEndTime = formatTime(parsedEndTime, "db");
+
+		const scheduleVals = {
+			workoutDesc: workoutInfo?.workoutDesc ?? "",
+			isRecurring: isRecurring ?? false,
+			interval: schedule?.interval ?? 1,
+			frequency: "Weekly",
+			byDay: schedule?.byDay ?? [],
+			byMonth: schedule?.byMonth ?? "",
+			byMonthDay: schedule?.byMonthDay ?? "",
+			startDate: newStartDate,
+			endDate: newEndDate,
+			startTime: newStartTime,
+			endTime: newEndTime,
+		};
+		return {
+			...baseVals,
+			...scheduleVals,
+		} as EditWorkoutValues;
+	}
+};
+
+const EditWorkout = ({ workout, onClose }: Props) => {
+	const { workoutID, activityType } = workout;
+	const { data: recurringData, isLoading } = useGetRecurringWorkoutData({
+		workoutID,
+		activityType,
+	});
+	const [activeTab, setActiveTab] = useState<EActiveSection>(
+		EActiveSection.INFO
+	);
+
+	const onTabChange = (tab: EActiveSection) => {
+		setActiveTab(tab);
+	};
+
+	const saveChanges = async (data: EditedData) => {
+		const { values, sets } = data;
+		console.log("[VALUES]", values);
+		console.log("[SETS]", sets);
+
+		// do stuff
+		// prepare edit workout values for server
+
+		// return onClose && onClose();
 	};
 
 	const cancelChanges = () => {
@@ -310,28 +429,23 @@ const EditWorkout = ({ workout, onClose }: Props) => {
 				<EditTabs onSelect={onTabChange} selectedTab={activeTab} />
 			</div>
 			<div className={styles.EditWorkout_content}>
-				{activeTab === EActiveSection.INFO && (
-					<EditWorkoutInfo values={values} onChange={onChange} />
+				{isLoading && (
+					<div className={styles.EditWorkout_content_loading}>
+						<Loader />
+						<span>Loading details...</span>
+					</div>
 				)}
-				{activeTab === EActiveSection.GOALS && (
-					<EditWorkoutGoals
-						values={values}
-						onChange={onChange}
-						onSelect={onSelect}
-						onChecked={onChecked}
-					/>
-				)}
-				{activeTab === EActiveSection.SCHEDULE && (
-					<EditWorkoutSchedule
-						values={values}
-						onChange={onChange}
-						onSelect={onSelect}
-						onChecked={onChecked}
+				{!isLoading && (
+					<EditWorkoutContent
+						activeTab={activeTab}
+						workout={workout}
+						recurringData={recurringData}
+						onClose={onClose}
+						onSave={saveChanges}
+						onCancel={cancelChanges}
 					/>
 				)}
 			</div>
-
-			<Footer onSave={saveChanges} onCancel={cancelChanges} />
 		</div>
 	);
 };

@@ -23,6 +23,11 @@ $navSize: 3rem;
 			font-size: 1.6rem;
 			background-color: $inputBG;
 			color: $text1;
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.4;
+			}
 		}
 
 		&_button {
@@ -196,4 +201,8 @@ $navSize: 3rem;
 	-webkit-box-shadow: 6px 7px 94px 161px rgba(0, 0, 0, 0.95);
 	-moz-box-shadow: 6px 7px 94px 161px rgba(0, 0, 0, 0.95);
 	box-shadow: 6px 7px 94px 161px rgba(0, 0, 0, 0.95);
+}
+
+.DatePicker:has(input[aria-invalid="true"]) .DatePicker_inputWrapper {
+	border-color: $accentRed;
 }

@@ -11,17 +11,19 @@ import {
 	OtherHistory,
 } from "../../features/history/types";
 import { useHistoryDetails } from "../../hooks/useHistoryDetails";
-import { formatCustomDate, formatTime } from "../../utils/utils_dates";
 import {
-	formatDuration,
-	getTotalReps,
-	getWeight,
-} from "../../utils/utils_details";
+	formatCustomDate,
+	formatTime,
+	parseAnyDate,
+} from "../../utils/utils_dates";
+import { getTotalReps, getWeight } from "../../utils/utils_details";
 import { getKcals } from "../../utils/utils_history";
-import DetailsBlock from "./DetailsBlock";
 import { addEllipsis, formatThousand } from "../../utils/utils_misc";
 import { Activity } from "../../features/shared/types";
 import { isExerciseType } from "../../utils/utils_activity";
+import { durationTo } from "../../utils/utils_workouts";
+import DetailsBlock from "./DetailsBlock";
+import { isToday } from "date-fns";
 
 type ExerciseHistory =
 	| StretchHistory
@@ -49,7 +51,7 @@ const HistoryBlock = ({
 	children?: ReactNode;
 }) => {
 	const kcals = getKcals(entry);
-	const duration = formatDuration(entry.duration);
+	const duration = durationTo(entry.duration, "mm:ss");
 	return (
 		<>
 			<DetailsBlock type="Duration" label="Duration" value={duration} />
@@ -95,7 +97,7 @@ const ExerciseBlock = ({
 	entry: ExerciseHistory;
 }) => {
 	const exercise = entry.exercise ?? type;
-	const duration = formatDuration(entry.duration);
+	const duration = durationTo(entry.duration, "mm:ss");
 	const kcals = getKcals(entry);
 
 	return (
@@ -107,6 +109,18 @@ const ExerciseBlock = ({
 	);
 };
 
+const getRecordedDate = (workoutDate: string) => {
+	if (isToday(workoutDate)) {
+		return "Today";
+	}
+	const parsed = parseAnyDate(workoutDate);
+	console.log("parsed", parsed);
+	console.log("workoutDate", workoutDate);
+	const date = formatCustomDate(parsed, "monthAndDay");
+
+	return date;
+};
+
 const HistoryDetails = ({ history }: Props) => {
 	const { data, refetch } = useHistoryDetails({
 		userID: history?.userID,
@@ -114,7 +128,8 @@ const HistoryDetails = ({ history }: Props) => {
 		activityType: history?.activityType,
 	});
 	const when = getWhen(history);
-	const date = formatCustomDate(history.workoutDate, "monthAndDay");
+	// const date = formatCustomDate(history.workoutDate, "monthAndDay");
+	const date = getRecordedDate(history.workoutDate);
 	const details = data as IHistoryDetails;
 	const workout = details?.workout;
 	const entry = details?.history;

@@ -11,6 +11,7 @@
 
 	&_days {
 		width: 100%;
+		padding: 0 2rem;
 		@include flex_row(space-between, center);
 		gap: 0 0.5rem;
 	}

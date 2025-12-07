@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/CardioHistory.module.scss";
 import {
@@ -5,16 +6,20 @@ import {
 	HistoryOfType,
 } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
 import { EMenuAction } from "../features/types";
 import { isEmptyArray } from "../utils/utils_misc";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
 import ModalLG from "../components/shared/ModalLG";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import CardioHistoryEntry from "../components/history/CardioHistoryEntry";
+import HistoryDetails from "../components/details/HistoryDetails";
 
 const CardioHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
@@ -28,7 +33,11 @@ const CardioHistory = () => {
 		activityType: "Cardio",
 	});
 
-	const history = data as CardioLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as CardioLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 
@@ -47,7 +56,7 @@ const CardioHistory = () => {
 			<div className={styles.CardioHistory_header}>
 				<h2 className={styles.CardioHistory_header_title}>Strength History</h2>
 				<div className={styles.CardioHistory_header_total}>
-					Total: {totalMins} mins.
+					Total: {Math.round(totalMins)} mins.
 				</div>
 			</div>
 			{hasHistory && (
@@ -75,10 +84,9 @@ const CardioHistory = () => {
 			)}
 
 			{/* MODALS */}
-			{modalType === EMenuAction.VIEW && (
+			{selectedEntry && modalType === EMenuAction.VIEW && (
 				<ModalLG onClose={closeActionModal}>
-					{/*  */}
-					{/*  */}
+					<HistoryDetails history={selectedEntry as HistoryOfType} />
 				</ModalLG>
 			)}
 			{modalType === EMenuAction.EDIT && (

@@ -9,7 +9,11 @@ import { Activity } from "../features/shared/types";
 import { AsyncResponse } from "../features/types";
 import { ExerciseSet, WalkWorkout, Workout } from "../features/workouts/types";
 import { currentEnv, historyApis } from "./utils_env";
-import { formatThousand } from "./utils_misc";
+import {
+	formatThousand,
+	sortByDateOrder,
+	sortByNumberOrder,
+} from "./utils_misc";
 import { fetchWithAuth } from "./utils_requests";
 
 export type AllHistoryResp = AsyncResponse<AllHistory>;
@@ -134,6 +138,39 @@ const getExerciseFromSets = (sets: ExerciseSet[], fallback: string = "") => {
 	return item?.exercise ?? fallback;
 };
 
+export type SortHistoryBy = {
+	by: "workoutDate" | "startTime" | "duration";
+	order: "ASC" | "DESC";
+};
+
+const defaultSort: SortHistoryBy = {
+	by: "workoutDate",
+	order: "DESC", // recent to oldest
+};
+
+const sortHistoryBy = (
+	history: Array<WorkoutHistory | HistoryOfType>,
+	sort: SortHistoryBy = defaultSort
+) => {
+	const { by, order } = sort;
+	switch (by) {
+		case "workoutDate": {
+			const sorted = sortByDateOrder("workoutDate", history, order);
+			return sorted;
+		}
+		case "startTime": {
+			const sorted = sortByDateOrder("startTime", history, order);
+			return sorted;
+		}
+		case "duration": {
+			const sorted = sortByNumberOrder("duration", history, order);
+			return sorted;
+		}
+		default:
+			return history;
+	}
+};
+
 export {
 	fetchHistoryDetails,
 	fetchHistoryByRange,
@@ -145,4 +182,5 @@ export {
 	getTotalMins,
 	getTotalCalories,
 	getExerciseFromSets,
+	sortHistoryBy,
 };

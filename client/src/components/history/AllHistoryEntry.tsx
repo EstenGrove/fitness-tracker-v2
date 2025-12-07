@@ -16,12 +16,13 @@ type Props = {
 };
 
 const MinsBadge = ({ mins }: { mins: number }) => {
+	const cleanMins = Math.round(mins);
 	return (
 		<div className={styles.MinsBadge}>
 			<svg className={styles.MinsBadge_icon}>
 				<use xlinkHref={`${sprite}#icon-time`}></use>
 			</svg>
-			<span>{mins}m</span>
+			<span>{cleanMins}m</span>
 		</div>
 	);
 };

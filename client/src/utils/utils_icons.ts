@@ -1,6 +1,7 @@
 const iconsMap = {
 	// sprite1
 	1: {
+		effort: "effort",
 		exercise: "running",
 		strength: "strength",
 		dumbbell: "dumbbell",
@@ -31,8 +32,8 @@ const iconsMap = {
 		speedometer: "speedometer",
 		done: "done",
 		checkmark: "checkmark",
-		checkmar2: "checkmark-2",
-		checkmar3: "checkmark-3",
+		checkmark2: "checkmark-2",
+		checkmark3: "checkmark-3",
 		cardio: "heart-health",
 		cardio2: "heart-health-2",
 		cardio3: "heart-health-3",
@@ -97,5 +98,7 @@ const iconsMap = {
 		repeat: "synchronize",
 	},
 } as const;
+
+export type IconKey = keyof (typeof iconsMap)[1] | keyof (typeof iconsMap)[2];
 
 export { iconsMap };

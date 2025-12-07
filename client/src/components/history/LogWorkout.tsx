@@ -176,11 +176,7 @@ const MoreDetailsStep = ({
 			{/* WALK UI */}
 			{isWalk && (
 				<div className={styles.MainDetailsStep_walk}>
-					<EditWalkInfo
-						miles={values.miles}
-						duration={values.duration}
-						onChange={onChange}
-					/>
+					<EditWalkInfo miles={values.miles} onChange={onChange} />
 				</div>
 			)}
 			{/* SETS UI */}
@@ -329,7 +325,12 @@ const ConfirmLogStep = ({ values }: StepProps) => {
 	);
 };
 
-const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
+const LogWorkout = ({
+	allWorkouts,
+	currentUser,
+	onClose,
+	onConfirm,
+}: Props) => {
 	const [values, setValues] = useState<LogWorkoutValues>({
 		workoutID: 0,
 		activityType: "", // Default to Strength, can be changed later
@@ -369,7 +370,7 @@ const LogWorkout = ({ currentUser, onClose, allWorkouts }: Props) => {
 		const newLog = prepareLogWorkout(userID, values);
 
 		await logWorkout({ userID, newLog });
-
+		if (onConfirm) return onConfirm();
 		return onClose && onClose();
 	};
 

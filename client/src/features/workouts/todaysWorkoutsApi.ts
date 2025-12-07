@@ -9,21 +9,27 @@ import {
 import {
 	CreatedWorkoutData,
 	CreateWorkoutParams,
+	RecurringWorkoutData,
 	TodaysWorkout,
 	Workout,
+	WorkoutDetails,
 } from "./types";
 import {
 	createNewWorkout,
 	DeletedWorkoutDateData,
 	deleteWorkoutDate,
 	DeleteWorkoutDateParams,
+	editWorkout,
+	EditWorkoutValues,
 	fetchAllUserWorkouts,
+	fetchAllWorkoutDetails,
 	fetchAllWorkouts,
 	fetchScheduledWorkouts,
 	fetchScheduledWorkoutsByDate,
 	fetchSkippedWorkouts,
 	fetchTodaysUnscheduledWorkouts,
 	fetchTodaysWorkouts,
+	getRecurringWorkoutData,
 	GroupedScheduledWorkouts,
 	logWorkout,
 	LogWorkoutParams,
@@ -35,7 +41,7 @@ import {
 	WorkoutSet,
 } from "../../utils/utils_workouts";
 import { HistoryOfType, WorkoutHistory } from "../history/types";
-import { Effort } from "../shared/types";
+import { Activity, Effort } from "../shared/types";
 
 export interface MarkAsDonePayload {
 	updatedWorkout: TodaysWorkout;
@@ -66,6 +72,21 @@ export interface LoggedWorkoutResponse {
 export interface NewWorkoutParams {
 	userID: string;
 	newWorkout: CreateWorkoutParams;
+}
+
+export interface EditedWorkoutParams {
+	userID: string;
+	workout: EditWorkoutValues;
+}
+export interface RecurringDataParams {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
+}
+export interface DetailsParams {
+	userID: string;
+	workoutID: number;
+	activityType: Activity;
 }
 
 export const todaysWorkoutsApi = createApi({
@@ -242,6 +263,41 @@ export const todaysWorkoutsApi = createApi({
 			},
 			invalidatesTags: ["TodaysWorkouts"],
 		}),
+		editWorkout: builder.mutation<TodaysWorkout, EditedWorkoutParams>({
+			queryFn: async (params) => {
+				const { userID, workout } = params;
+				const response = await editWorkout(userID, workout);
+				const newWorkout = response.Data.workout as TodaysWorkout;
+				return { data: newWorkout };
+			},
+		}),
+		getRecurringWorkoutData: builder.query<
+			RecurringWorkoutData,
+			RecurringDataParams
+		>({
+			queryFn: async (params) => {
+				const { userID, workoutID, activityType } = params;
+				const response = await getRecurringWorkoutData(userID, {
+					workoutID,
+					activityType,
+				});
+				const data = response.Data as RecurringWorkoutData;
+				return { data: data };
+			},
+		}),
+		getWorkoutDetails: builder.query<WorkoutDetails, DetailsParams>({
+			queryFn: async (params) => {
+				const { userID, workoutID, activityType } = params;
+				const response = (await fetchAllWorkoutDetails(
+					userID,
+					workoutID,
+					activityType
+				)) as AwaitedResponse<WorkoutDetails>;
+				const data = response.Data as WorkoutDetails;
+
+				return { data };
+			},
+		}),
 	}),
 });
 
@@ -255,7 +311,10 @@ export const {
 	useSkipWorkoutMutation,
 	useCreateWorkoutMutation,
 	useDeleteWorkoutMutation,
+	useEditWorkoutMutation,
+	useGetWorkoutDetailsQuery,
 	useGetScheduledWorkoutsQuery,
+	useGetRecurringWorkoutDataQuery,
 	useGetScheduledWorkoutsGroupedQuery,
 	useGetTodaysUnscheduledWorkoutsQuery,
 } = todaysWorkoutsApi;

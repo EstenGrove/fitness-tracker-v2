@@ -69,6 +69,16 @@ const isExerciseType = (type: Activity | string) => {
 	);
 };
 
+const isSetsActivity = (type: Activity | string) => {
+	return (
+		type === "Strength" ||
+		type === "Stretch" ||
+		type === "Cardio" ||
+		type === "Timed" ||
+		type === "Other"
+	);
+};
+
 export {
 	ACTIVITIES,
 	ACTIVITY_STYLES,
@@ -76,4 +86,5 @@ export {
 	isWalkType,
 	isStrengthType,
 	isExerciseType,
+	isSetsActivity,
 };
