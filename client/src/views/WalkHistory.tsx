@@ -33,9 +33,8 @@ const WalkHistory = () => {
 		activityType: "Walk",
 	});
 	const history = useMemo(() => {
-		const sort: SortHistoryBy = { by: "workoutDate", order: "ASC" };
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
 		const sorted = sortHistoryBy(data, sort) as WalkLog[];
-		console.log(sorted.map((x) => x.workoutDate));
 		return sorted;
 	}, [data]);
 	const hasHistory = !isEmptyArray(history);

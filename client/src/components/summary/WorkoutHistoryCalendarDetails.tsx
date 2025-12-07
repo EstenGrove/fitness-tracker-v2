@@ -28,7 +28,9 @@ const getMinsSummary = (details: WorkoutCalendarDay) => {
 	const scheduled = details.totalMinsScheduled;
 	const performed = details.totalMinsPerformed;
 
-	return `${performed} minutes out of ${scheduled} scheduled minutes`;
+	return `${performed.toFixed(
+		2
+	)} minutes out of ${scheduled} scheduled minutes`;
 };
 
 const WorkoutHistoryCalendarDetails = ({ details, date, data }: Props) => {

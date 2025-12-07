@@ -1,11 +1,6 @@
 import styles from "../../css/details/WorkoutDetails.module.scss";
 import sprite from "../../assets/icons/main.svg";
 import {
-	CardioWorkout,
-	OtherWorkout,
-	StrengthWorkout,
-	StretchWorkout,
-	TimedWorkout,
 	WalkWorkout,
 	WorkoutByType,
 	WorkoutSchedule,
@@ -18,7 +13,7 @@ import { formatTime, parseAnyTime } from "../../utils/utils_dates";
 import Icon from "../ui/Icon";
 import { IconKey } from "../../utils/utils_icons";
 import { ReactNode } from "react";
-import { isExerciseType, isSetsActivity } from "../../utils/utils_activity";
+import { isSetsActivity } from "../../utils/utils_activity";
 import { formatThousand } from "../../utils/utils_misc";
 
 type Props = {
@@ -110,7 +105,6 @@ const StepsInfo = ({ workout, history }: StepsInfoProps) => {
 			<InfoRow
 				value={workout?.pace + "'/sec"}
 				icon="cardio"
-				// iconColor="var(--accent-red)"
 				iconColor="var(--blueGrey700)"
 			/>
 		</>

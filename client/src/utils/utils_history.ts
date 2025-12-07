@@ -11,7 +11,6 @@ import { ExerciseSet, WalkWorkout, Workout } from "../features/workouts/types";
 import { currentEnv, historyApis } from "./utils_env";
 import {
 	formatThousand,
-	sortByDateDesc,
 	sortByDateOrder,
 	sortByNumberOrder,
 } from "./utils_misc";

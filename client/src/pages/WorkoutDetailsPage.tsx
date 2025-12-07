@@ -123,7 +123,7 @@ const WorkoutDetailsPage = () => {
 				return;
 			}
 			case "BACK": {
-				return navigate("/workouts");
+				return navigate(-1);
 			}
 			default:
 				break;

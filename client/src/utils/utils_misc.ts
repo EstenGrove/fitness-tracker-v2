@@ -119,7 +119,7 @@ const sortByDateDesc = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 		const dateA = new Date(valA).getTime();
 		const dateB = new Date(valB).getTime();
 
-		return dateA - dateB;
+		return dateB - dateA;
 	});
 };
 const provideFallbackStr = (targetVal: string, fallback: string) => {

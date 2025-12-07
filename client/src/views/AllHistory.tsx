@@ -1,8 +1,12 @@
+import { useState } from "react";
 import styles from "../css/views/AllHistory.module.scss";
 import { HistoryOfType, WorkoutHistory } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { formatCustomDate, formatDate } from "../utils/utils_dates";
 import { groupByFn, TRecord } from "../utils/utils_misc";
 import { EMenuAction } from "../features/types";
@@ -34,14 +38,13 @@ type HistoryByDateProps = {
 	history: HistoryOfType[];
 	onMenuAction: (action: MenuAction, entry: HistoryOfType) => void;
 };
+
+const sortOrder: SortHistoryBy = { by: "startTime", order: "DESC" };
+
 const HistoryByDate = ({ date, history, onMenuAction }: HistoryByDateProps) => {
 	const dateLabel = formatCustomDate(date, "monthAndDay");
 	const numOfWorkouts = history.length || 0;
-	const sorted = history.sort((a, b) => {
-		const timeA = new Date(a.startTime).getTime();
-		const timeB = new Date(b.startTime).getTime();
-		return timeB - timeA;
-	});
+	const sorted = sortHistoryBy(history, sortOrder) as HistoryOfType[];
 	return (
 		<div className={styles.HistoryByDate}>
 			<div className={styles.HistoryByDate_header}>

@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/OtherHistory.module.scss";
 import {
@@ -6,9 +7,12 @@ import {
 } from "../features/history/types";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { isEmptyArray } from "../utils/utils_misc";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	sortHistoryBy,
+	SortHistoryBy,
+} from "../utils/utils_history";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
 import HistoryEntry from "../components/history/HistoryEntry";
 import { EMenuAction } from "../features/types";
 import ModalLG from "../components/shared/ModalLG";
@@ -28,7 +32,11 @@ const OtherHistory = () => {
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
 		null
 	);
-	const history = data as OtherLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as OtherLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 

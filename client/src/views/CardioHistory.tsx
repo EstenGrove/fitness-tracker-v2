@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/CardioHistory.module.scss";
 import {
@@ -5,10 +6,13 @@ import {
 	HistoryOfType,
 } from "../features/history/types";
 import { MenuAction } from "../components/shared/MenuDropdown";
-import { useState } from "react";
 import { EMenuAction } from "../features/types";
 import { isEmptyArray } from "../utils/utils_misc";
-import { getTotalMins } from "../utils/utils_history";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
 import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
@@ -29,7 +33,11 @@ const CardioHistory = () => {
 		activityType: "Cardio",
 	});
 
-	const history = data as CardioLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as CardioLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 

@@ -32,7 +32,7 @@ const MinsBadge = ({ mins }: { mins: number }) => {
 			<svg className={styles.MinsBadge_icon}>
 				<use xlinkHref={`${sprite}#icon-time`}></use>
 			</svg>
-			<span>{mins}m</span>
+			<span>{Math.round(mins)}m</span>
 		</div>
 	);
 };

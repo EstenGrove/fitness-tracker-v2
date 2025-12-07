@@ -1,20 +1,24 @@
+import { useState, useMemo } from "react";
 import NoData from "../components/ui/NoData";
 import styles from "../css/views/StrengthHistory.module.scss";
 import {
 	HistoryOfType,
 	StrengthHistory as StrengthLog,
 } from "../features/history/types";
-import { useState } from "react";
 import { MenuAction } from "../components/shared/MenuDropdown";
 import { isEmptyArray } from "../utils/utils_misc";
-import StrengthHistoryEntry from "../components/history/StrengthHistoryEntry";
 import { EMenuAction } from "../features/types";
-import ModalLG from "../components/shared/ModalLG";
-import { getTotalMins } from "../utils/utils_history";
-import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
-import FadeSlideIn from "../components/ui/FadeSlideIn";
 import { useSelector } from "react-redux";
 import { selectHistoryRange } from "../features/history/historySlice";
+import {
+	getTotalMins,
+	SortHistoryBy,
+	sortHistoryBy,
+} from "../utils/utils_history";
+import ModalLG from "../components/shared/ModalLG";
+import StrengthHistoryEntry from "../components/history/StrengthHistoryEntry";
+import { useHistoryForRangeAndType } from "../hooks/useHistoryForRangeAndType";
+import FadeSlideIn from "../components/ui/FadeSlideIn";
 import HistoryDetails from "../components/details/HistoryDetails";
 
 const StrengthHistory = () => {
@@ -29,7 +33,11 @@ const StrengthHistory = () => {
 		activityType: "Strength",
 	});
 
-	const history = (data || []) as StrengthLog[];
+	const history = useMemo(() => {
+		const sort: SortHistoryBy = { by: "startTime", order: "ASC" };
+		const sorted = sortHistoryBy(data, sort) as StrengthLog[];
+		return sorted;
+	}, [data]);
 	const hasHistory = !isEmptyArray(history);
 	const totalMins = getTotalMins(history);
 
