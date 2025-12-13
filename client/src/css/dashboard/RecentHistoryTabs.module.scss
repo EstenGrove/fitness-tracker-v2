@@ -43,6 +43,7 @@
 }
 
 .RecentHabitEntry {
+	position: relative;
 	width: 100%;
 	padding: 1rem 2rem 2rem 1rem;
 	border-radius: 1rem;
@@ -77,6 +78,14 @@
 			color: $text2;
 			padding-left: 2.5rem;
 		}
+	}
+	&_amount {
+		position: absolute;
+		display: block;
+		top: 0.5rem;
+		right: 0.5rem;
+		font-size: 1.3rem;
+		color: $text2;
 	}
 }
 

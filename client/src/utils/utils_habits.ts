@@ -33,6 +33,16 @@ export enum EHabitModalType {
 	LOG = "LOG",
 	HISTORY = "HISTORY",
 }
+export interface NewHabitGoalParams {
+	userID: string;
+	habitID: number;
+	newGoal: number;
+	newGoalUnit: string;
+}
+
+export interface NewHabitGoalData {
+	updatedHabit: Habit;
+}
 
 export interface HabitDetailParams {
 	userID: string;
@@ -88,6 +98,8 @@ export type RecentHabitLogsResp = AsyncResponse<{
 export type HabitHistoryResp = AsyncResponse<{ history: HabitHistory }>;
 export type HabitHistorySummaryResp = AsyncResponse<HabitYearSummary>;
 export type HabitHistoryByRangeResp = AsyncResponse<HabitHistoryByRange>;
+export type HabitGoalResp = AsyncResponse<NewHabitGoalData>;
+export type DeletedHabitResp = AsyncResponse<{ habit: Habit }>;
 
 const fetchHabitCards = async (
 	userID: string,
@@ -291,6 +303,45 @@ const createHabit = async (
 	}
 };
 
+// Change habit goal
+const saveHabitGoal = async (
+	userID: string,
+	newGoal: NewHabitGoalParams
+): HabitGoalResp => {
+	let url = currentEnv.base + habitApis.changeHabitGoal;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				newGoal: newGoal,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const deleteHabit = async (
+	userID: string,
+	habitID: number
+): DeletedHabitResp => {
+	let url = currentEnv.base + habitApis.deleteHabit;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ habitID: String(habitID) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
 const getBuildStatus = (currentValue: number, targetValue: number) => {
 	switch (true) {
 		case !currentValue || currentValue === 0:
@@ -426,6 +477,8 @@ export {
 	fetchHabitHistoryForRange,
 	logHabit,
 	logHabitsBatched,
+	saveHabitGoal,
+	deleteHabit,
 	// Habit Icons
 	habitIcons,
 	// Habit Status

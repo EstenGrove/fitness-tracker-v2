@@ -11,8 +11,6 @@ import { AI_MODELS } from "../modules/chat/models.js";
 import { formatTimestamp } from "../utils/dates.js";
 import { createTools } from "../modules/chat/tools.js";
 import { SYSTEM_PROMPTS } from "../modules/chat/system.js";
-import { getAIWorkoutSummary } from "../modules/chat/utils.js";
-import { sub } from "date-fns";
 import { getResponseOk } from "../utils/api.js";
 
 const app = new Hono();

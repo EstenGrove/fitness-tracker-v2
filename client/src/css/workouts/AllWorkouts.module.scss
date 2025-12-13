@@ -129,3 +129,18 @@
 		}
 	}
 }
+
+@media only screen and (min-width: $bp-SM) {
+	.AllWorkouts {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+
+		&_filters {
+			@include rowCenter();
+		}
+	}
+	.SearchInput {
+		@include rowCenter();
+	}
+}

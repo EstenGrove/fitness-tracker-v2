@@ -7,6 +7,7 @@ import { allRoutes } from "./routes/index.js";
 import { getServer, isRemote } from "./utils/env.js";
 import { withAuth } from "./modules/auth/utils.js";
 dotenv.config();
+console.log("KEY", process.env.GOOGLE_API_KEY);
 
 const target = getServer("local");
 console.log("TARGET ENV:", target);

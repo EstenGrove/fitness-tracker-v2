@@ -11,12 +11,11 @@ type Props = {
 };
 
 const AIChat = ({
-	currentUser,
 	endpoint,
 	suggestions = [],
-	isNewChat,
-}: Props) => {
-	console.log("[USER]:", { currentUser, isNewChat });
+}: // currentUser,
+// isNewChat,
+Props) => {
 	return (
 		<div className={styles.AIChat}>
 			<ChatWindow endpoint={endpoint} quickPrompts={suggestions} />

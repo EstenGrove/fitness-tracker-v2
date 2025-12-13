@@ -23,6 +23,7 @@ import { habitsService } from "../services/index.js";
 import type { HabitWeekResp } from "../services/HabitsService.js";
 import { getHabitHistorySummary } from "../modules/habits/getHabitHistorySummary.js";
 import { getHabitHistoryForRange } from "../modules/habits/getHabitHistoryForRange.js";
+import { changeHabitGoal } from "../modules/habits/changeHabitGoal.js";
 
 const app = new Hono();
 
@@ -261,6 +262,31 @@ app.get("/getHabitHistoryForRange", async (ctx: Context) => {
 
 	const resp = getResponseOk(historyData);
 
+	return ctx.json(resp);
+});
+
+app.post("/changeHabitGoal", async (ctx: Context) => {
+	const body = await ctx.req.json();
+	const newGoal = body.newGoal;
+
+	console.log("body", newGoal);
+
+	const result = await changeHabitGoal(newGoal);
+
+	console.log("GOAL:", result);
+
+	if (result instanceof Error) {
+		const errResp = getResponseError(result, {
+			updatedHabit: null,
+			endedGoal: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		updatedHabit: result.updatedHabit,
+		endedGoal: result.endedGoal,
+	});
 	return ctx.json(resp);
 });
 

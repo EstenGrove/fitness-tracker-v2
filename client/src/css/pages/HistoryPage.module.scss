@@ -29,3 +29,11 @@
 		fill: $borderColor;
 	}
 }
+
+@media only screen and (min-width: $bp-SM) {
+	.HistoryPage {
+		display: block;
+		margin: 0 auto;
+		max-width: 80rem;
+	}
+}

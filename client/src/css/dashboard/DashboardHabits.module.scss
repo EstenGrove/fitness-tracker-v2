@@ -7,7 +7,7 @@
 		width: 100%;
 		@include flex_row(flex-start, center);
 		gap: 0 1rem;
-		overflow-x: scroll;
+		overflow-x: auto;
 		scroll-snap-type: x mandatory;
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
@@ -161,4 +161,18 @@
 	outline: none;
 	background-color: transparent;
 	color: $text1;
+}
+
+// DESKTOP
+@media only screen and (min-width: $bp-SM) {
+	.DashboardHabits_list {
+		gap: 0 2rem;
+		padding: 0 1rem;
+	}
+	.DashboardHabit {
+		min-width: clamp(260px, 30vw, 360px);
+		max-width: clamp(260px, 30vw, 360px);
+		scroll-snap-align: start;
+		flex: 0 0 100%;
+	}
 }

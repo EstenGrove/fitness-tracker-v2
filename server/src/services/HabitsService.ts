@@ -19,6 +19,13 @@ export interface RecentHabitParams {
 	lastXDays: number;
 }
 
+export interface NewHabitGoalParams {
+	userID: string;
+	habitID: number;
+	newGoal: number;
+	newGoalUnit: string;
+}
+
 export type HabitResp = Promise<HabitDB | unknown>;
 export type LoggedHabitResp = Promise<HabitDB | unknown>;
 export type BatchedLogsResp = Promise<HabitDB[] | unknown>;
@@ -280,6 +287,23 @@ class HabitsService {
 			]);
 			const data = results?.rows?.[0]?.get_habit_history_for_range;
 			return data;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async changeHabitGoal(data: NewHabitGoalParams) {
+		const { userID, habitID, newGoal, newGoalUnit } = data;
+		try {
+			const query = `SELECT * FROM change_habit_goal($1, $2, $3, $4) as data`;
+			const results = await this.#db.query(query, [
+				userID,
+				habitID,
+				newGoal,
+				newGoalUnit,
+			]);
+			const rows = results?.rows?.[0]?.data;
+			return rows;
 		} catch (error) {
 			return error;
 		}
