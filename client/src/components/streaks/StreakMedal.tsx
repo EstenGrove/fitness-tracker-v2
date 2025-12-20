@@ -3,10 +3,12 @@ import { StreakColor, StreakSize } from "../../utils/utils_streaks";
 
 type Size = StreakSize;
 type Color = StreakColor;
+type Variant = "inferno" | "mythic" | "ascended";
 
 type Props = {
 	size?: Size;
 	color?: Color;
+	variant?: Variant;
 	streak: number;
 	label?: string;
 };
@@ -14,11 +16,18 @@ type Props = {
 const StreakMedal = ({
 	size = "MD",
 	color = "gold",
-	streak,
+	streak = 0,
 	label = "Day Streak",
+	variant,
 }: Props) => {
+	const classes = [
+		styles.Medal,
+		styles[size],
+		styles[color],
+		variant && styles[variant],
+	].join(" ");
 	return (
-		<div className={`${styles.Medal} ${styles[size]} ${styles[color]}`}>
+		<div className={classes}>
 			<div className={styles.Medal_inner}>
 				<span className={styles.Medal_count}>{streak}</span>
 				<span className={styles.Medal_label}>{label}</span>

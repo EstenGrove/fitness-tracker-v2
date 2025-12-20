@@ -7,6 +7,19 @@ export type StreakColor =
 	| "pink"
 	| "blue";
 
+export type StreakTierName =
+	| "spark"
+	| "charge"
+	| "flow"
+	| "surge"
+	| "blaze"
+	| "inferno"
+	| "mythic"
+	| "legendary"
+	| "epic"
+	| "ascended"
+	| "eternal";
+
 const STREAK_TIERS: StreakTier[] = [
 	{ max: 3, tier: "spark" },
 	{ max: 5, tier: "charge" },
@@ -21,7 +34,7 @@ const STREAK_TIERS: StreakTier[] = [
 	{ max: 365, tier: "eternal" },
 ];
 
-export type StreakTier = { max: number; tier: string };
+export type StreakTier = { max: number; tier: StreakTierName };
 
 const getStreakTier = (
 	days: number,
@@ -32,4 +45,69 @@ const getStreakTier = (
 	return tier;
 };
 
-export { STREAK_TIERS, getStreakTier };
+const STREAK_MEDAL_CONFIG: Record<
+	StreakTier["tier"],
+	{
+		color: "fire" | "gold" | "green" | "purple" | "pink" | "blue";
+		size: "XSM" | "SM" | "MD" | "LG" | "XLG";
+		label: string;
+	}
+> = {
+	spark: {
+		color: "blue",
+		size: "XSM",
+		label: "Getting Started",
+	},
+	charge: {
+		color: "blue",
+		size: "SM",
+		label: "Building Momentum",
+	},
+	flow: {
+		color: "green",
+		size: "SM",
+		label: "In the Flow",
+	},
+	surge: {
+		color: "green",
+		size: "MD",
+		label: "Surging",
+	},
+	blaze: {
+		color: "gold",
+		size: "MD",
+		label: "On Fire",
+	},
+	inferno: {
+		color: "fire",
+		size: "LG",
+		label: "Unstoppable",
+	},
+	mythic: {
+		color: "purple",
+		size: "LG",
+		label: "Mythic Streak",
+	},
+	legendary: {
+		color: "pink",
+		size: "XLG",
+		label: "Legendary",
+	},
+	epic: {
+		color: "pink",
+		size: "XLG",
+		label: "Epic Run",
+	},
+	ascended: {
+		color: "gold",
+		size: "XLG",
+		label: "Ascended",
+	},
+	eternal: {
+		color: "fire",
+		size: "XLG",
+		label: "Eternal Streak",
+	},
+};
+
+export { STREAK_TIERS, STREAK_MEDAL_CONFIG, getStreakTier };
