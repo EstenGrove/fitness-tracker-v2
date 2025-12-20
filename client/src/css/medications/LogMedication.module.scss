@@ -51,6 +51,11 @@
 		height: 1.6rem;
 		fill: $accentGreen;
 	}
+
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
 }
 .SkipButton {
 	padding: 1rem 1.8rem;
@@ -67,6 +72,10 @@
 		width: 1.6rem;
 		height: 1.6rem;
 		fill: $accentRed;
+	}
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
 	}
 }
 
