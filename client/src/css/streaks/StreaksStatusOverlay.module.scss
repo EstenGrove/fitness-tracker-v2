@@ -1,0 +1,15 @@
+.StreaksStatusOverlay {
+	position: fixed;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 100dvw;
+	height: 100dvh;
+	z-index: 9999;
+	padding: 4rem;
+
+	&_flame {
+		width: 100%;
+		@include rowCenter();
+	}
+}

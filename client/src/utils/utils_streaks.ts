@@ -1,4 +1,11 @@
-export type StreakSize = "XSM" | "SM" | "MD" | "LG" | "XLG";
+import {
+	HabitStreakDetailsResp,
+	WorkoutStreakDetailsResp,
+} from "../features/streaks/types";
+import { currentEnv, streakApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
+
+export type StreakSize = "XSM" | "SM" | "MD" | "LG" | "XLG" | "XXLG";
 export type StreakColor =
 	| "fire"
 	| "gold"
@@ -110,4 +117,44 @@ const STREAK_MEDAL_CONFIG: Record<
 	},
 };
 
-export { STREAK_TIERS, STREAK_MEDAL_CONFIG, getStreakTier };
+const fetchWorkoutStreaks = async (
+	userID: string,
+	targetDate: string
+): WorkoutStreakDetailsResp => {
+	let url = currentEnv.base + streakApis.getWorkoutStreaks;
+	url += "?" + new URLSearchParams({ userID, targetDate });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+const fetchHabitStreaks = async (
+	userID: string,
+	habitID: number,
+	targetDate: string
+): HabitStreakDetailsResp => {
+	let url = currentEnv.base + streakApis.getHabitStreaks;
+	url += "?" + new URLSearchParams({ userID, targetDate });
+	url += "&" + new URLSearchParams({ habitID: String(habitID) });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+export {
+	STREAK_TIERS,
+	STREAK_MEDAL_CONFIG,
+	getStreakTier,
+	// Data fetching utils
+	fetchWorkoutStreaks,
+	fetchHabitStreaks,
+};

@@ -41,6 +41,7 @@ export type TRecord<T> = Record<string, T[]>;
 export type Groups<T> = Record<string, T>;
 
 const groupBy = <T extends object>(key: TKey<T>, list: T[]) => {
+	if (!list || !list.length) return {};
 	const grouped = {} as TRecord<T>;
 	for (let i = 0; i < list.length; i++) {
 		const item = list[i] as T;

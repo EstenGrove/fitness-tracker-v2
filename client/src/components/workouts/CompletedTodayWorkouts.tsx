@@ -1,5 +1,4 @@
-import { useState } from "react";
-import styles from "../../css/workouts/TodaysWorkouts.module.scss";
+import styles from "../../css/workouts/CompletedTodayWorkouts.module.scss";
 import {
 	EWorkoutStatus,
 	TodaysWorkout as ITodaysWorkout,
@@ -9,13 +8,12 @@ import Loader from "../layout/Loader";
 import FadeSlideIn from "../ui/FadeSlideIn";
 import NoData from "../ui/NoData";
 import TodaysWorkout from "./TodaysWorkout";
+import { useNavigate } from "react-router";
 
 type Props = {
 	title?: string;
 	isLoading: boolean;
 	workouts: ITodaysWorkout[];
-	unscheduled?: ITodaysWorkout[];
-	onShowAll: () => void;
 };
 
 const getDoneCount = (workouts: ITodaysWorkout[]) => {
@@ -139,42 +137,32 @@ const getSkippedWorkouts = (workouts: ITodaysWorkout[]) => {
 	return skipped;
 };
 
-const TodaysWorkouts = ({
-	title = "Today's Workouts",
+const CompletedTodayWorkouts = ({
+	title = "Unscheduled Workouts",
 	workouts = [],
-	unscheduled = [],
 	isLoading,
-	onShowAll,
 }: Props) => {
-	const [showAll, setShowAll] = useState<boolean>(false);
-	const hasUnscheduled = Boolean(unscheduled && unscheduled?.length);
+	const navigate = useNavigate();
 	const noWorkouts = !isLoading && (!workouts || !workouts.length);
 	const skipped = getSkippedWorkouts(workouts);
 
-	const handleShowAll = () => {
-		setShowAll(!showAll);
-
-		onShowAll();
+	const goToAll = () => {
+		navigate("all");
 	};
 
 	return (
-		<div className={styles.TodaysWorkouts}>
-			<div className={styles.TodaysWorkouts_heading}>
-				<h3 className={styles.TodaysWorkouts_heading_title}>
+		<div className={styles.CompletedTodayWorkouts}>
+			<div className={styles.CompletedTodayWorkouts_heading}>
+				<h3 className={styles.CompletedTodayWorkouts_heading_title}>
 					<span>{title}</span>
 					<Totals workouts={workouts} skippedWorkouts={skipped} />
 				</h3>
-				{hasUnscheduled && (
-					<div
-						className={styles.TodaysWorkouts_heading_showAll}
-						onClick={handleShowAll}
-					>
-						{showAll ? "Hide" : "Show"} All{" "}
-						{hasUnscheduled && `(${unscheduled.length})`}
-					</div>
-				)}
+				<div
+					className={styles.CompletedTodayWorkouts_heading_showAll}
+					onClick={goToAll}
+				></div>
 			</div>
-			<div className={styles.TodaysWorkouts_main}>
+			<div className={styles.CompletedTodayWorkouts_main}>
 				{isLoading ? (
 					<Loader>
 						<span>Loading today...</span>
@@ -199,4 +187,4 @@ const TodaysWorkouts = ({
 	);
 };
 
-export default TodaysWorkouts;
+export default CompletedTodayWorkouts;

@@ -1,10 +1,10 @@
-.TodaysWorkouts {
+.CompletedTodayWorkouts {
 	width: 100%;
 	padding: 3rem 0;
 
 	&_heading {
 		width: 100%;
-		@include flex_row(space-between, center);
+		@include flex_row(flex-start, center);
 
 		&_title {
 			@include flex_row(flex-start, center);

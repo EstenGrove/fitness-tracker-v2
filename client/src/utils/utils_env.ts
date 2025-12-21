@@ -211,6 +211,12 @@ const API_ENDPOINTS = {
 	jobs: {
 		summary: "/jobs/getSummary",
 	},
+	streaks: {
+		getWorkoutStreaks: "/streaks/getWorkoutStreaks",
+		getWorkoutStreakDetails: "/streaks/getWorkoutStreakDetails",
+		getHabitStreaks: "/streaks/getHabitStreaks",
+		getHabitStreakDetails: "/streaks/getHabitStreakDetails",
+	},
 };
 
 export const {
@@ -230,6 +236,7 @@ export const {
 	settings: settingsApis,
 	recentActivity: recentActivityApis,
 	summary: summaryApis,
+	streaks: streakApis,
 } = API_ENDPOINTS;
 
 export {

@@ -76,6 +76,7 @@ app.route("auth", allRoutes.auth);
 app.route("chat", allRoutes.chat);
 app.route("stats", allRoutes.stats);
 app.route("habits", allRoutes.habits);
+app.route("streaks", allRoutes.streaks);
 app.route("exports", allRoutes.exports);
 app.route("history", allRoutes.history);
 app.route("summary", allRoutes.summary);

@@ -1,11 +1,13 @@
 import { useDispatch } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 // Apis
+import { streaksApi } from "../features/streaks/api";
 import { statsApi } from "../features/stats/statsApi";
 import { settingsApi } from "../features/settings/api";
 import { habitsApi } from "../features/habits/habitsApi";
 import { historyApi } from "../features/history/historyApi";
 import { summaryApi } from "../features/dashboard/summaryApi";
+import { customSummaryApi } from "../features/summary/summaryApi";
 import { medicationsApi } from "../features/medications/medicationsApi";
 import { todaysWorkoutsApi } from "../features/workouts/todaysWorkoutsApi";
 import { recentActivityApi } from "../features/recent-activity/recentActivityApi";
@@ -17,7 +19,6 @@ import sharedReducer from "../features/shared/sharedSlice";
 import historyReducer from "../features/history/historySlice";
 import workoutsReducer from "../features/workouts/workoutsSlice";
 import medicationsReducer from "../features/medications/medicationsSlice";
-import { customSummaryApi } from "../features/summary/summaryApi";
 
 const store = configureStore({
 	reducer: {
@@ -29,6 +30,7 @@ const store = configureStore({
 		medications: medicationsReducer,
 		[statsApi.reducerPath]: statsApi.reducer,
 		[habitsApi.reducerPath]: habitsApi.reducer,
+		[streaksApi.reducerPath]: streaksApi.reducer,
 		[historyApi.reducerPath]: historyApi.reducer,
 		[summaryApi.reducerPath]: summaryApi.reducer,
 		[settingsApi.reducerPath]: settingsApi.reducer,
@@ -47,7 +49,8 @@ const store = configureStore({
 			.concat(statsApi.middleware)
 			.concat(habitsApi.middleware)
 			.concat(settingsApi.middleware)
-			.concat(customSummaryApi.middleware);
+			.concat(customSummaryApi.middleware)
+			.concat(streaksApi.middleware);
 	},
 });
 

@@ -9,7 +9,7 @@ import { useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
-import { formatDate } from "../utils/utils_dates";
+import { formatDate, formatDateTime } from "../utils/utils_dates";
 import { useNavigate } from "react-router";
 import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
 import { useAllWorkouts } from "../hooks/useAllWorkouts";
@@ -23,6 +23,13 @@ import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkouts
 import { useTodaysUnscheduledWorkouts } from "../hooks/useTodaysUnscheduledWorkouts";
 import { TagDescription } from "@reduxjs/toolkit/query";
 import SearchWorkouts from "../components/workouts/SearchWorkouts";
+import StreaksStatusOverlay from "../components/streaks/StreaksStatusOverlay";
+import { LocalStorage } from "../utils/utils_storage";
+import { groupBy } from "../utils/utils_misc";
+import CompletedTodayWorkouts from "../components/workouts/CompletedTodayWorkouts";
+
+const storage = new LocalStorage();
+const STREAKS_KEY = `STREAKS`;
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -145,15 +152,21 @@ const WorkoutsPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useAllWorkouts();
 	const { data, isLoading } = useTodaysWorkouts(targetDate);
-	const { data: completedToday } = useTodaysUnscheduledWorkouts(targetDate);
+	const { data: completedToday, isLoading: loadingOthers } =
+		useTodaysUnscheduledWorkouts(targetDate);
+
+	console.log("[UN-SCHEDULED]:", groupBy("activityType", completedToday));
 
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
+	const [showAllWorkouts, setShowAllWorkouts] = useState<boolean>(false);
+	const [showStreaksOverlay, setShowStreaksOverlay] = useState<boolean>(false);
 
 	const list = data as TodaysWorkout[];
 	const todaysWorkouts = sortByCompleted(list);
 	const allWorkouts = workoutsList as Workout[];
+	const hasUnscheduled = Boolean(completedToday?.length);
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -191,6 +204,16 @@ const WorkoutsPage = () => {
 		navigate("/history");
 	};
 
+	const onShowAllWorkouts = () => {
+		setShowAllWorkouts(!showAllWorkouts);
+	};
+
+	const onDismissStreaks = () => {
+		const timestamp = formatDateTime(new Date(), "longMs");
+		storage.set(STREAKS_KEY, timestamp);
+		setShowStreaksOverlay(false);
+	};
+
 	return (
 		<div className={styles.WorkoutsPage}>
 			<div className={styles.WorkoutsPage_header}>
@@ -213,8 +236,19 @@ const WorkoutsPage = () => {
 					<TodaysWorkouts
 						title="Today's Workouts"
 						workouts={todaysWorkouts}
+						unscheduled={completedToday}
 						isLoading={isLoading}
+						onShowAll={onShowAllWorkouts}
 					/>
+
+					{/* Shows other workouts completed today */}
+					{hasUnscheduled && showAllWorkouts && (
+						<CompletedTodayWorkouts
+							title="Unscheduled"
+							workouts={completedToday}
+							isLoading={loadingOthers}
+						/>
+					)}
 				</div>
 			</div>
 
@@ -246,6 +280,11 @@ const WorkoutsPage = () => {
 					onConfirm={onLoggedWorkout}
 					allWorkouts={allWorkouts as Workout[]}
 				/>
+			)}
+
+			{/* STREAKS OVERLAY */}
+			{showStreaksOverlay && (
+				<StreaksStatusOverlay date={targetDate} onDismiss={onDismissStreaks} />
 			)}
 		</div>
 	);

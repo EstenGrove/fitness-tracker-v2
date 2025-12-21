@@ -1,9 +1,12 @@
+import AchievementBadge from "../components/achievements/AchievementBadge";
+import AchievementMedal from "../components/achievements/AchievementMedal";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import StreakMedal from "../components/streaks/StreakMedal";
 import StreakTierMedal from "../components/streaks/StreakTierMedal";
-import { FlameIcon } from "../components/ui/FlameIcon";
+import FlameIcon from "../components/ui/FlameIcon";
 import styles from "../css/pages/DemoPage.module.scss";
+import { useTypewriter } from "../hooks/useTypewriter";
 
 const Flame = () => {
 	return (
@@ -60,16 +63,27 @@ const Fire = () => {
 };
 
 const DemoPage = () => {
+	const text = "You've worked out for 69 days in a row. Keep it up!!";
+	const typedText = useTypewriter(text);
 	return (
 		<PageContainer>
 			<PageHeader title="Demo Page" />
 			<div className={styles.DemoPage}>
-				{/* <Fire />
-				<Flame /> */}
+				<div>{typedText}</div>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						placeItems: "center",
+					}}
+				>
+					<FlameIcon variant="purple" glow="none" size="XLG" />
+					<div style={{ color: "#fff", fontSize: "1.3rem" }}>69 Day Streak</div>
+				</div>
 				<div>
-					<FlameIcon variant="blue" />
+					<FlameIcon variant="blue" glow="neon" />
 					<FlameIcon variant="green" />
-					<FlameIcon variant="pink" />
+					<FlameIcon variant="pink" glow="neon" />
 					<FlameIcon variant="fire" />
 					<FlameIcon variant="gold" />
 					<FlameIcon variant="grey" />

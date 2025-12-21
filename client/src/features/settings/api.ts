@@ -35,13 +35,13 @@ export const settingsApi = createApi({
 				return { data };
 			},
 		}),
-		getSettingsInfoByRoute: builder.query({
-			queryFn: async (params) => {
-				// const { userID, route } = params;
+		// getSettingsInfoByRoute: builder.query({
+		// 	queryFn: async (params) => {
+		// 		// const { userID, route } = params;
 
-				return { data: null };
-			},
-		}),
+		// 		return { data: null };
+		// 	},
+		// }),
 		getJobsSettings: builder.query<JobsRefreshSummary, { userID: string }>({
 			queryFn: async (params) => {
 				const { userID } = params;
@@ -59,5 +59,5 @@ export const {
 	useGetNavItemsQuery,
 	useGetSettingsQuery,
 	useGetJobsSettingsQuery,
-	useGetSettingsInfoByRouteQuery,
+	// useGetSettingsInfoByRouteQuery,
 } = settingsApi;

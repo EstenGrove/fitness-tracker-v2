@@ -5,6 +5,7 @@ import { AuthService } from "./AuthService.js";
 import { StatsService } from "./StatsService.js";
 import { HabitsService } from "./HabitsService.js";
 import { ExportService } from "./ExportService.js";
+import { StreaksService } from "./StreaksService.js";
 import { SummaryService } from "./SummaryService.js";
 import { HistoryService } from "./HistoryService.js";
 import { SettingsService } from "./SettingsService.js";
@@ -22,6 +23,7 @@ const statsService = new StatsService(db);
 const chatService = new ChatDataService(db);
 const habitsService = new HabitsService(db);
 const exportsService = new ExportService(db);
+const streaksService = new StreaksService(db);
 const historyService = new HistoryService(db);
 const summaryService = new SummaryService(db);
 const workoutsService = new WorkoutsService(db);
@@ -38,6 +40,7 @@ const allServices = {
 	jobs: jobsService,
 	stats: statsService,
 	habits: habitsService,
+	streaks: streaksService,
 	exports: exportsService,
 	history: historyService,
 	summary: summaryService,
@@ -62,6 +65,7 @@ export {
 	summaryService,
 	historyService,
 	exportsService,
+	streaksService,
 	habitsService,
 	statsService,
 	chatService,
