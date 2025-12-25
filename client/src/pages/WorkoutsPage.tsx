@@ -5,7 +5,7 @@ import styles from "../css/pages/WorkoutsPage.module.scss";
 import { useAppDispatch } from "../store/store";
 import { summaryApi } from "../features/dashboard/summaryApi";
 import { sortByCompleted } from "../utils/utils_workouts";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
@@ -14,22 +14,24 @@ import { useNavigate } from "react-router";
 import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
 import { useAllWorkouts } from "../hooks/useAllWorkouts";
 import { TodaysWorkout, Workout } from "../features/workouts/types";
-import ModalLG from "../components/shared/ModalLG";
-import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
-import CreateWorkout from "../components/workouts/CreateWorkout";
-import LogWorkout from "../components/history/LogWorkout";
-import PageHeader from "../components/layout/PageHeader";
-import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 import { useTodaysUnscheduledWorkouts } from "../hooks/useTodaysUnscheduledWorkouts";
 import { TagDescription } from "@reduxjs/toolkit/query";
+import { isToday } from "date-fns";
+import { StreaksCacheStatus } from "../features/streaks/types";
+import {
+	STREAKS_KEY,
+	STREAKS_CACHE as storage,
+	updateLastSeen,
+} from "../utils/utils_streaks";
+import ModalLG from "../components/shared/ModalLG";
+import PageHeader from "../components/layout/PageHeader";
+import LogWorkout from "../components/history/LogWorkout";
+import CreateWorkout from "../components/workouts/CreateWorkout";
 import SearchWorkouts from "../components/workouts/SearchWorkouts";
+import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
 import StreaksStatusOverlay from "../components/streaks/StreaksStatusOverlay";
-import { LocalStorage } from "../utils/utils_storage";
-import { groupBy } from "../utils/utils_misc";
 import CompletedTodayWorkouts from "../components/workouts/CompletedTodayWorkouts";
-
-const storage = new LocalStorage();
-const STREAKS_KEY = `STREAKS`;
+import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -155,8 +157,6 @@ const WorkoutsPage = () => {
 	const { data: completedToday, isLoading: loadingOthers } =
 		useTodaysUnscheduledWorkouts(targetDate);
 
-	console.log("[UN-SCHEDULED]:", groupBy("activityType", completedToday));
-
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
@@ -208,11 +208,53 @@ const WorkoutsPage = () => {
 		setShowAllWorkouts(!showAllWorkouts);
 	};
 
+	// Streaks modal should only appear once per day UNLESS we just performed a workout...
+	// ...then we should open it immediately after completing the workout w/ our updated streak data!
+	const openStreaks = () => {
+		const seenCache = storage.get(STREAKS_KEY) as StreaksCacheStatus;
+		const timestamp = formatDateTime(new Date(), "longMs");
+
+		if ("justFinished" in seenCache && seenCache.justFinished) {
+			setShowStreaksOverlay(true);
+			updateLastSeen(timestamp);
+			return;
+		}
+
+		// If there's no record of the streaks modal being opened, open it by default
+		if (!seenCache) {
+			setShowStreaksOverlay(true);
+			updateLastSeen(timestamp);
+			return;
+		}
+
+		const wasSeenToday = isToday(seenCache?.lastSeen);
+		if (wasSeenToday) return;
+
+		setShowStreaksOverlay(true);
+		updateLastSeen(timestamp);
+	};
+
 	const onDismissStreaks = () => {
 		const timestamp = formatDateTime(new Date(), "longMs");
-		storage.set(STREAKS_KEY, timestamp);
+		const seenToday = storage.get(STREAKS_KEY);
+		console.log("Was Seen Today?", isToday(seenToday?.lastSeen));
+
+		// Reset streaks status cache (eg. remove 'justFinished' always!)
+		updateLastSeen(timestamp);
 		setShowStreaksOverlay(false);
 	};
+
+	// Check whether we should open the Streaks overlay
+	useEffect(() => {
+		let isMounted = true;
+		if (!isMounted) return;
+
+		openStreaks();
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
 
 	return (
 		<div className={styles.WorkoutsPage}>

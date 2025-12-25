@@ -53,9 +53,8 @@ const ChatWindow = ({
 	const showSuggestions = hasSuggestions && !hasMessages && SHOW_SUGGESTIONS;
 
 	const handleSend = (value: string) => {
-		sendMessage({
-			text: value,
-		});
+		const chatMessage = { text: value } as unknown as ChatMessage;
+		sendMessage(chatMessage);
 	};
 
 	const handleCancel = () => {

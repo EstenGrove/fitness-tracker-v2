@@ -63,6 +63,8 @@ app.post("/summarize", async (ctx: Context) => {
 	const { userID, messages } = body;
 	const modelMsgs: ModelMessage[] = convertToModelMessages(messages);
 
+	console.log("[USER-ID]:", userID);
+
 	const result = streamText({
 		model: google,
 		messages: modelMsgs,

@@ -1,5 +1,10 @@
 import { AsyncResponse } from "../types";
 
+export interface StreaksCacheStatus {
+	lastSeen: string;
+	justFinished?: boolean;
+}
+
 export interface CurrentStreak {
 	streakStart: string;
 	streakEnd: string;

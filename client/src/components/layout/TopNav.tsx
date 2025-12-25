@@ -69,6 +69,11 @@ const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 							Trends
 						</NavLink>
 					</li>
+					<li className={styles.SidePanelItem} onClick={onSelect}>
+						<NavLink to="awards" className={isActiveRoute}>
+							Awards & Streaks
+						</NavLink>
+					</li>
 				</ul>
 				<div className={styles.SidePanel_main_section}>Other</div>
 				<ul className={styles.SidePanel_main_list}>

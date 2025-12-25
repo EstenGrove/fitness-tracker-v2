@@ -33,6 +33,7 @@ import {
 	getAllWorkoutDetails,
 	type WorkoutDetailsInfo,
 } from "../modules/workouts/getAllWorkoutDetails.js";
+import { evaluateWorkoutStreaksPromise } from "../modules/streaks/evaluateWorkoutStreaks.js";
 
 const app = new Hono();
 
@@ -274,6 +275,8 @@ app.post("/logWorkout", async (ctx: Context) => {
 		});
 		return ctx.json(errResp);
 	}
+
+	await evaluateWorkoutStreaksPromise(body.userID, body.workoutDate);
 
 	const newLog = normalizeWorkoutLog(rawLog);
 	const resp = getResponseOk({

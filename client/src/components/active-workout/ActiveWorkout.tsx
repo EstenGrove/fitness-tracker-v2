@@ -14,7 +14,8 @@ import {
 	SkipWorkoutBody,
 	WorkoutSet,
 } from "../../utils/utils_workouts";
-import { formatDate } from "../../utils/utils_dates";
+import { formatDate, formatDateTime } from "../../utils/utils_dates";
+import { updateStreaksCachePromise } from "../../utils/utils_streaks";
 import EndedWorkout from "./EndedWorkout";
 import WorkoutTimer from "./WorkoutTimer";
 import AddWorkoutDetails from "./AddWorkoutDetails";
@@ -183,7 +184,9 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 			});
 
 			// go back to Workouts page: '/workouts'
+			await updateStreaksCachePromise(formatDateTime(new Date(), "db"), true);
 		}
+
 		goBack();
 	};
 

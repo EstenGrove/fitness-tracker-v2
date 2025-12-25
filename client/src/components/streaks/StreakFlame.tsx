@@ -1,4 +1,3 @@
-import styles from "../../css/streaks/StreakFlame.module.scss";
 import { StreakSize } from "../../utils/utils_streaks";
 import FlameIcon from "../ui/FlameIcon";
 import {
@@ -14,13 +13,9 @@ type Props = {
 
 const StreakFlame = ({ streak, size = "XXLG" }: Props) => {
 	const tier: FlameStreakTier = getFlameStreakTier(streak);
-	const { variant, glow, pulse } = FLAME_STREAK_MAP[tier];
+	const { variant, glow } = FLAME_STREAK_MAP[tier];
 
-	return (
-		// <div className={pulse ? styles["flame-pulse"] : undefined}>
-		<FlameIcon variant={variant} glow={glow} size={size} />
-		// </div>
-	);
+	return <FlameIcon variant={variant} glow={glow} size={size} />;
 };
 
 export default StreakFlame;

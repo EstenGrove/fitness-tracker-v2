@@ -6,6 +6,17 @@ class StreaksService {
 		this.#db = db;
 	}
 
+	async evaluateWorkoutStreaks(userID: string, targetDate: string) {
+		try {
+			const query = `SELECT * FROM evaluate_workout_streaks_for_date($1, $2)`;
+			const results = await this.#db.query(query, [userID, targetDate]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async getCurrentWorkoutStreak(userID: string, targetDate: string) {
 		try {
 			const query = `SELECT * FROM get_current_workout_streak($1, $2)`;

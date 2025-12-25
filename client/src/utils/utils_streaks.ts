@@ -4,6 +4,7 @@ import {
 } from "../features/streaks/types";
 import { currentEnv, streakApis } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
+import { LocalStorage } from "./utils_storage";
 
 export type StreakSize = "XSM" | "SM" | "MD" | "LG" | "XLG" | "XXLG";
 export type StreakColor =
@@ -150,10 +151,50 @@ const fetchHabitStreaks = async (
 	}
 };
 
+// STREAKS CACHE UTILS //
+const STREAKS_KEY = `STREAKS`;
+const STREAKS_CACHE = new LocalStorage();
+
+const updateLastSeen = (timestamp: string) => {
+	STREAKS_CACHE.set(STREAKS_KEY, {
+		lastSeen: timestamp,
+	});
+};
+
+const updateStreaksCache = (
+	lastSeen: string,
+	justFinished: boolean = false
+) => {
+	STREAKS_CACHE.set(STREAKS_KEY, {
+		lastSeen: lastSeen,
+		justFinished: justFinished,
+	});
+};
+
+const updateStreaksCachePromise = (
+	lastSeen: string,
+	justFinished: boolean = false
+) => {
+	return new Promise((resolve) => {
+		resolve(
+			STREAKS_CACHE.set(STREAKS_KEY, {
+				lastSeen: lastSeen,
+				justFinished: justFinished,
+			})
+		);
+	});
+};
+
 export {
 	STREAK_TIERS,
 	STREAK_MEDAL_CONFIG,
 	getStreakTier,
+	// STREAKS CACHE UTILS
+	STREAKS_KEY,
+	STREAKS_CACHE,
+	updateLastSeen,
+	updateStreaksCache,
+	updateStreaksCachePromise,
 	// Data fetching utils
 	fetchWorkoutStreaks,
 	fetchHabitStreaks,
