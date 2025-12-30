@@ -177,7 +177,16 @@ const TimePicker = ({ name, value, onChange, ...rest }: Props) => {
 		});
 	};
 
-	const selectMins = (_: string, value: string) => {
+	const selectMins = (name: string, value: string) => {
+		// If user deletes the value, bail from formatting that value as 'hh:mm a'
+		if (value === null || value === "") {
+			setTime({
+				...time,
+				[name]: "",
+			});
+			return;
+		}
+
 		const num: number = Number(value);
 		if (isNaN(num)) return;
 		if (num > 59) return;

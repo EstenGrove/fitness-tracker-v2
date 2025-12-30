@@ -104,7 +104,7 @@ const EditStrengthSets = ({ sets, reps, weight, onChange }: Props) => {
 		const lastID = lastItem.id;
 		const newEntry = {
 			id: lastID + 1,
-			sets: base.sets,
+			sets: 1,
 			reps: base.reps,
 			weight: base.weight,
 		};

@@ -36,61 +36,67 @@ const removeFromSessionStorage = (key: string) => {
 	sessionStorage.removeItem(key);
 };
 
-export type JsonValue =
+export type JsonValue<TExtra = never> =
 	| string
 	| number
 	| boolean
 	| null
 	| JsonValue[]
-	| { [key: string]: JsonValue };
+	| { [key: string]: JsonValue }
+	| TExtra;
 
-export interface BrowserStorage {
-	get: (key: string) => unknown;
-	set: (
-		key: string,
-		data: JsonValue
-		// data: object | number | Array<unknown> | string | null
-	) => void;
+export interface BrowserStorage<TExtra = never> {
+	get: <T = JsonValue<TExtra>>(key: string) => T | null;
+
+	set: (key: string, data: JsonValue<TExtra>) => void;
+
 	remove: (key: string) => void;
 	clear: () => void;
-	getAll: () => Record<string, unknown>;
+
+	getAll: () => Record<string, JsonValue<TExtra>>;
 }
 
-class LocalStorage implements BrowserStorage {
-	get(key: string) {
-		return getFromLocalStorage(key);
+class LocalStorage<TExtra = never> implements BrowserStorage<TExtra> {
+	get<T = JsonValue<TExtra>>(key: string): T | null {
+		return getFromLocalStorage(key) as T | null;
 	}
-	set(key: string, data: JsonValue) {
-		return saveToLocalStorage(key, data as JsonValue);
+
+	set(key: string, data: JsonValue<TExtra>): void {
+		saveToLocalStorage(key, data as unknown as JsonValue);
 	}
-	remove(key: string) {
-		return removeFromLocalStorage(key);
+
+	remove(key: string): void {
+		removeFromLocalStorage(key);
 	}
-	clear() {
-		return localStorage.clear();
+
+	clear(): void {
+		localStorage.clear();
 	}
-	getAll() {
-		const items = { ...localStorage };
-		return items;
+
+	getAll(): Record<string, JsonValue<TExtra>> {
+		return { ...localStorage } as Record<string, JsonValue<TExtra>>;
 	}
 }
 
-class SessionStorage implements BrowserStorage {
-	get(key: string) {
-		return getFromSessionStorage(key);
+class SessionStorage<TExtra = never> implements BrowserStorage<TExtra> {
+	get<T = JsonValue<TExtra>>(key: string): T | null {
+		return getFromSessionStorage(key) as T | null;
 	}
-	set(key: string, data: JsonValue) {
-		return saveToSessionStorage(key, data);
+
+	set(key: string, data: JsonValue<TExtra>): void {
+		saveToSessionStorage(key, data as unknown as JsonValue);
 	}
-	remove(key: string) {
-		return removeFromSessionStorage(key);
+
+	remove(key: string): void {
+		removeFromSessionStorage(key);
 	}
-	clear() {
-		return sessionStorage.clear();
+
+	clear(): void {
+		sessionStorage.clear();
 	}
-	getAll() {
-		const items = { ...sessionStorage };
-		return items;
+
+	getAll(): Record<string, JsonValue<TExtra>> {
+		return { ...sessionStorage } as Record<string, JsonValue<TExtra>>;
 	}
 }
 

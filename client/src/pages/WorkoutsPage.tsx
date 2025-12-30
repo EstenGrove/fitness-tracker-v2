@@ -191,6 +191,8 @@ const WorkoutsPage = () => {
 	const selectPanelAction = (action: PanelAction) => {
 		if (action === "Trends") {
 			navigate("/trends");
+		} else if (action === "Search") {
+			navigate("/workouts/all");
 		} else {
 			setPanelAction(action);
 		}
@@ -211,7 +213,9 @@ const WorkoutsPage = () => {
 	// Streaks modal should only appear once per day UNLESS we just performed a workout...
 	// ...then we should open it immediately after completing the workout w/ our updated streak data!
 	const openStreaks = () => {
-		const seenCache = storage.get(STREAKS_KEY) as StreaksCacheStatus;
+		const seenCache = storage.get<StreaksCacheStatus>(
+			STREAKS_KEY
+		) as StreaksCacheStatus;
 		const timestamp = formatDateTime(new Date(), "longMs");
 
 		if ("justFinished" in seenCache && seenCache.justFinished) {
@@ -236,7 +240,7 @@ const WorkoutsPage = () => {
 
 	const onDismissStreaks = () => {
 		const timestamp = formatDateTime(new Date(), "longMs");
-		const seenToday = storage.get(STREAKS_KEY);
+		const seenToday = storage.get(STREAKS_KEY) as StreaksCacheStatus;
 		console.log("Was Seen Today?", isToday(seenToday?.lastSeen));
 
 		// Reset streaks status cache (eg. remove 'justFinished' always!)

@@ -3,12 +3,12 @@ import {
 	EWorkoutStatus,
 	TodaysWorkout as ITodaysWorkout,
 } from "../../features/workouts/types";
+import { useNavigate } from "react-router";
 import { getWorkoutsByStatus } from "../../utils/utils_workouts";
 import Loader from "../layout/Loader";
 import FadeSlideIn from "../ui/FadeSlideIn";
 import NoData from "../ui/NoData";
 import TodaysWorkout from "./TodaysWorkout";
-import { useNavigate } from "react-router";
 
 type Props = {
 	title?: string;

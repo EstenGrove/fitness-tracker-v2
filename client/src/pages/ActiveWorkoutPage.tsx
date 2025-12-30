@@ -14,6 +14,7 @@ import { useAppDispatch } from "../store/store";
 import { useEffect } from "react";
 import { addEllipsis } from "../utils/utils_misc";
 import { useNavigate } from "react-router";
+import { checkForActiveWorkout } from "../utils/utils_workouts";
 
 const ACTIVE_KEY = "ACTIVE";
 const storage = new LocalStorage();
@@ -36,7 +37,7 @@ const ActiveWorkoutPage = () => {
 		if (!isMounted) return;
 
 		if (!activeWorkout) {
-			const workout = storage.get(ACTIVE_KEY);
+			const workout = checkForActiveWorkout();
 			dispatch(setActiveWorkout(workout as TodaysWorkout));
 		} else {
 			storage.set(ACTIVE_KEY, activeWorkout as unknown as JsonValue);
