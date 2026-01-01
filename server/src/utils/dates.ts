@@ -51,6 +51,8 @@ const formatTimestamp = (date: Date | string = new Date()) => {
 	return formatCustomDate(date, "timestamp");
 };
 
+export type DateRangeUnit = "days" | "weeks" | "months";
+
 const getDateRangeFromInput = (input: string) => {
 	const lastRegex =
 		/((?<last>last) (?<count>\d{1,}) (?<unit>days|weeks|months))/gm;
@@ -58,7 +60,7 @@ const getDateRangeFromInput = (input: string) => {
 
 	const endDate = new Date();
 
-	const getUnit = (unit: "days" | "weeks" | "months") => {
+	const getUnit = (unit: DateRangeUnit) => {
 		switch (unit) {
 			case "days": {
 				return 1;
@@ -78,20 +80,32 @@ const getDateRangeFromInput = (input: string) => {
 	let matches: RegExpMatchArray | null;
 	if ((matches = lastRegex.exec(input))) {
 		const { groups } = matches;
-		const { last, count, unit } = groups;
-		const start = subDays(endDate, count * getUnit(unit));
+		const { last, count, unit } = groups as {
+			last: string;
+			count: string;
+			unit: DateRangeUnit;
+		};
+		const start = subDays(endDate, Number(count) * getUnit(unit));
 		return {
 			startDate: start,
 			endDate: endDate,
 		};
 	}
 
-	if (matches = thisRegex.exec(input)) {
+	if ((matches = thisRegex.exec(input))) {
 		const { groups } = matches;
-		const { this, count, unit } = groups;
+		const {
+			this: main,
+			count,
+			unit,
+		} = groups as {
+			this: string;
+			count: string;
+			unit: DateRangeUnit;
+		};
 		return {
-			endDate: endDate
-		}
+			endDate: endDate,
+		};
 	}
 };
 

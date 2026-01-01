@@ -1,0 +1,14 @@
+.IndicatorButton {
+	padding: 0.2rem 0.3rem;
+	border-radius: 0.2rem;
+	border: none;
+	outline: none;
+	flex: 1;
+}
+
+.CardIndicators {
+	width: 100%;
+	padding: 1rem 2rem;
+	@include flex_row(center, center);
+	gap: 0 0.5rem;
+}

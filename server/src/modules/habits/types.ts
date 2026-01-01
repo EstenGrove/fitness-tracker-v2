@@ -261,3 +261,22 @@ export interface HabitHistoryForRange {
 	history: HabitLog[];
 	summary: HabitSummaryItem[];
 }
+
+export interface HabitGoalHistoryDB {
+	user_id: string;
+	habit_id: number;
+	habit_intent: HabitIntent;
+	habit_goal: number;
+	habit_unit: string;
+	start_date: string;
+	end_date: string;
+}
+export interface HabitGoalHistory {
+	userID: string;
+	habitID: number;
+	habitIntent: HabitIntent;
+	habitGoal: number;
+	habitUnit: string;
+	startDate: string;
+	endDate: string;
+}

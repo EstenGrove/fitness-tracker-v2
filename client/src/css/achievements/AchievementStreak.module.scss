@@ -1,11 +1,11 @@
 .AchievementStreak {
 	$baseSize: 2rem;
-	width: $size;
-	height: $size;
-	min-width: $size;
-	min-height: $size;
-	max-width: $size;
-	max-height: $size;
+	width: $baseSize;
+	height: $baseSize;
+	min-width: $baseSize;
+	min-height: $baseSize;
+	max-width: $baseSize;
+	max-height: $baseSize;
 	border-radius: 50%;
 	@include colCenter();
 

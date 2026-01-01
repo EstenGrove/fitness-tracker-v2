@@ -98,9 +98,29 @@ const getWhen = (logEntry: RecentHabitLog) => {
 	return `${ago} (${day}. ${date})`;
 };
 
+const getAmountLogged = (entry: RecentHabitLog): string => {
+	const amount = Number(entry.loggedValue);
+	const unit = entry.habitUnit;
+
+	if (amount <= 1) {
+		const single = unit.replace(/s$/, "");
+		return `${amount} ${single}`;
+	} else {
+		return `${amount} ${unit}`;
+	}
+};
+
+const getLoggedAt = (entry: RecentHabitLog): string => {
+	const raw = entry.logTime;
+	const loggedAt = format(raw, "h:mm a");
+	return loggedAt;
+};
+
 const RecentHabitEntry = ({ entry }: { entry: RecentHabitLog }) => {
 	const name = addEllipsis(entry.habitName, 25);
 	const when = getWhen(entry);
+	const loggedAt = getLoggedAt(entry);
+	const amount = getAmountLogged(entry);
 	const icon = habitIcons[entry.icon];
 	const color = { fill: entry.iconColor };
 	return (
@@ -112,6 +132,8 @@ const RecentHabitEntry = ({ entry }: { entry: RecentHabitLog }) => {
 				<h4 className={styles.RecentHabitEntry_top_title}>{name}</h4>
 			</div>
 			<div className={styles.RecentHabitEntry_top_when}>{when}</div>
+			<div className={styles.RecentHabitEntry_amount}>{amount}</div>
+			<div className={styles.RecentHabitEntry_loggedAt}>{loggedAt}</div>
 		</div>
 	);
 };

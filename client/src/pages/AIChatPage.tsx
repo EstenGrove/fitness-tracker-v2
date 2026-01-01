@@ -4,8 +4,6 @@ import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import styles from "../css/pages/AIChatPage.module.scss";
 import { chatApis } from "../utils/utils_env";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../features/user/userSlice";
 import { ChatSuggestion } from "../features/chat/types";
 import { subDays } from "date-fns";
 import { formatDate } from "../utils/utils_dates";
@@ -64,7 +62,6 @@ const chatOpts = {
 };
 
 const AIChatPage = () => {
-	const currentUser = useSelector(selectCurrentUser);
 	const [isNewChat, setIsNewChat] = useState<boolean>(false);
 
 	const onNewChat = () => {
@@ -81,7 +78,6 @@ const AIChatPage = () => {
 				</div>
 				<div className={styles.AIChatPage_main}>
 					<AIChat
-						currentUser={currentUser}
 						endpoint={chatOpts.endpoint}
 						isNewChat={isNewChat}
 						suggestions={DEFAULT_SUGGESTIONS}

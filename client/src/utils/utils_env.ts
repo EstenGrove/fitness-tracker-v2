@@ -174,8 +174,10 @@ const API_ENDPOINTS = {
 		logHabitsBatched: "/habits/logHabitsBatched",
 		getHabitDetails: "/habits/getHabitDetails",
 		getHabitSummaries: "/habits/getHabitSummaries",
+		deleteHabit: "/habits/deleteHabit",
 		getHabitCards: "/habits/getHabitCards",
 		createHabit: "/habits/createHabit",
+		changeHabitGoal: "/habits/changeHabitGoal",
 		getRecentLogs: "/habits/getRecentHabitLogs",
 		getHabitHistory: "/habits/getHabitHistory",
 		getHabitHistorySummary: "/habits/getHabitHistorySummary",
@@ -209,6 +211,16 @@ const API_ENDPOINTS = {
 	jobs: {
 		summary: "/jobs/getSummary",
 	},
+	streaks: {
+		getWorkoutStreaks: "/streaks/getWorkoutStreaks",
+		getWorkoutStreakDetails: "/streaks/getWorkoutStreakDetails",
+		getHabitStreaks: "/streaks/getHabitStreaks",
+		getHabitStreakDetails: "/streaks/getHabitStreakDetails",
+	},
+	recaps: {
+		getWeeklyRecap: "/recap/getWeeklyRecap",
+		getRecapForRange: "/recap/getRecapForRange",
+	},
 };
 
 export const {
@@ -228,6 +240,8 @@ export const {
 	settings: settingsApis,
 	recentActivity: recentActivityApis,
 	summary: summaryApis,
+	streaks: streakApis,
+	recaps: recapApis,
 } = API_ENDPOINTS;
 
 export {

@@ -52,6 +52,9 @@ const StrengthHistory = lazy(() => import("../views/StrengthHistory"));
 
 const SettingsOption = lazy(() => import("../pages/SettingsOptionPage"));
 
+// Awards & Streaks' Pages
+const Awards = lazy(() => import("../pages/AwardsPage"));
+
 // Demo Page
 const Demo = lazy(() => import("../pages/DemoPage"));
 
@@ -76,6 +79,9 @@ export const router = createBrowserRouter([
 
 			/* AI */
 			{ path: "ai/*", element: load(<AIChatPage />) },
+
+			/* AWARDS */
+			{ path: "awards/*", element: load(<Awards />) },
 
 			/* STATS */
 			{

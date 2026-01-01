@@ -9,8 +9,9 @@ import {
 	HabitModalType,
 } from "../../utils/utils_habits";
 import { addEllipsis, isEmptyArray } from "../../utils/utils_misc";
-import { useAppDispatch } from "../../store/store";
 import { summaryApi } from "../../features/dashboard/summaryApi";
+import { useDeleteHabitMutation } from "../../features/habits/habitsApi";
+import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router";
 import NoData from "../ui/NoData";
 import ModalSM from "../shared/ModalSM";
@@ -20,7 +21,6 @@ import NumberCounter from "../ui/NumberCounter";
 import MenuDropdown from "../shared/MenuDropdown";
 import QuickLogHabit from "../habits/QuickLogHabit";
 import ChangeHabitGoal from "../habits/ChangeHabitGoal";
-import ModalWithFooter from "../shared/ModalWithFooter";
 import HabitHistoryModal from "../habits/HabitHistoryModal";
 
 type Props = {
@@ -31,23 +31,6 @@ type TotalProps = {
 	loggedValue: number;
 	targetValue: number;
 	unit: string;
-};
-
-type FooterProps = {
-	onCancel: () => void;
-	onSave: () => void;
-};
-const Footer = ({ onCancel, onSave }: FooterProps) => {
-	return (
-		<div className={styles.Footer}>
-			<button type="button" onClick={onCancel} className={styles.Footer_cancel}>
-				Cancel
-			</button>
-			<button type="button" onClick={onSave} className={styles.Footer_save}>
-				Update
-			</button>
-		</div>
-	);
 };
 
 const Total = ({ loggedValue = 0, targetValue = 0, unit }: TotalProps) => {
@@ -192,6 +175,7 @@ const DashboardHabit = ({ habit, onAction, onAddLog }: DashboardHabitProps) => {
 const DashboardHabits = ({ habits }: Props) => {
 	const dispatch = useAppDispatch();
 	const hasHabits = !isEmptyArray(habits);
+	const [deleteHabit] = useDeleteHabitMutation();
 	const [modalType, setModalType] = useState<HabitModalType | null>(null);
 	const [selectedHabit, setSelectedHabit] = useState<HabitCard | null>(null);
 
@@ -211,10 +195,11 @@ const DashboardHabits = ({ habits }: Props) => {
 	};
 
 	const confirmDelete = async () => {
-		//  do stuff
-	};
-	const confirmGoalChanges = async () => {
-		// do stuff
+		if (!selectedHabit) return;
+
+		const { userID, habitID } = selectedHabit;
+		await deleteHabit({ userID, habitID });
+		closeModal();
 	};
 
 	const invalidateCache = () => {
@@ -255,13 +240,9 @@ const DashboardHabits = ({ habits }: Props) => {
 			)}
 			{/* CHANGE GOAL */}
 			{modalType === EHabitModalType.EDIT && selectedHabit && (
-				<ModalWithFooter
-					onClose={closeModal}
-					size="SM"
-					footer={<Footer onCancel={closeModal} onSave={confirmGoalChanges} />}
-				>
-					<ChangeHabitGoal habit={selectedHabit} />
-				</ModalWithFooter>
+				<ModalSM onClose={closeModal}>
+					<ChangeHabitGoal habit={selectedHabit} onClose={closeModal} />
+				</ModalSM>
 			)}
 			{/* DELETE HABIT */}
 			{modalType === EHabitModalType.DELETE && selectedHabit && (

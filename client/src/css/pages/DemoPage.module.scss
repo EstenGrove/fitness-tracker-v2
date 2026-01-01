@@ -1,0 +1,29 @@
+// :root {
+// 	--hdr-gradient: linear-gradient(
+// 		226deg in oklch,
+// 		oklch(70% 0.5 340) 0%,
+// 		oklch(90% 0.3 200) 100%
+// 	);
+// 	--sdr-gradient: linear-gradient(226deg, #ff00fa 0%, #0ff 100%);
+
+// 	background: var(--hdr-gradient);
+// }
+
+.Fire {
+	width: 15rem;
+	height: 15rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	& svg {
+		fill: var(--blueGradient);
+	}
+}
+
+.Flame {
+	width: 15rem;
+	height: 15rem;
+	fill: var(--blueGradient);
+}

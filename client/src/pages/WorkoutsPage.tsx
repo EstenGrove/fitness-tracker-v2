@@ -5,24 +5,33 @@ import styles from "../css/pages/WorkoutsPage.module.scss";
 import { useAppDispatch } from "../store/store";
 import { summaryApi } from "../features/dashboard/summaryApi";
 import { sortByCompleted } from "../utils/utils_workouts";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
-import { formatDate } from "../utils/utils_dates";
+import { formatDate, formatDateTime } from "../utils/utils_dates";
 import { useNavigate } from "react-router";
 import { useTodaysWorkouts } from "../hooks/useTodaysWorkouts";
 import { useAllWorkouts } from "../hooks/useAllWorkouts";
 import { TodaysWorkout, Workout } from "../features/workouts/types";
-import ModalLG from "../components/shared/ModalLG";
-import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
-import CreateWorkout from "../components/workouts/CreateWorkout";
-import LogWorkout from "../components/history/LogWorkout";
-import PageHeader from "../components/layout/PageHeader";
-import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 import { useTodaysUnscheduledWorkouts } from "../hooks/useTodaysUnscheduledWorkouts";
 import { TagDescription } from "@reduxjs/toolkit/query";
+import { isToday } from "date-fns";
+import { StreaksCacheStatus } from "../features/streaks/types";
+import {
+	STREAKS_KEY,
+	STREAKS_CACHE as storage,
+	updateLastSeen,
+} from "../utils/utils_streaks";
+import ModalLG from "../components/shared/ModalLG";
+import PageHeader from "../components/layout/PageHeader";
+import LogWorkout from "../components/history/LogWorkout";
+import CreateWorkout from "../components/workouts/CreateWorkout";
 import SearchWorkouts from "../components/workouts/SearchWorkouts";
+import TodaysWorkouts from "../components/workouts/TodaysWorkouts";
+import StreaksStatusOverlay from "../components/streaks/StreaksStatusOverlay";
+import CompletedTodayWorkouts from "../components/workouts/CompletedTodayWorkouts";
+import ScheduledWorkoutsCalendar from "../components/calendars/ScheduledWorkoutsCalendar";
 
 type ActionBtnProps = {
 	onClick: () => void;
@@ -145,15 +154,19 @@ const WorkoutsPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const { data: workoutsList } = useAllWorkouts();
 	const { data, isLoading } = useTodaysWorkouts(targetDate);
-	const { data: completedToday } = useTodaysUnscheduledWorkouts(targetDate);
+	const { data: completedToday, isLoading: loadingOthers } =
+		useTodaysUnscheduledWorkouts(targetDate);
 
 	const [panelAction, setPanelAction] = useState<PanelAction | null>(null);
 	const [quickAction, setQuickAction] = useState<QuickAction | null>(null);
 	const [showQuickActions, setShowQuickActions] = useState<boolean>(false);
+	const [showAllWorkouts, setShowAllWorkouts] = useState<boolean>(false);
+	const [showStreaksOverlay, setShowStreaksOverlay] = useState<boolean>(false);
 
 	const list = data as TodaysWorkout[];
 	const todaysWorkouts = sortByCompleted(list);
 	const allWorkouts = workoutsList as Workout[];
+	const hasUnscheduled = Boolean(completedToday?.length);
 
 	const openQuickActions = () => setShowQuickActions(true);
 	const closeQuickActions = () => setShowQuickActions(false);
@@ -178,6 +191,8 @@ const WorkoutsPage = () => {
 	const selectPanelAction = (action: PanelAction) => {
 		if (action === "Trends") {
 			navigate("/trends");
+		} else if (action === "Search") {
+			navigate("/workouts/all");
 		} else {
 			setPanelAction(action);
 		}
@@ -190,6 +205,60 @@ const WorkoutsPage = () => {
 		closeQuickAction();
 		navigate("/history");
 	};
+
+	const onShowAllWorkouts = () => {
+		setShowAllWorkouts(!showAllWorkouts);
+	};
+
+	// Streaks modal should only appear once per day UNLESS we just performed a workout...
+	// ...then we should open it immediately after completing the workout w/ our updated streak data!
+	const openStreaks = () => {
+		const seenCache = storage.get<StreaksCacheStatus>(
+			STREAKS_KEY
+		) as StreaksCacheStatus;
+		const timestamp = formatDateTime(new Date(), "longMs");
+
+		if ("justFinished" in seenCache && seenCache.justFinished) {
+			setShowStreaksOverlay(true);
+			updateLastSeen(timestamp);
+			return;
+		}
+
+		// If there's no record of the streaks modal being opened, open it by default
+		if (!seenCache) {
+			setShowStreaksOverlay(true);
+			updateLastSeen(timestamp);
+			return;
+		}
+
+		const wasSeenToday = isToday(seenCache?.lastSeen);
+		if (wasSeenToday) return;
+
+		setShowStreaksOverlay(true);
+		updateLastSeen(timestamp);
+	};
+
+	const onDismissStreaks = () => {
+		const timestamp = formatDateTime(new Date(), "longMs");
+		const seenToday = storage.get(STREAKS_KEY) as StreaksCacheStatus;
+		console.log("Was Seen Today?", isToday(seenToday?.lastSeen));
+
+		// Reset streaks status cache (eg. remove 'justFinished' always!)
+		updateLastSeen(timestamp);
+		setShowStreaksOverlay(false);
+	};
+
+	// Check whether we should open the Streaks overlay
+	useEffect(() => {
+		let isMounted = true;
+		if (!isMounted) return;
+
+		openStreaks();
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
 
 	return (
 		<div className={styles.WorkoutsPage}>
@@ -213,8 +282,19 @@ const WorkoutsPage = () => {
 					<TodaysWorkouts
 						title="Today's Workouts"
 						workouts={todaysWorkouts}
+						unscheduled={completedToday}
 						isLoading={isLoading}
+						onShowAll={onShowAllWorkouts}
 					/>
+
+					{/* Shows other workouts completed today */}
+					{hasUnscheduled && showAllWorkouts && (
+						<CompletedTodayWorkouts
+							title="Unscheduled"
+							workouts={completedToday}
+							isLoading={loadingOthers}
+						/>
+					)}
 				</div>
 			</div>
 
@@ -246,6 +326,11 @@ const WorkoutsPage = () => {
 					onConfirm={onLoggedWorkout}
 					allWorkouts={allWorkouts as Workout[]}
 				/>
+			)}
+
+			{/* STREAKS OVERLAY */}
+			{showStreaksOverlay && (
+				<StreaksStatusOverlay date={targetDate} onDismiss={onDismissStreaks} />
 			)}
 		</div>
 	);

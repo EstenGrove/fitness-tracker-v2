@@ -37,9 +37,6 @@ const HistoryTabs = () => {
 				<PageTabButton to="timed">Timed</PageTabButton>
 				<PageTabButton to="other">Other</PageTabButton>
 			</div>
-			{/*  */}
-			{/*  */}
-			{/*  */}
 		</div>
 	);
 };

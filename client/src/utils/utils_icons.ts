@@ -1,3 +1,5 @@
+export type IconSize = "XSM" | "SM" | "MD" | "LG" | "XLG" | "XXLG";
+
 const iconsMap = {
 	// sprite1
 	1: {

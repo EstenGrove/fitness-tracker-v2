@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styles from "../../css/workouts/TodaysWorkouts.module.scss";
 import {
 	EWorkoutStatus,
@@ -8,12 +9,13 @@ import Loader from "../layout/Loader";
 import FadeSlideIn from "../ui/FadeSlideIn";
 import NoData from "../ui/NoData";
 import TodaysWorkout from "./TodaysWorkout";
-import { useNavigate } from "react-router";
 
 type Props = {
 	title?: string;
 	isLoading: boolean;
 	workouts: ITodaysWorkout[];
+	unscheduled?: ITodaysWorkout[];
+	onShowAll: () => void;
 };
 
 const getDoneCount = (workouts: ITodaysWorkout[]) => {
@@ -139,15 +141,20 @@ const getSkippedWorkouts = (workouts: ITodaysWorkout[]) => {
 
 const TodaysWorkouts = ({
 	title = "Today's Workouts",
-	workouts,
+	workouts = [],
+	unscheduled = [],
 	isLoading,
+	onShowAll,
 }: Props) => {
-	const navigate = useNavigate();
+	const [showAll, setShowAll] = useState<boolean>(false);
+	const hasUnscheduled = Boolean(unscheduled && unscheduled?.length);
 	const noWorkouts = !isLoading && (!workouts || !workouts.length);
 	const skipped = getSkippedWorkouts(workouts);
 
-	const goToAll = () => {
-		navigate("all");
+	const handleShowAll = () => {
+		setShowAll(!showAll);
+
+		onShowAll();
 	};
 
 	return (
@@ -157,12 +164,15 @@ const TodaysWorkouts = ({
 					<span>{title}</span>
 					<Totals workouts={workouts} skippedWorkouts={skipped} />
 				</h3>
-				<div
-					className={styles.TodaysWorkouts_heading_showAll}
-					onClick={goToAll}
-				>
-					Show All
-				</div>
+				{hasUnscheduled && (
+					<div
+						className={styles.TodaysWorkouts_heading_showAll}
+						onClick={handleShowAll}
+					>
+						{showAll ? "Hide" : "Show"} All{" "}
+						{hasUnscheduled && `(${unscheduled.length})`}
+					</div>
+				)}
 			</div>
 			<div className={styles.TodaysWorkouts_main}>
 				{isLoading ? (

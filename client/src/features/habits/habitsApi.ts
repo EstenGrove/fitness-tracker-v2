@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
 import {
 	createHabit,
+	deleteHabit,
 	fetchHabitCards,
 	fetchHabitDetails,
 	fetchHabitHistory,
@@ -13,10 +14,14 @@ import {
 	HabitHistoryByRange,
 	HabitHistoryByRangeParams,
 	logHabit,
+	NewHabitGoalData,
+	NewHabitGoalParams,
 	NewHabitParams,
 	RecentHabitParams,
+	saveHabitGoal,
 } from "../../utils/utils_habits";
 import {
+	Habit,
 	HabitCard,
 	HabitDetails,
 	HabitHistory,
@@ -163,6 +168,30 @@ export const habitsApi = createApi({
 				return { data };
 			},
 		}),
+		changeHabitGoal: builder.mutation<NewHabitGoalData, NewHabitGoalParams>({
+			queryFn: async (params) => {
+				const { userID } = params;
+				const response = (await saveHabitGoal(
+					userID,
+					params
+				)) as AwaitedResponse<NewHabitGoalData>;
+				const data = response.Data as NewHabitGoalData;
+
+				return { data };
+			},
+		}),
+		deleteHabit: builder.mutation<Habit, HabitParams>({
+			queryFn: async (params) => {
+				const { userID, habitID } = params;
+				const response = (await deleteHabit(
+					userID,
+					habitID
+				)) as AwaitedResponse<{ habit: Habit }>;
+				const data = response.Data as { habit: Habit };
+
+				return { data: data.habit };
+			},
+		}),
 	}),
 });
 
@@ -174,6 +203,8 @@ export const {
 	useGetHabitDetailsQuery,
 	useGetRecentHabitLogsQuery,
 	useGetHabitHistoryQuery,
+	useDeleteHabitMutation,
+	useChangeHabitGoalMutation,
 	useGetHabitHistorySummaryQuery,
 	useGetHabitHistoryForRangeQuery,
 	useLazyGetHabitHistoryForRangeQuery,

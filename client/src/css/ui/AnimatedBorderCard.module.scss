@@ -1,0 +1,32 @@
+.animated-border-card {
+	position: relative;
+	background: #0f172a;
+	overflow: hidden;
+}
+
+.animated-border-svg {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.animated-border-svg rect {
+	fill: none;
+	stroke-dasharray: 400;
+	stroke-dashoffset: 400;
+	animation-name: draw-border;
+	animation-timing-function: ease-out;
+	animation-fill-mode: forwards;
+}
+
+@keyframes draw-border {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+.animated-border-content {
+	position: relative;
+	z-index: 1;
+	padding: 1.5rem;
+}

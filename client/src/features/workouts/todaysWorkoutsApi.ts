@@ -92,7 +92,7 @@ export interface DetailsParams {
 export const todaysWorkoutsApi = createApi({
 	reducerPath: "todaysWorkoutsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
-	tagTypes: ["TodaysWorkouts"],
+	tagTypes: ["TodaysWorkouts", "UnscheduledWorkouts"],
 	endpoints: (builder) => ({
 		getTodaysWorkouts: builder.query<TodaysWorkout[], UserDateParams>({
 			queryFn: async (params) => {
@@ -121,6 +121,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data: workouts || [] };
 			},
+			providesTags: ["UnscheduledWorkouts"],
 		}),
 
 		markAsDone: builder.mutation<MarkAsDonePayload, MarkAsDoneParams>({
@@ -139,7 +140,7 @@ export const todaysWorkoutsApi = createApi({
 				};
 				return { data };
 			},
-			invalidatesTags: ["TodaysWorkouts"],
+			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
 		}),
 		getScheduledWorkouts: builder.query<TodaysWorkout[], UserRangeParams>({
 			queryFn: async (params) => {
@@ -153,6 +154,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data: workouts };
 			},
+			providesTags: ["UnscheduledWorkouts"],
 		}),
 		getScheduledWorkoutsGrouped: builder.query<
 			ScheduledWorkoutsGrouped,
@@ -170,6 +172,7 @@ export const todaysWorkoutsApi = createApi({
 				// { "2025-11-08": [...], "2025-11-09": [...], ...rest }
 				return { data: workouts };
 			},
+			providesTags: ["UnscheduledWorkouts"],
 		}),
 		getAllWorkouts: builder.query<Workout[], Pick<UserDateParams, "userID">>({
 			queryFn: async ({ userID }) => {
@@ -221,7 +224,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data: data.newLog };
 			},
-			invalidatesTags: ["TodaysWorkouts"],
+			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
 		}),
 		skipWorkout: builder.mutation<SkippedResp, SkipWorkoutParams>({
 			queryFn: async (params) => {
@@ -234,7 +237,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data };
 			},
-			invalidatesTags: ["TodaysWorkouts"],
+			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
 		}),
 		deleteWorkout: builder.mutation<
 			DeletedWorkoutDateData,
@@ -248,7 +251,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data };
 			},
-			invalidatesTags: ["TodaysWorkouts"],
+			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
 		}),
 		createWorkout: builder.mutation<CreatedWorkoutData, NewWorkoutParams>({
 			queryFn: async (params) => {
@@ -261,7 +264,7 @@ export const todaysWorkoutsApi = createApi({
 
 				return { data };
 			},
-			invalidatesTags: ["TodaysWorkouts"],
+			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
 		}),
 		editWorkout: builder.mutation<TodaysWorkout, EditedWorkoutParams>({
 			queryFn: async (params) => {

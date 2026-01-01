@@ -16,3 +16,11 @@
 		}
 	}
 }
+
+@media only screen and (min-width: $bp-SM) {
+	.AllWorkoutsPage {
+		max-width: 80rem;
+		display: block;
+		margin: 0 auto;
+	}
+}

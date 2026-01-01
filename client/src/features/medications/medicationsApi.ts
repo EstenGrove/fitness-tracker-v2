@@ -23,7 +23,7 @@ import {
 } from "./types";
 import { AwaitedResponse, DateRange } from "../types";
 
-interface NewMedLog {
+export interface NewMedLog {
 	newLog: MedLogEntry;
 }
 interface MedLogsByRange {

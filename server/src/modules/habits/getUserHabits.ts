@@ -1,6 +1,13 @@
 import { habitsService } from "../../services/index.js";
 import { getResponseError } from "../../utils/api.js";
-import type { Habit, HabitDB, HabitLog, HabitLogDB } from "./types.js";
+import type {
+	Habit,
+	HabitDB,
+	HabitGoalHistory,
+	HabitGoalHistoryDB,
+	HabitLog,
+	HabitLogDB,
+} from "./types.js";
 
 const getUserHabits = async (userID: string, targetDate: string) => {
 	const rawHabits = (await habitsService.getHabits(
@@ -50,4 +57,17 @@ const normalizeHabitLog = (habit: HabitLogDB): HabitLog => {
 	return record;
 };
 
-export { getUserHabits, normalizeHabit, normalizeHabitLog };
+const normalizeHabitGoal = (goal: HabitGoalHistoryDB): HabitGoalHistory => {
+	const newGoal: HabitGoalHistory = {
+		userID: goal.user_id,
+		habitID: goal.habit_id,
+		habitIntent: goal.habit_intent,
+		habitGoal: goal.habit_goal,
+		habitUnit: goal.habit_unit,
+		startDate: goal.start_date,
+		endDate: goal.end_date,
+	};
+	return newGoal;
+};
+
+export { getUserHabits, normalizeHabit, normalizeHabitLog, normalizeHabitGoal };

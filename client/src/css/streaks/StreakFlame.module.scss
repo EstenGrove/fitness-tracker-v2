@@ -1,0 +1,15 @@
+.flame-pulse {
+	animation: flamePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes flamePulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.06);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

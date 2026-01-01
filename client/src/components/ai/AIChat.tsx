@@ -1,22 +1,14 @@
 import styles from "../../css/ai/AIChat.module.scss";
-import ChatWindow from "../chat/ChatWindow";
-import { CurrentUser } from "../../features/user/types";
 import { ChatSuggestion } from "../../features/chat/types";
+import ChatWindow from "../chat/ChatWindow";
 
 type Props = {
 	isNewChat: boolean;
 	endpoint: string;
-	currentUser: CurrentUser;
 	suggestions: ChatSuggestion[];
 };
 
-const AIChat = ({
-	currentUser,
-	endpoint,
-	suggestions = [],
-	isNewChat,
-}: Props) => {
-	console.log("[USER]:", { currentUser, isNewChat });
+const AIChat = ({ endpoint, suggestions = [] }: Props) => {
 	return (
 		<div className={styles.AIChat}>
 			<ChatWindow endpoint={endpoint} quickPrompts={suggestions} />

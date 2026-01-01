@@ -3,6 +3,7 @@ import {
 	differenceInMinutes,
 	differenceInSeconds,
 	intervalToDuration,
+	isToday,
 	parse,
 	secondsToMinutes,
 } from "date-fns";
@@ -31,7 +32,8 @@ import {
 import { HistoryOfType } from "../features/history/types";
 import { fetchWithAuth } from "./utils_requests";
 import { milesToPace, milesToSteps } from "./utils_steps";
-import { LocalStorage } from "./utils_storage";
+import { JsonValue, LocalStorage } from "./utils_storage";
+import { TimerStatus } from "../hooks/usePersistentTimer";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
 
@@ -934,6 +936,21 @@ const prepareLogWorkout = (userID: string, values: LogWorkoutValues) => {
 	return newValues;
 };
 
+export interface ActiveWorkoutCache {
+	startedAt: number;
+	startTime: string;
+	status: TimerStatus;
+	intervalInSecs: number;
+	endedAt: number;
+	endTime: string;
+	pausedAt: number | null;
+	pauseTime: string | null;
+	resumedAt: number | null;
+	resumeTime: string | null;
+	totalSecs: number;
+	totalLength: string;
+}
+
 export interface EndedWorkoutValues {
 	workoutID: number;
 	activityType: Activity | string;
@@ -1055,16 +1072,18 @@ const prepareEndedWorkout = (
 	}
 };
 
-const getElapsedWorkoutTime = (cacheKey: string = "TIMER_KEY") => {
-	const cache = new LocalStorage();
-	const timer = cache.get(cacheKey);
+const getElapsedWorkoutTime = (
+	cacheKey: string = "TIMER_KEY"
+): { mins: number; secs: number } => {
+	const cache = new LocalStorage<ActiveWorkoutCache>();
+	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
 
 	if (!timer) {
 		return { mins: 0, secs: 0 };
 	} else {
 		const elapsed = intervalToDuration({
-			start: timer.startedAt as number,
-			end: Date.now() as number,
+			start: timer.startedAt,
+			end: Date.now(),
 		});
 		const { minutes: mins, seconds: secs } = elapsed;
 		return {
@@ -1155,6 +1174,7 @@ function minsToTimerHHMMSSms(decimalMins: number): string {
 }
 
 export type DurationTarget =
+	| "h&m"
 	| "HH:mm:ss"
 	| "HH:mm:ss.mss"
 	| "mm:ss"
@@ -1187,10 +1207,75 @@ const durationTo = (durInMins: number, to: DurationTarget = "mm:ss") => {
 		case "mm:ss": {
 			return `${mm}:${ss}`;
 		}
+		// 3h 27m
+		case "h&m": {
+			return `${hours}h ${minutes}m`;
+		}
 
 		default:
 			throw new Error(`Unrecognized duration target: ${to}`);
 	}
+};
+
+// ACTIVE WORKOUT UTILS //
+const ACTIVE_KEY = "ACTIVE";
+const TIMER_KEY = "TIMER_KEY";
+
+// Checks local storage for an 'in-progress' workout (eg active workout)
+const checkForActiveWorkout = (
+	workoutKey: string = ACTIVE_KEY
+): TodaysWorkout | null => {
+	const storage = new LocalStorage<TodaysWorkout>();
+	const workout = storage.get(workoutKey) || null;
+
+	if (!workout) return null;
+
+	return workout as TodaysWorkout;
+};
+
+const setActiveWorkout = (
+	activeWorkout: TodaysWorkout,
+	workoutKey: string = ACTIVE_KEY
+) => {
+	if (!activeWorkout) return;
+	const storage = new LocalStorage<TodaysWorkout>();
+	storage.set(workoutKey, activeWorkout as JsonValue<TodaysWorkout>);
+};
+
+const checkForActiveWorkoutTimer = () => {
+	const storage = new LocalStorage<ActiveWorkoutCache>();
+	const timer = storage.get(TIMER_KEY);
+
+	if (!timer) return null;
+
+	return timer as ActiveWorkoutCache;
+};
+
+const checkForInProgressWorkout = () => {
+	const active = checkForActiveWorkout();
+	const timer = checkForActiveWorkoutTimer();
+
+	if (!active) {
+		return {
+			workout: null,
+			timer: null,
+		};
+	} else {
+		return {
+			workout: active as TodaysWorkout,
+			timer: timer as ActiveWorkoutCache,
+		};
+	}
+};
+
+const hasActiveWorkout = () => {
+	const details = checkForInProgressWorkout();
+
+	if (details.workout && details.timer) {
+		const wasToday = isToday(details.timer.startTime);
+		return wasToday;
+	}
+	return false;
 };
 
 export {
@@ -1212,6 +1297,13 @@ export {
 	createNewWorkout,
 	editWorkout,
 	// utils
+	// ACTIVE WORKOUT UTILS //
+	setActiveWorkout,
+	checkForActiveWorkout,
+	checkForActiveWorkoutTimer,
+	checkForInProgressWorkout,
+	hasActiveWorkout,
+	// LOG WORKOUT UTILS //
 	prepareLogWorkout,
 	prepareMarkAsDoneBody,
 	prepareNewWalk,

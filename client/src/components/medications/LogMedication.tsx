@@ -7,7 +7,7 @@ import { PillSummary } from "../../features/medications/types";
 import { formatDate, formatTime } from "../../utils/utils_dates";
 import { selectCurrentUser } from "../../features/user/userSlice";
 import { MedLogBody, prepareMedLog } from "../../utils/utils_medications";
-import { useLogMedicationMutation } from "../../features/medications/medicationsApi";
+import { useLogMedication } from "../../hooks/useLogMedication";
 import CounterInput from "../shared/CounterInput";
 import TimePicker from "../shared/TimePicker";
 import DatePicker from "../shared/DatePicker";
@@ -65,11 +65,21 @@ const SkippedBadge = () => {
 type ActionBtnProps = {
 	onClick: () => void;
 	children?: ReactNode;
+	isDisabled?: boolean;
 };
 
-const TakeButton = ({ onClick, children }: ActionBtnProps) => {
+const TakeButton = ({
+	onClick,
+	children,
+	isDisabled = false,
+}: ActionBtnProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.TakeButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			className={styles.TakeButton}
+			disabled={isDisabled}
+		>
 			<svg className={styles.TakeButton_icon}>
 				<use xlinkHref={`${sprite}#icon-checkmark`}></use>
 			</svg>
@@ -77,9 +87,18 @@ const TakeButton = ({ onClick, children }: ActionBtnProps) => {
 		</button>
 	);
 };
-const SkipButton = ({ onClick, children }: ActionBtnProps) => {
+const SkipButton = ({
+	onClick,
+	children,
+	isDisabled = false,
+}: ActionBtnProps) => {
 	return (
-		<button type="button" onClick={onClick} className={styles.SkipButton}>
+		<button
+			type="button"
+			onClick={onClick}
+			className={styles.SkipButton}
+			disabled={isDisabled}
+		>
 			<svg className={styles.SkipButton_icon}>
 				<use xlinkHref={`${sprite}#icon-multiply`}></use>
 			</svg>
@@ -220,8 +239,8 @@ const LogMedication = ({
 		loggedAt: formatTime(new Date(), "long"),
 		loggedDate: formatDate(selectedDate || new Date(), "long"),
 	});
+	const { logMed, isSubmitting } = useLogMedication();
 	const currentUser: CurrentUser = useSelector(selectCurrentUser);
-	const [logMed] = useLogMedicationMutation();
 
 	const handleTime = (name: string, value: string) => {
 		setValues({
@@ -317,8 +336,10 @@ const LogMedication = ({
 				/>
 			</div>
 			<div className={styles.LogMedication_actions}>
-				<SkipButton onClick={skipMed} />
-				<TakeButton onClick={takeMed}>Take {values.dose}</TakeButton>
+				<SkipButton onClick={skipMed} isDisabled={isSubmitting} />
+				<TakeButton onClick={takeMed} isDisabled={isSubmitting}>
+					Take {values.dose}
+				</TakeButton>
 			</div>
 		</div>
 	);
