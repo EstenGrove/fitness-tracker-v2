@@ -68,7 +68,7 @@ const DateControls = ({ currentDate, onPrev, onNext }: DateControlProps) => {
 };
 
 const ScheduledWorkoutsCalendar = () => {
-	const { data, isLoading } = useScheduledWorkouts();
+	const { data } = useScheduledWorkouts();
 	const { currentDate, onPrev, onNext } = useDateCarousel();
 	const { grouped } = data;
 	const scheduledWorkouts = useMemo(() => {

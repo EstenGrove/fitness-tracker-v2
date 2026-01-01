@@ -1174,6 +1174,7 @@ function minsToTimerHHMMSSms(decimalMins: number): string {
 }
 
 export type DurationTarget =
+	| "h&m"
 	| "HH:mm:ss"
 	| "HH:mm:ss.mss"
 	| "mm:ss"
@@ -1205,6 +1206,10 @@ const durationTo = (durInMins: number, to: DurationTarget = "mm:ss") => {
 		}
 		case "mm:ss": {
 			return `${mm}:${ss}`;
+		}
+		// 3h 27m
+		case "h&m": {
+			return `${hours}h ${minutes}m`;
 		}
 
 		default:

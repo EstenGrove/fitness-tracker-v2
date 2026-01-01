@@ -217,6 +217,10 @@ const API_ENDPOINTS = {
 		getHabitStreaks: "/streaks/getHabitStreaks",
 		getHabitStreakDetails: "/streaks/getHabitStreakDetails",
 	},
+	recaps: {
+		getWeeklyRecap: "/recap/getWeeklyRecap",
+		getRecapForRange: "/recap/getRecapForRange",
+	},
 };
 
 export const {
@@ -237,6 +241,7 @@ export const {
 	recentActivity: recentActivityApis,
 	summary: summaryApis,
 	streaks: streakApis,
+	recaps: recapApis,
 } = API_ENDPOINTS;
 
 export {

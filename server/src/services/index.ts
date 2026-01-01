@@ -12,6 +12,7 @@ import { SettingsService } from "./SettingsService.js";
 import { ChatDataService } from "./ChatDataService.js";
 import { WorkoutsService } from "./WorkoutsService.js";
 import { DashboardService } from "./DashboardService.js";
+import { WeeklyRecapService } from "./WeeklyRecapService.js";
 import { MedicationsService } from "./MedicationsService.js";
 import { RecentActivityService } from "./RecentActivityService.js";
 import { ChatSuggestionsService } from "./ChatSuggestionsService.js";
@@ -29,6 +30,7 @@ const summaryService = new SummaryService(db);
 const workoutsService = new WorkoutsService(db);
 const settingsService = new SettingsService(db);
 const dashboardService = new DashboardService(db);
+const weeklyRecapService = new WeeklyRecapService(db);
 const medicationsService = new MedicationsService(db);
 const recentActivityService = new RecentActivityService(db);
 const chatSuggestionsService = new ChatSuggestionsService(db);
@@ -47,6 +49,7 @@ const allServices = {
 	settings: settingsService,
 	workouts: workoutsService,
 	dashboard: dashboardService,
+	weeklyRecap: weeklyRecapService,
 	medications: medicationsService,
 	recentActivity: recentActivityService,
 	chatSuggestions: chatSuggestionsService,
@@ -59,6 +62,7 @@ export {
 	chatSuggestionsService,
 	recentActivityService,
 	medicationsService,
+	weeklyRecapService,
 	dashboardService,
 	workoutsService,
 	settingsService,

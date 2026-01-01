@@ -1,0 +1,16 @@
+.CardHeader {
+	width: 100%;
+	padding: 1rem 2rem;
+	height: 10rem;
+	border: 1px solid grey;
+}
+
+.CardHeader h2 {
+	font-size: 2.5rem;
+	color: $text1;
+}
+.CardHeader h6 {
+	font-size: 1.6rem;
+	color: $text3;
+	font-weight: 500;
+}
