@@ -1,0 +1,43 @@
+import styles from "../../css/weekly-recap/RecapStrengthCard.module.scss";
+import { WeeklyRecapForActivity } from "../../features/recaps/types";
+import { durationTo } from "../../utils/utils_workouts";
+import RecapCard from "./RecapCard";
+
+type Props = {
+	isActive: boolean;
+	data: WeeklyRecapForActivity;
+};
+
+const RecapStrengthCard = ({ data, isActive = false }: Props) => {
+	const { totalMins, totalWorkouts, longestMins } = data;
+	const duration = durationTo(totalMins, "h&m");
+	const longest = durationTo(longestMins, "h&m");
+
+	const header = (
+		<>
+			<h2 className={styles.Title}>
+				You did <b>{duration}</b> of strength training across{" "}
+				<b>{totalWorkouts} total workouts</b>.
+			</h2>
+			<h6 className={styles.Desc}>Your longest session was {longest}.</h6>
+		</>
+	);
+	const body = (
+		<>
+			{/*  */}
+			{/*  */}
+		</>
+	);
+
+	return (
+		<RecapCard
+			isActive={isActive}
+			header={header}
+			body={body}
+			icon="dumbbell2"
+			color="var(--accent-purple)"
+		/>
+	);
+};
+
+export default RecapStrengthCard;

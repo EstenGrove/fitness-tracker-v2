@@ -5,6 +5,9 @@ import { useRef, useState } from "react";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { LocalStorage } from "../../utils/utils_storage";
 import { NavLink } from "react-router";
+import WeeklyRecap from "../weekly-recap/WeeklyRecap";
+import { subDays } from "date-fns";
+import { formatDate } from "../../utils/utils_dates";
 
 const THEME_KEY = "APP_THEME";
 const storage = new LocalStorage();
@@ -101,11 +104,27 @@ const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 	);
 };
 
+const getDateRange = (lastXDays: number = 7) => {
+	const today = new Date();
+	const start = subDays(today, lastXDays);
+	const end = today;
+
+	return {
+		startDate: formatDate(start, "db"),
+		endDate: formatDate(end, "db"),
+	};
+};
+
 const TopNav = ({ onLogout }: Props) => {
+	const dateRange = getDateRange();
 	const [showSidePanel, setShowSidePanel] = useState<boolean>(false);
+	const [showWeeklyRecap, setShowWeeklyRecap] = useState<boolean>(false);
 
 	const openPanel = () => setShowSidePanel(true);
 	const closePanel = () => setShowSidePanel(false);
+
+	const openRecap = () => setShowWeeklyRecap(true);
+	const closeRecap = () => setShowWeeklyRecap(false);
 
 	const selectLink = () => {
 		closePanel();
@@ -117,6 +136,15 @@ const TopNav = ({ onLogout }: Props) => {
 				<li className={styles.TopNav_list_item} onClick={openPanel}>
 					<svg className={styles.TopNav_list_item_icon}>
 						<use xlinkHref={`${sprite2}#icon-sidebar`}></use>
+					</svg>
+				</li>
+				<li
+					className={styles.TopNav_list_item}
+					onClick={openRecap}
+					data-recap="true"
+				>
+					<svg className={styles.TopNav_list_item_icon}>
+						<use xlinkHref={`${sprite}#icon-delivery-time`}></use>
 					</svg>
 				</li>
 				<li className={styles.TopNav_list_item} onClick={toggleTheme}>
@@ -131,6 +159,10 @@ const TopNav = ({ onLogout }: Props) => {
 
 			{showSidePanel && (
 				<SidePanel closePanel={closePanel} onSelect={selectLink} />
+			)}
+
+			{showWeeklyRecap && (
+				<WeeklyRecap onClose={closeRecap} dateRange={dateRange} />
 			)}
 		</nav>
 	);

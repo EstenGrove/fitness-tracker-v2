@@ -1,0 +1,14 @@
+.Title {
+	@include recapTitle();
+
+	& > b {
+		color: $accentPurple;
+	}
+}
+.Desc {
+	@include recapDesc();
+
+	& > b {
+		color: $accentPurple;
+	}
+}

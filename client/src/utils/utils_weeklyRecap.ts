@@ -5,13 +5,14 @@ import {
 	WeeklyRecapCompleted,
 	WeeklyRecapForActivity,
 	WeeklyRecapForWalkActivity,
+	WeeklyRecaps,
 } from "../features/recaps/types";
 import { AsyncResponse, RangeParams } from "../features/types";
 import { currentEnv, recapApis } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
 import { durationTo } from "./utils_workouts";
 
-export type WeeklyRecapResp = AsyncResponse<WeeklyRecap>;
+export type WeeklyRecapResp = AsyncResponse<WeeklyRecaps>;
 export type RecapForRangeResp = AsyncResponse<RecapForRange>;
 
 const getWeeklyRecap = async (
@@ -46,8 +47,31 @@ const getRecapForRange = async (
 		return error;
 	}
 };
+const getWeeklyRecaps = async (
+	userID: string,
+	range: RangeParams
+): WeeklyRecapResp => {
+	let url = currentEnv.base + recapApis.getWeeklyRecaps;
+	url += "?" + new URLSearchParams({ userID });
+	url += "&" + new URLSearchParams({ ...range });
+
+	try {
+		const request = await fetchWithAuth(url);
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
 
 // WEEKLY RECAP CARD GENERATOR UTILS //
+
+const getRangeDesc = (dateRange: RangeParams) => {
+	const start = format(dateRange.startDate, "MMMM dd");
+	const end = format(dateRange.endDate, "dd, yyyy");
+
+	return `${start} - ${end}`;
+};
 
 const getWalkCardDetails = (recapForActivity: WeeklyRecapForWalkActivity) => {
 	const {
@@ -111,4 +135,4 @@ const getWeeklyRecapCards = (
 	const end = format(dateRange.endDate, "dd, yyyy");
 };
 
-export { getWeeklyRecap, getRecapForRange };
+export { getWeeklyRecap, getWeeklyRecaps, getRecapForRange, getRangeDesc };

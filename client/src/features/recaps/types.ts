@@ -1,4 +1,5 @@
 import { Activity } from "../shared/types";
+import { CurrentStreak, LongestStreak } from "../streaks/types";
 import { DateRange } from "../types";
 
 export interface WeeklyRecapBreakdown {
@@ -34,7 +35,13 @@ export interface WeeklyRecapForWalkActivity extends WeeklyRecapForActivity {
 	longestSteps: number;
 }
 
+export interface RecapStreaks {
+	current: CurrentStreak;
+	longest: LongestStreak;
+}
+
 export interface WeeklyRecap {
+	streak: RecapStreaks;
 	recap: {
 		breakdown: WeeklyRecapBreakdown;
 		completed: WeeklyRecapCompleted;
@@ -48,3 +55,11 @@ export interface WeeklyRecap {
 export interface RecapForRange extends WeeklyRecap {
 	range: DateRange;
 }
+
+export type RecapCardData<K extends keyof WeeklyRecap> = Pick<WeeklyRecap, K>;
+
+export type WeeklyRecaps = {
+	currentWeek: WeeklyRecap;
+	oneWeekAgo: WeeklyRecap;
+	twoWeeksAgo: WeeklyRecap;
+};

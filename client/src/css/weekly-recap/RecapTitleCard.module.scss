@@ -1,0 +1,19 @@
+.Title {
+	font-size: 3.5rem;
+	color: $text1;
+	// text-overflow: clip;
+	text-wrap: wrap;
+	white-space: normal;
+	overflow-wrap: break-word;
+	min-width: 0;
+}
+.Desc {
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: $text3;
+	// text-overflow: clip;
+	text-wrap: wrap;
+	white-space: normal;
+	overflow-wrap: break-word;
+	min-width: 0;
+}

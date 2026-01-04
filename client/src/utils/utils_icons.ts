@@ -1,7 +1,7 @@
 export type IconSize = "XSM" | "SM" | "MD" | "LG" | "XLG" | "XXLG";
 
 const iconsMap = {
-	// sprite1
+	// main.svg
 	1: {
 		effort: "effort",
 		exercise: "running",

@@ -46,3 +46,9 @@ export interface WeeklyRecap {
 export interface RecapForRange extends WeeklyRecap {
 	range: DateRange;
 }
+
+export type WeeklyRecaps = {
+	currentWeek: WeeklyRecap;
+	oneWeekAgo: WeeklyRecap;
+	twoWeeksAgo: WeeklyRecap;
+};

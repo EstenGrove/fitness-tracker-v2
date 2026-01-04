@@ -219,6 +219,7 @@ const API_ENDPOINTS = {
 	},
 	recaps: {
 		getWeeklyRecap: "/recap/getWeeklyRecap",
+		getWeeklyRecaps: "/recap/getWeeklyRecaps",
 		getRecapForRange: "/recap/getRecapForRange",
 	},
 };
