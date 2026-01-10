@@ -24,6 +24,7 @@ import type { HabitWeekResp } from "../services/HabitsService.js";
 import { getHabitHistorySummary } from "../modules/habits/getHabitHistorySummary.js";
 import { getHabitHistoryForRange } from "../modules/habits/getHabitHistoryForRange.js";
 import { changeHabitGoal } from "../modules/habits/changeHabitGoal.js";
+import { logHabitOverride } from "../modules/habits/logHabitOverride.js";
 
 const app = new Hono();
 
@@ -162,6 +163,28 @@ app.post("/logHabitsBatched", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		newLogs: habitLogs,
+	});
+
+	return ctx.json(resp);
+});
+
+app.post("/logHabitManually", async (ctx: Context) => {
+	const body = await ctx.req.json<{ newLog: HabitLogValues }>();
+	const newLog: HabitLogValues = body.newLog;
+	const todaysLogs = (await logHabitOverride(newLog)) as HabitLog[];
+
+	console.log("newLog", newLog);
+	console.log("todaysLogs", todaysLogs);
+
+	if (todaysLogs instanceof Error) {
+		const errResp = getResponseError(todaysLogs, {
+			newLogs: [],
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		newLogs: todaysLogs,
 	});
 
 	return ctx.json(resp);

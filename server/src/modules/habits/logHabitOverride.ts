@@ -1,0 +1,18 @@
+import { habitsService } from "../../services/index.js";
+import { normalizeHabitLog } from "./getUserHabits.js";
+import type { HabitLogDB, HabitLogValues } from "./types.js";
+
+const logHabitOverride = async (newLog: HabitLogValues) => {
+	const results = (await habitsService.logHabitOverride(
+		newLog
+	)) as HabitLogDB[];
+
+	if (results instanceof Error) {
+		return results;
+	}
+	const newLogs = results?.map(normalizeHabitLog);
+
+	return newLogs;
+};
+
+export { logHabitOverride };

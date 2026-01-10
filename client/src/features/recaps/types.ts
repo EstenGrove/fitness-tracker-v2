@@ -1,6 +1,6 @@
 import { Activity } from "../shared/types";
 import { CurrentStreak, LongestStreak } from "../streaks/types";
-import { DateRange } from "../types";
+import { DateRange, RangeParams } from "../types";
 
 export interface WeeklyRecapBreakdown {
 	totalMins: number;
@@ -40,16 +40,19 @@ export interface RecapStreaks {
 	longest: LongestStreak;
 }
 
+export type WeeklyRecapActivities = {
+	[key in Activity]: WeeklyRecapForActivity | WeeklyRecapForWalkActivity;
+};
+
 export interface WeeklyRecap {
+	dateRange: RangeParams;
 	streak: RecapStreaks;
 	recap: {
 		breakdown: WeeklyRecapBreakdown;
 		completed: WeeklyRecapCompleted;
 		topActivities: TopActivities;
 	};
-	activities: {
-		[key in Activity]: WeeklyRecapForActivity | WeeklyRecapForWalkActivity;
-	};
+	activities: WeeklyRecapActivities;
 }
 
 export interface RecapForRange extends WeeklyRecap {
@@ -63,3 +66,11 @@ export type WeeklyRecaps = {
 	oneWeekAgo: WeeklyRecap;
 	twoWeeksAgo: WeeklyRecap;
 };
+
+// Progress bar - data viz shape
+export interface RecapBar {
+	when: string; // 'Last Week' or '2 weeks ago' etc
+	what: string; // '7.2 mi' or '1h 38m' etc
+	value: number;
+	mins: number;
+}

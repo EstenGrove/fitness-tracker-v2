@@ -169,6 +169,7 @@ const API_ENDPOINTS = {
 	},
 	habits: {
 		logHabit: "/habits/logHabit",
+		logHabitManually: "/habits/logHabitManually",
 		getHabits: "/habits/getHabits",
 		getHabitLogs: "/habits/getHabitLogs",
 		logHabitsBatched: "/habits/logHabitsBatched",

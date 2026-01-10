@@ -1,15 +1,20 @@
 import styles from "../../css/weekly-recap/RecapStrengthCard.module.scss";
-import { WeeklyRecapForActivity } from "../../features/recaps/types";
+import {
+	WeeklyRecapForActivity,
+	WeeklyRecaps,
+} from "../../features/recaps/types";
 import { durationTo } from "../../utils/utils_workouts";
 import RecapCard from "./RecapCard";
 
 type Props = {
 	isActive: boolean;
-	data: WeeklyRecapForActivity;
+	data: WeeklyRecaps;
 };
 
 const RecapStrengthCard = ({ data, isActive = false }: Props) => {
-	const { totalMins, totalWorkouts, longestMins } = data;
+	const { activities } = data.currentWeek;
+	const { totalMins, totalWorkouts, longestMins } =
+		activities.Strength as WeeklyRecapForActivity;
 	const duration = durationTo(totalMins, "h&m");
 	const longest = durationTo(longestMins, "h&m");
 

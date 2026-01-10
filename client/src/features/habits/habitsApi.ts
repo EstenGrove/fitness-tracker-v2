@@ -14,6 +14,7 @@ import {
 	HabitHistoryByRange,
 	HabitHistoryByRangeParams,
 	logHabit,
+	logHabitOverride,
 	NewHabitGoalData,
 	NewHabitGoalParams,
 	NewHabitParams,
@@ -124,6 +125,18 @@ export const habitsApi = createApi({
 			},
 			invalidatesTags: ["HabitCards", "HabitLogs", "HabitDetails"],
 		}),
+		// This function allows setting the final, total value for a given date
+		// ...the backend will calculate how to do that based off whether logs exist for that date
+		logHabitOverride: builder.mutation({
+			queryFn: async (params) => {
+				const response = (await logHabitOverride(params)) as AwaitedResponse<{
+					newLogs: HabitLog[];
+				}>;
+				const data = response.Data as { newLogs: HabitLog[] };
+				return { data: data.newLogs };
+			},
+			invalidatesTags: ["HabitCards", "HabitLogs", "HabitDetails"],
+		}),
 		getHabitHistory: builder.query<HabitHistory, HabitHistoryParams>({
 			queryFn: async (params) => {
 				const { userID, habitID, lastXDays = 60 } = params;
@@ -205,6 +218,7 @@ export const {
 	useGetHabitHistoryQuery,
 	useDeleteHabitMutation,
 	useChangeHabitGoalMutation,
+	useLogHabitOverrideMutation,
 	useGetHabitHistorySummaryQuery,
 	useGetHabitHistoryForRangeQuery,
 	useLazyGetHabitHistoryForRangeQuery,

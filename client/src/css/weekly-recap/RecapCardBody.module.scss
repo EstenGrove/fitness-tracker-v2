@@ -1,6 +1,12 @@
 .RecapCardBody {
 	width: 100%;
 	height: 100%;
-	padding: 1rem 2rem;
-	// border: 1px solid blue;
+	min-height: 55dvh;
+	padding: 1rem;
+	padding-bottom: 5rem;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-end;
+	margin-top: auto;
+	// border: 1px solid red;
 }

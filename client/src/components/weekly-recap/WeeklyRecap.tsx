@@ -4,6 +4,7 @@ import { subDays } from "date-fns";
 import {
 	WeeklyRecap as IWeeklyRecap,
 	RecapCardData,
+	WeeklyRecaps,
 } from "../../features/recaps/types";
 import { useSelector } from "react-redux";
 import { RangeParams } from "../../features/types";
@@ -23,6 +24,7 @@ import RecapStrengthCard from "./RecapStrengthCard";
 import RecapCompletedCard from "./RecapCompletedCard";
 import RecapCardIndicators from "./RecapCardIndicators";
 import RecapTopActivitiesCard from "./RecapTopActivitiesCard";
+import RecapActivitiesCard from "./RecapActivitiesCard";
 
 type Props = {
 	onClose: () => void;
@@ -67,7 +69,7 @@ const getTopActivityCards = (data: IWeeklyRecap) => {
 	return cards;
 };
 
-const getCards = (data: IWeeklyRecap) => {
+const getCards = (data: WeeklyRecaps) => {
 	const titleCard = {
 		id: 0,
 		type: "Title",
@@ -76,25 +78,37 @@ const getCards = (data: IWeeklyRecap) => {
 	const completedCard = {
 		id: 1,
 		type: "Completed",
-		data: data.recap.completed,
+		data: data,
 	};
 	const streakCard = {
 		id: 2,
 		type: "Streak",
-		data: data.streak,
+		data: data,
 	};
 	const stepsCard = {
 		id: 3,
 		type: "Steps",
-		data: data.activities.Walk,
+		data: data,
 	};
 	const strengthCard = {
 		id: 4,
 		type: "Strength",
-		data: data.activities.Strength,
+		data: data,
+	};
+	const activityCard = {
+		id: 5,
+		type: "Activity",
+		data: data,
 	};
 
-	return [titleCard, completedCard, streakCard, stepsCard, strengthCard];
+	return [
+		titleCard,
+		completedCard,
+		streakCard,
+		stepsCard,
+		strengthCard,
+		activityCard,
+	];
 };
 
 const getTitle = (currentUser: CurrentUser) => {
@@ -108,6 +122,7 @@ type CardType =
 	| "Steps"
 	| "Strength"
 	| "Top"
+	| "Activity"
 	| "Standard";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CardsMap = Record<CardType, React.ComponentType<any>>;
@@ -119,6 +134,7 @@ const cardsMap: CardsMap = {
 	Steps: RecapStepsCard,
 	Strength: RecapStrengthCard,
 	Top: RecapTopActivitiesCard,
+	Activity: RecapActivitiesCard,
 };
 
 type TapZoneProps = {
@@ -166,8 +182,7 @@ const TapZones = ({ onPrev, onNext }: TapZoneProps) => {
 };
 
 const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
-	const { data: allData } = useGetWeeklyRecaps(dateRange);
-	const data = allData?.currentWeek;
+	const { data } = useGetWeeklyRecaps(dateRange);
 	const currentUser = useSelector(selectCurrentUser);
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const [currentStep, setCurrentStep] = useState<number>(0);
@@ -176,7 +191,6 @@ const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
 	const dates = getRangeDesc(dateRange);
 	const title = getTitle(currentUser);
 	const showTitleInfo = currentStep > 0;
-	const hasData = allData && allData?.currentWeek;
 
 	const cards = useMemo(() => {
 		if (!data) return [];
@@ -214,12 +228,12 @@ const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
 
 	const onTapPrev = () => {
 		const prev = currentStep - 1;
-		const card = prev <= 0 ? 0 : prev;
+		const card = Math.max(prev, 0);
 		goToCard(card);
 	};
 	const onTapNext = () => {
 		const next = currentStep + 1;
-		const card = next >= cards.length - 1 ? currentStep : next;
+		const card = Math.min(cards.length, next);
 		goToCard(card);
 	};
 
@@ -241,7 +255,7 @@ const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
 				ref={carouselRef}
 				onScroll={onScroll}
 			>
-				{cards &&
+				{cards?.length > 0 &&
 					cards.map((card, idx) => {
 						const Card = cardsMap[card.type as keyof CardsMap];
 						return (

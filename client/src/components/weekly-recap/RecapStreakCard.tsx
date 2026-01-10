@@ -1,4 +1,5 @@
 import styles from "../../css/weekly-recap/RecapStreakCard.module.scss";
+import { WeeklyRecaps } from "../../features/recaps/types";
 import { CurrentStreak, LongestStreak } from "../../features/streaks/types";
 import RecapCard from "./RecapCard";
 
@@ -9,7 +10,7 @@ interface StreakData {
 
 type Props = {
 	isActive: boolean;
-	data: StreakData;
+	data: WeeklyRecaps;
 };
 
 const hasStreak = (data: StreakData) => {
@@ -18,25 +19,10 @@ const hasStreak = (data: StreakData) => {
 	return current.currentStreak > 1;
 };
 
-const getTitle = (data: StreakData) => {
-	const { current, longest } = data;
-	const streakExists = hasStreak(data);
-
-	if (current.currentStreak > 1) {
-		return {
-			current: current.currentStreak,
-			longest: longest.longestStreak,
-		};
-	} else {
-		return {
-			current: current.currentStreak,
-		};
-	}
-};
-
 const RecapStreakCard = ({ isActive = false, data }: Props) => {
-	const { current, longest } = data;
-	const streakExists = hasStreak(data);
+	const { currentWeek } = data;
+	const { current, longest } = currentWeek.streak;
+	const streakExists = hasStreak(currentWeek.streak);
 	const header = (
 		<>
 			{streakExists && (

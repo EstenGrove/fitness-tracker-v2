@@ -264,6 +264,24 @@ const logHabit = async (log: HabitLogValues): LoggedHabitResp => {
 		return error;
 	}
 };
+// This works as an override, where u can set a value that's meant to be the final value
+// ...the backend will then calculate what the total logged prior & what the diff is to create the override value.
+const logHabitOverride = async (log: HabitLogValues): LoggedHabitResp => {
+	const url = currentEnv.base + habitApis.logHabitManually;
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				newLog: log,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
 const logHabitsBatched = async (userID: string, logs: HabitLogValues[]) => {
 	let url = currentEnv.base + habitApis.logHabitsBatched;
 	url += "?" + new URLSearchParams({ userID });
@@ -476,6 +494,7 @@ export {
 	fetchRecentHabitLogs,
 	fetchHabitHistoryForRange,
 	logHabit,
+	logHabitOverride,
 	logHabitsBatched,
 	saveHabitGoal,
 	deleteHabit,

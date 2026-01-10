@@ -1,16 +1,21 @@
 import styles from "../../css/weekly-recap/RecapStepsCard.module.scss";
-import { WeeklyRecapForWalkActivity } from "../../features/recaps/types";
+import {
+	WeeklyRecapForWalkActivity,
+	WeeklyRecaps,
+} from "../../features/recaps/types";
 import { durationTo } from "../../utils/utils_workouts";
 import { formatThousand } from "../../utils/utils_misc";
 import RecapCard from "./RecapCard";
 
 type Props = {
 	isActive: boolean;
-	data: WeeklyRecapForWalkActivity;
+	data: WeeklyRecaps;
 };
 
 const RecapStepsCard = ({ data, isActive = false }: Props) => {
-	const { totalMins, totalMiles, totalSteps, totalWorkouts } = data;
+	const { activities } = data.currentWeek;
+	const { totalMins, totalMiles, totalSteps, totalWorkouts } =
+		activities.Walk as WeeklyRecapForWalkActivity;
 	const duration = durationTo(totalMins, "h&m");
 	const miles = `${totalMiles.toFixed(2)} mi`;
 	const steps = formatThousand(totalSteps);

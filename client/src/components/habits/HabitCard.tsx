@@ -8,7 +8,7 @@ import {
 	habitIcons,
 	HabitModalType,
 } from "../../utils/utils_habits";
-import { addEllipsis } from "../../utils/utils_misc";
+import { addEllipsis, formatThousand } from "../../utils/utils_misc";
 import { formatDate } from "../../utils/utils_dates";
 import { useNavigate } from "react-router";
 import MenuDropdown from "../shared/MenuDropdown";
@@ -27,8 +27,17 @@ type TotalProps = {
 
 // type HabitStatus = 'On Track' | 'Exceeded Target' | 'Needs Reduction' | 'Over Target' | 'Eliminated' | 'Still Occurring' | 'Lapsed' | 'Maintained'
 
+const formatValue = (targetValue: number) => {
+	if (targetValue >= 1000) {
+		return formatThousand(targetValue);
+	} else {
+		return targetValue;
+	}
+};
+
 const Total = ({ loggedValue = 0, targetValue = 0, unit }: TotalProps) => {
 	const habitUnit = addEllipsis(unit, 10);
+	const value = formatValue(targetValue);
 	return (
 		<div className={styles.Total}>
 			<span className={styles.Total_logged}>
@@ -36,7 +45,7 @@ const Total = ({ loggedValue = 0, targetValue = 0, unit }: TotalProps) => {
 			</span>
 			<span className={styles.Total_slash}>/</span>
 			<span className={styles.Total_target}>
-				{targetValue} {habitUnit}
+				{value} {habitUnit}
 			</span>
 		</div>
 	);
