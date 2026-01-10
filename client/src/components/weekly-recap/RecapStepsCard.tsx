@@ -6,16 +6,22 @@ import {
 import { durationTo } from "../../utils/utils_workouts";
 import { formatThousand } from "../../utils/utils_misc";
 import RecapCard from "./RecapCard";
+import RecapProgressBars from "./RecapProgressBars";
+import { getRecapProgressBars } from "../../utils/utils_weeklyRecap";
+import RecapCardBody from "./RecapCardBody";
 
 type Props = {
 	isActive: boolean;
 	data: WeeklyRecaps;
 };
 
+const STEPS_COLOR = "var(--accent-green)";
+
 const RecapStepsCard = ({ data, isActive = false }: Props) => {
 	const { activities } = data.currentWeek;
 	const { totalMins, totalMiles, totalSteps, totalWorkouts } =
 		activities.Walk as WeeklyRecapForWalkActivity;
+	const recapBars = getRecapProgressBars(data, "Walk");
 	const duration = durationTo(totalMins, "h&m");
 	const miles = `${totalMiles.toFixed(2)} mi`;
 	const steps = formatThousand(totalSteps);
@@ -32,8 +38,13 @@ const RecapStepsCard = ({ data, isActive = false }: Props) => {
 	);
 	const body = (
 		<>
-			{/*  */}
-			{/*  */}
+			{isActive && (
+				<RecapProgressBars
+					key="STEPS_PROGRESS"
+					data={recapBars}
+					color={STEPS_COLOR}
+				/>
+			)}
 		</>
 	);
 
@@ -43,7 +54,7 @@ const RecapStepsCard = ({ data, isActive = false }: Props) => {
 			header={header}
 			body={body}
 			icon="steps"
-			color="var(--accent-green)"
+			color={STEPS_COLOR}
 		/>
 	);
 };

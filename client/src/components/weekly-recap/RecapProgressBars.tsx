@@ -1,7 +1,7 @@
 import styles from "../../css/weekly-recap/RecapProgressBars.module.scss";
 import { differenceInWeeks } from "date-fns";
 import { RecapBar } from "../../features/recaps/types";
-import { useLayoutEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { durationTo } from "../../utils/utils_workouts";
 
 type Props = {
@@ -40,12 +40,14 @@ type BarProps = {
 const gradient =
 	"linear-gradient(to right top, #007cff, #0071f8, #0065f0, #005ae8, #004ee0)";
 
-const getStyles = (isPrimary: boolean, color: string) => {
+const getStyles = (isPrimary: boolean, color: string | null) => {
 	if (isPrimary) {
+		const prop = !color
+			? { backgroundImage: gradient }
+			: { backgroundColor: color };
 		return {
 			width: `0%`,
-			backgroundImage: gradient,
-			backgroundColor: "none",
+			...prop,
 		};
 	} else {
 		return {
@@ -65,6 +67,13 @@ const getWhen = (when: string) => {
 	return dist + label;
 };
 
+const animCurves = {
+	bounce: "cubic-bezier(0.68, -0.55, 0.27, 1.55)",
+	splash: "cubic-bezier(0.68, -0.55, 0.27, 1.42)",
+	calm: "cubic-bezier(0.68, 0, 0.27, 1.2)",
+	smooth: "cubic-bezier(0.65, 0, 0.35, 1.05)",
+};
+
 const RecapBarItem = ({ data, color, value, isPrimary = false }: BarProps) => {
 	const [isMounted, setIsMounted] = useState<boolean>(false);
 	const { when, what, mins = 0 } = data;
@@ -73,11 +82,16 @@ const RecapBarItem = ({ data, color, value, isPrimary = false }: BarProps) => {
 	const whenLabel = getWhen(when);
 	const css = {
 		...baseCss,
-		width: isMounted ? `${value}%` : `0%`,
-	};
+		width: isMounted ? `${value}%` : "0%",
+		transition: `width .6s ${animCurves.splash}`, // ensure transition is here if not in CSS
+	} as CSSProperties;
 
-	useLayoutEffect(() => {
-		requestAnimationFrame(() => setIsMounted(true));
+	useEffect(() => {
+		const timeout = setTimeout(() => setIsMounted(true), 20); // very short delay
+		return () => {
+			clearTimeout(timeout);
+			setIsMounted(false);
+		};
 	}, []);
 
 	return (

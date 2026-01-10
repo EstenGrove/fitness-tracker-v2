@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import {
+	RecapBar,
 	RecapForRange,
 	WeeklyRecap,
 	WeeklyRecapCompleted,
@@ -11,6 +12,7 @@ import { AsyncResponse, RangeParams } from "../features/types";
 import { currentEnv, recapApis } from "./utils_env";
 import { fetchWithAuth } from "./utils_requests";
 import { durationTo } from "./utils_workouts";
+import { Activity } from "../features/shared/types";
 
 export type WeeklyRecapResp = AsyncResponse<WeeklyRecaps>;
 export type RecapForRangeResp = AsyncResponse<RecapForRange>;
@@ -71,6 +73,30 @@ const getRangeDesc = (dateRange: RangeParams) => {
 	const end = format(dateRange.endDate, "dd, yyyy");
 
 	return `${start} - ${end}`;
+};
+
+const getRecapProgressBars = (
+	data: WeeklyRecaps,
+	activityType: Activity
+): RecapBar[] => {
+	if (!data) return [];
+
+	const bars: RecapBar[] = [];
+
+	for (const key in data) {
+		const week = data[key as keyof WeeklyRecaps];
+		const activity = week.activities[activityType];
+		const total = activity.totalWorkouts;
+		const barEntry: RecapBar = {
+			when: week.dateRange.startDate,
+			what: `${total} workouts`,
+			value: total,
+			mins: activity.totalMins,
+		};
+		bars.push(barEntry);
+	}
+
+	return bars;
 };
 
 const getWalkCardDetails = (recapForActivity: WeeklyRecapForWalkActivity) => {
@@ -135,4 +161,10 @@ const getWeeklyRecapCards = (
 	const end = format(dateRange.endDate, "dd, yyyy");
 };
 
-export { getWeeklyRecap, getWeeklyRecaps, getRecapForRange, getRangeDesc };
+export {
+	getWeeklyRecap,
+	getWeeklyRecaps,
+	getRecapForRange,
+	getRangeDesc,
+	getRecapProgressBars,
+};

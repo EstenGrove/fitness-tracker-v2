@@ -6,7 +6,11 @@ type Props = {
 };
 
 const RecapCardBody = ({ children }: Props) => {
-	return <div className={styles.RecapCardBody}>{children}</div>;
+	return (
+		<div className={styles.RecapCardBody}>
+			<div className={styles.RecapCardBody_inner}>{children}</div>
+		</div>
+	);
 };
 
 export default RecapCardBody;

@@ -66,7 +66,13 @@ const RecapCompletedCard = ({ data, isActive = false }: Props) => {
 	);
 	const body = (
 		<>
-			<RecapProgressBars data={progressBars} color={COMPLETED_COLOR} />
+			{isActive && (
+				<RecapProgressBars
+					key="COMPLETED_PROGRESS"
+					data={progressBars}
+					color={COMPLETED_COLOR}
+				/>
+			)}
 		</>
 	);
 	if (!isActive) return null;

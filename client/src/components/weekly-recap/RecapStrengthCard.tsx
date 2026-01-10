@@ -3,13 +3,17 @@ import {
 	WeeklyRecapForActivity,
 	WeeklyRecaps,
 } from "../../features/recaps/types";
+import { getRecapProgressBars } from "../../utils/utils_weeklyRecap";
 import { durationTo } from "../../utils/utils_workouts";
 import RecapCard from "./RecapCard";
+import RecapProgressBars from "./RecapProgressBars";
 
 type Props = {
 	isActive: boolean;
 	data: WeeklyRecaps;
 };
+
+const STRENGTH_COLOR = "var(--accent-purple)";
 
 const RecapStrengthCard = ({ data, isActive = false }: Props) => {
 	const { activities } = data.currentWeek;
@@ -17,6 +21,7 @@ const RecapStrengthCard = ({ data, isActive = false }: Props) => {
 		activities.Strength as WeeklyRecapForActivity;
 	const duration = durationTo(totalMins, "h&m");
 	const longest = durationTo(longestMins, "h&m");
+	const recapBars = getRecapProgressBars(data, "Strength");
 
 	const header = (
 		<>
@@ -29,8 +34,13 @@ const RecapStrengthCard = ({ data, isActive = false }: Props) => {
 	);
 	const body = (
 		<>
-			{/*  */}
-			{/*  */}
+			{isActive && (
+				<RecapProgressBars
+					key="STEPS_PROGRESS"
+					data={recapBars}
+					color={STRENGTH_COLOR}
+				/>
+			)}
 		</>
 	);
 
@@ -40,7 +50,7 @@ const RecapStrengthCard = ({ data, isActive = false }: Props) => {
 			header={header}
 			body={body}
 			icon="dumbbell2"
-			color="var(--accent-purple)"
+			color={STRENGTH_COLOR}
 		/>
 	);
 };
