@@ -1,13 +1,21 @@
-import { ChangeEvent, FocusEvent, useEffect, useRef, useState } from "react";
+import {
+	ChangeEvent,
+	FocusEvent,
+	KeyboardEvent,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/habits/QuickLogHabit.module.scss";
-import { useOutsideClick } from "../../hooks/useOutsideClick";
-import { HabitCard, HabitLogValues } from "../../features/habits/types";
 import { logHabitsBatched } from "../../utils/utils_habits";
-import { DeferredFetch } from "../../hooks/useDeferredLogQueue";
-import { useBatchedHabitLogger } from "../../hooks/useBatchedHabitLogger";
 import { prepareTimestamp } from "../../utils/utils_dates";
+import { DeferredFetch } from "../../hooks/useDeferredLogQueue";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll";
+import { HabitCard, HabitLogValues } from "../../features/habits/types";
+import { useBatchedHabitLogger } from "../../hooks/useBatchedHabitLogger";
+import { useLogHabitOverrideMutation } from "../../features/habits/habitsApi";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 type Props = {
 	habit: HabitCard;
@@ -46,30 +54,60 @@ const AddButton = ({ onClick }: { onClick: () => void }) => {
 
 type DisplayProps = {
 	value: number;
+	originalValue: number;
 	onChange: (value: number) => void;
+	onSave: (newValue: number) => Promise<void>;
 };
 type DisplayInputProps = {
 	habitValue: number;
+	originalValue: number;
 	closeInput: () => void;
 	onChange: (value: number) => void;
+	onSave: (newValue: number) => Promise<void>;
 };
 
 const DisplayInput = ({
 	habitValue,
+	originalValue,
 	onChange,
+	onSave,
 	closeInput,
 }: DisplayInputProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
-	useOutsideClick(inputRef, closeInput);
+	useOutsideClick(inputRef, () => {
+		// closeInput();
+		// closeInput();
+	});
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target;
-
 		return onChange(Number(value));
 	};
 
 	const selectText = (e: FocusEvent<HTMLInputElement>) => {
 		e.currentTarget.select();
+	};
+
+	const handleSave = async () => {
+		const el = inputRef.current as HTMLInputElement;
+		const current = Number(el.value);
+		if (current !== originalValue) {
+			await onSave(Number(el.value));
+		}
+		closeInput();
+	};
+
+	const handleBlur = async () => {
+		console.log("BLURRED");
+
+		await handleSave();
+	};
+
+	const onEnter = (e: KeyboardEvent) => {
+		if (e.key === "Enter") {
+			const el = inputRef.current as HTMLInputElement;
+			onSave(Number(el.value));
+		}
 	};
 
 	// Focus & select text onMount
@@ -97,6 +135,8 @@ const DisplayInput = ({
 			value={habitValue}
 			onChange={handleChange}
 			onFocus={selectText}
+			onBlur={handleBlur}
+			onKeyDown={onEnter}
 			className={styles.DisplayInput}
 		/>
 	);
@@ -104,7 +144,12 @@ const DisplayInput = ({
 
 const habitStep = 1;
 
-const DisplayValue = ({ value = 0, onChange }: DisplayProps) => {
+const DisplayValue = ({
+	value = 0,
+	originalValue = 0,
+	onChange,
+	onSave,
+}: DisplayProps) => {
 	const [showInput, setShowInput] = useState<boolean>(false);
 
 	const openInput = () => {
@@ -112,6 +157,10 @@ const DisplayValue = ({ value = 0, onChange }: DisplayProps) => {
 	};
 	const closeInput = () => {
 		setShowInput(false);
+	};
+
+	const saveManual = async () => {
+		onSave(value);
 	};
 
 	return (
@@ -123,9 +172,11 @@ const DisplayValue = ({ value = 0, onChange }: DisplayProps) => {
 			)}
 			{showInput && (
 				<DisplayInput
+					originalValue={originalValue}
 					habitValue={value}
 					onChange={onChange}
 					closeInput={closeInput}
+					onSave={saveManual}
 				/>
 			)}
 		</div>
@@ -141,12 +192,19 @@ const QuickLogHabit = ({ habit }: Props) => {
 		650,
 		logHabitsBatched as DeferredFetch<HabitLogValues>
 	);
+	const [logManual] = useLogHabitOverrideMutation();
 
-	const handleEdit = (value: number) => {
+	const handleManualEdit = (value: number) => {
 		setTodaysValue(value);
+	};
 
-		const newLog = prepareHabitLog(value, habit);
-		queueLog(newLog);
+	const saveManualEdit = async (newValue: number) => {
+		const newLog = prepareHabitLog(newValue, habit);
+
+		console.log("newLog", newLog);
+		console.log("newValue", newValue);
+
+		await logManual(newLog);
 	};
 
 	const add = () => {
@@ -173,7 +231,12 @@ const QuickLogHabit = ({ habit }: Props) => {
 			<div className={styles.QuickLogHabit_display}>
 				<div className={styles.QuickLogHabit_display_main}>
 					<MinusButton onClick={minus} />
-					<DisplayValue value={todaysValue} onChange={handleEdit} />
+					<DisplayValue
+						value={todaysValue}
+						onChange={handleManualEdit}
+						onSave={saveManualEdit}
+						originalValue={habit.habitsLogged}
+					/>
 					<AddButton onClick={add} />
 				</div>
 				<div className={styles.QuickLogHabit_display_unitDesc}>

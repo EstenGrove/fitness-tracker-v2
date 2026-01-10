@@ -198,7 +198,6 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 
 	const handleEdit = (value: number) => {
 		setTodaysValue(value);
-		console.log("handleEdit	", value);
 
 		const newLog = prepareHabitLog(value, habit);
 		queueLog(newLog);
