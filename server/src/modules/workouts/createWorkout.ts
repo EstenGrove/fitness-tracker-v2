@@ -27,6 +27,8 @@ const createOneTimeWorkout = async (
 		payload
 	)) as NewWorkoutDataDB;
 
+	console.log("PG_FUNC Results:", results);
+
 	if (results instanceof Error) {
 		return results;
 	}
@@ -62,7 +64,7 @@ const createRecurringWorkout = async (
 const createWorkout = async (payload: CreateWorkoutParams): NewWorkoutResp => {
 	const { workout, schedule } = payload;
 	const frequency = schedule?.frequency ? schedule.frequency : "None";
-	const isRecurring = workout.isRecurring || frequency !== "None";
+	const isRecurring = workout?.isRecurring || frequency !== "None";
 
 	if (isRecurring) {
 		const results = await createRecurringWorkout(payload);

@@ -186,6 +186,10 @@ export type WorkoutOfTypeDB =
 	| WalkWorkoutDB
 	| ExerciseWorkoutDB;
 
+export interface CreateWorkoutBody {
+	userID: string;
+	newWorkout: CreateWorkoutParams;
+}
 export interface CreateWorkoutParams {
 	workout: {
 		userID: string;

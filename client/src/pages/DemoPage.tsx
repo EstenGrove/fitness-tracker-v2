@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+import styles from "../css/pages/DemoPage.module.scss";
 import AchievementBadge from "../components/achievements/AchievementBadge";
 import AchievementMedal from "../components/achievements/AchievementMedal";
 import PageContainer from "../components/layout/PageContainer";
@@ -5,80 +7,262 @@ import PageHeader from "../components/layout/PageHeader";
 import StreakMedal from "../components/streaks/StreakMedal";
 import StreakTierMedal from "../components/streaks/StreakTierMedal";
 import FlameIcon from "../components/ui/FlameIcon";
-import styles from "../css/pages/DemoPage.module.scss";
-import { useTypewriter } from "../hooks/useTypewriter";
+import css from "../css/pages/DemoPage.module.scss";
+import LayeredCircles from "../components/ui/LayeredCircles";
+import AnimatedCircles from "../components/ui/AnimatedCircles";
+import Circle from "../components/ui/Circle";
+import DriftingCircle from "../components/ui/DriftingCircle";
 
-const Flame = () => {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="-5 -10 110 135"
-			width="64"
-			height="64"
-			className={styles.Flame}
-		>
-			<defs>
-				<linearGradient id="outerFlameGradient" x1="0" y1="0" x2="0" y2="1">
-					{/* bright orage top */}
-					<stop offset="0%" stop-color="#ff6a00" />
-					{/* dark red bottom */}
-					<stop offset="100%" stop-color="#ff1a00" />
-				</linearGradient>
+const colorVariants = {
+	Pink: [
+		"rgba(255, 214, 229, 1)", // soft / background
+		"rgb(255, 102, 153)", // light
+		"rgb(255, 0, 102)", // base
+		"rgb(204, 0, 82)", // dark
+		"rgb(153, 0, 61)", // deep
+	],
 
-				<linearGradient id="innerFlameGradient" x1="0" y1="0" x2="0" y2="1">
-					{/* yellow top */}
-					<stop offset="0%" stop-color="#fff700" />
-					{/* orange bottom */}
-					<stop offset="100%" stop-color="#ff9900" />
-				</linearGradient>
-			</defs>
+	Purple: [
+		"rgb(229, 221, 252)",
+		"rgb(167, 139, 250)",
+		"rgb(124, 58, 237)",
+		"rgb(96, 44, 180)",
+		"rgb(68, 32, 128)",
+	],
 
-			<path
-				id="flame-outer"
-				d="M48.586 5.7578c0.10156-1.918 2.3242-3.0312 3.9375-1.8164 1.6172 1.2109 1.6172 1.2109 2.3242 1.8164 6.4648 5.3555 10.605 12.121 11.617 20.605 0.60547 5.5547 0 10.91-1.918 16.16-1.5156 4.2422 0.20312 8.5859 4.1406 10.305 2.8281 1.2109 5.5547 0.80859 7.9805-1.0117 0.91016-0.70703 1.5156-2.0195 2.0195-3.332s2.9297-1.8164 3.7383-0.20312c2.8281 5.7578 4.5469 11.816 4.5469 18.383 0 11.211-5.0508 19.797-13.84 26.465-2.5234 1.918-5.2539 3.332-8.2812 4.4453 4.3438-4.0391 6.3633-8.7891 5.4531-14.645-0.40234-2.9297-1.6172-5.3555-3.2305-7.5742-1.6172-2.2227-3.5352-1.3125-4.3438 0.50391-1.918 3.9375-7.0703 4.7461-10.305 1.8164-4.8477-4.4453-6.3633-10.102-5.8594-16.465 0.30469-3.0312 1.8164-7.5742 3.2305-11.312 1.4141-3.7383-1.6172-3.4336-3.1328-2.0195-8.082 7.6758-20.504 24.141-10.809 43.938 1.2109 2.5234 3.0312 4.7461 5.1523 6.668-0.80859-0.30469-1.5156-0.50391-2.3242-0.80859-7.6758-2.9297-14.039-7.5742-18.281-14.746-3.5352-5.9609-4.3438-12.426-3.6367-19.191 1.3125-11.617 6.5664-21.211 14.645-29.496 5.4531-5.5547 10.203-11.617 13.84-18.484 1.6172-3.1328 2.9297-6.3633 3.2305-9.8984z"
-				fill="url(#outerFlameGradient)"
-			/>
+	Blue: [
+		"rgb(219, 234, 254)",
+		"rgb(96, 165, 250)",
+		"rgb(0, 124, 255)",
+		"rgb(0, 95, 196)",
+		"rgb(0, 67, 138)",
+	],
 
-			<path
-				id="flame-inner"
-				d="M48 15c-5 6-5 12-3 18 2 6 6 4 8 0s3-12 0-18c-2-4-5-4-5-0z"
-				fill="url(#innerFlameGradient)"
-			/>
-		</svg>
-	);
+	Red: [
+		"rgb(254, 226, 226)",
+		"rgb(252, 165, 165)",
+		"#ff333d",
+		"rgb(220, 38, 38)",
+		"rgb(153, 27, 27)",
+	],
 };
 
-const Fire = () => {
-	return (
-		<div className={styles.Fire}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				version="1.1"
-				viewBox="-5.0 -10.0 110.0 135.0"
-			>
-				<path d="m48.586 5.7578c0.10156-1.918 2.3242-3.0312 3.9375-1.8164 1.6172 1.2109 1.6172 1.2109 2.3242 1.8164 6.4648 5.3555 10.605 12.121 11.617 20.605 0.60547 5.5547 0 10.91-1.918 16.16-1.5156 4.2422 0.20312 8.5859 4.1406 10.305 2.8281 1.2109 5.5547 0.80859 7.9805-1.0117 0.91016-0.70703 1.5156-2.0195 2.0195-3.332s2.9297-1.8164 3.7383-0.20312c2.8281 5.7578 4.5469 11.816 4.5469 18.383 0 11.211-5.0508 19.797-13.84 26.465-2.5234 1.918-5.2539 3.332-8.2812 4.4453 4.3438-4.0391 6.3633-8.7891 5.4531-14.645-0.40234-2.9297-1.6172-5.3555-3.2305-7.5742-1.6172-2.2227-3.5352-1.3125-4.3438 0.50391-1.918 3.9375-7.0703 4.7461-10.305 1.8164-4.8477-4.4453-6.3633-10.102-5.8594-16.465 0.30469-3.0312 1.8164-7.5742 3.2305-11.312 1.4141-3.7383-1.6172-3.4336-3.1328-2.0195-8.082 7.6758-20.504 24.141-10.809 43.938 1.2109 2.5234 3.0312 4.7461 5.1523 6.668-0.80859-0.30469-1.5156-0.50391-2.3242-0.80859-7.6758-2.9297-14.039-7.5742-18.281-14.746-3.5352-5.9609-4.3438-12.426-3.6367-19.191 1.3125-11.617 6.5664-21.211 14.645-29.496 5.4531-5.5547 10.203-11.617 13.84-18.484 1.6172-3.1328 2.9297-6.3633 3.2305-9.8984z" />
-			</svg>
-		</div>
-	);
+const ringVariants = {
+	Blue: "rgba(0, 124, 255, 0.6)",
+	Purple: "rgba(124, 58, 237, 0.6)",
+	Pink: "rgba(255, 0, 102, 0.6)",
+	Red: "rgba(255, 51, 61, 0.6)",
+};
+
+const translucentColorVariants = {
+	Pink: [
+		"rgba(255, 0, 102, 0.08)",
+		"rgba(255, 0, 102, 0.16)",
+		"rgba(255, 0, 102, 0.24)",
+	],
+
+	Purple: [
+		"rgba(124, 58, 237, 0.08)",
+		"rgba(124, 58, 237, 0.16)",
+		"rgba(124, 58, 237, 0.24)",
+	],
+
+	Blue: [
+		"rgba(0, 124, 255, 0.08)",
+		"rgba(0, 124, 255, 0.16)",
+		"rgba(0, 124, 255, 0.24)",
+	],
+
+	Red: [
+		"rgba(255, 51, 61, 0.08)",
+		"rgba(255, 51, 61, 0.16)",
+		"rgba(255, 51, 61, 0.24)",
+	],
+};
+
+const newColors = {
+	Purple: [
+		"rgb(229, 221, 252)",
+		"rgb(167, 139, 250)",
+		"rgb(124, 58, 237)",
+		"rgb(96, 44, 180)",
+		"rgb(68, 32, 128)",
+	],
+
+	Pink: [
+		"rgb(255, 214, 229)",
+		"rgb(255, 102, 153)",
+		"rgb(255, 0, 102)",
+		"rgb(204, 0, 82)",
+		"rgb(153, 0, 61)",
+	],
+
+	Blue: [
+		"rgb(219, 234, 254)",
+		"rgb(96, 165, 250)",
+		"#007cff",
+		"rgb(0, 95, 196)",
+		"rgb(0, 67, 138)",
+	],
+
+	Green: [
+		"rgb(204, 250, 241)",
+		"rgb(94, 234, 212)",
+		"#00e2bd",
+		"rgb(0, 178, 148)",
+		"rgb(0, 122, 101)",
+	],
+
+	Red: [
+		"rgb(254, 226, 226)",
+		"rgb(252, 165, 165)",
+		"#ff333d",
+		"rgb(220, 38, 38)",
+		"rgb(153, 27, 27)",
+	],
+
+	Yellow: [
+		"rgb(254, 249, 195)",
+		"rgb(253, 224, 71)",
+		"#f9f871",
+		"rgb(202, 138, 4)",
+		"rgb(133, 77, 14)",
+	],
+
+	Orange: [
+		"rgb(255, 237, 213)",
+		"rgb(253, 186, 116)",
+		"#ff7700",
+		"rgb(234, 88, 12)",
+		"rgb(154, 52, 18)",
+	],
+
+	/* ───────────────
+     NEW UNIQUE COLORS
+     ─────────────── */
+
+	Teal: [
+		"rgb(204, 251, 241)",
+		"rgb(94, 234, 212)",
+		"rgb(20, 184, 166)",
+		"rgb(13, 148, 136)",
+		"rgb(15, 118, 110)",
+	],
+
+	Cyan: [
+		"rgb(207, 250, 254)",
+		"rgb(103, 232, 249)",
+		"rgb(6, 182, 212)",
+		"rgb(8, 145, 178)",
+		"rgb(14, 116, 144)",
+	],
+
+	Indigo: [
+		"rgb(224, 231, 255)",
+		"rgb(165, 180, 252)",
+		"rgb(99, 102, 241)",
+		"rgb(67, 56, 202)",
+		"rgb(49, 46, 129)",
+	],
+
+	Lime: [
+		"rgb(236, 252, 203)",
+		"rgb(190, 242, 100)",
+		"rgb(132, 204, 22)",
+		"rgb(77, 124, 15)",
+		"rgb(54, 83, 20)",
+	],
+
+	Coral: [
+		"rgb(255, 228, 220)",
+		"rgb(255, 159, 140)",
+		"rgb(255, 99, 71)",
+		"rgb(220, 68, 50)",
+		"rgb(160, 45, 35)",
+	],
+
+	Slate: [
+		"rgb(241, 245, 249)",
+		"rgb(148, 163, 184)",
+		"rgb(100, 116, 139)",
+		"rgb(51, 65, 85)",
+		"rgb(30, 41, 59)",
+	],
 };
 
 const DemoPage = () => {
-	const text = "You've worked out for 69 days in a row. Keep it up!!";
-	const typedText = useTypewriter(text);
+	// const testColor = colorVariants["Blue"][2];
+	// const testColor = translucentColorVariants["Red"][2];
+	const primary = ringVariants.Red;
+	const secondary = ringVariants.Blue;
+	const tertiary = ringVariants.Purple;
+
+	const set1 = [
+		newColors.Blue[4],
+		newColors.Cyan[4],
+		newColors.Slate[4],
+		newColors.Indigo[4],
+	];
+
 	return (
 		<PageContainer>
 			<PageHeader title="Demo Page" />
-			<div className={styles.DemoPage}>
-				<div>{typedText}</div>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						placeItems: "center",
-					}}
-				>
-					<FlameIcon variant="purple" glow="none" size="XLG" />
-					<div style={{ color: "#fff", fontSize: "1.3rem" }}>69 Day Streak</div>
+			<div className={css.DemoPage}>
+				<div className={css.DemoPage_circles}>
+					{/* <LayeredCircles
+						size={75}
+						// colors={[primary, secondary, tertiary]}
+						colors={set1}
+						overlap={0.6}
+						opacity={0.3}
+						ringOpacity={0.1}
+					/> */}
+					{/* <Circle
+						size={350}
+						color={set1[2]}
+						ringOpacity={0.5}
+						classes={[styles.driftAcross]}
+						styles={{ opacity: 0.3 }}
+					/> */}
+
+					<DriftingCircle
+						y={0}
+						duration={3}
+						delay={0}
+						size={350}
+						color={set1[1]}
+						styles={{ opacity: 0.3 }}
+					/>
+				</div>
+				<div className={css.DemoPage_circles}>
+					{/* <Circle
+						size={75}
+						color={set1[0]}
+						ringOpacity={0.1}
+						classes={[styles.drift]}
+					/> */}
+					{/* <Circle
+						size={350}
+						color={set1[1]}
+						ringOpacity={0.5}
+						classes={[styles.driftAcross]}
+						styles={{ opacity: 0.3 }}
+					/> */}
+					{/* <div
+						className={`${styles.item} ${styles.drift}`}
+						style={{
+							width: "20rem",
+							height: "20rem",
+							borderRadius: "50%",
+							backgroundColor: newColors.Blue[4],
+						}}
+					></div> */}
+					{/* <AnimatedCircles
+						size={75}
+						// colors={[primary, secondary, tertiary]}
+						colors={set1}
+						overlap={0.6}
+					/> */}
 				</div>
 				<div>
 					<FlameIcon variant="blue" glow="neon" />

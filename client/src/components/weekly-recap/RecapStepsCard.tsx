@@ -5,10 +5,9 @@ import {
 } from "../../features/recaps/types";
 import { durationTo } from "../../utils/utils_workouts";
 import { formatThousand } from "../../utils/utils_misc";
+import { getRecapProgressBars } from "../../utils/utils_weeklyRecap";
 import RecapCard from "./RecapCard";
 import RecapProgressBars from "./RecapProgressBars";
-import { getRecapProgressBars } from "../../utils/utils_weeklyRecap";
-import RecapCardBody from "./RecapCardBody";
 
 type Props = {
 	isActive: boolean;

@@ -1,11 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import styles from "../../css/weekly-recap/WeeklyRecap.module.scss";
 import { subDays } from "date-fns";
-import {
-	WeeklyRecap as IWeeklyRecap,
-	RecapCardData,
-	WeeklyRecaps,
-} from "../../features/recaps/types";
+import { WeeklyRecaps } from "../../features/recaps/types";
 import { useSelector } from "react-redux";
 import { RangeParams } from "../../features/types";
 import { formatDate } from "../../utils/utils_dates";
@@ -23,18 +19,12 @@ import RecapStreakCard from "./RecapStreakCard";
 import RecapStrengthCard from "./RecapStrengthCard";
 import RecapCompletedCard from "./RecapCompletedCard";
 import RecapCardIndicators from "./RecapCardIndicators";
-import RecapTopActivitiesCard from "./RecapTopActivitiesCard";
 import RecapActivitiesCard from "./RecapActivitiesCard";
+import RecapTopActivitiesCard from "./RecapTopActivitiesCard";
 
 type Props = {
 	onClose: () => void;
 	dateRange: RangeParams;
-};
-
-type RecapCardItem<T extends keyof IWeeklyRecap> = {
-	id?: number;
-	type: CardType;
-	data: RecapCardData<T> | null;
 };
 
 // FULL PAGE CARDS CAROUSEL
@@ -50,23 +40,6 @@ type RecapCardItem<T extends keyof IWeeklyRecap> = {
 const defaultRange = {
 	startDate: formatDate(subDays(new Date(), 7), "db"),
 	endDate: formatDate(new Date(), "db"),
-};
-
-const getTopActivityCards = (data: IWeeklyRecap) => {
-	const { recap, activities } = data;
-	const top = [...recap.topActivities];
-
-	const cards = [];
-	for (const item of top) {
-		const details = activities[item.activityType];
-		const newCard = {
-			type: "Top",
-			data: details,
-		};
-		cards.push(newCard);
-	}
-
-	return cards;
 };
 
 const getCards = (data: WeeklyRecaps) => {

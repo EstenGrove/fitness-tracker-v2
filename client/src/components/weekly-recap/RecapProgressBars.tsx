@@ -83,6 +83,7 @@ const RecapBarItem = ({ data, color, value, isPrimary = false }: BarProps) => {
 	const css = {
 		...baseCss,
 		width: isMounted ? `${value}%` : "0%",
+		transitionDelay: ".3s",
 		transition: `width .6s ${animCurves.splash}`, // ensure transition is here if not in CSS
 	} as CSSProperties;
 

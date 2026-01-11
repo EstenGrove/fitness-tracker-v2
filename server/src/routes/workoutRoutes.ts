@@ -2,6 +2,7 @@ import { Hono, type Context } from "hono";
 import { getResponseError, getResponseOk } from "../utils/api.js";
 import { workoutsService } from "../services/index.js";
 import type {
+	CreateWorkoutBody,
 	CreateWorkoutParams,
 	DeleteWorkoutDateParams,
 	EditWorkoutParams,
@@ -330,27 +331,29 @@ app.get("/getPostWorkoutSummary", async (ctx: Context) => {
 });
 
 app.post("/createNewWorkout", async (ctx: Context) => {
-	const body = await ctx.req.json<CreateWorkoutParams>();
+	const body = await ctx.req.json<CreateWorkoutBody>();
+	const { userID, newWorkout } = body;
 
-	return ctx.json({
-		data: body,
+	console.log("body", body);
+
+	// const results = new Error("TEST FAILURE");
+	const results = await createWorkout(newWorkout);
+	console.log("results", results);
+
+	if (results instanceof Error) {
+		const errResp = getResponseError(results, {
+			workout: null,
+			schedule: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		workout: results.workout,
+		schedule: results.schedule,
 	});
-	// const results = await createWorkout(body);
 
-	// if (results instanceof Error) {
-	// 	const errResp = getResponseError(results, {
-	// 		workout: null,
-	// 		schedule: null,
-	// 	});
-	// 	return ctx.json(errResp);
-	// }
-
-	// const resp = getResponseOk({
-	// 	workout: results.workout,
-	// 	schedule: results.schedule,
-	// });
-
-	// return ctx.json(resp);
+	return ctx.json(resp);
 });
 
 // Deletes a workout instance (eg. a date); not the workout itself

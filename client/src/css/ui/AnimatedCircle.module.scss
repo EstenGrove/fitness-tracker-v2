@@ -1,0 +1,37 @@
+.AnimatedCircle {
+	width: initial;
+}
+
+@keyframes driftX {
+	0% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(64px);
+	}
+	100% {
+		transform: translateX(-10px);
+	}
+}
+
+@keyframes driftY {
+	0% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-60px);
+	}
+	100% {
+		transform: translateY(8px);
+	}
+}
+
+@keyframes breathe {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.03);
+	}
+}

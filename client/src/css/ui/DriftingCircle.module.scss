@@ -1,19 +1,3 @@
-.Circle {
-	width: 15rem;
-	height: 15rem;
-	border-radius: 50%;
-}
-
-.DemoPage {
-	width: 100%;
-	overflow: hidden;
-
-	&_circles {
-		width: 100%;
-		height: 25rem;
-	}
-}
-
 @keyframes drift {
 	0% {
 		transform: translate(0, 0);
@@ -42,7 +26,27 @@
 
 .driftAcross {
 	position: absolute;
+	left: 0;
+	animation-name: driftAcross;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-duration: var(--duration, 20s);
+	animation-delay: var(--delay, 0s);
 	animation: drift-across 20s linear infinite;
+}
+
+.drifting {
+	position: absolute;
+	top: var(--y);
+	left: 0;
+	animation-name: driftAcross;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-duration: var(--duration, 20s);
+	animation-delay: var(--delay, 0s);
+
+	will-change: transform;
+	pointer-events: none;
 }
 
 @keyframes float {

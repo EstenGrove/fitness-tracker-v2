@@ -670,9 +670,10 @@ const prepareNewWorkoutValues = (
 
 	switch (type) {
 		case "Strength": {
-			const details = prepareNewStrengthSets(
-				workoutSets as unknown as PrepareSets<StrengthSet>
-			);
+			const details = prepareNewStrengthSets({
+				workoutSets: workoutSets,
+				equipment: values?.equipment ?? "None",
+			} as PrepareSets<StrengthSet>);
 			const workout = {
 				...newValues,
 				sets: details.sets,

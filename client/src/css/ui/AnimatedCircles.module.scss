@@ -1,0 +1,46 @@
+.container {
+	position: relative;
+	overflow: visible;
+}
+
+.circle {
+	position: absolute;
+	top: 0;
+	border-radius: 50%;
+	mix-blend-mode: multiply;
+	filter: saturate(1.2);
+
+	/* motion variables */
+	--x: 0px;
+	--y: 0px;
+	--s: 1;
+
+	transform: translate(var(--x), var(--y)) scale(var(--s));
+
+	animation: drift 22s ease-in-out infinite, breathe 14s ease-in-out infinite;
+}
+
+@keyframes drift {
+	0% {
+		--x: 0px;
+		--y: 0px;
+	}
+	50% {
+		--x: 14px;
+		--y: -12px;
+	}
+	100% {
+		--x: -10px;
+		--y: 8px;
+	}
+}
+
+@keyframes breathe {
+	0%,
+	100% {
+		--s: 1;
+	}
+	50% {
+		--s: 1.03;
+	}
+}

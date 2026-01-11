@@ -7,5 +7,7 @@
 
 	&_inner {
 		width: 100%;
+		min-height: 100%;
+		// flex: 1 1 auto; // fills remaining space
 	}
 }
