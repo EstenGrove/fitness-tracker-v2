@@ -2,6 +2,10 @@ import { habitsService } from "../../services/index.js";
 import { normalizeHabitLog } from "./getUserHabits.js";
 import type { HabitLogDB, HabitLogValues } from "./types.js";
 
+/**
+ * This function allows setting a FINAL total for a given habit & date
+ */
+
 const logHabitOverride = async (newLog: HabitLogValues) => {
 	const results = (await habitsService.logHabitOverride(
 		newLog

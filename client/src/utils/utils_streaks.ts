@@ -1,5 +1,7 @@
+import { differenceInHours, isSameDay } from "date-fns";
 import {
 	HabitStreakDetailsResp,
+	StreaksCacheStatus,
 	WorkoutStreakDetailsResp,
 } from "../features/streaks/types";
 import { currentEnv, streakApis } from "./utils_env";
@@ -155,6 +157,37 @@ const fetchHabitStreaks = async (
 const STREAKS_KEY = `STREAKS`;
 const STREAKS_CACHE = new LocalStorage();
 
+/**
+ * Rules for show streaks modal:
+ * - IF there's no cache, then we "probably" haven't seen it in a while => SHOW STREAKS
+ * - IF there's a cache, then check "when" it was last seen; If greater than 10hrs ago OR was NOT already seen today => SHOW STREAKS
+ * @param currentTime Date
+ * @returns boolean
+ */
+const shouldShowStreaks = (currentTime: Date = new Date()): boolean => {
+	const seenCache = STREAKS_CACHE.get<StreaksCacheStatus>(
+		STREAKS_KEY
+	) as StreaksCacheStatus;
+
+	// If there's no cache, then it hasn't been seen in a while (presumably)...so we show it!
+	if (!seenCache) return true;
+
+	const seenXHoursAgo = differenceInHours(
+		currentTime,
+		new Date(seenCache.lastSeen)
+	);
+	const wasSeenToday = isSameDay(currentTime, new Date(seenCache.lastSeen));
+	const justFinishedWorkout =
+		"justFinished" in seenCache && seenCache.justFinished;
+
+	// If we just finished a workout, then show it IF it hasn't been seen today, or last time it was seen was greater than 10hrs ago
+	if (justFinishedWorkout && (seenXHoursAgo >= 10 || !wasSeenToday)) {
+		return true;
+	}
+
+	return false;
+};
+
 const updateLastSeen = (timestamp: string) => {
 	STREAKS_CACHE.set(STREAKS_KEY, {
 		lastSeen: timestamp,
@@ -192,6 +225,7 @@ export {
 	// STREAKS CACHE UTILS
 	STREAKS_KEY,
 	STREAKS_CACHE,
+	shouldShowStreaks,
 	updateLastSeen,
 	updateStreaksCache,
 	updateStreaksCachePromise,

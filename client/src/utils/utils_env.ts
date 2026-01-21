@@ -223,6 +223,15 @@ const API_ENDPOINTS = {
 		getWeeklyRecaps: "/recap/getWeeklyRecaps",
 		getRecapForRange: "/recap/getRecapForRange",
 	},
+	trends: {
+		getActivityTrends: "/trends/getActivityTrends",
+	},
+	insights: {
+		getActivityInsights: "/insights/getActivityInsights",
+	},
+	workoutRecaps: {
+		getWorkoutRecap: "/workoutRecaps/getWorkoutRecap",
+	},
 };
 
 export const {
@@ -244,6 +253,9 @@ export const {
 	summary: summaryApis,
 	streaks: streakApis,
 	recaps: recapApis,
+	trends: trendsApis,
+	insights: insightsApis,
+	workoutRecaps: workoutRecapApis,
 } = API_ENDPOINTS;
 
 export {

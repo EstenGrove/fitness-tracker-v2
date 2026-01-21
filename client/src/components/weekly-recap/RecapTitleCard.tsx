@@ -2,6 +2,7 @@ import styles from "../../css/weekly-recap/RecapTitleCard.module.scss";
 import RecapCardLayout from "./RecapCardLayout";
 import { RangeParams } from "../../features/types";
 import { format, isSameMonth } from "date-fns";
+import { parseAnyDate } from "../../utils/utils_dates";
 
 type Props = {
 	isActive: boolean;
@@ -9,13 +10,16 @@ type Props = {
 };
 
 const getRangeDesc = (dateRange: RangeParams) => {
+	const startDate = parseAnyDate(dateRange.startDate);
+	const endDate = parseAnyDate(dateRange.endDate);
+
 	if (isSameMonth(dateRange.endDate, dateRange.startDate)) {
-		const start = format(dateRange.startDate, "MMMM dd");
-		const end = format(dateRange.endDate, "dd, yyyy");
+		const start = format(startDate, "MMMM dd");
+		const end = format(endDate, "dd, yyyy");
 		return `${start} - ${end}`;
 	} else {
-		const start = format(dateRange.startDate, "MMMM dd");
-		const end = format(dateRange.endDate, "MMM dd, yyyy");
+		const start = format(startDate, "MMMM dd");
+		const end = format(endDate, "MMM dd, yyyy");
 		return `${start} - ${end}`;
 	}
 };

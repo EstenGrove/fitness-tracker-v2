@@ -37,9 +37,12 @@ type Props = {
 // 6th: <activity-type> card
 // 7th: Summary card: a summary of the week's workouts & efforts
 
+const today = new Date();
+const baseDate = subDays(today, 1);
+
 const defaultRange = {
-	startDate: formatDate(subDays(new Date(), 7), "db"),
-	endDate: formatDate(new Date(), "db"),
+	startDate: formatDate(subDays(baseDate, 7), "db"),
+	endDate: formatDate(baseDate, "db"),
 };
 
 const getCards = (data: WeeklyRecaps) => {

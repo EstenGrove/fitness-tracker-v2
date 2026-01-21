@@ -16,6 +16,8 @@ import { HabitCard, HabitLogValues } from "../../features/habits/types";
 import { useBatchedHabitLogger } from "../../hooks/useBatchedHabitLogger";
 import { useLogHabitOverrideMutation } from "../../features/habits/habitsApi";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/user/userSlice";
 
 type Props = {
 	habit: HabitCard;
@@ -185,6 +187,7 @@ const DisplayValue = ({
 
 const QuickLogHabit = ({ habit }: Props) => {
 	useLockBodyScroll();
+	const currentUser = useSelector(selectCurrentUser);
 	const [todaysValue, setTodaysValue] = useState<number>(
 		habit.habitsLogged || 0
 	);
@@ -199,7 +202,10 @@ const QuickLogHabit = ({ habit }: Props) => {
 	};
 
 	const saveManualEdit = async (newValue: number) => {
-		const newLog = prepareHabitLog(newValue, habit);
+		const newLog = prepareHabitLog(newValue, {
+			...habit,
+			userID: currentUser.userID,
+		});
 
 		console.log("newLog", newLog);
 		console.log("newValue", newValue);
