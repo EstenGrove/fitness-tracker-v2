@@ -21,9 +21,10 @@ export interface CardioRecap {
 	maxReps: number;
 	totalMins: number;
 	totalReps: number;
+	totalWorkouts: number;
 }
 // 'history' array entry
-export interface CardioWorkoutRecap {
+export interface CardioRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	totalMins: number;
@@ -37,9 +38,10 @@ export interface StretchRecap {
 	maxReps: number;
 	totalMins: number;
 	totalReps: number;
+	totalWorkouts: number;
 }
 // 'history' array entry
-export interface StretchWorkoutRecap {
+export interface StretchRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	totalMins: number;
@@ -53,9 +55,10 @@ export interface TimedRecap {
 	maxReps: number;
 	totalMins: number;
 	totalReps: number;
+	totalWorkouts: number;
 }
 // 'history' array entry
-export interface TimedWorkoutRecap {
+export interface TimedRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	totalMins: number;
@@ -69,15 +72,17 @@ export interface OtherRecap {
 	maxReps: number;
 	totalMins: number;
 	totalReps: number;
+	totalWorkouts: number;
 }
 // 'history' array entry
-export interface OtherWorkoutRecap {
+export interface OtherRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	totalMins: number;
 	totalReps: number;
 	totalSets: number;
 	totalCalories: number;
+	totalWorkouts: number;
 }
 
 /* STRENGTH */
@@ -87,9 +92,11 @@ export interface StrengthRecap {
 	totalMins: number;
 	totalReps: number;
 	totalVolume: number;
+	totalWorkouts: number;
 }
+
 // 'history' array entry
-export interface StrengthWorkoutRecap {
+export interface StrengthRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	maxReps: number;
@@ -109,10 +116,12 @@ export interface WalkRecap {
 	maxCalories: number;
 	totalMins: number;
 	totalSteps: number;
+	totalMiles: number;
 	totalCalories: number;
+	totalWorkouts: number;
 }
 // 'history' array entry
-export interface WalkWorkoutRecap {
+export interface WalkRecapHistory {
 	historyID: number;
 	workoutDate: string;
 	maxMiles: number;
@@ -134,43 +143,49 @@ export type ActivityRecap = {
 		| OtherRecap
 		| CardioRecap;
 	history:
-		| StrengthWorkoutRecap
-		| WalkWorkoutRecap
-		| TimedWorkoutRecap
-		| StretchWorkoutRecap
-		| OtherWorkoutRecap
-		| CardioWorkoutRecap;
+		| StrengthRecapHistory[]
+		| WalkRecapHistory[]
+		| TimedRecapHistory[]
+		| StretchRecapHistory[]
+		| OtherRecapHistory[]
+		| CardioRecapHistory[];
 };
 
 export interface StrengthRecapDetails {
 	recap: StrengthRecap;
 	trends: StrengthTrends;
 	insights: StrengthInsights;
+	history: StrengthRecapHistory[];
 }
 export interface StretchRecapDetails {
 	recap: StretchRecap;
 	trends: StretchTrends;
 	insights: StretchInsights;
+	history: StretchRecapHistory[];
 }
 export interface WalkRecapDetails {
 	recap: WalkRecap;
 	trends: WalkTrends;
 	insights: WalkInsights;
+	history: WalkRecapHistory[];
 }
 export interface CardioRecapDetails {
 	recap: CardioRecap;
 	trends: CardioTrends;
 	insights: CardioInsights;
+	history: CardioRecapHistory[];
 }
 export interface TimedRecapDetails {
 	recap: TimedRecap;
 	trends: TimedTrends;
 	insights: TimedInsights;
+	history: TimedRecapHistory[];
 }
 export interface OtherRecapDetails {
 	recap: OtherRecap;
 	trends: OtherTrends;
 	insights: OtherInsights;
+	history: OtherRecapHistory[];
 }
 
 export type ActivityRecapDetails =
@@ -180,3 +195,12 @@ export type ActivityRecapDetails =
 	| StretchRecapDetails
 	| TimedRecapDetails
 	| OtherRecapDetails;
+
+export type ActivityRecapDataMap = {
+	Strength: StrengthRecapDetails;
+	Stretch: StretchRecapDetails;
+	Cardio: CardioRecapDetails;
+	Walk: WalkRecapDetails;
+	Timed: TimedRecapDetails;
+	Other: OtherRecapDetails;
+};

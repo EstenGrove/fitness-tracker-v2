@@ -401,10 +401,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 					onClose={closeModal}
 					activityType={workout.activityType}
 					workoutID={workout.workoutID}
-					dateRange={{
-						startDate: formatDate(subDays(new Date(), 30), "db"),
-						endDate: formatDate(new Date(), "db"),
-					}}
+					lastXDays={30}
 				/>
 			)}
 

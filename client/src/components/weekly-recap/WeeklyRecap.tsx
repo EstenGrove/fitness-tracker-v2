@@ -176,6 +176,7 @@ const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
 	console.log("data", data);
 
 	// Card indicator buttons & tap-zones
+	// - when the carousel scrolls the 'onScroll' fires syncing currentStep
 	const goToCard = (card: number) => {
 		if (!carouselRef.current) return;
 

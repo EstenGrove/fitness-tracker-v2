@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import styles from "../../css/ui/NumberCounter.module.scss";
+import { CSSProperties, useEffect, useState } from "react";
+import css from "../../css/ui/NumberCounter.module.scss";
 
 type Props = {
 	number: number;
 	duration?: number;
+	styles?: CSSProperties;
 };
 
-const NumberCounter = ({ number, duration = 1000 }: Props) => {
+const NumberCounter = ({ number, duration = 1000, styles = {} }: Props) => {
 	const [current, setCurrent] = useState<number>(0);
 
 	useEffect(() => {
@@ -34,7 +35,11 @@ const NumberCounter = ({ number, duration = 1000 }: Props) => {
 		};
 	}, [duration, number]);
 
-	return <span className={styles.NumberCounter}>{current}</span>;
+	return (
+		<span className={css.NumberCounter} style={styles}>
+			{current}
+		</span>
+	);
 };
 
 export default NumberCounter;

@@ -12,6 +12,7 @@ import {
 	startOfMonth,
 	startOfWeek,
 	startOfYear,
+	subDays,
 	subMonths,
 } from "date-fns";
 import { RepeatType } from "../features/shared/types";
@@ -375,6 +376,16 @@ const getLastXMonthsRange = (last: number = 3) => {
 		endDate,
 	};
 };
+const getLastXDaysRange = (last: number = 3) => {
+	const now = new Date();
+	const start = subDays(now, last);
+	const startDate = formatDate(start, "db");
+	const endDate = formatDate(now, "db");
+	return {
+		startDate,
+		endDate,
+	};
+};
 
 const isMidnight = (date: string | Date): boolean => {
 	return isEqual(date, startOfDay(date));
@@ -435,6 +446,7 @@ export {
 	getMonthStartAndEnd,
 	getYearStartAndEnd,
 	getLastXMonthsRange,
+	getLastXDaysRange,
 	// APPLY TIME TO DATE
 	applyTimeStrToDate,
 	prepareTimestamp,

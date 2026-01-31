@@ -112,14 +112,6 @@ const getDateRange = (lastXDays: number = 7) => {
 
 	const startDate = formatDate(start, "db");
 	const endDate = formatDate(end, "db");
-
-	console.group("Date Range:");
-	console.log("startDate", startDate);
-	console.log("endDate", endDate);
-	console.log("start", start);
-	console.log("end", end);
-	console.groupEnd();
-
 	return {
 		startDate,
 		endDate,

@@ -1,0 +1,15 @@
+.RecapsHeader {
+	width: 100%;
+	height: auto;
+	min-height: 15rem;
+	max-height: auto;
+	padding: 1rem 2rem;
+	// border: 1px solid grey;
+	@include flex_col(center, flex-start);
+
+	&_icon {
+		width: 3.5rem;
+		height: 3.5rem;
+		fill: var(--blueGrey700);
+	}
+}

@@ -1,6 +1,8 @@
+// import { JSX, ReactNode } from "react";
 import { Activity } from "../shared/types";
 import { CurrentStreak, LongestStreak } from "../streaks/types";
 import { DateRange, RangeParams } from "../types";
+import { ActivityRecapDataMap } from "../workout-recaps/types";
 
 export interface WeeklyRecapBreakdown {
 	totalMins: number;
@@ -73,4 +75,34 @@ export interface RecapBar {
 	what: string; // '7.2 mi' or '1h 38m' etc
 	value: number;
 	mins: number;
+}
+
+export type ActivityRecapCardType =
+	| "Title"
+	| "Strength"
+	| "Cardio"
+	| "Stretch"
+	| "Timed"
+	| "Walk"
+	| "Other";
+
+export interface ActivityRecapCard<A extends Activity> {
+	id: number;
+	type: ActivityRecapCardType;
+	data: ActivityRecapDataMap[A];
+	render: React.ComponentType<ActivityRecapsCardProps<A>>;
+}
+
+// Builder type for narrowing the recap data & cards by activity type
+export type ActivityRecapCardBuilder<A extends Activity> = (
+	data: ActivityRecapDataMap[A]
+) => ActivityRecapCard<A>[];
+
+export type ActivityRecapCardFactories = {
+	[A in Activity]: ActivityRecapCardBuilder<A>;
+};
+
+export interface ActivityRecapsCardProps<A extends Activity> {
+	data: ActivityRecapDataMap[A];
+	isActive: boolean;
 }

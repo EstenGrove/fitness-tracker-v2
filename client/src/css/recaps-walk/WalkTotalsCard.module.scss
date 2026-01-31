@@ -1,0 +1,33 @@
+.Title {
+	@include recapTitle();
+	margin-top: 0.5rem;
+
+	& > b {
+		color: var(--walkAccent);
+	}
+}
+.Desc {
+	@include recapDesc();
+	& > b {
+		color: var(--walkAccent);
+	}
+}
+
+.Chart {
+	padding: 2rem 1rem 0 1rem;
+}
+.Totals {
+	width: 100%;
+	@include rowCenter();
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+.Delta {
+	font-size: 1.7rem;
+	text-align: center;
+	margin: auto 0;
+}
+.Chart {
+	width: 100%;
+	padding: 4rem 1rem 0 1rem;
+}

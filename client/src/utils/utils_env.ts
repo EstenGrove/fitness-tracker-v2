@@ -230,7 +230,7 @@ const API_ENDPOINTS = {
 		getActivityInsights: "/insights/getActivityInsights",
 	},
 	workoutRecaps: {
-		getWorkoutRecap: "/workoutRecaps/getWorkoutRecap",
+		getWorkoutRecap: "/recaps/getWorkoutRecap",
 	},
 };
 

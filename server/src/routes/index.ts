@@ -1,6 +1,7 @@
 import userRoutes from "./userRoutes.js";
 import authRoutes from "./authRoutes.js";
 import chatRoutes from "./chatRoutes.js";
+import recapRoutes from "./recapRoutes.js";
 import habitRoutes from "./habitRoutes.js";
 import statsRoutes from "./statsRoutes.js";
 import trendsRoutes from "./trendsRoutes.js";
@@ -27,6 +28,7 @@ const allRoutes = {
 	exports: exportRoutes,
 	streaks: streakRoutes,
 	habits: habitRoutes,
+	recaps: recapRoutes,
 	stats: statsRoutes,
 	trends: trendsRoutes,
 	chat: chatRoutes,
