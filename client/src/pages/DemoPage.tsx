@@ -14,6 +14,13 @@ import Circle from "../components/ui/Circle";
 import DriftingCircle from "../components/ui/DriftingCircle";
 import AreaChart from "../components/ui/AreaChart";
 import TrendLine from "../components/ui/TrendLine";
+import HeatMap from "../components/ui/HeatMap";
+import ProgressRing from "../components/ui/ProgressRing";
+import ProgressCircle from "../components/ui/ProgressCircle";
+import ProgressArc from "../components/ui/ProgressArc";
+import ProgressContent from "../components/ui/ProgressContent";
+import TrendItem from "../components/recaps-shared/TrendItem";
+import LayeredAreaChart from "../components/ui/LayeredAreaChart";
 
 const colorVariants = {
 	Pink: [
@@ -1238,6 +1245,40 @@ const getDataFor = <T extends object>(data: Array<T>, key: keyof T) => {
 };
 
 const baseData = [15, 32, 18, 22, 21, 30, 45, 48];
+const heatData = [
+	20,
+	22,
+	15,
+	null,
+	33,
+	41,
+	10,
+	12,
+	41,
+	26,
+	10,
+	null,
+	17,
+	19,
+	35,
+	12,
+	18,
+	null,
+	33,
+	44,
+	23,
+];
+
+const getLongestMins = (data) => {
+	const allMins = data.map((x) => x.totalMins);
+	const max = Math.max(...allMins);
+	const min = Math.min(...allMins, 0);
+
+	return {
+		min,
+		max,
+	};
+};
 
 const DemoPage = () => {
 	const primary = ringVariants.Red;
@@ -1246,6 +1287,8 @@ const DemoPage = () => {
 	const minsData = getDataFor(strengthData, "totalMins");
 	const maxRepsData = getDataFor(strengthData, "maxReps");
 	const maxVolData = getDataFor(strengthData, "maxVolume");
+	const minMax = getLongestMins(strengthData);
+	console.log("minMax", minMax);
 
 	const set1 = [
 		newColors.Blue[4],
@@ -1259,10 +1302,58 @@ const DemoPage = () => {
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
 				<div className={css.DemoPage_item}>
+					<LayeredAreaChart
+						width={320}
+						height={140}
+						datasets={[
+							{
+								data: [10, 20, 40, 35, 50, 60],
+								fill: "rgba(0,124,255,0.25)",
+								stroke: "#007cff",
+							},
+							{
+								data: [5, 15, 25, 30, 45, 55],
+								fill: "rgba(0,226,189,0.25)",
+								stroke: "#00e2bd",
+							},
+							{
+								data: [8, 18, 28, 20, 38, 48],
+								fill: "rgba(255,51,61,0.25)",
+								stroke: "#ff333d",
+							},
+						]}
+					/>
+				</div>
+				<div className={css.DemoPage_item}>
+					<TrendItem />
+				</div>
+				<div className={css.DemoPage_item}>
+					<ProgressContent
+						size={140}
+						strokeWidth={7}
+						progress={55}
+						stroke="var(--walkAccent)"
+					>
+						<div style={{ fontSize: "2rem", fontWeight: "700" }}>5.5k lbs.</div>
+					</ProgressContent>
+				</div>
+
+				<div className={css.DemoPage_item}>
+					<HeatMap
+						data={minsData}
+						size={25}
+						gap={1}
+						columns={8}
+						// colors={["#bbf7d0", "#4ade80", "#16a34a"]}
+						noDataColor="var(--blueGrey900)"
+					/>
+				</div>
+				<div className={css.DemoPage_item}>
 					<TrendLine
 						// data={[...baseData].reverse()}
 						data={[...baseData]}
 						stroke="var(--accent-green)"
+						strokeWidth={3.25}
 					/>
 				</div>
 				<div className={css.DemoPage}>

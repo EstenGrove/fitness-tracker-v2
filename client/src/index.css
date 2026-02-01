@@ -42,6 +42,7 @@
 
 	--lightBorder: var(--blueGrey800);
 
+	/* MARK: ACTIVITY */
 	/* ACTIVITY TYPE ACCENTS */
 	--strengthAccent: var(--accent-purple);
 	--cardioAccent: var(--accent-red);

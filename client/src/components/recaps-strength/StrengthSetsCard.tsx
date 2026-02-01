@@ -6,10 +6,21 @@ import RecapsHeader from "../recaps-carousel/RecapsHeader";
 import RecapsBody from "../recaps-carousel/RecapsBody";
 import TotalsItem from "../recaps-shared/TotalsItem";
 import RecapChart from "../recaps-shared/RecapChart";
+import TrendLine from "../ui/TrendLine";
+import RecapTrendLine from "../recaps-shared/RecapTrendLine";
+import { durationTo } from "../../utils/utils_workouts";
 
 type Props = {
 	isActive: boolean;
 	data: StrengthRecapDetails;
+};
+
+const getLongestSession = (data: StrengthRecapDetails) => {
+	if (!data || !data?.history?.length) return 0;
+	const mins = data.history.map((entry) => entry.totalMins);
+	const max = Math.max(...mins);
+
+	return max;
 };
 
 const getTrendsData = (data: StrengthRecapDetails) => {
@@ -33,6 +44,7 @@ const getTrendsData = (data: StrengthRecapDetails) => {
 const StrengthSetsCard = ({ isActive, data }: Props) => {
 	const totalVolume = data?.recap?.totalVolume;
 	const historyData = getTrendsData(data);
+	const longestMins = getLongestSession(data);
 	const volume = data?.trends?.volume;
 	const days = data?.trends?.rangeDays;
 	const totalWorkouts = data?.recap?.totalWorkouts;
@@ -44,43 +56,14 @@ const StrengthSetsCard = ({ isActive, data }: Props) => {
 					Your volume efforts are trending <b>{volume?.direction}</b>!
 				</h2>
 				<div className={styles.Desc}>
-					You performed {totalWorkouts} in the last {days} days.
+					Your longest session was {durationTo(longestMins, "h&m")}.
 				</div>
 			</RecapsHeader>
 			<RecapsBody styles={{ justifyContent: "flex-start", paddingTop: "3rem" }}>
 				<div className={styles.Charts}>
-					<div className={styles.Charts_item}>
-						<RecapChart
-							data={historyData?.volume as number[]}
-							label="Total Volume"
-							icon="weight"
-							chartFill="var(--blueGrey500)"
-							chartStroke="#fff"
-						/>
-					</div>
-					<div className={styles.Charts_item}>
-						<RecapChart
-							data={historyData?.reps as number[]}
-							label="Total Reps"
-							icon="weightLift"
-							chartFill="var(--strengthFill)"
-							chartStroke="var(--strengthAccent)"
-						/>
-					</div>
-				</div>
-				<div className={styles.Charts}>
-					<TotalsItem
-						icon="weight"
-						total={totalVolume}
-						label="Total Volume"
-						color="var(--strengthAccent)"
-					/>
-					<TotalsItem
-						icon="weightLift"
-						total={data?.recap?.totalReps}
-						label="Total Reps"
-						color="var(--strengthAccent)"
-					/>
+					{/*  */}
+					{/*  */}
+					{/*  */}
 				</div>
 			</RecapsBody>
 		</RecapsCard>

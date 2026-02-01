@@ -19,6 +19,7 @@ import WalkTotalsCard from "../components/recaps-walk/WalkTotalsCard";
 import CardioTitleCard from "../components/recaps-cardio/CardioTitleCard";
 import CardioTotalsCard from "../components/recaps-cardio/CardioTotalsCard";
 import StrengthSetsCard from "../components/recaps-strength/StrengthSetsCard";
+import WalkAveragesCard from "../components/recaps-walk/WalkAveragesCard";
 
 const renderContent = (content?: JSX.Element | ReactNode) => {
 	if (content) {
@@ -84,8 +85,14 @@ const getRecapWalkCards = (data: WalkRecapDetails) => {
 		data: data,
 		render: WalkTotalsCard,
 	};
+	const avgCard = {
+		id: 2,
+		type: "Walk",
+		data: data,
+		render: WalkAveragesCard,
+	};
 
-	const walkCards = [titleCard, totalsCard];
+	const walkCards = [titleCard, totalsCard, avgCard];
 
 	return walkCards;
 };
@@ -136,6 +143,8 @@ const getActivityRecapCards = (
 	activityType: Activity,
 	data: ActivityRecapDetails
 ) => {
+	if (!data) return [];
+
 	switch (activityType) {
 		case "Strength": {
 			return getRecapStrengthCards(data as StrengthRecapDetails);
@@ -160,9 +169,31 @@ const getActivityRecapCards = (
 	}
 };
 
+// UTILS //
+
+// Get number of days for recap
+const getDaysRange = (data: ActivityRecapDetails) => {
+	if (!data) return 0;
+	const days = data.trends.sampleSize;
+
+	return days || 0;
+};
+
+const getLongestMins = (data: ActivityRecapDetails) => {
+	if (!data || !data?.history?.length) return 0;
+
+	const allMins = [...data.history].map((entry) => entry.totalMins);
+	const max = Math.max(...allMins);
+
+	return max;
+};
+
 export {
 	renderContent,
 	getRecapCardioCards,
 	getRecapStrengthCards,
 	getActivityRecapCards,
+	// UTILS
+	getDaysRange,
+	getLongestMins,
 };

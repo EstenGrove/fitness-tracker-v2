@@ -27,13 +27,15 @@ const getDateRangeDesc = (range: DateRange) => {
 	return `${start} - ${end}`;
 };
 
+type TitleToggle = "Show" | "Hide";
+
 const RecentActivityBreakdown = ({
 	dateRange,
 	totalTime,
 	segments = [],
 }: Props) => {
 	// For toggling the the accordion title, based off expanded/collapsed
-	const [title, setTitle] = useState<string>("Show");
+	const [title, setTitle] = useState<TitleToggle>("Hide");
 	const minsTotals = extractHrsAndMins(totalTime.totalMins);
 	const rangeDesc = getDateRangeDesc({
 		startDate: dateRange.startDate,

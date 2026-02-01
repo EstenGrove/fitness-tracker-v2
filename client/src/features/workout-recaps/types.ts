@@ -114,6 +114,9 @@ export interface WalkRecap {
 	maxMiles: number;
 	maxSteps: number;
 	maxCalories: number;
+	avgMiles: number;
+	avgMins: number;
+	avgSteps: number;
 	totalMins: number;
 	totalSteps: number;
 	totalMiles: number;

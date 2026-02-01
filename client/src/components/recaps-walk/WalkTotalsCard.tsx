@@ -61,7 +61,7 @@ const getTotalsDataFor = (
 		return entry?.[forKey];
 	});
 
-	return totalsData;
+	return totalsData || [];
 };
 
 const WalkTotalsCard = ({ isActive, data }: Props) => {

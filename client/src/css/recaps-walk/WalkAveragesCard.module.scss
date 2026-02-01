@@ -1,0 +1,20 @@
+.Title {
+	@include recapTitle();
+	margin-top: 0.5rem;
+
+	& > b {
+		color: var(--walkAccent);
+	}
+}
+.Desc {
+	@include recapDesc();
+	& > b {
+		color: var(--walkAccent);
+	}
+}
+
+.Metrics {
+	width: 100%;
+	@include rowCenter(wrap);
+	gap: 1rem 1rem;
+}
