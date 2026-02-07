@@ -46,3 +46,20 @@
 	border: $borderLight;
 	border-left: 5px solid var(--blueGrey800);
 }
+
+@mixin recapTitle($color: $text1) {
+	font-size: 3.5rem;
+	color: $color;
+	text-wrap: wrap;
+	white-space: normal;
+	overflow-wrap: break-word;
+	min-width: 0;
+}
+@mixin recapDesc($color: $text3) {
+	font-size: 1.6rem;
+	color: $color;
+	text-wrap: wrap;
+	white-space: normal;
+	overflow-wrap: break-word;
+	min-width: 0;
+}

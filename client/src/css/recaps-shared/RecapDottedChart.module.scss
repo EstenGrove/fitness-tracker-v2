@@ -1,0 +1,17 @@
+.RecapDottedChart {
+	width: auto;
+
+	&_title {
+		width: auto;
+		@include flex_row(flex-start, center);
+		gap: 0 0.5rem;
+		font-size: 1.5rem;
+		color: $text1;
+
+		&_icon {
+			width: 1.6rem;
+			height: 1.6rem;
+			fill: var(--blueGrey300);
+		}
+	}
+}

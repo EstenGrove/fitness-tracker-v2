@@ -18,7 +18,6 @@ const sizes = {
 
 const getSizeStyles = (size: keyof typeof sizes) => {
 	const value = sizes[size];
-	console.log("value", value);
 	const main = {
 		minWidth: value,
 		maxWidth: value,

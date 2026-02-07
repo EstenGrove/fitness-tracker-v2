@@ -81,6 +81,7 @@ $displayWidth: 14rem;
 }
 
 .DisplayValue {
+	position: relative;
 	min-width: $displayWidth;
 	max-width: $displayWidth;
 	font-size: $display;
@@ -88,17 +89,32 @@ $displayWidth: 14rem;
 	color: var(--habitDisplay);
 }
 .DisplayInput {
-	min-width: $displayWidth;
-	max-width: $displayWidth;
-	font-size: $display;
-	text-align: center;
-	background-color: transparent;
-	border: none;
-	outline: none;
-	color: var(--habitDisplay);
+	position: absolute;
+	display: block;
+	top: -4rem;
+	left: 0;
+	background-color: var(--bg-input);
+	border: $borderLight;
+	z-index: 9999;
 
 	&:focus-within {
 		color: $accentBlue;
+	}
+
+	&_input {
+		min-width: $displayWidth;
+		max-width: $displayWidth;
+		font-size: $display;
+		text-align: center;
+		border: none;
+		outline: none;
+		color: var(--habitDisplay);
+		background-color: var(--bg-input);
+		z-index: 9999;
+
+		&:focus-within {
+			color: $accentBlue;
+		}
 	}
 }
 

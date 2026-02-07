@@ -3,9 +3,10 @@ import { currentEnv } from "../../utils/utils_env";
 import {
 	getRecapForRange,
 	getWeeklyRecap,
+	getWeeklyRecaps,
 } from "../../utils/utils_weeklyRecap";
 import { AwaitedResponse, UserRangeParams } from "../types";
-import { RecapForRange, WeeklyRecap } from "./types";
+import { RecapForRange, WeeklyRecap, WeeklyRecaps } from "./types";
 
 export const recapsApi = createApi({
 	reducerPath: "recapsApi",
@@ -20,6 +21,19 @@ export const recapsApi = createApi({
 					endDate,
 				})) as AwaitedResponse<WeeklyRecap>;
 				const data = response.Data as WeeklyRecap;
+
+				return { data };
+			},
+			// providesTags: ["WeeklyRecap"],
+		}),
+		getWeeklyRecaps: builder.query<WeeklyRecaps, UserRangeParams>({
+			queryFn: async (params) => {
+				const { userID, startDate, endDate } = params;
+				const response = (await getWeeklyRecaps(userID, {
+					startDate,
+					endDate,
+				})) as AwaitedResponse<WeeklyRecaps>;
+				const data = response.Data as WeeklyRecaps;
 
 				return { data };
 			},
@@ -41,4 +55,8 @@ export const recapsApi = createApi({
 	}),
 });
 
-export const { useGetWeeklyRecapQuery, useGetRecapForRangeQuery } = recapsApi;
+export const {
+	useGetWeeklyRecapQuery,
+	useGetWeeklyRecapsQuery,
+	useGetRecapForRangeQuery,
+} = recapsApi;

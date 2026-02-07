@@ -1,0 +1,13 @@
+.dot {
+	fill: currentColor;
+	opacity: 0;
+	transform: translateY(6px);
+	animation: popIn 400ms ease-out forwards;
+}
+
+@keyframes popIn {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

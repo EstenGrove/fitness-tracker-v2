@@ -1,29 +1,81 @@
-// :root {
-// 	--hdr-gradient: linear-gradient(
-// 		226deg in oklch,
-// 		oklch(70% 0.5 340) 0%,
-// 		oklch(90% 0.3 200) 100%
-// 	);
-// 	--sdr-gradient: linear-gradient(226deg, #ff00fa 0%, #0ff 100%);
-
-// 	background: var(--hdr-gradient);
-// }
-
-.Fire {
+.Circle {
 	width: 15rem;
 	height: 15rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+	border-radius: 50%;
+}
 
-	& svg {
-		fill: var(--blueGradient);
+.DemoPage {
+	width: 100%;
+	overflow: hidden;
+
+	&_item {
+		width: 100%;
+		padding-top: 2rem;
+		// border: 1px solid grey;
+	}
+
+	&_circles {
+		width: 100%;
+		height: 25rem;
 	}
 }
 
-.Flame {
-	width: 15rem;
-	height: 15rem;
-	fill: var(--blueGradient);
+@keyframes drift {
+	0% {
+		transform: translate(0, 0);
+	}
+	50% {
+		transform: translate(20vw, -30vh);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+.drift {
+	position: absolute;
+	animation: drift 12s ease-in-out;
+}
+
+@keyframes drift-across {
+	0% {
+		transform: translate(-20vw, 20vh);
+	}
+	100% {
+		transform: translate(120vw, -20vh);
+	}
+}
+
+.driftAcross {
+	position: absolute;
+	animation: drift-across 20s linear infinite;
+}
+
+@keyframes float {
+	0% {
+		transform: translate(0, 0);
+	}
+	25% {
+		transform: translate(10vw, -5vh);
+	}
+	50% {
+		transform: translate(5vw, 10vh);
+	}
+	75% {
+		transform: translate(-10vw, 5vh);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+.float {
+	position: absolute;
+	animation: float 50s ease-in-out infinite;
+}
+.float,
+.drift,
+.driftAcross {
+	will-change: transform;
+	pointer-events: none;
 }

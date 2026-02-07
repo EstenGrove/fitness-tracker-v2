@@ -197,6 +197,7 @@ const usePersistentTimer = (
 		const origin = getPersistedInfo() as TimeInfo;
 		const info: TimeInfo = {
 			...origin,
+			status: ETimerStatus.ACTIVE,
 			resumedAt: startedAt,
 			resumeTime: startTime,
 			intervalInSecs: timer,

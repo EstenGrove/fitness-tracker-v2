@@ -58,11 +58,12 @@ const DisplayInput = ({
 }: DisplayInputProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	useOutsideClick(inputRef, closeInput);
+	const [value, setValue] = useState<number>(habitValue);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
+		const { value: local } = e.target;
 
-		return onChange(Number(value));
+		setValue(Number(local));
 	};
 
 	const selectText = (e: FocusEvent<HTMLInputElement>) => {
@@ -85,17 +86,23 @@ const DisplayInput = ({
 	}, []);
 
 	return (
-		<input
-			type="number"
-			name="value"
-			id="value"
-			inputMode="numeric"
-			ref={inputRef}
-			value={habitValue}
-			onChange={handleChange}
-			onFocus={selectText}
-			className={styles.DisplayInput}
-		/>
+		<div className={styles.DisplayInput}>
+			<input
+				type="number"
+				name="value"
+				id="value"
+				inputMode="numeric"
+				ref={inputRef}
+				value={value}
+				onChange={handleChange}
+				onBlur={() => {
+					onChange(habitValue - value);
+					closeInput();
+				}}
+				onFocus={selectText}
+				className={styles.DisplayInput_input}
+			/>
+		</div>
 	);
 };
 
@@ -211,6 +218,14 @@ const HabitLogger = ({ habit, summary, habitStep = 1 }: Props) => {
 		const newLog = prepareHabitLog(-habitStep, habit);
 		queueLog(newLog);
 	};
+
+	// Sync this change. DO not add 'todaysValue' to the deps
+	useEffect(() => {
+		if (summary?.totalLogged !== todaysValue) {
+			setTodaysValue(summary?.totalLogged);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [summary?.totalLogged]);
 
 	return (
 		<div className={styles.HabitLogger}>

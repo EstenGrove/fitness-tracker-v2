@@ -462,8 +462,11 @@ const CreateWorkout = ({ currentUser, onClose }: Props) => {
 		}).catch((err) => {
 			if (err instanceof Error) {
 				alert(JSON.stringify(error));
+				return;
 			}
 		});
+
+		onClose();
 	};
 
 	return (

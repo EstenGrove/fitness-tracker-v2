@@ -1,0 +1,13 @@
+.RecapCardBody {
+	flex: 1 1 auto; // fills remaining space
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end; // content aligned at bottom
+
+	&_inner {
+		width: 100%;
+		min-height: 100%;
+		// flex: 1 1 auto; // fills remaining space
+	}
+}

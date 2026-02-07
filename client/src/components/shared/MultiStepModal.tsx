@@ -48,12 +48,26 @@ const NextButton = ({ onClick, isDisabled = false }: NavButtonProps) => {
 	);
 };
 const SaveButton = ({ onClick, isDisabled = false }: NavButtonProps) => {
+	const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
+	const [lockButton, setLockButton] = useState<boolean>(isDisabled);
+
+	const handleClick = () => {
+		onClick();
+		setLockButton(true);
+
+		if (timerRef.current) clearTimeout(timerRef.current);
+
+		timerRef.current = setTimeout(() => {
+			setLockButton(false);
+		}, 500);
+	};
+
 	return (
 		<button
 			type="button"
-			onClick={onClick}
+			onClick={handleClick}
 			className={styles.SaveButton}
-			disabled={isDisabled}
+			disabled={lockButton}
 		>
 			Save
 		</button>
@@ -88,7 +102,7 @@ const MultiStepModal = ({ steps, onClose, onNext, onPrev, onSave }: Props) => {
 	// closes on swipe down after threshold is reached
 	const { translateY, onTouchStart, onTouchMove, onTouchEnd } = useSwipeDown(
 		threshold,
-		onClose
+		onClose,
 	);
 
 	const handleNext = () => {

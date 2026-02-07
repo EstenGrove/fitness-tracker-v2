@@ -1,0 +1,33 @@
+.TotalsItem {
+	width: 17rem;
+	height: 15rem;
+	border-radius: 1rem;
+	border: $borderLight;
+	padding: 1rem;
+
+	&_top {
+		width: 100%;
+		@include flex_row(flex-start, center);
+		gap: 0 1rem;
+
+		&_icon {
+			$size: 1.6rem;
+			width: $size;
+			height: $size;
+			fill: $accentOrange;
+		}
+		&_label {
+			text-align: left;
+			font-size: 1.5rem;
+			font-weight: 700;
+		}
+	}
+
+	&_total {
+		@include rowCenter();
+		text-align: center;
+		width: 100%;
+		height: 90%;
+		font-size: 3rem;
+	}
+}

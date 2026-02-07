@@ -49,6 +49,7 @@ const HabitTrackerPage = () => {
 						habit={details.habit}
 						summary={details.summary}
 						allLogs={allLogs}
+						onChanges={invalidateCache}
 					/>
 				)}
 			</div>

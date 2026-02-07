@@ -1,14 +1,18 @@
-import React from "react";
-import styles from "../../css/weekly-recap/RecapCard.module.scss";
+import { JSX, ReactNode } from "react";
+import { IconKey } from "../../utils/utils_icons";
+import RecapCardLayout from "./RecapCardLayout";
 
-type Props = {};
+type Props = {
+	isActive: boolean;
+	header: JSX.Element | ReactNode;
+	body: JSX.Element | ReactNode;
+	icon?: IconKey;
+	color?: string;
+};
 
-const RecapCard = ({}: Props) => {
+const RecapCard = ({ header, body, icon, color }: Props) => {
 	return (
-		<div className={styles.RecapCard}>
-			{/*  */}
-			{/*  */}
-		</div>
+		<RecapCardLayout header={header} body={body} icon={icon} color={color} />
 	);
 };
 

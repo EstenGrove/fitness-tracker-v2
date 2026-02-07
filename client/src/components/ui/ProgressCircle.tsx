@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../../css/ui/ProgressCircle.module.scss";
 
-type ColorType = "blue" | "purple" | "green" | "primary" | "blank";
+type ColorType = "red" | "blue" | "purple" | "green" | "primary" | "blank";
 
 type Props = {
 	percentage: number;
@@ -27,6 +27,11 @@ const accents = {
 		main: "var(--accent-green)",
 		start: "var(--green200)",
 		stop: "var(--accent-green)",
+	},
+	red: {
+		main: "var(--accent-red)",
+		start: "var(--accent-red)",
+		stop: "var(--accent-red)",
 	},
 	primary: {
 		main: "var(--accent)",

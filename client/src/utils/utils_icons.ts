@@ -1,7 +1,11 @@
+import sprite from "../assets/icons/main.svg";
+import sprite2 from "../assets/icons/main.svg";
+import alt from "../assets/icons/calendar.svg";
+
 export type IconSize = "XSM" | "SM" | "MD" | "LG" | "XLG" | "XXLG";
 
 const iconsMap = {
-	// sprite1
+	// main.svg
 	1: {
 		effort: "effort",
 		exercise: "running",
@@ -63,6 +67,7 @@ const iconsMap = {
 		empty3: "fridge-with-open-door-3",
 		pill: "pill",
 		pillBottle: "pillBottle",
+		weightLift: "weightlift-2",
 	},
 	2: {
 		// HABITS - sprite2
@@ -103,4 +108,27 @@ const iconsMap = {
 
 export type IconKey = keyof (typeof iconsMap)[1] | keyof (typeof iconsMap)[2];
 
-export { iconsMap };
+const getSprite = (name: string) => {
+	const in1 = name in iconsMap[1];
+	const in2 = name in iconsMap[2];
+
+	if (in1) {
+		return sprite;
+	} else if (in2) {
+		return sprite2;
+	} else {
+		return alt;
+	}
+};
+
+const getIcon = (name: string): string => {
+	if (name in iconsMap[1]) {
+		return iconsMap[1][name as keyof object];
+	} else if (name in iconsMap[2]) {
+		return iconsMap[2][name as keyof object];
+	} else {
+		return name;
+	}
+};
+
+export { iconsMap, getSprite, getIcon };

@@ -1,9 +1,25 @@
 import type { Pool } from "pg";
+import type { DateRange, DateRangeDB } from "../modules/types.js";
 
 class SummaryService {
 	#db: Pool;
 	constructor(db: Pool) {
 		this.#db = db;
+	}
+
+	async getExerciseSummaryForRange(userID: string, range: DateRange) {
+		try {
+			const query = `SELECT * FROM get_exercise_summary_for_range($1, $2, $3)`;
+			const results = await this.#db.query(query, [
+				userID,
+				range.startDate,
+				range.endDate,
+			]);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
 	}
 
 	async getWorkoutHistoryCalendar(userID: string, baseDate: string) {

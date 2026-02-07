@@ -169,6 +169,7 @@ const API_ENDPOINTS = {
 	},
 	habits: {
 		logHabit: "/habits/logHabit",
+		logHabitManually: "/habits/logHabitManually",
 		getHabits: "/habits/getHabits",
 		getHabitLogs: "/habits/getHabitLogs",
 		logHabitsBatched: "/habits/logHabitsBatched",
@@ -219,7 +220,17 @@ const API_ENDPOINTS = {
 	},
 	recaps: {
 		getWeeklyRecap: "/recap/getWeeklyRecap",
+		getWeeklyRecaps: "/recap/getWeeklyRecaps",
 		getRecapForRange: "/recap/getRecapForRange",
+	},
+	trends: {
+		getActivityTrends: "/trends/getActivityTrends",
+	},
+	insights: {
+		getActivityInsights: "/insights/getActivityInsights",
+	},
+	workoutRecaps: {
+		getWorkoutRecap: "/recaps/getWorkoutRecap",
 	},
 };
 
@@ -242,6 +253,9 @@ export const {
 	summary: summaryApis,
 	streaks: streakApis,
 	recaps: recapApis,
+	trends: trendsApis,
+	insights: insightsApis,
+	workoutRecaps: workoutRecapApis,
 } = API_ENDPOINTS;
 
 export {

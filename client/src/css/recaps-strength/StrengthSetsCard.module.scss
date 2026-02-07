@@ -1,0 +1,25 @@
+.Title {
+	@include recapTitle();
+	margin-top: 0.5rem;
+
+	& > b {
+		color: var(--strengthAccent);
+	}
+}
+.Desc {
+	@include recapDesc();
+	& > b {
+		color: var(--strengthAccent);
+	}
+}
+
+.Charts {
+	width: 100%;
+	@include rowCenter();
+	gap: 0 2rem;
+	// padding: 3rem 1rem 0 1rem;
+
+	&_item {
+		width: 40%;
+	}
+}

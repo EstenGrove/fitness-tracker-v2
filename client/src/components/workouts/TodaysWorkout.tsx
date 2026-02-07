@@ -25,7 +25,7 @@ import {
 	SkipWorkoutBody,
 } from "../../utils/utils_workouts";
 import { MarkAsDoneParams } from "../../features/types";
-import { isValid } from "date-fns";
+import { isValid, subDays } from "date-fns";
 import MenuDropdown from "../shared/MenuDropdown";
 import ViewWorkout from "./ViewWorkout";
 import ModalLG from "../shared/ModalLG";
@@ -36,6 +36,7 @@ import UnskipWorkout from "./UnskipWorkout";
 import ViewPostWorkout from "../details/ViewPostWorkout";
 import DeleteWorkout from "./DeleteWorkout";
 import EditWorkout from "./EditWorkout";
+import WorkoutRecap from "../workout-recaps/WorkoutRecap";
 
 type Props = {
 	workout: ITodaysWorkout;
@@ -114,7 +115,8 @@ type ModalType =
 	| "COMPLETE"
 	| "CANCEL"
 	| "SKIP"
-	| "UNSKIP";
+	| "UNSKIP"
+	| "PROGRESS";
 
 enum EModalType {
 	VIEW = "VIEW",
@@ -124,6 +126,7 @@ enum EModalType {
 	CANCEL = "CANCEL",
 	SKIP = "SKIP",
 	UNSKIP = "UNSKIP",
+	PROGRESS = "PROGRESS",
 }
 
 type ItemsProps = {
@@ -139,6 +142,12 @@ const MenuItems = ({ onAction, isDone = false, wasSkipped }: ItemsProps) => {
 				style={{ color: "var(--todaysMenuText)" }}
 			>
 				View
+			</li>
+			<li
+				onClick={() => onAction(EModalType.PROGRESS)}
+				style={{ color: "var(--todaysMenuText)" }}
+			>
+				Progress
 			</li>
 			<li
 				onClick={() => onAction(EModalType.EDIT)}
@@ -384,6 +393,18 @@ const TodaysWorkout = ({ workout }: Props) => {
 					<StartButton onClick={goToStartWorkout} />
 				)}
 			</div>
+
+			{/* MARK: MODALS */}
+
+			{modalType === EModalType.PROGRESS && (
+				<WorkoutRecap
+					onClose={closeModal}
+					activityType={workout.activityType}
+					workoutID={workout.workoutID}
+					workoutName={workout.workoutName}
+					lastXDays={30}
+				/>
+			)}
 
 			{modalType === EModalType.VIEW && (
 				<ModalLG onClose={closeModal}>

@@ -20,6 +20,7 @@ import { isToday } from "date-fns";
 import { StreaksCacheStatus } from "../features/streaks/types";
 import {
 	STREAKS_KEY,
+	shouldShowStreaks,
 	STREAKS_CACHE as storage,
 	updateLastSeen,
 } from "../utils/utils_streaks";
@@ -213,29 +214,16 @@ const WorkoutsPage = () => {
 	// Streaks modal should only appear once per day UNLESS we just performed a workout...
 	// ...then we should open it immediately after completing the workout w/ our updated streak data!
 	const openStreaks = () => {
-		const seenCache = storage.get<StreaksCacheStatus>(
-			STREAKS_KEY
-		) as StreaksCacheStatus;
 		const timestamp = formatDateTime(new Date(), "longMs");
+		const shouldOpenStreaks = shouldShowStreaks();
 
-		if ("justFinished" in seenCache && seenCache.justFinished) {
+		// If we just completed an active workout session, we should show the updated streaks
+		//...but we should only show it once in a 10hour window, instead of every time we finish a workout
+		if (shouldOpenStreaks) {
 			setShowStreaksOverlay(true);
 			updateLastSeen(timestamp);
 			return;
 		}
-
-		// If there's no record of the streaks modal being opened, open it by default
-		if (!seenCache) {
-			setShowStreaksOverlay(true);
-			updateLastSeen(timestamp);
-			return;
-		}
-
-		const wasSeenToday = isToday(seenCache?.lastSeen);
-		if (wasSeenToday) return;
-
-		setShowStreaksOverlay(true);
-		updateLastSeen(timestamp);
 	};
 
 	const onDismissStreaks = () => {

@@ -33,6 +33,21 @@ $displayWidth: 14rem;
 			margin-top: 3rem;
 		}
 	}
+
+	&_manual {
+		width: 100%;
+		height: 25rem;
+		@include flex_col(flex-end, center);
+		margin-top: auto;
+
+		&_btn {
+			padding: 0.5rem 1.2rem;
+			border-radius: 5rem;
+			border: 1px solid $text1;
+			background-color: transparent;
+			color: $text1;
+		}
+	}
 }
 .MinusButton {
 	width: 5rem;
@@ -76,21 +91,33 @@ $displayWidth: 14rem;
 }
 
 .DisplayValue {
+	position: relative;
 	min-width: $displayWidth;
-	max-width: $displayWidth;
+	width: fit-content;
 	font-size: $display;
 	text-align: center;
 	color: var(--habitDisplay);
 }
+
 .DisplayInput {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	width: 10ch; // wider edit surface
 	min-width: $displayWidth;
-	max-width: $displayWidth;
+	max-width: 14ch;
+
 	font-size: $display;
 	text-align: center;
-	background-color: transparent;
+
+	background: var(--bg-foreground);
 	border: none;
 	outline: none;
+
 	color: var(--habitDisplay);
+	z-index: 10;
 
 	&:focus-within {
 		color: $accentBlue;

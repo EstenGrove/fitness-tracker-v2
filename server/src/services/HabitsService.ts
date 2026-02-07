@@ -125,6 +125,17 @@ class HabitsService {
 			return error;
 		}
 	}
+	async logHabitOverride(values: HabitLogValues) {
+		try {
+			const query = `SELECT * FROM log_habit_override($1)`;
+			const results = await this.#db.query(query, [values]);
+			console.log("results", results);
+			const rows = results?.rows;
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
 	async logHabitsBatched(logs: HabitLogValues[]): BatchedLogsResp {
 		try {
 			const query = `SELECT * FROM log_habits_batched($1::JSONB)`;

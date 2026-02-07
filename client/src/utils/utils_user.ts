@@ -112,8 +112,6 @@ const fetchUserExists = async (
 	let url = currentEnv.base + userApis.userExists;
 	url += "?" + new URLSearchParams({ username, password });
 
-	console.log("url", url);
-
 	try {
 		const request = await fetch(url);
 		const response = await request.json();

@@ -1,0 +1,19 @@
+@mixin arrow() {
+	width: 2rem;
+	height: 2rem;
+	min-width: 2rem;
+	min-height: 2rem;
+}
+
+.TrendUpArrow {
+	@include arrow();
+	fill: $accentGreen;
+}
+.TrendDownArrow {
+	@include arrow();
+	fill: $accentRed;
+}
+.TrendFlatArrow {
+	@include arrow();
+	fill: var(--blueGrey700);
+}
