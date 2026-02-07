@@ -12,6 +12,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3004
+EXPOSE 3002
 
 CMD ["node", "dist/index.js"]
