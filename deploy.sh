@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # COLORS
 RED="\033[1;31m"
@@ -8,22 +9,18 @@ NC="\033[0m"
 
 REMOTE_HOST='198.199.97.95'
 REMOTE_USER='root'
-TARGET_PATH='/var/www/app.sgore.dev/html'
+TARGET_PATH='/opt/app.sgore.dev'
 LOCAL_PATH=$(pwd)
-DB_BACKUP_PATH="./backup.dump"  # Custom-format dump file
+DB_BACKUP_PATH="./backup.dump"
 
-# Parse flags
 RESTORE_DB=false
 for arg in "$@"; do
-  if [[ "$arg" == "--restore-db" ]]; then
-    RESTORE_DB=true
-  fi
+  [[ "$arg" == "--restore-db" ]] && RESTORE_DB=true
 done
 
-# SYNC CODE
-# - Copies project files but excludes certain files & folders
-printf "${GREEN}Syncing project to remote host at ${REMOTE_HOST}${NC}\n"
-rsync -av --progress \
+printf "${GREEN}📦 Syncing project to ${REMOTE_HOST}${NC}\n"
+
+rsync -av --delete --progress \
   --exclude node_modules \
   --exclude dist \
   --exclude .env \
@@ -31,25 +28,38 @@ rsync -av --progress \
   --exclude .DS_Store \
   "${LOCAL_PATH}/" "${REMOTE_USER}@${REMOTE_HOST}:${TARGET_PATH}/"
 
-# OPTIONAL: Upload DB backup file
 if $RESTORE_DB; then
-  printf "${BLUE}Uploading DB backup file: ${DB_BACKUP_PATH}${NC}\n"
+  printf "${BLUE}📤 Uploading DB backup${NC}\n"
   scp "$DB_BACKUP_PATH" "${REMOTE_USER}@${REMOTE_HOST}:${TARGET_PATH}/backup.dump"
 fi
 
-# REMOTE COMMANDS
-printf "🚀 ${GREEN}Deploying project...${NC}\n"
-ssh "${REMOTE_USER}@${REMOTE_HOST}" << EOF
-  cd ${TARGET_PATH}
-  docker compose pull
-  docker compose up --build -d
+printf "🚀 ${GREEN}Deploying on remote...${NC}\n"
 
-  if $RESTORE_DB; then
-    echo "${BLUE}Restoring PostgreSQL database from backup.dump...${NC}"
-    docker cp backup.dump \$(docker compose ps -q db):/backup.dump
-    docker exec -i \$(docker compose ps -q db) pg_restore -U postgres -d yourdb --clean --if-exists /backup.dump
-    echo "${GREEN}✅ Database restore completed.${NC}"
+ssh "${REMOTE_USER}@${REMOTE_HOST}" << 'EOF'
+  set -e
+  cd /opt/app.sgore.dev
+
+  docker compose build
+  docker compose up -d
+
+  if [ -f backup.dump ]; then
+    echo "🗄 Restoring database..."
+
+    DB_CONTAINER=$(docker compose ps -q db)
+
+    docker cp backup.dump ${DB_CONTAINER}:/backup.dump
+
+    docker exec -i ${DB_CONTAINER} \
+      pg_restore \
+        -U "$POSTGRES_USER" \
+        -d "$POSTGRES_DB" \
+        --clean \
+        --if-exists \
+        /backup.dump
+
+    rm backup.dump
+    echo "✅ Database restored"
   fi
 
-  echo "${GREEN}✅ Deployment & build were successful!${NC}"
+  echo "✅ Deploy complete"
 EOF

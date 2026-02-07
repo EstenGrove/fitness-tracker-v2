@@ -12,7 +12,7 @@ type Props = {
 
 const getRepsDataParts = (data: StrengthRecapDetails) => {
 	if (!data || !data.history.length) {
-		return { data: [], maxValue: 0 };
+		return { data: [], maxValue: 0, minValue: 0 };
 	}
 	const repsData: number[] = data.history.map((entry) => entry.totalReps);
 	const min = Math.min(...repsData);
