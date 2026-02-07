@@ -20,6 +20,9 @@ import CardioTitleCard from "../components/recaps-cardio/CardioTitleCard";
 import CardioTotalsCard from "../components/recaps-cardio/CardioTotalsCard";
 import StrengthSetsCard from "../components/recaps-strength/StrengthSetsCard";
 import WalkAveragesCard from "../components/recaps-walk/WalkAveragesCard";
+import StrengthVolumeCard from "../components/recaps-strength/StrengthVolumeCard";
+import CardioAveragesCard from "../components/recaps-cardio/CardioAveragesCard";
+import StretchConsistencyCard from "../components/recaps-stretch/StretchConsistencyCard";
 
 const renderContent = (content?: JSX.Element | ReactNode) => {
 	if (content) {
@@ -29,7 +32,7 @@ const renderContent = (content?: JSX.Element | ReactNode) => {
 };
 
 const getRecapStrengthCards = (
-	data: StrengthRecapDetails
+	data: StrengthRecapDetails,
 ): ActivityRecapCard<"Strength">[] => {
 	const titleCard: ActivityRecapCard<"Strength"> = {
 		id: 0,
@@ -42,18 +45,26 @@ const getRecapStrengthCards = (
 		data,
 		render: StrengthTotalsCard,
 	} as ActivityRecapCard<"Strength">;
-	const setsCard = {
+
+	const avgCard = {
 		id: 2,
+		type: "Strength",
+		data: data,
+		render: StrengthVolumeCard,
+	} as ActivityRecapCard<"Strength">;
+
+	const setsCard = {
+		id: 3,
 		data,
 		render: StrengthSetsCard,
 	} as ActivityRecapCard<"Strength">;
 
-	const strengthCards = [titleCard, totalsCard, setsCard];
+	const strengthCards = [titleCard, totalsCard, avgCard, setsCard];
 
 	return strengthCards;
 };
 const getRecapCardioCards = (
-	data: CardioRecapDetails
+	data: CardioRecapDetails,
 ): ActivityRecapCard<"Cardio">[] => {
 	const titleCard: ActivityRecapCard<"Cardio"> = {
 		id: 0,
@@ -67,8 +78,14 @@ const getRecapCardioCards = (
 		data: data,
 		render: CardioTotalsCard,
 	};
+	const avgsCard: ActivityRecapCard<"Cardio"> = {
+		id: 2,
+		type: "Cardio",
+		data: data,
+		render: CardioAveragesCard,
+	};
 
-	const cardioCards = [titleCard, totalsCard];
+	const cardioCards = [titleCard, totalsCard, avgsCard];
 
 	return cardioCards;
 };
@@ -133,21 +150,28 @@ const getRecapStretchCards = (data: StretchRecapDetails) => {
 		data: data,
 		render: StretchTotalsCard,
 	};
-
-	const stretchCards = [titleCard, totalsCard];
+	const consistencyCard = {
+		id: 2,
+		type: "Stretch",
+		data: data,
+		render: StretchConsistencyCard,
+	};
+	const stretchCards = [titleCard, totalsCard, consistencyCard];
 
 	return stretchCards;
 };
 
 const getActivityRecapCards = (
 	activityType: Activity,
-	data: ActivityRecapDetails
+	data: ActivityRecapDetails,
+	workoutName: string = "",
 ) => {
 	if (!data) return [];
 
 	switch (activityType) {
 		case "Strength": {
-			return getRecapStrengthCards(data as StrengthRecapDetails);
+			const newData = { ...data, title: workoutName };
+			return getRecapStrengthCards(newData as StrengthRecapDetails);
 		}
 		case "Stretch": {
 			return getRecapStretchCards(data as StretchRecapDetails);
@@ -174,7 +198,7 @@ const getActivityRecapCards = (
 // Get number of days for recap
 const getDaysRange = (data: ActivityRecapDetails) => {
 	if (!data) return 0;
-	const days = data.trends.sampleSize;
+	const days = data.trends?.rangeDays ?? data.trends?.sampleSize;
 
 	return days || 0;
 };

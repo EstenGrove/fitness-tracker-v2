@@ -84,7 +84,8 @@ const StrengthTotalsCard = ({ isActive, data }: Props) => {
 					<b>{totals.totalWorkouts} workouts.</b>
 				</h2>
 				<div className={styles.Desc}>
-					You performed {totals.totalWorkouts} in the last {days} days.
+					You did this workout {totals.totalWorkouts} times in the last {days}{" "}
+					days.
 				</div>
 			</RecapsHeader>
 			<RecapsBody>

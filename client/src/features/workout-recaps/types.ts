@@ -89,6 +89,9 @@ export interface OtherRecapHistory {
 export interface StrengthRecap {
 	maxReps: number;
 	maxVolume: number;
+	avgReps: number;
+	avgMins: number;
+	avgVolume: number;
 	totalMins: number;
 	totalReps: number;
 	totalVolume: number;
@@ -155,6 +158,7 @@ export type ActivityRecap = {
 };
 
 export interface StrengthRecapDetails {
+	title: string;
 	recap: StrengthRecap;
 	trends: StrengthTrends;
 	insights: StrengthInsights;

@@ -15,6 +15,7 @@ import RecapsCarousel from "../recaps-carousel/RecapsCarousel";
 type Props = {
 	workoutID: number;
 	activityType: Activity;
+	workoutName?: string;
 	lastXDays?: number;
 	onClose: () => void;
 };
@@ -116,10 +117,10 @@ const CarouselTop = ({ title, dates, children, onClose }: CarouselTopProps) => {
 	);
 };
 
-const getTopTitle = (type: Activity) => {
+const getTopTitle = (type: Activity, name: string = "") => {
 	switch (type) {
 		case "Strength": {
-			return "Strength Training";
+			return `${name} Recap`;
 		}
 		case "Stretch": {
 			return "Stretch Workouts";
@@ -153,10 +154,11 @@ const getDatesRangeAndDesc = (lastXDays: number = 30) => {
 const WorkoutRecap = ({
 	workoutID,
 	activityType,
+	workoutName = "",
 	onClose,
 	lastXDays = 30,
 }: Props) => {
-	const topTitle = getTopTitle(activityType);
+	const topTitle = getTopTitle(activityType, workoutName);
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const [currentStep, setCurrentStep] = useState(0);
 	const { desc } = getDatesRangeAndDesc(lastXDays);
@@ -166,8 +168,10 @@ const WorkoutRecap = ({
 		lastXDays: lastXDays,
 	});
 	const cards = useMemo(() => {
-		return getActivityRecapCards(activityType, data);
-	}, [activityType, data]);
+		return getActivityRecapCards(activityType, data, workoutName);
+	}, [activityType, data, workoutName]);
+
+	const hasCards = cards && cards?.length > 0;
 
 	console.log("data", data);
 	console.log("cards", cards);
@@ -227,7 +231,7 @@ const WorkoutRecap = ({
 				onNext={onTapNext}
 				carouselRef={carouselRef}
 			>
-				{cards?.length &&
+				{hasCards &&
 					cards.map((card, idx) => {
 						const Card = card.render as WorkoutCard;
 						return (

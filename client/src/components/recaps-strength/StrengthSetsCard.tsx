@@ -1,69 +1,60 @@
-import React from "react";
 import styles from "../../css/recaps-strength/StrengthSetsCard.module.scss";
 import RecapsCard from "../recaps-carousel/RecapsCard";
 import { StrengthRecapDetails } from "../../features/workout-recaps/types";
 import RecapsHeader from "../recaps-carousel/RecapsHeader";
 import RecapsBody from "../recaps-carousel/RecapsBody";
-import TotalsItem from "../recaps-shared/TotalsItem";
-import RecapChart from "../recaps-shared/RecapChart";
-import TrendLine from "../ui/TrendLine";
-import RecapTrendLine from "../recaps-shared/RecapTrendLine";
-import { durationTo } from "../../utils/utils_workouts";
+import RecapDottedChart from "../recaps-shared/RecapDottedChart";
 
 type Props = {
 	isActive: boolean;
 	data: StrengthRecapDetails;
 };
 
-const getLongestSession = (data: StrengthRecapDetails) => {
-	if (!data || !data?.history?.length) return 0;
-	const mins = data.history.map((entry) => entry.totalMins);
-	const max = Math.max(...mins);
-
-	return max;
-};
-
-const getTrendsData = (data: StrengthRecapDetails) => {
-	if (!data || !data?.history?.length) {
-		return { reps: [], sets: [], volume: [], calories: [] };
+const getRepsDataParts = (data: StrengthRecapDetails) => {
+	if (!data || !data.history.length) {
+		return { data: [], maxValue: 0 };
 	}
-
-	const repsData = data.history.map((entry) => entry.totalReps);
-	const setsData = data.history.map((entry) => entry.totalSets);
-	const volData = data.history.map((entry) => entry.totalVolume);
-	const caloriesData = data.history.map((entry) => entry.totalCalories);
+	const repsData: number[] = data.history.map((entry) => entry.totalReps);
+	const min = Math.min(...repsData);
+	const max = Math.max(...repsData);
+	// We add 1/2 of the 'min' as an upper-bound cushion
+	const normedMax = max + min / 2;
 
 	return {
-		reps: repsData,
-		sets: setsData,
-		volume: volData,
-		calories: caloriesData,
+		data: repsData,
+		minValue: min,
+		maxValue: normedMax,
 	};
 };
 
 const StrengthSetsCard = ({ isActive, data }: Props) => {
-	const totalVolume = data?.recap?.totalVolume;
-	const historyData = getTrendsData(data);
-	const longestMins = getLongestSession(data);
-	const volume = data?.trends?.volume;
+	const maxReps = data?.recap?.maxReps;
+	const repsHistory = getRepsDataParts(data);
+	const reps = data?.trends?.reps;
 	const days = data?.trends?.rangeDays;
-	const totalWorkouts = data?.recap?.totalWorkouts;
+
+	console.log("Reps Data:", repsHistory);
 
 	return (
 		<RecapsCard isActive={isActive}>
 			<RecapsHeader>
 				<h2 className={styles.Title}>
-					Your volume efforts are trending <b>{volume?.direction}</b>!
+					Your <b>strength reps</b> are trending <b>{reps?.direction}</b>!
 				</h2>
 				<div className={styles.Desc}>
-					Your longest session was {durationTo(longestMins, "h&m")}.
+					Your max reps in the last {days} days was {maxReps} reps in a set.
 				</div>
 			</RecapsHeader>
-			<RecapsBody styles={{ justifyContent: "flex-start", paddingTop: "3rem" }}>
+			<RecapsBody styles={{ justifyContent: "flex-end", paddingTop: "3rem" }}>
 				<div className={styles.Charts}>
-					{/*  */}
-					{/*  */}
-					{/*  */}
+					<RecapDottedChart
+						data={repsHistory.data}
+						maxValue={repsHistory.maxValue}
+						title="Total Reps per Workout"
+						icon="weightLift"
+						dotColor="var(--strengthAccent)"
+						axisColor="var(--blueGrey400)"
+					/>
 				</div>
 			</RecapsBody>
 		</RecapsCard>

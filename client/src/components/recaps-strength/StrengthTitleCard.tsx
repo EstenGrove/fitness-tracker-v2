@@ -13,13 +13,17 @@ type Props = {
 
 const StrengthTitleCard = ({ isActive, data }: Props) => {
 	const lastXDays = data?.trends?.rangeDays ?? 30;
+	const title = data?.title;
 	return (
 		<RecapsCard isActive={isActive}>
 			<RecapsHeader>
 				<TypeBadge activityType="Strength" size="MD" />
 				<h2 className={styles.Title}>
-					<b>Strength Training</b> Recap
+					<b>{title}</b> Recap
 				</h2>
+				{/* <h2 className={styles.Title}>
+					<b>Strength Training</b> Recap
+				</h2> */}
 				<h6 className={styles.Desc}>
 					Your recap for the last {lastXDays} days.
 				</h6>

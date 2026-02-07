@@ -401,6 +401,7 @@ const TodaysWorkout = ({ workout }: Props) => {
 					onClose={closeModal}
 					activityType={workout.activityType}
 					workoutID={workout.workoutID}
+					workoutName={workout.workoutName}
 					lastXDays={30}
 				/>
 			)}

@@ -3,13 +3,13 @@
 	margin-top: 0.5rem;
 
 	& > b {
-		color: var(--walkAccent);
+		color: var(--strengthAccent);
 	}
 }
 .Desc {
 	@include recapDesc();
 	& > b {
-		color: var(--walkAccent);
+		color: var(--strengthAccent);
 	}
 }
 
@@ -20,4 +20,5 @@
 }
 .Chart {
 	width: 100%;
+	padding: 0 1rem;
 }

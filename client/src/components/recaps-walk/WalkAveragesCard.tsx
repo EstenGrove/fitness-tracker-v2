@@ -1,15 +1,12 @@
-import React from "react";
 import styles from "../../css/recaps-walk/WalkAveragesCard.module.scss";
-import RecapsCard from "../recaps-carousel/RecapsCard";
-import RecapsHeader from "../recaps-carousel/RecapsHeader";
-import RecapsBody from "../recaps-carousel/RecapsBody";
 import { WalkRecapDetails } from "../../features/workout-recaps/types";
-import { getDaysRange, getLongestMins } from "../../utils/utils_recaps";
-import { TrendMetric, WalkTrends } from "../../features/trends/types";
-import { durationTo } from "../../utils/utils_workouts";
+import { getDaysRange } from "../../utils/utils_recaps";
 import { formatThousand } from "../../utils/utils_misc";
-import MetricAvg from "../recaps-shared/MetricAvg";
+import RecapsCard from "../recaps-carousel/RecapsCard";
+import RecapsBody from "../recaps-carousel/RecapsBody";
 import MetricTrend from "../recaps-shared/MetricTrend";
+import RecapsHeader from "../recaps-carousel/RecapsHeader";
+import RecapChart from "../recaps-shared/RecapChart";
 
 type Props = { isActive: boolean; data: WalkRecapDetails };
 
@@ -27,60 +24,70 @@ const getAvg = (value: number) => {
 	}
 };
 
+const getMilesData = (data: WalkRecapDetails) => {
+	if (!data) return [];
+
+	const miles = data.history.map((entry) => {
+		return entry.totalMiles;
+	});
+	return miles;
+};
+
+const showMetrics = true;
+const showChart = true;
+
 const WalkAveragesCard = ({ isActive, data }: Props) => {
 	const days = getDaysRange(data);
 	const trends = getOverallTrend(data);
-	const longest = getLongestMins(data);
-	const avgMins = getAvg(data.recap.avgMins);
+	const milesData = getMilesData(data);
 	const avgMiles = getAvg(data.recap.avgMiles);
 	const avgSteps = getAvg(data.recap.avgSteps);
+	const maxMiles = getAvg(data.recap.maxMiles);
+	const maxSteps = getAvg(data.recap.maxSteps);
 
 	return (
 		<RecapsCard isActive={isActive}>
 			<RecapsHeader>
 				<h2 className={styles.Title}>
-					Your walks are trending{" "}
+					Your walking distance is trending{" "}
 					<b data-direction={trends.direction}>{trends.direction}</b> in the
 					last <b>{days}</b> days.
 				</h2>
 				<h6 className={styles.Desc}>
-					Your longest walk was {durationTo(longest, "h&m")}.
+					Your longest walk was {maxMiles} miles ({maxSteps} steps)
 				</h6>
 			</RecapsHeader>
 			<RecapsBody>
-				<div className={styles.Metrics}>
-					<MetricTrend
-						title="Miles"
-						type="miles"
-						value={avgMiles}
-						direction="down"
-						delta={32.0}
-					/>
-					<MetricTrend
-						title="Steps"
-						type="steps"
-						value={avgSteps}
-						direction="up"
-						delta={6.52}
-					/>
-					{/* <MetricTrend
-						title="Reps"
-						type="reps"
-						value={32}
-						direction="flat"
-						delta={0}
-					/>
-					<MetricTrend
-						title="Volume"
-						type="volume"
-						value={1850}
-						direction="up"
-						delta={66.2}
-					/> */}
-				</div>
-
-				{/*  */}
-				{/*  */}
+				{showMetrics && (
+					<div className={styles.Metrics}>
+						<MetricTrend
+							title="Miles"
+							type="miles"
+							value={avgMiles}
+							direction="down"
+							delta={32.0}
+						/>
+						<MetricTrend
+							title="Steps"
+							type="steps"
+							value={avgSteps}
+							direction="up"
+							delta={6.52}
+						/>
+					</div>
+				)}
+				{showChart && (
+					<div className={styles.Chart}>
+						<RecapChart
+							icon="steps"
+							data={milesData}
+							label="Distance (mi.)"
+							chartStroke="var(--walkAccent)"
+							chartFill="var(--walkFill)"
+							titlePosition="bottom"
+						/>
+					</div>
+				)}
 			</RecapsBody>
 		</RecapsCard>
 	);

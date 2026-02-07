@@ -1,4 +1,4 @@
-import styles from "../../css/recaps-strength/StrengthVolumeCard.module.scss";
+import styles from "../../css/recaps-strength/StrengthAveragesCard.module.scss";
 import RecapsCard from "../recaps-carousel/RecapsCard";
 import RecapsHeader from "../recaps-carousel/RecapsHeader";
 import RecapsBody from "../recaps-carousel/RecapsBody";
@@ -31,17 +31,12 @@ const getLayeredData = (data: StrengthRecapDetails): LayeredData => {
 	};
 };
 
-const getMaxVolume = (data: StrengthRecapDetails) => {
-	if (!data) return 0;
-	return data.recap.maxVolume;
-};
-
 // VOLUME CARD
 
-const StrengthVolumeCard = ({ isActive, data }: Props) => {
+const StrengthAveragesCard = ({ isActive, data }: Props) => {
 	const days = getDaysRange(data);
 	const trend = getOverallTrend(data);
-	const maxVolume = getMaxVolume(data);
+	const longest = getLongestMins(data);
 	const layeredData = getLayeredData(data);
 
 	return (
@@ -52,7 +47,9 @@ const StrengthVolumeCard = ({ isActive, data }: Props) => {
 					<b data-direction={trend.direction}>{trend.direction}</b> in the last{" "}
 					<b>{days}</b> days.
 				</h2>
-				<h6 className={styles.Desc}>Your max volume was {maxVolume} lbs.</h6>
+				<h6 className={styles.Desc}>
+					Your longest workout was {durationTo(longest, "h&m")}.
+				</h6>
 			</RecapsHeader>
 
 			<RecapsBody>
@@ -71,4 +68,4 @@ const StrengthVolumeCard = ({ isActive, data }: Props) => {
 	);
 };
 
-export default StrengthVolumeCard;
+export default StrengthAveragesCard;

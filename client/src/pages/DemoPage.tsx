@@ -21,6 +21,8 @@ import ProgressArc from "../components/ui/ProgressArc";
 import ProgressContent from "../components/ui/ProgressContent";
 import TrendItem from "../components/recaps-shared/TrendItem";
 import LayeredAreaChart from "../components/ui/LayeredAreaChart";
+import DottedBarChart from "../components/ui/DottedBarChart";
+import WorkoutCalendarViz from "../components/ui/WorkoutCalendarViz";
 
 const colorVariants = {
 	Pink: [
@@ -1280,15 +1282,25 @@ const getLongestMins = (data) => {
 	};
 };
 
+const getMinMaxValues = (data: number[]) => {
+	const max = Math.max(...data);
+	const min = Math.min(...data);
+
+	return {
+		max,
+		min,
+	};
+};
+
 const DemoPage = () => {
+	const repsPerSet = [26, 22, 18, 20, 24];
+	const { min, max } = getMinMaxValues(repsPerSet);
 	const primary = ringVariants.Red;
 	const secondary = ringVariants.Blue;
 	const tertiary = ringVariants.Purple;
 	const minsData = getDataFor(strengthData, "totalMins");
 	const maxRepsData = getDataFor(strengthData, "maxReps");
 	const maxVolData = getDataFor(strengthData, "maxVolume");
-	const minMax = getLongestMins(strengthData);
-	console.log("minMax", minMax);
 
 	const set1 = [
 		newColors.Blue[4],
@@ -1301,6 +1313,19 @@ const DemoPage = () => {
 		<PageContainer>
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
+				<div className={css.DemoPage_item}>
+					<WorkoutCalendarViz lastXDays={30} />
+				</div>
+				<div className={css.DemoPage_item}>
+					<DottedBarChart
+						data={[26, 22, 18, 20, 24]}
+						maxValue={max + 5}
+						// dotColor="var(--strengthAccent)"
+						dotColor="var(--walkAccent)"
+						labelColor="var(--walkFill)"
+						axisColor="var(--walkFill)"
+					/>
+				</div>
 				<div className={css.DemoPage_item}>
 					<LayeredAreaChart
 						width={320}

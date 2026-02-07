@@ -1,0 +1,49 @@
+.WorkoutCalendarViz {
+	width: 100%;
+
+	&_labels {
+		width: 100%;
+	}
+	&_days {
+		width: 100%;
+		@include flex_row(flex-start, center, wrap);
+		gap: 0 0.5rem;
+	}
+}
+.WorkoutDay {
+	position: relative;
+	width: 4.771rem;
+	height: 4.771rem;
+	@include rowCenter();
+	// border: 1px solid grey;
+
+	&_date {
+		@include rowCenter();
+	}
+	&_value {
+		$size: 4rem;
+		width: $size;
+		height: $size;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.WeekDayLabels {
+	width: 100%;
+	height: 5rem;
+	@include flex_row(space-evenly, center);
+	gap: 0 0.5rem;
+	// border: 1px solid grey;
+
+	&_day {
+		width: 100%;
+		height: 100%;
+		font-size: 1.5rem;
+		color: $text1;
+		// border: 1px solid grey;
+		@include flex_row(center, flex-start);
+	}
+}
