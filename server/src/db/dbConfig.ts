@@ -13,6 +13,7 @@ export interface PgSQLConfig extends PoolConfig {
 const envName = process.env.ENVIRONMENT;
 const isDocker = Boolean(process.env.IS_DOCKER) || existsSync("/.dockerenv");
 const isProd = envName === "prod" || envName === "PRODUCTION";
+const isLocalEnv = envName === "local";
 
 // In Docker, default host should be 'db' (the service name), otherwise 'localhost'
 const defaultHost = isDocker || isProd ? "db" : "localhost";
@@ -30,9 +31,14 @@ const PROD_CONFIG = {
 	connectionString: process.env.PROD_DB_CONFIG as string,
 };
 
-// Use PROD_CONFIG if we have a connection string (works in Docker too)
-// Otherwise fall back to LOCAL_CONFIG with individual environment variables
-const useConnectionString = Boolean(process.env.PROD_DB_CONFIG);
+// Use PROD_CONFIG only if:
+// 1. We have a connection string
+// 2. We're NOT in local development (local env should always use LOCAL_CONFIG)
+// 3. We're in Docker or production
+const useConnectionString = 
+	Boolean(process.env.PROD_DB_CONFIG) && 
+	!isLocalEnv && 
+	(isDocker || isProd);
 
 const DB_CONFIG = useConnectionString ? PROD_CONFIG : LOCAL_CONFIG;
 
