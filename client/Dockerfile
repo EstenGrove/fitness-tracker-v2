@@ -16,19 +16,23 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+# Remove default nginx website and configs
+RUN rm -rf /usr/share/nginx/html/* && \
+    find /etc/nginx/conf.d -name "*.conf" -type f -delete || true
+
+# Ensure SSL directories exist with correct permissions
+RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
+    chmod 755 /etc/ssl/certs && \
+    chmod 750 /etc/ssl/private
 
 # Copy built static files to Nginx folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config (adjust path if needed)
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-
-# Expose port 80
-EXPOSE 80
+# Expose ports
+EXPOSE 80 443
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

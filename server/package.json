@@ -5,7 +5,8 @@
 		"build": "tsc",
 		"dev": "tsx watch --env-file=.env src/index.ts",
 		"start": "node --env-file=.env dist/index.js",
-		"local": "node --env-file=.env dist/index.ts"
+		"local": "tsx watch --env-file=.env.local src/index.ts",
+		"prod": "tsx watch --env-file=.env.production src/index.ts"
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^2.0.46",

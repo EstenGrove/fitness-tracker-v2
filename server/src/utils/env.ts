@@ -1,12 +1,14 @@
 import dotenv from "dotenv";
+import { existsSync } from "fs";
 dotenv.config();
 
 // ENV CONDITIONAL BOOLEANS
 const isRemote = Boolean(process.env.IS_REMOTE);
-const isDocker = Boolean(process.env.IS_DOCKER);
+// Auto-detect Docker: check env var OR if running in container (has /.dockerenv file)
+const isDocker = Boolean(process.env.IS_DOCKER) || existsSync("/.dockerenv");
 
 const currentEnv = String(process.env.ENVIRONMENT);
-const isProd = currentEnv === "prod";
+const isProd = currentEnv === "prod" || currentEnv === "PRODUCTION";
 const isLocalEnv = currentEnv === "local";
 
 const defaultPort = 3004;
@@ -26,15 +28,28 @@ const SERVERS = {
 	},
 	docker: {
 		prefix: defaultPrefix,
-		ip: process.env.DOCKER_IP,
+		ip: process.env.DOCKER_IP || "0.0.0.0",
+		port: 3002,
+	},
+	production: {
+		prefix: "https://",
+		ip: process.env.DOCKER_IP || "0.0.0.0",
 		port: 3002,
 	},
 };
 
-const getServer = (envOverride?: "local" | "docker" | "remote") => {
+const getServer = (
+	envOverride?: "local" | "docker" | "remote" | "production"
+) => {
 	switch (true) {
+		case isLocalEnv || envOverride === "local": {
+			return SERVERS["local"];
+		}
 		case !!envOverride: {
 			return SERVERS[envOverride];
+		}
+		case isProd: {
+			return SERVERS["production"];
 		}
 		case isDocker: {
 			return SERVERS["docker"];
@@ -42,11 +57,18 @@ const getServer = (envOverride?: "local" | "docker" | "remote") => {
 		case isRemote: {
 			return SERVERS["remote"];
 		}
-		case isLocalEnv: {
-			return SERVERS["local"];
-		}
+
 		default:
-			throw new Error(`Unrecognized ENV!`);
+			// Default to docker if we're in a container, otherwise throw error
+			if (existsSync("/.dockerenv")) {
+				console.warn(
+					"⚠️  No environment variables set, defaulting to Docker configuration"
+				);
+				return SERVERS["docker"];
+			}
+			throw new Error(
+				`Unrecognized ENV! Set one of: IS_DOCKER, IS_REMOTE, or ENVIRONMENT (local/prod/PRODUCTION). Current: IS_DOCKER=${process.env.IS_DOCKER}, IS_REMOTE=${process.env.IS_REMOTE}, ENVIRONMENT=${process.env.ENVIRONMENT}`
+			);
 	}
 };
 
@@ -54,6 +76,7 @@ export {
 	isLocalEnv,
 	isProd,
 	isRemote,
+	isDocker,
 	SERVERS,
 	getServer,
 	defaultPort,
