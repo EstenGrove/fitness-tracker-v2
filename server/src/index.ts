@@ -4,13 +4,21 @@ import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { allRoutes } from "./routes/index.js";
-import { getServer, isRemote } from "./utils/env.js";
+import {
+	getServer,
+	isLocalEnv,
+	isRemote,
+	isProd,
+	isDocker,
+} from "./utils/env.js";
 import { withAuth } from "./modules/auth/utils.js";
+import { testDatabaseConnection } from "./db/db.js";
 dotenv.config();
-console.log("KEY", process.env.GOOGLE_API_KEY);
 
-const target = getServer("local");
-console.log("TARGET ENV:", target);
+// Auto-detect environment - don't hardcode
+const envKey = isProd ? "production" : isDocker ? "docker" : "local";
+const target = getServer();
+console.log(`(${envKey.toUpperCase()}):`, target);
 
 const SERVER = {
 	host: target.ip,
@@ -22,7 +30,7 @@ const CLIENT = {
 };
 
 const ORIGIN = {
-	prefix: "http://",
+	prefix: !isLocalEnv ? "https://" : "http://",
 	host: CLIENT.host,
 	port: CLIENT.port,
 };
@@ -98,4 +106,9 @@ serve({
 	port: SERVER.port,
 });
 
-console.log(`\n✅ - Server is running on http://${SERVER.host}:${SERVER.port}`);
+// Test database connection after server starts
+testDatabaseConnection().catch(console.error);
+
+console.log(
+	`\n✅ - Server is running on ${ORIGIN.prefix}${SERVER.host}:${SERVER.port}`
+);

@@ -1,4 +1,4 @@
-import styles from "../../css/recaps-Cardio/CardioTitleCard.module.scss";
+import styles from "../../css/recaps-cardio/CardioTitleCard.module.scss";
 import RecapsCard from "../recaps-carousel/RecapsCard";
 import RecapsHeader from "../recaps-carousel/RecapsHeader";
 

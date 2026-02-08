@@ -1,5 +1,5 @@
 const isRemote = Boolean(
-	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE
+	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE,
 );
 
 export const BASE_URL: string = !isRemote
@@ -60,7 +60,7 @@ const API_AUTH = {
 	},
 };
 
-const CURRENT_ENV_KEY = "local";
+const CURRENT_ENV_KEY = "production";
 const CURRENT_ENV = API_AUTH[CURRENT_ENV_KEY];
 
 const API_ENDPOINTS = {

@@ -3,30 +3,31 @@ version: "3.9"
 services:
   client:
     build: ./client
+    env_file:
+      - .env.production
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - server
     volumes:
-      - /etc/letsencrypt/live/app.mydomain.dev:/etc/ssl/live:ro
-      - /etc/letsencrypt/archive/app.mydomain.dev:/etc/ssl/archive:ro
-      - /etc/letsencrypt/renewal:/etc/ssl/renewal:ro
+      - /etc/letsencrypt/live/app.sgore.dev/fullchain.pem:/etc/ssl/certs/app.sgore.dev.crt:ro
+      - /etc/letsencrypt/live/app.sgore.dev/privkey.pem:/etc/ssl/private/app.sgore.dev.key:ro
     restart: always
 
   server:
     build: ./server
     env_file:
-      - .env
+      - .env.production
     depends_on:
       - db
     restart: always
 
   db:
-    image: postgres:17
+    build: ./db
     restart: always
     env_file:
-      - .env
+      - .env.production
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
