@@ -19,6 +19,8 @@ services:
     build: ./server
     env_file:
       - .env.production
+    environment:
+      - TZ=America/Phoenix
     depends_on:
       - db
     restart: always
@@ -28,8 +30,12 @@ services:
     restart: always
     env_file:
       - .env.production
+    environment:
+      - TZ=America/Phoenix
+      - PGTZ=America/Phoenix
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    command: postgres -c timezone=America/Phoenix
 
 volumes:
   postgres_data:
