@@ -25,6 +25,8 @@ const LOCAL_CONFIG: PgSQLConfig = {
 	database:
 		process.env.DB_NAME || process.env.POSTGRES_DB || "FitnessTracker-v2",
 	port: Number(process.env.DB_PORT) || 5432,
+	// Set timezone for this connection
+	options: `-c timezone=${process.env.TZ || "America/Phoenix"}`,
 };
 
 const PROD_CONFIG = {

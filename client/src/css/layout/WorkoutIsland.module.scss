@@ -1,0 +1,214 @@
+// ============================================
+// Variables
+// ============================================
+$iconSize: 3.5rem;
+
+// ============================================
+// Mixins
+// ============================================
+@mixin iconStyles() {
+	width: $iconSize;
+	height: $iconSize;
+	border-radius: 50%;
+	@include rowCenter();
+	cursor: pointer;
+
+	&_icon {
+		width: calc($iconSize - 30%);
+		height: calc($iconSize - 30%);
+		fill: var(--accent);
+		cursor: pointer;
+	}
+}
+
+// ============================================
+// Main Container
+// ============================================
+.WorkoutIsland {
+	position: fixed;
+	bottom: 8rem;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 60dvw;
+	border-radius: 5rem;
+	max-width: 40rem;
+	background: #000;
+	overflow: hidden;
+	transition: border-radius 0.35s ease,
+		max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+	max-height: 10rem; // Collapsed height
+
+	&_expanded {
+		border-radius: 2rem;
+		max-height: 30rem; // Expanded height - adjust as needed
+	}
+}
+
+.WorkoutIsland_content {
+	width: 100%;
+	position: relative;
+}
+
+// ============================================
+// Collapsed Section
+// ============================================
+.CollapsedSection {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 5rem;
+	padding: 0.5rem;
+	cursor: pointer;
+	border-radius: 5rem;
+	opacity: 0;
+	visibility: hidden;
+	transform: scale(0.95) translateY(-10px);
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: opacity 0.25s ease, transform 0.25s ease,
+		visibility 0s linear 0.25s;
+
+	&_visible {
+		opacity: 1;
+		visibility: visible;
+		transform: scale(1) translateY(0);
+		pointer-events: auto;
+		position: relative;
+		transition: opacity 0.25s ease 0.15s, transform 0.25s ease 0.15s,
+			visibility 0s linear 0s;
+	}
+
+	&_left {
+		flex: 1;
+		@include flex_row(flex-start, center);
+		gap: 0 1rem;
+		align-items: center;
+
+		&_iconWrapper {
+			width: $iconSize;
+			height: $iconSize;
+			border-radius: 50%;
+			background-color: var(--pinkBG);
+			@include rowCenter();
+
+			&_icon {
+				width: calc($iconSize - 30%);
+				height: calc($iconSize - 30%);
+				fill: var(--accent);
+				cursor: pointer;
+			}
+		}
+
+		&_title {
+			font-size: 1.6rem;
+			font-weight: 500;
+			color: $text1;
+		}
+	}
+
+	&_right {
+		flex-shrink: 0;
+		@include flex_row(flex-end, center);
+		gap: 0 1rem;
+		align-items: center;
+	}
+}
+
+// ============================================
+// Expanded Section
+// ============================================
+.ExpandedSection {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem;
+	border-radius: 1rem;
+	overflow: visible;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transform: scale(0.95) translateY(10px);
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: opacity 0.25s ease, transform 0.25s ease,
+		visibility 0s linear 0.25s;
+
+	&_visible {
+		opacity: 1;
+		visibility: visible;
+		transform: scale(1) translateY(0);
+		pointer-events: auto;
+		position: relative;
+		transition: opacity 0.25s ease 0.15s, transform 0.25s ease 0.15s,
+			visibility 0s linear 0s;
+	}
+
+	&_top {
+		@include flex_row(flex-start, center);
+		gap: 0 1rem;
+		flex-shrink: 0;
+
+		&_title {
+			font-size: 1.6rem;
+			font-weight: 500;
+			color: $text1;
+		}
+	}
+
+	&_body {
+		width: 100%;
+		flex: 1 1 auto;
+		min-height: 10rem;
+	}
+
+	&_actions {
+		width: 100%;
+		@include flex_row(flex-end, flex-start);
+	}
+}
+
+// ============================================
+// Icon Components
+// ============================================
+.ActivityIcon {
+	width: $iconSize;
+	height: $iconSize;
+	border-radius: 50%;
+	@include rowCenter();
+
+	&_icon {
+		width: calc($iconSize - 30%);
+		height: calc($iconSize - 30%);
+		cursor: pointer;
+	}
+}
+
+.PlayIcon {
+	@include iconStyles();
+	background-color: rgba(185, 0, 52, 0.26);
+}
+
+.PauseIcon {
+	@include iconStyles();
+}
+
+.ResumeIcon {
+	@include iconStyles();
+}
+
+.DismissIcon {
+	@include iconStyles();
+}
+
+// ============================================
+// Utility Classes
+// ============================================
+.Content {
+	display: flex;
+	flex-direction: column;
+}

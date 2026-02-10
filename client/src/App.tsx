@@ -4,9 +4,11 @@ import { store } from "./store/store";
 import { RouterProvider } from "react-router";
 import { AppProviders } from "./context/AppProviders";
 import { router } from "./routes/routes";
+import { useRefreshOnFocus } from "./hooks/useRefreshOnFocus";
 import OfflineIndicator from "./components/offline/OfflineIndicator";
 
 function App() {
+	useRefreshOnFocus();
 	return (
 		<Provider store={store}>
 			<AppProviders>

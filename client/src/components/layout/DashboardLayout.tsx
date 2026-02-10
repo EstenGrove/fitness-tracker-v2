@@ -9,15 +9,35 @@ import {
 	selectCurrentSession,
 	selectCurrentUser,
 } from "../../features/user/userSlice";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AuthRefreshResponse } from "../../utils/utils_user";
 import { setAccessTokenCookie } from "../../utils/utils_cookies";
+import { useResumeActiveWorkout } from "../../hooks/useResumeActiveWorkouts";
+import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
+import WorkoutIsland from "./WorkoutIsland";
+
+const ENABLE_WORKOUT_ISLAND = false;
 
 const AppLayout = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const currentSession = useSelector(selectCurrentSession);
+	const { activeWorkout, resume } = useResumeActiveWorkout();
+	const [showActiveWorkoutIndicator, setShowActiveWorkoutIndicator] =
+		useState<boolean>(!!activeWorkout || false);
+
+	const onResumeWorkout = () => {
+		setShowActiveWorkoutIndicator(false);
+		resume();
+	};
+	const onPauseWorkout = () => {
+		setShowActiveWorkoutIndicator(false);
+		resume();
+	};
+	const onDismissWorkout = () => {
+		setShowActiveWorkoutIndicator(false);
+	};
 
 	const handleLogout = async () => {
 		const userID = currentUser?.userID ?? "";
@@ -73,6 +93,14 @@ const AppLayout = () => {
 			<TopNav onLogout={handleLogout} />
 			<Navbar />
 			<Outlet />
+			{showActiveWorkoutIndicator && ENABLE_WORKOUT_ISLAND && (
+				<WorkoutIsland
+					workout={activeWorkout as ActiveWorkoutInfo}
+					onResume={onResumeWorkout}
+					onPause={onPauseWorkout}
+					onDismiss={onDismissWorkout}
+				/>
+			)}
 		</div>
 	);
 };
