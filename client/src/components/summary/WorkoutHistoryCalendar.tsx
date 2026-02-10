@@ -117,7 +117,7 @@ const WorkoutHistoryMonth = ({
 			{data &&
 				data.map((entry, idx) => {
 					const { date } = entry;
-					const key = `${idx}-${date}`;
+					const key = idx;
 					const isDateSelected = isSelected(date, selectedDate);
 					return (
 						<WorkoutHistoryCalendarDay

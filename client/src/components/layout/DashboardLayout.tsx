@@ -16,7 +16,7 @@ import { useResumeActiveWorkout } from "../../hooks/useResumeActiveWorkouts";
 import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
 import WorkoutIsland from "./WorkoutIsland";
 
-const ENABLE_WORKOUT_ISLAND = false;
+const ENABLE_WORKOUT_ISLAND = true;
 
 const AppLayout = () => {
 	const navigate = useNavigate();
