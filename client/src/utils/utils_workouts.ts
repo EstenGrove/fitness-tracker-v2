@@ -1234,6 +1234,27 @@ const checkForActiveWorkout = (
 	return workout as TodaysWorkout;
 };
 
+export interface ActiveWorkoutInfo extends TodaysWorkout {
+	status: TimerStatus;
+	intervalInSecs: number;
+	totalSecs: number;
+	totalLength: string;
+}
+
+const checkForActiveWorkoutInfo = (): ActiveWorkoutInfo | null => {
+	const workout = checkForActiveWorkout();
+	const timer = checkForActiveWorkoutTimer();
+
+	if (!workout || !timer) return null;
+
+	const info = {
+		...(workout as TodaysWorkout),
+		...(timer as ActiveWorkoutCache),
+	};
+
+	return info as ActiveWorkoutInfo;
+};
+
 const setActiveWorkout = (
 	activeWorkout: TodaysWorkout,
 	workoutKey: string = ACTIVE_KEY
@@ -1303,6 +1324,7 @@ export {
 	checkForActiveWorkout,
 	checkForActiveWorkoutTimer,
 	checkForInProgressWorkout,
+	checkForActiveWorkoutInfo,
 	hasActiveWorkout,
 	// LOG WORKOUT UTILS //
 	prepareLogWorkout,

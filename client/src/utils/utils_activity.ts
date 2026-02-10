@@ -37,9 +37,9 @@ const ACTIVITY_STYLES: ActivityStyles = {
 		bg: "rgba(255, 0, 102, .3)",
 	},
 	Other: {
-		icon: "dots-three-horizontal",
-		color: "var(--blueGrey900)",
-		bg: "",
+		icon: "exercise",
+		color: "var(--blueGrey200)",
+		bg: "var(--blueGrey800",
 	},
 } as const;
 
