@@ -16,6 +16,8 @@ import { useResumeActiveWorkout } from "../../hooks/useResumeActiveWorkouts";
 import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
 import WorkoutIsland from "./WorkoutIsland";
 
+const ENABLE_WORKOUT_ISLAND = false;
+
 const AppLayout = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -91,7 +93,7 @@ const AppLayout = () => {
 			<TopNav onLogout={handleLogout} />
 			<Navbar />
 			<Outlet />
-			{showActiveWorkoutIndicator && (
+			{showActiveWorkoutIndicator && ENABLE_WORKOUT_ISLAND && (
 				<WorkoutIsland
 					workout={activeWorkout as ActiveWorkoutInfo}
 					onResume={onResumeWorkout}

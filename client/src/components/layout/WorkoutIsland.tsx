@@ -77,6 +77,7 @@ type ExpandedSectionProps = {
 	onPause: () => void;
 	onDismiss: () => void;
 	toggleExpanded: () => void;
+	isVisible: boolean;
 };
 
 const ExpandedSection = ({
@@ -85,22 +86,28 @@ const ExpandedSection = ({
 	onPause,
 	onDismiss,
 	toggleExpanded,
+	isVisible,
 }: ExpandedSectionProps) => {
 	const { workoutName, activityType } = workout;
 	const title = addEllipsis(workoutName, 15);
 	return (
-		<div className={styles.ExpandedSection}>
+		<div
+			className={`${styles.ExpandedSection} ${
+				isVisible ? styles.ExpandedSection_visible : ""
+			}`}
+		>
 			<div className={styles.ExpandedSection_top} onClick={toggleExpanded}>
 				<ActivityIcon activityType={activityType} />
 				<div className={styles.ExpandedSection_top_title}>{title}</div>
 			</div>
-			<div className={styles.CollapsedSection_body}>
+			<div className={styles.ExpandedSection_body}>
 				{/*  */}
 				{/*  */}
 			</div>
-			<div className={styles.CollapsedSection_actions}>
-				{/*  */}
-				{/*  */}
+			<div className={styles.ExpandedSection_actions}>
+				<PlayIcon onClick={onResume} />
+				<PauseIcon onClick={onPause} />
+				<DismissIcon onClick={onDismiss} />
 			</div>
 		</div>
 	);
@@ -112,6 +119,7 @@ type CollapsedSectionProps = {
 	onPause: () => void;
 	onDismiss: () => void;
 	toggleExpanded: () => void;
+	isVisible: boolean;
 };
 
 const CollapsedSection = ({
@@ -120,11 +128,17 @@ const CollapsedSection = ({
 	onPause,
 	onDismiss,
 	toggleExpanded,
+	isVisible,
 }: CollapsedSectionProps) => {
 	const { status, workoutName, activityType } = workout;
 	const title = addEllipsis(workoutName, 15);
 	return (
-		<div className={styles.CollapsedSection} onClick={toggleExpanded}>
+		<div
+			className={`${styles.CollapsedSection} ${
+				isVisible ? styles.CollapsedSection_visible : ""
+			}`}
+			onClick={toggleExpanded}
+		>
 			<div className={styles.CollapsedSection_left}>
 				<ActivityIcon activityType={activityType} />
 				<div className={styles.CollapsedSection_left_title}>{title}</div>
@@ -152,16 +166,17 @@ const WorkoutIsland = ({ workout, onResume, onPause, onDismiss }: Props) => {
 	return (
 		<div
 			className={`${styles.WorkoutIsland} ${
-				isExpanded ? styles.expanded : styles.collapsed
+				isExpanded ? styles.WorkoutIsland_expanded : ""
 			}`}
 		>
-			<div className={styles.WorkoutIsland_content}>
+			<div className={`${styles.WorkoutIsland_content}`}>
 				<CollapsedSection
 					workout={workout}
 					onResume={onResume}
 					onPause={onPause}
 					onDismiss={onDismiss}
 					toggleExpanded={toggleExpanded}
+					isVisible={!isExpanded}
 				/>
 				<ExpandedSection
 					workout={workout}
@@ -169,6 +184,7 @@ const WorkoutIsland = ({ workout, onResume, onPause, onDismiss }: Props) => {
 					onPause={onPause}
 					onDismiss={onDismiss}
 					toggleExpanded={toggleExpanded}
+					isVisible={isExpanded}
 				/>
 			</div>
 		</div>
