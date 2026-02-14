@@ -1,17 +1,17 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/active-workout/WorkoutTimer.module.scss";
 import {
 	ETimerStatus,
 	TimeInfo,
 	TimerStatus,
-	usePersistentTimer,
 } from "../../hooks/usePersistentTimer";
 import { formattedTime } from "../../utils/utils_formatter";
 import {
 	formatElapsedTime,
 	getElapsedWorkoutTime,
 } from "../../utils/utils_workouts";
+import { useWorkoutTimerContext } from "../../context/useWorkoutContext";
 
 type Props = {
 	duration: number;
@@ -173,40 +173,66 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 };
 
 const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
-	const timer = usePersistentTimer(duration, {
-		onEnd(info) {
-			return onEnd(info);
-		},
-	});
-	const timerStatus: TimerStatus = timer.status;
+	// Use the shared timer instance from context
+	const { timer, status, timeInfo, start, pause, resume, end, reset } =
+		useWorkoutTimerContext();
+
+	// Initialize timer with workout duration when component mounts (but don't start it)
+	// This ensures the timer displays the correct duration (e.g., 15:00) even when IDLE
+	useEffect(() => {
+		// Only initialize if timer is IDLE and there's no existing timer in localStorage
+		if (status === ETimerStatus.IDLE && !timeInfo) {
+			// Reset to set the correct duration without starting
+			reset(duration);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // Only on mount
+
+	const timerStatus: TimerStatus = status;
 	// Converts to seconds to '00:00' format
 	const displayTime: string = useMemo(() => {
-		const baseTime = Number(timer.timer.toFixed(0));
+		const baseTime = Number(timer.toFixed(0));
 		return formattedTime(baseTime);
-	}, [timer.timer]);
+	}, [timer]);
 
-	const start = () => {
-		timer.start();
+	const handleStart = () => {
+		start(duration);
 	};
-	const end = () => {
-		timer.end();
+
+	const handleEnd = () => {
+		end();
+		// timeInfo will be updated by the context's onEnd callback
+		// We'll handle the onEnd call in a useEffect to ensure we have the latest timeInfo
 	};
-	const reset = () => {
+
+	// Watch for when timer ends and timeInfo is available
+	useEffect(() => {
+		// When timer ends (status becomes IDLE) and we have timeInfo with endedAt, call onEnd
+		if (status === "IDLE" && timeInfo && timeInfo.endedAt) {
+			onEnd(timeInfo);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [status, timeInfo]);
+
+	const handleReset = () => {
 		const statuses: TimerStatus[] = ["ACTIVE", "PAUSED"];
 		if (statuses.includes(timerStatus)) {
 			alert("Workout is IN-PROGRESS!");
 			return;
 		}
-		timer.reset();
+		reset(duration);
 
 		return onReset && onReset();
 	};
-	const pause = () => {
-		timer.pause();
+
+	const handlePause = () => {
+		pause();
 	};
-	const resume = () => {
-		timer.resume();
+
+	const handleResume = () => {
+		resume();
 	};
+
 	const skip = () => {
 		return onSkip && onSkip();
 	};
@@ -219,15 +245,15 @@ const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 			<div className={styles.WorkoutTimer_controls}>
 				<TimerControls
 					status={timerStatus}
-					start={start}
-					pause={pause}
-					resume={resume}
-					end={end}
+					start={handleStart}
+					pause={handlePause}
+					resume={handleResume}
+					end={handleEnd}
 					skip={skip}
 				/>
 			</div>
 			<div className={styles.WorkoutTimer_reset}>
-				<ResetButton onClick={reset} />
+				<ResetButton onClick={handleReset} />
 			</div>
 		</div>
 	);
