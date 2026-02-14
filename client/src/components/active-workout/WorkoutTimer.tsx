@@ -1,17 +1,19 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useWorkoutContext } from "../../context/useWorkoutContext";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/active-workout/WorkoutTimer.module.scss";
 import {
 	ETimerStatus,
+	getPersistedInfo,
 	TimeInfo,
 	TimerStatus,
-	usePersistentTimer,
 } from "../../hooks/usePersistentTimer";
 import { formattedTime } from "../../utils/utils_formatter";
 import {
 	formatElapsedTime,
 	getElapsedWorkoutTime,
 } from "../../utils/utils_workouts";
+import { formatDateTime } from "../../utils/utils_dates";
 
 type Props = {
 	duration: number;
@@ -32,6 +34,16 @@ type TimerControlProps = {
 	resume: () => void;
 	end: () => void;
 	skip: () => void;
+};
+
+const getNows = () => {
+	const timestamp = Date.now();
+	const timeStr = formatDateTime(new Date(), "longMs");
+
+	return {
+		startTime: timeStr, // 4533515
+		startedAt: timestamp, // 2025-05-10 07:39:42
+	};
 };
 
 const TimerControls = ({
@@ -173,23 +185,31 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 };
 
 const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
-	const timer = usePersistentTimer(duration, {
-		onEnd(info) {
-			return onEnd(info);
-		},
-	});
+	const { workoutTimer: timer, setDuration } = useWorkoutContext();
 	const timerStatus: TimerStatus = timer.status;
 	// Converts to seconds to '00:00' format
 	const displayTime: string = useMemo(() => {
-		const baseTime = Number(timer.timer.toFixed(0));
-		return formattedTime(baseTime);
-	}, [timer.timer]);
+		// Since we have to sync the duration from here to the context timer, the 'workoutTimer.timer' is not actually populated until we start the timer
+		const initialDur: number = timer.duration * 60;
+		const currentTimer: number = Number(timer.timer.toFixed(0));
+		const isIdle: boolean = timer.status === ETimerStatus.IDLE;
+		const time: number = isIdle ? initialDur : currentTimer;
+		return formattedTime(time);
+	}, [timer.duration, timer.status, timer.timer]);
 
 	const start = () => {
 		timer.start();
 	};
 	const end = () => {
-		timer.end();
+		const info = getPersistedInfo() as TimeInfo;
+		const { startedAt, startTime } = getNows();
+		const newInfo: TimeInfo = {
+			...info,
+			endedAt: startedAt,
+			endTime: startTime,
+		};
+		timer.end(newInfo);
+		return onEnd && onEnd(newInfo);
 	};
 	const reset = () => {
 		const statuses: TimerStatus[] = ["ACTIVE", "PAUSED"];
@@ -210,6 +230,12 @@ const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 	const skip = () => {
 		return onSkip && onSkip();
 	};
+
+	// We need to sync the initial duration from props to our context timer
+	useEffect(() => {
+		setDuration(duration);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className={styles.WorkoutTimer}>
