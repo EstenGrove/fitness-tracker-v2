@@ -86,18 +86,6 @@ type ExpandedSectionProps = {
 	isVisible: boolean;
 };
 
-const getElapsedMins = () => {
-	const elapsed = getElapsedWorkoutTime();
-	const totalMins = elapsed.mins + elapsed.secs / 60;
-	return totalMins;
-};
-
-const getElapsedInfo = () => {
-	const elapsedMins = getElapsedMins();
-	const value = durationTo(elapsedMins, "HH:mm:ss");
-	return { value, elapsed: elapsedMins };
-};
-
 const ExpandedSection = ({
 	workout,
 	onResume,
