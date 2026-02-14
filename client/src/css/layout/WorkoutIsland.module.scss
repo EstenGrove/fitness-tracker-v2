@@ -137,6 +137,7 @@ $iconSize: 3.5rem;
 	left: 0;
 	transition: opacity 0.25s ease, transform 0.25s ease,
 		visibility 0s linear 0.25s;
+	z-index: 9999;
 
 	&_visible {
 		opacity: 1;
@@ -144,6 +145,8 @@ $iconSize: 3.5rem;
 		transform: scale(1) translateY(0);
 		pointer-events: auto;
 		position: relative;
+		box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.5);
+		border: 1px solid rgba(255, 255, 255, 0.08);
 		transition: opacity 0.25s ease 0.15s, transform 0.25s ease 0.15s,
 			visibility 0s linear 0s;
 	}
@@ -164,11 +167,20 @@ $iconSize: 3.5rem;
 		width: 100%;
 		flex: 1 1 auto;
 		min-height: 10rem;
+
+		&_elapsed {
+			font-size: 1.6rem;
+			font-weight: 500;
+			color: $text1;
+			text-align: center;
+			margin-top: 1rem;
+		}
 	}
 
 	&_actions {
 		width: 100%;
 		@include flex_row(flex-end, flex-start);
+		gap: 0 0.5rem;
 	}
 }
 
@@ -197,8 +209,18 @@ $iconSize: 3.5rem;
 	@include iconStyles();
 }
 
-.ResumeIcon {
-	@include iconStyles();
+.ResumeButton {
+	padding: 0.5rem 1.2rem;
+	border-radius: 1rem;
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: $text1;
+	background-color: var(--accent);
+	@include rowCenter();
+	gap: 0 0.5rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	cursor: pointer;
 }
 
 .DismissIcon {

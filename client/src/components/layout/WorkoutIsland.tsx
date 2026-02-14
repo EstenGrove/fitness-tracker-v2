@@ -2,10 +2,15 @@ import { useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/layout/WorkoutIsland.module.scss";
 import { EActiveStatus } from "../../hooks/useWorkoutTimer";
-import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
+import {
+	ActiveWorkoutInfo,
+	durationTo,
+	getElapsedWorkoutTime,
+} from "../../utils/utils_workouts";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
 import { addEllipsis } from "../../utils/utils_misc";
+import { useElapsedWorkoutTime } from "../../hooks/useElapsedWorkoutTime";
 
 type Props = {
 	workout: ActiveWorkoutInfo;
@@ -33,12 +38,13 @@ const PauseIcon = ({ onClick }: { onClick: () => void }) => {
 	);
 };
 
-const ResumeIcon = ({ onClick }: { onClick: () => void }) => {
+const ResumeButton = ({ onClick }: { onClick: () => void }) => {
 	return (
-		<div className={styles.ResumeIcon} onClick={onClick}>
-			<svg className={styles.ResumeIcon_icon}>
+		<div className={styles.ResumeButton} onClick={onClick}>
+			{/* <svg className={styles.ResumeButton_icon}>
 				<use xlinkHref={`${sprite}#icon-arrow-right`}></use>
-			</svg>
+      </svg> */}
+			<span>Resume</span>
 		</div>
 	);
 };
@@ -80,6 +86,18 @@ type ExpandedSectionProps = {
 	isVisible: boolean;
 };
 
+const getElapsedMins = () => {
+	const elapsed = getElapsedWorkoutTime();
+	const totalMins = elapsed.mins + elapsed.secs / 60;
+	return totalMins;
+};
+
+const getElapsedInfo = () => {
+	const elapsedMins = getElapsedMins();
+	const value = durationTo(elapsedMins, "HH:mm:ss");
+	return { value, elapsed: elapsedMins };
+};
+
 const ExpandedSection = ({
 	workout,
 	onResume,
@@ -90,6 +108,7 @@ const ExpandedSection = ({
 }: ExpandedSectionProps) => {
 	const { workoutName, activityType } = workout;
 	const title = addEllipsis(workoutName, 15);
+	const { display, isActive } = useElapsedWorkoutTime();
 	return (
 		<div
 			className={`${styles.ExpandedSection} ${
@@ -101,13 +120,16 @@ const ExpandedSection = ({
 				<div className={styles.ExpandedSection_top_title}>{title}</div>
 			</div>
 			<div className={styles.ExpandedSection_body}>
-				{/*  */}
-				{/*  */}
+				<div className={styles.ExpandedSection_body_elapsed}>{display}</div>
 			</div>
 			<div className={styles.ExpandedSection_actions}>
-				<PlayIcon onClick={onResume} />
-				<PauseIcon onClick={onPause} />
+				{isActive ? (
+					<PauseIcon onClick={onPause} />
+				) : (
+					<PlayIcon onClick={onResume} />
+				)}
 				<DismissIcon onClick={onDismiss} />
+				<ResumeButton onClick={onResume} />
 			</div>
 		</div>
 	);

@@ -1079,17 +1079,23 @@ const getElapsedWorkoutTime = (
 	const cache = new LocalStorage<ActiveWorkoutCache>();
 	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
 
-	if (!timer) {
+	if (!timer || !timer.startedAt || isNaN(timer.startedAt)) {
 		return { mins: 0, secs: 0 };
 	} else {
 		const elapsed = intervalToDuration({
 			start: timer.startedAt,
 			end: Date.now(),
 		});
-		const { minutes: mins, seconds: secs } = elapsed;
+		// const { minutes: mins, seconds: secs } = elapsed;
+		const mins = elapsed?.minutes ?? 0;
+		const secs = elapsed?.seconds ?? 0;
+
+		const validMins = isNaN(mins) ? 0 : mins;
+		const validSecs = isNaN(secs) ? 0 : secs;
+
 		return {
-			mins: mins as number,
-			secs: secs as number,
+			mins: validMins,
+			secs: validSecs,
 		};
 	}
 };
@@ -1235,6 +1241,10 @@ const checkForActiveWorkout = (
 };
 
 export interface ActiveWorkoutInfo extends TodaysWorkout {
+	startedAt: number;
+	pausedAt: number | null;
+	resumedAt: number | null;
+	endedAt: number | null;
 	status: TimerStatus;
 	intervalInSecs: number;
 	totalSecs: number;
