@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { formatDateTime } from "../utils/utils_dates";
 import { useTimer } from "./useTimer";
 
@@ -30,20 +30,6 @@ interface HookParams {
 	onReset?: () => void;
 }
 
-export interface IMinsAndSecs {
-	minutes: number;
-	seconds: number;
-}
-const timerToMinsAndSecs = (timer: number): IMinsAndSecs => {
-	const mins = Math.floor(timer / 60);
-	const secs = timer - mins * 60;
-
-	return {
-		minutes: mins,
-		seconds: secs,
-	};
-};
-
 const getTimestamp = () => {
 	const time = formatDateTime(new Date(), "longMs");
 
@@ -67,13 +53,6 @@ const useWorkoutTimer = (params: HookParams = defaultOpts) => {
 		resumedAt: null,
 		endedAt: null,
 	});
-	const timeDisplay = useMemo(() => {
-		// format the timerValue => '0:01'
-		const { minutes, seconds } = timerToMinsAndSecs(timer.timer);
-		const secs = seconds < 10 ? `0${seconds}` : seconds;
-		const newTime = `${minutes}:${secs}`;
-		return newTime;
-	}, [timer.timer]);
 
 	const start = () => {
 		const time = getTimestamp();

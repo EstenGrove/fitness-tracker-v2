@@ -33,7 +33,7 @@ import { HistoryOfType } from "../features/history/types";
 import { fetchWithAuth } from "./utils_requests";
 import { milesToPace, milesToSteps } from "./utils_steps";
 import { JsonValue, LocalStorage } from "./utils_storage";
-import { TimerStatus } from "../hooks/usePersistentTimer";
+import { ETimerStatus, TimerStatus } from "../hooks/usePersistentTimer";
 
 export type WorkoutSet = StrengthSet | ExerciseSet;
 
@@ -1079,17 +1079,23 @@ const getElapsedWorkoutTime = (
 	const cache = new LocalStorage<ActiveWorkoutCache>();
 	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
 
-	if (!timer) {
+	if (!timer || !timer.startedAt || isNaN(timer.startedAt)) {
 		return { mins: 0, secs: 0 };
 	} else {
 		const elapsed = intervalToDuration({
 			start: timer.startedAt,
 			end: Date.now(),
 		});
-		const { minutes: mins, seconds: secs } = elapsed;
+		// const { minutes: mins, seconds: secs } = elapsed;
+		const mins = elapsed?.minutes ?? 0;
+		const secs = elapsed?.seconds ?? 0;
+
+		const validMins = isNaN(mins) ? 0 : mins;
+		const validSecs = isNaN(secs) ? 0 : secs;
+
 		return {
-			mins: mins as number,
-			secs: secs as number,
+			mins: validMins,
+			secs: validSecs,
 		};
 	}
 };
@@ -1235,6 +1241,10 @@ const checkForActiveWorkout = (
 };
 
 export interface ActiveWorkoutInfo extends TodaysWorkout {
+	startedAt: number;
+	pausedAt: number | null;
+	resumedAt: number | null;
+	endedAt: number | null;
 	status: TimerStatus;
 	intervalInSecs: number;
 	totalSecs: number;
@@ -1300,6 +1310,41 @@ const hasActiveWorkout = () => {
 	return false;
 };
 
+const getTimestamp = () => {
+	const time = formatDateTime(new Date(), "longMs");
+
+	return time;
+};
+
+const pauseActiveWorkout = (cacheKey: string = TIMER_KEY) => {
+	const cache = new LocalStorage<ActiveWorkoutCache>();
+	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
+
+	if (!timer) return;
+
+	const newCache: ActiveWorkoutCache = {
+		...timer,
+		status: ETimerStatus.PAUSED,
+		pausedAt: Date.now(),
+		pauseTime: getTimestamp(),
+	};
+	cache.set(cacheKey, newCache as unknown as JsonValue<ActiveWorkoutCache>);
+};
+const resumeActiveWorkout = (cacheKey: string = TIMER_KEY) => {
+	const cache = new LocalStorage<ActiveWorkoutCache>();
+	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
+
+	if (!timer) return;
+
+	const newCache: ActiveWorkoutCache = {
+		...timer,
+		status: ETimerStatus.ACTIVE,
+		resumedAt: Date.now(),
+		resumeTime: getTimestamp(),
+	};
+	cache.set(cacheKey, newCache as unknown as JsonValue<ActiveWorkoutCache>);
+};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -1348,4 +1393,7 @@ export {
 	minsToTimerWithMs,
 	minsToTimerHHMMSSms,
 	durationTo,
+	// Workout Status Utils
+	pauseActiveWorkout,
+	resumeActiveWorkout,
 };

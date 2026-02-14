@@ -13,6 +13,7 @@ TARGET_PATH='/var/www/app.sgore.dev/html'
 LOCAL_PATH=$(pwd)
 DB_BACKUP_PATH="./backup.dump"
 
+# Check if '--restore-db' is passed & set 'RESTORE_DB' accordingly
 RESTORE_DB=false
 for arg in "$@"; do
   [[ "$arg" == "--restore-db" ]] && RESTORE_DB=true
@@ -35,6 +36,13 @@ if $RESTORE_DB; then
 fi
 
 printf "🚀 ${GREEN}Deploying on remote...${NC}\n"
+
+# Create a marker file if we're restoring, so the remote script knows
+if $RESTORE_DB; then
+  ssh "${REMOTE_USER}@${REMOTE_HOST}" "touch /var/www/app.sgore.dev/html/.restore-db-flag"
+else
+  ssh "${REMOTE_USER}@${REMOTE_HOST}" "rm -f /var/www/app.sgore.dev/html/.restore-db-flag"
+fi
 
 ssh "${REMOTE_USER}@${REMOTE_HOST}" << 'EOF'
   set -e
@@ -77,7 +85,7 @@ ssh "${REMOTE_USER}@${REMOTE_HOST}" << 'EOF'
     docker exec $CLIENT_CONTAINER nginx -t 2>&1 || true
   fi
 
-  if [ -f backup.dump ]; then
+  if [ -f .restore-db-flag ] && [ -f backup.dump ]; then
     echo "🗄 Restoring database..."
 
     # Load environment variables from .env.production
@@ -144,7 +152,11 @@ ssh "${REMOTE_USER}@${REMOTE_HOST}" << 'EOF'
 
     docker exec ${DB_CONTAINER} rm -f /backup.dump
     rm backup.dump
+    rm -f .restore-db-flag
     echo "✅ Database restored"
+  elif [ -f .restore-db-flag ]; then
+    echo "⚠️  Restore flag found but backup.dump is missing - skipping restore"
+    rm -f .restore-db-flag
   fi
 
   echo "✅ Deploy complete"

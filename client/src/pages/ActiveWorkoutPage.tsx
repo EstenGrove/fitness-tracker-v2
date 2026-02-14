@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { addEllipsis } from "../utils/utils_misc";
 import { useNavigate } from "react-router";
 import { checkForActiveWorkout } from "../utils/utils_workouts";
+import { useRefreshOnFocus } from "../hooks/useRefreshOnFocus";
 
 const ACTIVE_KEY = "ACTIVE";
 const storage = new LocalStorage();
@@ -26,6 +27,8 @@ const ActiveWorkoutPage = () => {
 	const activeWorkout: TodaysWorkout = useSelector(selectActiveWorkout);
 	const workoutName: string =
 		addEllipsis(activeWorkout?.workoutName, 20) ?? "Active Workout";
+	// Refresh the page when we re-focus the browser tab (keeps the timer in-sync in the UI)
+	useRefreshOnFocus();
 
 	const goBack = () => {
 		navigate(-1);

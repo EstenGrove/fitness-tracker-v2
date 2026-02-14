@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import styles from "../../css/layout/DashboardLayout.module.scss";
 import Navbar from "./Navbar";
 import TopNav from "./TopNav";
@@ -13,13 +13,18 @@ import { useCallback, useEffect, useState } from "react";
 import { AuthRefreshResponse } from "../../utils/utils_user";
 import { setAccessTokenCookie } from "../../utils/utils_cookies";
 import { useResumeActiveWorkout } from "../../hooks/useResumeActiveWorkouts";
-import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
+import {
+	ActiveWorkoutInfo,
+	pauseActiveWorkout,
+	resumeActiveWorkout,
+} from "../../utils/utils_workouts";
 import WorkoutIsland from "./WorkoutIsland";
 
-const ENABLE_WORKOUT_ISLAND = false;
+const ENABLE_WORKOUT_ISLAND = true;
 
 const AppLayout = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const dispatch = useAppDispatch();
 	const currentUser = useSelector(selectCurrentUser);
 	const currentSession = useSelector(selectCurrentSession);
@@ -30,10 +35,12 @@ const AppLayout = () => {
 	const onResumeWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
 		resume();
+		resumeActiveWorkout();
 	};
 	const onPauseWorkout = () => {
-		setShowActiveWorkoutIndicator(false);
-		resume();
+		pauseActiveWorkout();
+		// setShowActiveWorkoutIndicator(false);
+		// resume();
 	};
 	const onDismissWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
@@ -87,6 +94,22 @@ const AppLayout = () => {
 			isMounted = false;
 		};
 	}, [checkAndRefreshAuth, currentUser]);
+
+	// We want to check of active workouts to show our island indicator, if applicable
+	useEffect(() => {
+		const isOnWorkoutPage = location.pathname.includes("/active/");
+		if (isOnWorkoutPage) {
+			setShowActiveWorkoutIndicator(false);
+			return;
+		}
+
+		if (activeWorkout) {
+			setShowActiveWorkoutIndicator(true);
+			return;
+		} else {
+			setShowActiveWorkoutIndicator(false);
+		}
+	}, [activeWorkout, location.pathname]);
 
 	return (
 		<div className={styles.AppLayout}>
