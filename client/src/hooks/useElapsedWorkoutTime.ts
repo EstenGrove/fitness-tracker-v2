@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-	checkForActiveWorkoutTimer,
-	durationTo,
-	getElapsedWorkoutTime,
-} from "../utils/utils_workouts";
+import { durationTo } from "../utils/utils_workouts";
 import { ETimerStatus } from "./usePersistentTimer";
+import { useWorkoutTimerContext } from "../context/useWorkoutContext";
 
 /**
  * Hook to check for active/in-progress workout & display the elapsed time
@@ -21,6 +18,9 @@ const useElapsedWorkoutTime = (
 	cacheKey: string = "TIMER_KEY",
 	intervalMs: number = 1000
 ) => {
+	// Use context directly - this is the source of truth
+	const { timer: timerSeconds, status } = useWorkoutTimerContext();
+
 	const [elapsed, setElapsed] = useState<IElapsed>({
 		isActive: false,
 		display: "00:00:00",
@@ -30,27 +30,17 @@ const useElapsedWorkoutTime = (
 	useEffect(() => {
 		let isMounted = true;
 		if (!isMounted) return;
-		const timer = checkForActiveWorkoutTimer();
-		const isActive = timer?.status === ETimerStatus.ACTIVE;
-		if (!isActive) {
-			setElapsed({
-				display: "00:00:00",
-				elapsed: 0,
-				isActive: false,
-			});
-			return;
-		}
 
 		const id = setInterval(() => {
-			const { mins, secs } = getElapsedWorkoutTime(cacheKey);
-			const validMins = isNaN(mins) ? 0 : mins;
-			const validSecs = isNaN(secs) ? 0 : secs;
-			const validElapsed = validMins + validSecs / 60;
-			const validDisplay = durationTo(validElapsed, "HH:mm:ss");
+			// Use context timer directly - it's always in sync
+			const isActive = status === ETimerStatus.ACTIVE;
+			const elapsedMins = timerSeconds / 60;
+			const display = durationTo(elapsedMins, "HH:mm:ss");
+
 			setElapsed({
-				display: validDisplay,
-				elapsed: validElapsed,
-				isActive: true,
+				display,
+				elapsed: elapsedMins,
+				isActive,
 			});
 		}, intervalMs);
 
@@ -58,7 +48,7 @@ const useElapsedWorkoutTime = (
 			isMounted = false;
 			clearInterval(id);
 		};
-	}, [cacheKey, intervalMs]);
+	}, [cacheKey, intervalMs, timerSeconds, status]);
 
 	return elapsed;
 };

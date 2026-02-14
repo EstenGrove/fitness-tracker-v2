@@ -174,13 +174,21 @@ $iconSize: 3.5rem;
 			color: $text1;
 			text-align: center;
 			margin-top: 1rem;
+			@include flex_row(center, center);
+			gap: 0 0.8rem;
+			flex-wrap: wrap;
 		}
 	}
 
 	&_actions {
 		width: 100%;
-		@include flex_row(flex-end, flex-start);
+		@include flex_row(space-between, center);
 		gap: 0 0.5rem;
+
+		&_right {
+			@include flex_row(flex-end, center);
+			gap: 0 0.5rem;
+		}
 	}
 }
 
@@ -223,8 +231,62 @@ $iconSize: 3.5rem;
 	cursor: pointer;
 }
 
+.DismissButton {
+	padding: 0.5rem 1.2rem;
+	border-radius: 1rem;
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: $text1;
+	background-color: rgba(136, 136, 136, 0.2);
+	@include rowCenter();
+	gap: 0 0.5rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: rgba(136, 136, 136, 0.3);
+	}
+}
+
 .DismissIcon {
 	@include iconStyles();
+}
+
+// ============================================
+// Status Indicator
+// ============================================
+.status_indicator {
+	font-size: 1.2rem;
+	font-weight: 400;
+	padding: 0.2rem 0.8rem;
+	border-radius: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.status_active {
+	color: var(--accent-green, #4caf50);
+	background-color: rgba(76, 175, 80, 0.15);
+}
+
+.status_paused {
+	color: var(--accent-orange, #ff9800);
+	background-color: rgba(255, 152, 0, 0.15);
+}
+
+.status_idle {
+	color: var(--text2, #888);
+	background-color: rgba(136, 136, 136, 0.1);
+}
+
+.status_stopped {
+	color: var(--text2, #888);
+	background-color: rgba(136, 136, 136, 0.1);
+}
+
+.status_ended {
+	color: var(--text2, #888);
+	background-color: rgba(136, 136, 136, 0.1);
 }
 
 // ============================================

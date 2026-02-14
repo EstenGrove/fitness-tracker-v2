@@ -1,16 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/layout/WorkoutIsland.module.scss";
 import { EActiveStatus } from "../../hooks/useWorkoutTimer";
-import {
-	ActiveWorkoutInfo,
-	durationTo,
-	getElapsedWorkoutTime,
-} from "../../utils/utils_workouts";
+import { ActiveWorkoutInfo, durationTo } from "../../utils/utils_workouts";
 import { Activity } from "../../features/shared/types";
 import { getActivityStyles } from "../../utils/utils_activity";
 import { addEllipsis } from "../../utils/utils_misc";
-import { useElapsedWorkoutTime } from "../../hooks/useElapsedWorkoutTime";
+import { useWorkoutTimerContext } from "../../context/useWorkoutContext";
+import { ETimerStatus, TimerStatus } from "../../hooks/usePersistentTimer";
 
 type Props = {
 	workout: ActiveWorkoutInfo;
@@ -44,10 +41,19 @@ const ResumeButton = ({ onClick }: { onClick: () => void }) => {
 			{/* <svg className={styles.ResumeButton_icon}>
 				<use xlinkHref={`${sprite}#icon-arrow-right`}></use>
       </svg> */}
-			<span>Resume</span>
+			<span>View</span>
 		</div>
 	);
 };
+
+const DismissButton = ({ onClick }: { onClick: () => void }) => {
+	return (
+		<div className={styles.DismissButton} onClick={onClick}>
+			<span>Dismiss</span>
+		</div>
+	);
+};
+
 const DismissIcon = ({ onClick }: { onClick: () => void }) => {
 	return (
 		<div className={styles.DismissIcon} onClick={onClick}>
@@ -86,6 +92,23 @@ type ExpandedSectionProps = {
 	isVisible: boolean;
 };
 
+const getStatusInfo = (status: TimerStatus) => {
+	switch (status) {
+		case ETimerStatus.ACTIVE:
+			return { label: "Active", className: styles.status_active };
+		case ETimerStatus.PAUSED:
+			return { label: "Paused", className: styles.status_paused };
+		case ETimerStatus.IDLE:
+			return { label: "Ready", className: styles.status_idle };
+		case ETimerStatus.STOPPED:
+			return { label: "Stopped", className: styles.status_stopped };
+		case ETimerStatus.ENDED:
+			return { label: "Ended", className: styles.status_ended };
+		default:
+			return { label: "", className: "" };
+	}
+};
+
 const ExpandedSection = ({
 	workout,
 	onResume,
@@ -94,9 +117,43 @@ const ExpandedSection = ({
 	toggleExpanded,
 	isVisible,
 }: ExpandedSectionProps) => {
-	const { workoutName, activityType } = workout;
+	const { workoutName, activityType, duration } = workout;
 	const title = addEllipsis(workoutName, 15);
-	const { display, isActive } = useElapsedWorkoutTime();
+	// Use the shared timer context directly
+	const { timer, status, pause, resume, start } = useWorkoutTimerContext();
+
+	// Format the timer display from context
+	const display = useMemo(() => {
+		const elapsedMins = timer / 60;
+		return durationTo(elapsedMins, "HH:mm:ss");
+	}, [timer]);
+
+	const handlePause = () => {
+		pause(); // Pause the shared timer
+		onPause(); // Parent callback (for navigation, etc.)
+	};
+
+	// Play icon - starts/resumes timer but does NOT navigate
+	const handlePlay = () => {
+		// If timer is IDLE, start it; otherwise resume
+		if (status === ETimerStatus.IDLE) {
+			start(duration);
+		} else {
+			resume();
+		}
+		// No navigation - just start/resume the timer
+	};
+
+	// Resume button - navigates to active workout page
+	const handleResume = () => {
+		// We ONLY want to navigate to the active workout page
+		onResume(); // Navigate
+	};
+
+	const isTimerActive = status === ETimerStatus.ACTIVE;
+
+	const statusInfo = getStatusInfo(status);
+
 	return (
 		<div
 			className={`${styles.ExpandedSection} ${
@@ -108,16 +165,28 @@ const ExpandedSection = ({
 				<div className={styles.ExpandedSection_top_title}>{title}</div>
 			</div>
 			<div className={styles.ExpandedSection_body}>
-				<div className={styles.ExpandedSection_body_elapsed}>{display}</div>
+				<div className={styles.ExpandedSection_body_elapsed}>
+					{display}
+					{statusInfo.label && (
+						<span
+							className={`${styles.status_indicator} ${statusInfo.className}`}
+						>
+							{statusInfo.label}
+						</span>
+					)}
+				</div>
 			</div>
 			<div className={styles.ExpandedSection_actions}>
-				{isActive ? (
-					<PauseIcon onClick={onPause} />
-				) : (
-					<PlayIcon onClick={onResume} />
-				)}
-				<DismissIcon onClick={onDismiss} />
-				<ResumeButton onClick={onResume} />
+				<DismissButton onClick={onDismiss} />
+				<div className={styles.ExpandedSection_actions_right}>
+					{isTimerActive ? (
+						<PauseIcon onClick={handlePause} />
+					) : (
+						<PlayIcon onClick={handlePlay} />
+					)}
+					<DismissIcon onClick={onDismiss} />
+					<ResumeButton onClick={handleResume} />
+				</div>
 			</div>
 		</div>
 	);
@@ -135,11 +204,10 @@ type CollapsedSectionProps = {
 const CollapsedSection = ({
 	workout,
 	onResume,
-	onPause,
 	onDismiss,
 	toggleExpanded,
 	isVisible,
-}: CollapsedSectionProps) => {
+}: Omit<CollapsedSectionProps, "onPause">) => {
 	const { status, workoutName, activityType } = workout;
 	const title = addEllipsis(workoutName, 15);
 	return (
@@ -183,7 +251,6 @@ const WorkoutIsland = ({ workout, onResume, onPause, onDismiss }: Props) => {
 				<CollapsedSection
 					workout={workout}
 					onResume={onResume}
-					onPause={onPause}
 					onDismiss={onDismiss}
 					toggleExpanded={toggleExpanded}
 					isVisible={!isExpanded}

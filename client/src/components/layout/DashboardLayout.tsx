@@ -13,12 +13,9 @@ import { useCallback, useEffect, useState } from "react";
 import { AuthRefreshResponse } from "../../utils/utils_user";
 import { setAccessTokenCookie } from "../../utils/utils_cookies";
 import { useResumeActiveWorkout } from "../../hooks/useResumeActiveWorkouts";
-import {
-	ActiveWorkoutInfo,
-	pauseActiveWorkout,
-	resumeActiveWorkout,
-} from "../../utils/utils_workouts";
+import { ActiveWorkoutInfo } from "../../utils/utils_workouts";
 import WorkoutIsland from "./WorkoutIsland";
+import { useWorkoutTimerContext } from "../../context/useWorkoutContext";
 
 const ENABLE_WORKOUT_ISLAND = true;
 
@@ -29,18 +26,18 @@ const AppLayout = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const currentSession = useSelector(selectCurrentSession);
 	const { activeWorkout, resume } = useResumeActiveWorkout();
+	const { pause, resume: resumeTimer } = useWorkoutTimerContext();
 	const [showActiveWorkoutIndicator, setShowActiveWorkoutIndicator] =
 		useState<boolean>(!!activeWorkout || false);
 
 	const onResumeWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
-		resume();
-		resumeActiveWorkout();
+		resumeTimer(); // Resume the shared timer
+		resume(); // Navigate to workout page
 	};
 	const onPauseWorkout = () => {
-		pauseActiveWorkout();
-		// setShowActiveWorkoutIndicator(false);
-		// resume();
+		pause(); // Pause the shared timer
+		// Don't navigate - just pause
 	};
 	const onDismissWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
