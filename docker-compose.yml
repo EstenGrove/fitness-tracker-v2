@@ -35,7 +35,7 @@ services:
       - PGTZ=America/Phoenix
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: postgres -c timezone=America/Phoenix
+    command: postgres -c shared_preload_libraries=pg_cron -c timezone=America/Phoenix
 
 volumes:
   postgres_data:
