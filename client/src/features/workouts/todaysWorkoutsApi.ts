@@ -42,6 +42,7 @@ import {
 } from "../../utils/utils_workouts";
 import { HistoryOfType, WorkoutHistory } from "../history/types";
 import { Activity, Effort } from "../shared/types";
+import { historyApi } from "../history/historyApi";
 
 export interface MarkAsDonePayload {
 	updatedWorkout: TodaysWorkout;
@@ -225,6 +226,15 @@ export const todaysWorkoutsApi = createApi({
 				return { data: data.newLog };
 			},
 			invalidatesTags: ["TodaysWorkouts", "UnscheduledWorkouts"],
+			async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+				try {
+					await queryFulfilled;
+					// Invalidate History tag after successful logWorkout
+					dispatch(historyApi.util.invalidateTags(["History"]));
+				} catch {
+					// If the mutation fails, don't invalidate
+				}
+			},
 		}),
 		skipWorkout: builder.mutation<SkippedResp, SkipWorkoutParams>({
 			queryFn: async (params) => {

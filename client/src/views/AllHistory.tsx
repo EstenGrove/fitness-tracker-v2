@@ -18,9 +18,11 @@ import NoData from "../components/ui/NoData";
 import Loader from "../components/layout/Loader";
 import AllHistoryEntry from "../components/history/AllHistoryEntry";
 import ModalLG from "../components/shared/ModalLG";
+import ModalSM from "../components/shared/ModalSM";
 import FadeSlideIn from "../components/ui/FadeSlideIn";
 import HistoryDetails from "../components/details/HistoryDetails";
 import EditHistory from "../components/history/EditHistory";
+import DeleteHistorySession from "../components/history/DeleteHistorySession";
 
 type GroupedHistory = TRecord<WorkoutHistory>;
 
@@ -169,6 +171,17 @@ const AllHistory = () => {
 				<ModalLG onClose={closeActionModal}>
 					<EditHistory historyEntry={selectedEntry} />
 				</ModalLG>
+			)}
+
+			{/* DELETE MODAL */}
+			{selectedEntry && modalType === EMenuAction.DELETE && (
+				<ModalSM onClose={closeActionModal}>
+					<DeleteHistorySession
+						historyEntry={selectedEntry}
+						onCancel={closeActionModal}
+						onConfirm={closeActionModal}
+					/>
+				</ModalSM>
 			)}
 		</div>
 	);

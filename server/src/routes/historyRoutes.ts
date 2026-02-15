@@ -21,7 +21,10 @@ import {
 import { normalizeHistoryDetails } from "../modules/history/historyDetails.js";
 import type { UpdateHistoryData } from "../services/HistoryService.js";
 import { editWorkoutHistory } from "../modules/history/editWorkoutHistory.js";
-
+import {
+	deleteWorkoutSession,
+	type DeletedSessionDB,
+} from "../modules/history/deleteWorkoutSession.js";
 const app = new Hono();
 
 app.get("/getLastWorkout", async (ctx: Context) => {
@@ -139,6 +142,37 @@ app.post("/editWorkoutHistory", async (ctx: Context) => {
 
 	const resp = getResponseOk({
 		updatedEntry: result,
+	});
+
+	return ctx.json(resp);
+});
+app.post("/deleteWorkoutSession", async (ctx: Context) => {
+	const body = await ctx.req.json<{
+		userID: string;
+		historyID: number;
+		activityType: Activity;
+	}>();
+	const { userID, historyID, activityType } = body;
+
+	const result = (await deleteWorkoutSession(
+		userID,
+		historyID,
+		activityType
+	)) as DeletedSessionDB;
+
+	if (result instanceof Error) {
+		const errResp = getResponseError(result, {
+			wasDeleted: false,
+			historyID: null,
+			activityType: null,
+		});
+		return ctx.json(errResp);
+	}
+
+	const resp = getResponseOk({
+		wasDeleted: result.was_deleted,
+		historyID: result.history_id,
+		activityType: result.activity_type,
 	});
 
 	return ctx.json(resp);

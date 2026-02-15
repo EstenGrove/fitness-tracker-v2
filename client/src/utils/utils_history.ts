@@ -30,6 +30,14 @@ interface DateRangeStr {
 	endDate: string;
 }
 
+export interface DeletedSessionData {
+	wasDeleted: boolean;
+	historyID: number;
+	activityType: Activity;
+}
+
+type DeletedSessionResp = AsyncResponse<DeletedSessionData>;
+
 const fetchHistoryByRange = async (
 	userID: string,
 	range: DateRangeStr
@@ -81,6 +89,29 @@ const fetchHistoryDetails = async (
 		const request = await fetchWithAuth(url);
 		const response = await request.json();
 
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
+const deleteWorkoutSession = async (
+	userID: string,
+	historyID: number,
+	activityType: Activity
+): DeletedSessionResp => {
+	let url = currentEnv.base + historyApis.deleteWorkoutSession;
+	url += "?" + new URLSearchParams({ userID });
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				userID,
+				historyID,
+				activityType,
+			}),
+		});
+		const response = await request.json();
 		return response;
 	} catch (error) {
 		return error;
@@ -175,6 +206,7 @@ export {
 	fetchHistoryDetails,
 	fetchHistoryByRange,
 	fetchHistoryByRangeAndActivity,
+	deleteWorkoutSession,
 	getKcals,
 	getSteps,
 	getMiles,

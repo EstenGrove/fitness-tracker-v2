@@ -149,6 +149,25 @@ class HistoryService {
 			return error;
 		}
 	}
+
+	async deleteWorkoutSession(
+		userID: string,
+		historyID: number,
+		activityType: Activity
+	) {
+		try {
+			const query = `SELECT * FROM delete_workout_session($1, $2, $3)`;
+			const result = await this.#db.query(query, [
+				userID,
+				historyID,
+				activityType,
+			]);
+			const rows = result?.rows?.[0];
+			return rows;
+		} catch (error) {
+			return error;
+		}
+	}
 }
 
 export { HistoryService };

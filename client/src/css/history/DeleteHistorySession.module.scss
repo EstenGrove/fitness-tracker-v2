@@ -1,0 +1,55 @@
+.DeleteHistorySession {
+	width: 100%;
+	height: 100%;
+	padding: 2rem 4rem;
+	z-index: 9999;
+
+	&_main {
+		width: 100%;
+
+		& h2 {
+			font-size: 2rem;
+			color: $text1;
+		}
+		& p {
+			font-size: 1.4rem;
+			color: $text2;
+		}
+	}
+
+	&_footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 6rem;
+		padding: 7rem 2rem;
+		@include flex_row(flex-end, center);
+		gap: 0 2rem;
+		background-color: $foreground;
+
+		&_cancel {
+			padding: 1rem 2rem;
+			border-radius: 1rem;
+			font-size: 1.6rem;
+			background-color: transparent;
+			border: none;
+			outline: none;
+			color: $text1;
+		}
+		&_confirm {
+			padding: 1rem 2rem;
+			border-radius: 1rem;
+			font-size: 1.6rem;
+			background-color: $accentRed;
+			color: #fff;
+			border: none;
+			outline: none;
+
+			&:disabled {
+				opacity: 0.4;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
