@@ -167,13 +167,19 @@ $iconSize: 3.5rem;
 		width: 100%;
 		flex: 1 1 auto;
 		min-height: 10rem;
+		@include flex_col(center, center);
+
+		&_content {
+			@include flex_row(center, center);
+			gap: 0 1rem;
+			align-items: center;
+		}
 
 		&_elapsed {
 			font-size: 1.6rem;
 			font-weight: 500;
 			color: $text1;
 			text-align: center;
-			margin-top: 1rem;
 		}
 	}
 
@@ -181,6 +187,27 @@ $iconSize: 3.5rem;
 		width: 100%;
 		@include flex_row(flex-end, flex-start);
 		gap: 0 0.5rem;
+	}
+}
+
+.DismissButton {
+	position: absolute;
+	bottom: 1rem;
+	left: 1rem;
+	padding: 0.5rem 1.2rem;
+	border-radius: 1rem;
+	font-size: 1.4rem;
+	font-weight: 500;
+	color: $text1;
+	background-color: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	z-index: 10;
+
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.3);
 	}
 }
 
@@ -228,9 +255,114 @@ $iconSize: 3.5rem;
 }
 
 // ============================================
+// Status Dot (Collapsed) - Easy to delete if not needed
+// ============================================
+.StatusDot {
+	width: 0.8rem;
+	height: 0.8rem;
+	border-radius: 50%;
+	flex-shrink: 0;
+
+	&_active {
+		background-color: rgb(0, 226, 189);
+		box-shadow: 0 0 0.4rem rgba(0, 226, 189, 0.5);
+		animation: pulse 2s ease-in-out infinite;
+	}
+
+	&_paused {
+		background-color: rgba(255, 193, 7, 1);
+		box-shadow: 0 0 0.4rem rgba(255, 193, 7, 0.5);
+	}
+
+	&_idle {
+		background-color: rgba(158, 158, 158, 0.5);
+	}
+
+	&_stopped {
+		background-color: rgba(255, 51, 61, 1);
+	}
+
+	&_ended {
+		background-color: rgba(158, 158, 158, 0.3);
+	}
+
+	&_countdown {
+		background-color: rgba(33, 150, 243, 1);
+		box-shadow: 0 0 0.4rem rgba(33, 150, 243, 0.5);
+	}
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.6;
+	}
+}
+
+// ============================================
+// Status Badge
+// ============================================
+.StatusBadge {
+	padding: 0.2rem 0.8rem;
+	border-radius: 5rem;
+	font-size: 1.2rem;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	width: max-content;
+	margin: 0 auto;
+
+	&_active {
+		border: 1px solid rgba(0, 226, 189, 1);
+		background-color: rgba(0, 226, 189, 0.1);
+		color: rgb(0, 226, 189);
+	}
+
+	&_paused {
+		border: 1px solid rgba(255, 193, 7, 1);
+		background-color: rgba(255, 193, 7, 0.1);
+		color: rgba(255, 193, 7, 1);
+	}
+
+	&_idle {
+		border: 1px solid rgba(158, 158, 158, 1);
+		background-color: rgba(158, 158, 158, 0.1);
+		color: rgba(158, 158, 158, 1);
+	}
+
+	&_stopped {
+		border: 1px solid rgba(255, 51, 61, 1);
+		background-color: rgba(185, 0, 52, 0.2);
+		color: rgba(255, 51, 61, 1);
+	}
+
+	&_ended {
+		border: 1px solid rgba(158, 158, 158, 0.5);
+		background-color: rgba(158, 158, 158, 0.05);
+		color: rgba(158, 158, 158, 0.8);
+	}
+
+	&_countdown {
+		border: 1px solid rgba(33, 150, 243, 1);
+		background-color: rgba(33, 150, 243, 0.1);
+		color: rgba(33, 150, 243, 1);
+	}
+}
+
+// ============================================
 // Utility Classes
 // ============================================
 .Content {
 	display: flex;
 	flex-direction: column;
+}
+
+@media only screen and (max-width: 768px) {
+	.WorkoutIsland {
+		width: 85dvw;
+		z-index: 9999;
+	}
 }
