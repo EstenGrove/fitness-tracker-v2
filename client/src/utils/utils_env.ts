@@ -132,6 +132,7 @@ const API_ENDPOINTS = {
 		editWorkout: "/workouts/editWorkout",
 	},
 	history: {
+		deleteWorkoutSession: "/history/deleteWorkoutSession",
 		getHistoryDetails: "/history/getHistoryDetails",
 		getLastWorkout: "/history/getLastWorkout",
 		getByID: "/history/getWorkoutHistoryByID",

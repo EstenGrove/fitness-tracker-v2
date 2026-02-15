@@ -7,15 +7,25 @@ import {
 	UserRangeParams,
 } from "../types";
 import {
+	DeletedSessionData,
 	fetchHistoryByRange,
 	fetchHistoryByRangeAndActivity,
 	fetchHistoryDetails,
 	HistoryDetailsParams,
 } from "../../utils/utils_history";
+import { deleteWorkoutSession } from "../../utils/utils_history";
+import { Activity } from "../shared/types";
+
+interface DeletedSessionParams {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+}
 
 export const historyApi = createApi({
 	reducerPath: "historyApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
+	tagTypes: ["History"],
 	endpoints: (builder) => ({
 		getHistoryForRange: builder.query<AllHistory, UserRangeParams>({
 			queryFn: async (params: UserRangeParams) => {
@@ -28,6 +38,7 @@ export const historyApi = createApi({
 
 				return { data };
 			},
+			providesTags: () => [{ type: "History" }],
 		}),
 		getHistoryByRangeAndType: builder.query({
 			queryFn: async (params: UserRangeActivityParams) => {
@@ -43,6 +54,7 @@ export const historyApi = createApi({
 				const data = response.Data;
 				return { data: data.history };
 			},
+			providesTags: () => [{ type: "History" }],
 		}),
 		getHistoryDetails: builder.query<HistoryDetails, HistoryDetailsParams>({
 			queryFn: async (params) => {
@@ -55,6 +67,23 @@ export const historyApi = createApi({
 				const data = response.Data as HistoryDetails;
 				return { data };
 			},
+			providesTags: () => [{ type: "History" }],
+		}),
+		deleteWorkoutSession: builder.mutation<
+			DeletedSessionData,
+			DeletedSessionParams
+		>({
+			queryFn: async (params) => {
+				const { userID, historyID, activityType } = params;
+				const response = (await deleteWorkoutSession(
+					userID,
+					historyID,
+					activityType
+				)) as AwaitedResponse<DeletedSessionData>;
+				const data = response.Data as DeletedSessionData;
+				return { data };
+			},
+			invalidatesTags: () => [{ type: "History" }],
 		}),
 	}),
 });
@@ -63,4 +92,5 @@ export const {
 	useGetHistoryForRangeQuery,
 	useGetHistoryByRangeAndTypeQuery,
 	useGetHistoryDetailsQuery,
+	useDeleteWorkoutSessionMutation,
 } = historyApi;
