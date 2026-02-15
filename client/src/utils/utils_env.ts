@@ -1,5 +1,5 @@
 const isRemote = Boolean(
-	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE,
+	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE
 );
 
 export const BASE_URL: string = !isRemote
@@ -232,6 +232,10 @@ const API_ENDPOINTS = {
 	workoutRecaps: {
 		getWorkoutRecap: "/recaps/getWorkoutRecap",
 	},
+	preferences: {
+		getPreferences: "/preferences/getPreferences",
+		updatePreferences: "/preferences/updatePreferences",
+	},
 };
 
 export const {
@@ -256,6 +260,7 @@ export const {
 	trends: trendsApis,
 	insights: insightsApis,
 	workoutRecaps: workoutRecapApis,
+	preferences: preferencesApis,
 } = API_ENDPOINTS;
 
 export {

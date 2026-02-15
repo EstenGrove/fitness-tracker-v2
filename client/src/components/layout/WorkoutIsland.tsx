@@ -192,7 +192,7 @@ const ExpandedSection = ({
 	timer,
 }: ExpandedSectionProps) => {
 	const { workoutName, activityType } = workout;
-	const title = addEllipsis(workoutName, 15);
+	const title = addEllipsis(workoutName, 28);
 	const display: string = formattedTime(Number(timer.toFixed(0)));
 	const isActive: boolean = status === ETimerStatus.ACTIVE;
 

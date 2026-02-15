@@ -19,6 +19,7 @@ import settingsReducer from "../features/settings/slice";
 import sharedReducer from "../features/shared/sharedSlice";
 import historyReducer from "../features/history/historySlice";
 import workoutsReducer from "../features/workouts/workoutsSlice";
+import preferencesReducer from "../features/preferences/slice";
 import medicationsReducer from "../features/medications/medicationsSlice";
 import { workoutRecapsApi } from "../features/workout-recaps/api";
 
@@ -30,6 +31,7 @@ const store = configureStore({
 		workouts: workoutsReducer,
 		settings: settingsReducer,
 		medications: medicationsReducer,
+		preferences: preferencesReducer,
 		[statsApi.reducerPath]: statsApi.reducer,
 		[recapsApi.reducerPath]: recapsApi.reducer,
 		[habitsApi.reducerPath]: habitsApi.reducer,
