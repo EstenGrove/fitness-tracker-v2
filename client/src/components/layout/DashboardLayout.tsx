@@ -29,21 +29,27 @@ const AppLayout = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const currentSession = useSelector(selectCurrentSession);
 	const { activeWorkout, resume } = useResumeActiveWorkout();
+	const [wasDismissed, setWasDismissed] = useState(false);
 	const [showActiveWorkoutIndicator, setShowActiveWorkoutIndicator] =
 		useState<boolean>(!!activeWorkout || false);
 
+	// Navigate to the active workout page
+	const onViewWorkout = () => {
+		resume();
+	};
+	// Will set the active workout status to 'ACTIVE'
 	const onResumeWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
-		resume();
 		resumeActiveWorkout();
 	};
+	// Will set the active workout status to 'PAUSED'
 	const onPauseWorkout = () => {
 		pauseActiveWorkout();
-		// setShowActiveWorkoutIndicator(false);
-		// resume();
 	};
+	// Dismisses & closes the workout island
 	const onDismissWorkout = () => {
 		setShowActiveWorkoutIndicator(false);
+		setWasDismissed(true);
 	};
 
 	const handleLogout = async () => {
@@ -103,25 +109,26 @@ const AppLayout = () => {
 			return;
 		}
 
-		if (activeWorkout) {
+		if (activeWorkout && !wasDismissed) {
 			setShowActiveWorkoutIndicator(true);
 			return;
 		} else {
 			setShowActiveWorkoutIndicator(false);
 		}
-	}, [activeWorkout, location.pathname]);
+	}, [activeWorkout, location.pathname, wasDismissed]);
 
 	return (
 		<div className={styles.AppLayout}>
 			<TopNav onLogout={handleLogout} />
 			<Navbar />
 			<Outlet />
-			{showActiveWorkoutIndicator && ENABLE_WORKOUT_ISLAND && (
+			{showActiveWorkoutIndicator && !wasDismissed && ENABLE_WORKOUT_ISLAND && (
 				<WorkoutIsland
 					workout={activeWorkout as ActiveWorkoutInfo}
 					onResume={onResumeWorkout}
 					onPause={onPauseWorkout}
 					onDismiss={onDismissWorkout}
+					onViewWorkout={onViewWorkout}
 				/>
 			)}
 		</div>
