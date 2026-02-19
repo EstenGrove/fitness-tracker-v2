@@ -114,8 +114,6 @@ const getRecordedDate = (workoutDate: string) => {
 		return "Today";
 	}
 	const parsed = parseAnyDate(workoutDate);
-	console.log("parsed", parsed);
-	console.log("workoutDate", workoutDate);
 	const date = formatCustomDate(parsed, "monthAndDay");
 
 	return date;
@@ -128,7 +126,6 @@ const HistoryDetails = ({ history }: Props) => {
 		activityType: history?.activityType,
 	});
 	const when = getWhen(history);
-	// const date = formatCustomDate(history.workoutDate, "monthAndDay");
 	const date = getRecordedDate(history.workoutDate);
 	const details = data as IHistoryDetails;
 	const workout = details?.workout;

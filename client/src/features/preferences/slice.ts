@@ -1,3 +1,4 @@
+import { RootState } from "../../store/store";
 import {
 	AppearancePreferences,
 	GeneralPreferences,
@@ -90,6 +91,10 @@ const preferencesSlice = createSlice({
 		},
 	},
 });
+
+export const selectPreferences = (state: RootState) => {
+	return state.preferences.preferences;
+};
 
 export const {
 	setPreferences,
