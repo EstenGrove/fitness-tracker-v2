@@ -71,6 +71,7 @@ const AddWalkDetails = ({ values, onChange }: DetailsProps) => {
 					value={values.miles}
 					onChange={onChange}
 					onBlur={handleMetrics}
+					inputMode="decimal"
 					style={{ minWidth: "15ch", maxWidth: "20ch" }}
 				/>
 			</div>

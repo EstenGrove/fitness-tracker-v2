@@ -8,6 +8,7 @@ import { settingsApi } from "../features/settings/api";
 import { habitsApi } from "../features/habits/habitsApi";
 import { historyApi } from "../features/history/historyApi";
 import { summaryApi } from "../features/dashboard/summaryApi";
+import { workoutRecapsApi } from "../features/workout-recaps/api";
 import { customSummaryApi } from "../features/summary/summaryApi";
 import { medicationsApi } from "../features/medications/medicationsApi";
 import { todaysWorkoutsApi } from "../features/workouts/todaysWorkoutsApi";
@@ -18,10 +19,9 @@ import userReducer from "../features/user/userSlice";
 import settingsReducer from "../features/settings/slice";
 import sharedReducer from "../features/shared/sharedSlice";
 import historyReducer from "../features/history/historySlice";
-import workoutsReducer from "../features/workouts/workoutsSlice";
 import preferencesReducer from "../features/preferences/slice";
+import workoutsReducer from "../features/workouts/workoutsSlice";
 import medicationsReducer from "../features/medications/medicationsSlice";
-import { workoutRecapsApi } from "../features/workout-recaps/api";
 
 const store = configureStore({
 	reducer: {
