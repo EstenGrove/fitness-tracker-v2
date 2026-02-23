@@ -4,9 +4,10 @@ import {
 	RefObject,
 	useRef,
 	useState,
+	CSSProperties,
 } from "react";
 import sprite from "../../assets/icons/calendar.svg";
-import styles from "../../css/shared/TimePicker.module.scss";
+import css from "../../css/shared/TimePicker.module.scss";
 import { parseAnyTime } from "../../utils/utils_dates";
 import { format, getHours, getMinutes } from "date-fns";
 
@@ -44,7 +45,7 @@ const HoursInput = ({ value, onChange, inputRef }: InputProps) => {
 			id="hours"
 			value={value}
 			inputMode="decimal"
-			className={styles.HoursInput}
+			className={css.HoursInput}
 			onChange={handleChange}
 			onContextMenu={(e) => e.preventDefault()}
 			onFocus={() => {
@@ -70,7 +71,7 @@ const MinsInput = ({ value, onChange, inputRef }: InputProps) => {
 			id="mins"
 			value={value}
 			inputMode="decimal"
-			className={styles.MinsInput}
+			className={css.MinsInput}
 			onChange={handleChange}
 			onContextMenu={(e) => e.preventDefault()}
 			onFocus={() => {
@@ -88,20 +89,20 @@ const TodInput = ({ value, onChange, inputRef }: SelectProps) => {
 		return onChange("tod", val);
 	};
 	return (
-		<div className={styles.TodInput}>
+		<div className={css.TodInput}>
 			<select
 				name="tod"
 				id="tod"
 				value={value}
 				onChange={handleChange}
-				className={styles.TodInput_select}
+				className={css.TodInput_select}
 				ref={inputRef}
 				onContextMenu={(e) => e.preventDefault()}
 			>
-				<option value="AM" className={styles.TodInput_select_option}>
+				<option value="AM" className={css.TodInput_select_option}>
 					AM
 				</option>
-				<option value="PM" className={styles.TodInput_select_option}>
+				<option value="PM" className={css.TodInput_select_option}>
 					PM
 				</option>
 			</select>
@@ -142,9 +143,11 @@ type TimeProps = {
 };
 
 // @ts-expect-error: this is fine
-interface Props extends TimeProps, ComponentPropsWithoutRef<"div"> {}
+interface Props extends TimeProps, ComponentPropsWithoutRef<"div"> {
+	styles?: CSSProperties;
+}
 
-const TimePicker = ({ name, value, onChange, ...rest }: Props) => {
+const TimePicker = ({ name, value, onChange, styles = {}, ...rest }: Props) => {
 	const hoursRef = useRef<HTMLInputElement>(null);
 	const minsRef = useRef<HTMLInputElement>(null);
 	const todRef = useRef<HTMLSelectElement>(null);
@@ -228,8 +231,8 @@ const TimePicker = ({ name, value, onChange, ...rest }: Props) => {
 	};
 
 	return (
-		<div className={styles.TimePicker} {...rest}>
-			<div className={styles.TimePicker_display}>
+		<div className={css.TimePicker} {...rest} style={styles}>
+			<div className={css.TimePicker_display} style={styles}>
 				<HoursInput
 					key="Hours"
 					value={time.hours}
@@ -249,7 +252,7 @@ const TimePicker = ({ name, value, onChange, ...rest }: Props) => {
 					value={time.tod}
 					onChange={selectTod}
 				/>
-				<svg className={styles.TimePicker_display_icon}>
+				<svg className={css.TimePicker_display_icon}>
 					<use xlinkHref={`${sprite}#icon-access_time`}></use>
 				</svg>
 			</div>

@@ -237,6 +237,9 @@ const API_ENDPOINTS = {
 		getPreferences: "/preferences/getPreferences",
 		updatePreferences: "/preferences/updatePreferences",
 	},
+	aiInsights: {
+		getAIInsights: "/aiInsights/getAIInsights",
+	},
 };
 
 export const {
@@ -262,6 +265,7 @@ export const {
 	insights: insightsApis,
 	workoutRecaps: workoutRecapApis,
 	preferences: preferencesApis,
+	aiInsights: aiInsightsApis,
 } = API_ENDPOINTS;
 
 export {

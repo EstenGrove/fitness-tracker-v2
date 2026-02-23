@@ -9,7 +9,11 @@ import {
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/habits/QuickLogHabit.module.scss";
 import { logHabitsBatched } from "../../utils/utils_habits";
-import { prepareTimestamp } from "../../utils/utils_dates";
+import {
+	formatTime,
+	parseAnyTime,
+	prepareTimestamp,
+} from "../../utils/utils_dates";
 import { DeferredFetch } from "../../hooks/useDeferredLogQueue";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll";
 import { HabitCard, HabitLogValues } from "../../features/habits/types";
@@ -18,13 +22,22 @@ import { useLogHabitOverrideMutation } from "../../features/habits/habitsApi";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../features/user/userSlice";
+import DatePicker from "../shared/DatePicker";
+import TimePicker from "../shared/TimePicker";
+import { set } from "date-fns";
 
 type Props = {
 	habit: HabitCard;
 };
 
-const prepareHabitLog = (value: number, habit: HabitCard) => {
-	const loggedAt = prepareTimestamp(new Date());
+const prepareHabitLog = (
+	value: number,
+	habit: HabitCard,
+	loggedTime?: Date | string
+) => {
+	const loggedAt = loggedTime
+		? prepareTimestamp(loggedTime)
+		: prepareTimestamp(new Date());
 	const values: HabitLogValues = {
 		userID: habit.userID,
 		habitID: habit.habitID,
@@ -184,10 +197,91 @@ const DisplayValue = ({
 		</div>
 	);
 };
+type OptionValues = {
+	date: Date | string;
+	time: string;
+};
+
+type OptionProps = {
+	date: Date | string;
+	time: string;
+	onChange: (name: string, dateOrTime: Date | string) => void;
+};
+
+const LoggingOptions = ({ date, time, onChange }: OptionProps) => {
+	const handleDateSelect = (name: string, date: Date) => {
+		onChange(name, date);
+	};
+	const handleTimeChange = (name: string, time: string) => {
+		onChange(name, time);
+	};
+	return (
+		<div className={styles.LoggingOptions}>
+			<div className={styles.LoggingOptions_date}>
+				<DatePicker
+					name="date"
+					id="date"
+					value={date}
+					onSelect={handleDateSelect}
+				/>
+			</div>
+			<div className={styles.LoggingOptions_time}>
+				<TimePicker
+					name="time"
+					id="time"
+					value={time}
+					onChange={handleTimeChange}
+					styles={{ minHeight: "4rem" }}
+				/>
+			</div>
+		</div>
+	);
+};
+
+const getInitialOptions = () => {
+	const date = new Date();
+	// const time = formatTime(date, "db");
+	const time = formatTime(date, "mil");
+
+	return {
+		date,
+		time,
+	};
+};
+
+// const getLoggedTimestamp = (date: Date | string, time: string) => {
+// 	const loggedAt = new Date(date);
+// 	const parsedTime = parseAnyTime(time) as Date;
+// 	const withTime = set(loggedAt, {
+// 		hours: parsedTime.getHours(),
+// 		minutes: parsedTime.getMinutes(),
+// 	});
+// 	return withTime.toISOString();
+// };
+
+const getLoggedTimestamp = (date: Date | string, time: string) => {
+	const baseDate = new Date(date);
+	// Ensure we're working with the date at midnight local time
+	const dateAtMidnight = new Date(
+		baseDate.getFullYear(),
+		baseDate.getMonth(),
+		baseDate.getDate()
+	);
+	const parsedTime = parseAnyTime(time) as Date;
+	const withTime = set(dateAtMidnight, {
+		hours: parsedTime.getHours(),
+		minutes: parsedTime.getMinutes(),
+	});
+	return withTime.toISOString();
+};
 
 const QuickLogHabit = ({ habit }: Props) => {
 	useLockBodyScroll();
 	const currentUser = useSelector(selectCurrentUser);
+	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [optionValues, setOptionValues] = useState<OptionValues>({
+		...getInitialOptions(),
+	});
 	const [todaysValue, setTodaysValue] = useState<number>(
 		habit.habitsLogged || 0
 	);
@@ -197,35 +291,56 @@ const QuickLogHabit = ({ habit }: Props) => {
 	);
 	const [logManual] = useLogHabitOverrideMutation();
 
+	const toggleOptions = () => {
+		setShowOptions(!showOptions);
+	};
+
+	const handleOptionChange = (name: string, value: Date | string) => {
+		if (name === "mins") {
+			return setOptionValues({
+				...optionValues,
+				time: value as string,
+			});
+		}
+		setOptionValues({
+			...optionValues,
+			[name]: value,
+		});
+	};
+
 	const handleManualEdit = (value: number) => {
 		setTodaysValue(value);
 	};
 
 	const saveManualEdit = async (newValue: number) => {
-		const newLog = prepareHabitLog(newValue, {
-			...habit,
-			userID: currentUser.userID,
-		});
-
-		console.log("newLog", newLog);
-		console.log("newValue", newValue);
+		const loggedAt = getLoggedTimestamp(optionValues.date, optionValues.time);
+		const newLog = prepareHabitLog(
+			newValue,
+			{
+				...habit,
+				userID: currentUser.userID,
+			},
+			loggedAt
+		);
 
 		await logManual(newLog);
 	};
 
 	const add = () => {
+		const loggedAt = getLoggedTimestamp(optionValues.date, optionValues.time);
 		const value = todaysValue + habitStep;
 		setTodaysValue(value);
 
-		const newLog = prepareHabitLog(habitStep, habit);
+		const newLog = prepareHabitLog(habitStep, habit, loggedAt);
 		queueLog(newLog);
 	};
 	const minus = () => {
+		const loggedAt = getLoggedTimestamp(optionValues.date, optionValues.time);
 		const newValue = todaysValue - habitStep;
 		const value = newValue >= 0 ? newValue : 0;
 		setTodaysValue(value);
 
-		const newLog = prepareHabitLog(-habitStep, habit);
+		const newLog = prepareHabitLog(-habitStep, habit, loggedAt);
 		queueLog(newLog);
 	};
 
@@ -248,6 +363,24 @@ const QuickLogHabit = ({ habit }: Props) => {
 				<div className={styles.QuickLogHabit_display_unitDesc}>
 					of {habit.habitTarget} {habit.habitUnit}
 				</div>
+			</div>
+			<div className={styles.QuickLogHabit_options}>
+				<div className={styles.QuickLogHabit_options_toggle}>
+					<button
+						type="button"
+						onClick={toggleOptions}
+						className={styles.QuickLogHabit_options_toggle_btn}
+					>
+						<span>{showOptions ? "Hide Options" : "Not for today?"}</span>
+					</button>
+				</div>
+				{showOptions && (
+					<LoggingOptions
+						date={optionValues.date}
+						time={optionValues.time}
+						onChange={handleOptionChange}
+					/>
+				)}
 			</div>
 		</div>
 	);

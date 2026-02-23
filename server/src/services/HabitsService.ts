@@ -127,8 +127,8 @@ class HabitsService {
 	}
 	async logHabitOverride(values: HabitLogValues) {
 		try {
-			const query = `SELECT * FROM log_habit_override($1)`;
-			const results = await this.#db.query(query, [values]);
+			const query = `SELECT * FROM log_habit_override($1::JSONB)`;
+			const results = await this.#db.query(query, [JSON.stringify(values)]);
 			console.log("results", results);
 			const rows = results?.rows;
 			return rows;
@@ -149,9 +149,9 @@ class HabitsService {
 	async logHabit(values: HabitLogValues): LoggedHabitResp {
 		try {
 			const query = `SELECT * FROM log_habit(
-        $1
+        $1::JSONB
       )`;
-			const results = await this.#db.query(query, [values]);
+			const results = await this.#db.query(query, [JSON.stringify(values)]);
 			const rows = results?.rows;
 			return rows;
 		} catch (error) {

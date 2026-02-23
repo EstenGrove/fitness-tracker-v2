@@ -1,8 +1,7 @@
-```
-npm install
-npm run dev
-```
+# FitnessTracker-v2 Docs
 
-```
-open http://localhost:3000
+## Docker Commands & Utils
+
+```bash
+docker compose exec db psql -U x-main-user -d FitnessTracker-v2
 ```

@@ -8,6 +8,7 @@ import { NavLink } from "react-router";
 import WeeklyRecap from "../weekly-recap/WeeklyRecap";
 import { subDays } from "date-fns";
 import { formatDate } from "../../utils/utils_dates";
+import { VERSION_INFO } from "../../utils/utils_version";
 
 const THEME_KEY = "APP_THEME";
 const storage = new LocalStorage();
@@ -58,7 +59,9 @@ const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 
 	return (
 		<div className={`${styles.SidePanel} ${styles.slideIn}`} ref={panelRef}>
-			<div className={styles.SidePanel_top}>{/*  */}</div>
+			<div className={styles.SidePanel_top}>
+				<div className={styles.SidePanel_top_version}>{VERSION_INFO.full}</div>
+			</div>
 			<div className={styles.SidePanel_main}>
 				<div className={styles.SidePanel_main_section}>Workouts</div>
 				<ul className={styles.SidePanel_main_list}>

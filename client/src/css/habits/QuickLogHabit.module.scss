@@ -3,20 +3,20 @@ $displayWidth: 14rem;
 
 .QuickLogHabit {
 	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 
 	&_top {
 		width: 100%;
-		height: 15rem;
+		height: 12rem;
 		font-size: 2rem;
 		text-align: center;
 		color: $text3;
 	}
 
 	&_display {
-		width: 100%;
-		height: 100%;
-		@include colCenter();
-		gap: 0 2rem;
+		flex: 0 0 auto;
 
 		&_main {
 			width: 100%;
@@ -30,7 +30,7 @@ $displayWidth: 14rem;
 			font-size: 2.5rem;
 			@include rowCenter();
 			text-align: center;
-			margin-top: 3rem;
+			margin-top: 1rem;
 		}
 	}
 
@@ -46,6 +46,25 @@ $displayWidth: 14rem;
 			border: 1px solid $text1;
 			background-color: transparent;
 			color: $text1;
+		}
+	}
+	&_options {
+		margin-top: auto;
+		min-height: 17rem;
+
+		&_toggle {
+			@include rowCenter();
+			&_btn {
+				padding: 0.5rem 1rem;
+				border-radius: 5rem;
+				border: none;
+				background-color: transparent;
+				color: $accentBlue;
+				font-size: 1.4rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
 		}
 	}
 }
@@ -121,5 +140,16 @@ $displayWidth: 14rem;
 
 	&:focus-within {
 		color: $accentBlue;
+	}
+}
+.LoggingOptions {
+	width: 100%;
+	height: 100%;
+	padding: 4rem 2rem 2rem 2rem;
+	@include flex_row(center, flex-start);
+	gap: 0 1rem;
+
+	&_date {
+		width: 100%;
 	}
 }

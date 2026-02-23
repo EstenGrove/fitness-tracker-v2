@@ -35,6 +35,9 @@
 	--altAccentBG: rgba(255, 0, 91, 0.2);
 	--orangeBG: rgba(255, 119, 0, 0.6);
 
+	--kcalsBG: rgba(255, 119, 0, 0.2);
+	--kcalsStroke: #ff7700;
+
 	--fadedRed: rgba(185, 0, 52, 0.8);
 	--fadedGreen: rgba(0, 226, 189, 0.8);
 	--fadedBlue: rgba(0, 124, 255, 0.8);

@@ -6,6 +6,7 @@ import { StatsService } from "./StatsService.js";
 import { HabitsService } from "./HabitsService.js";
 import { ExportService } from "./ExportService.js";
 import { TrendsService } from "./TrendsService.js";
+import { RecapsService } from "./RecapsService.js";
 import { StreaksService } from "./StreaksService.js";
 import { SummaryService } from "./SummaryService.js";
 import { HistoryService } from "./HistoryService.js";
@@ -13,12 +14,12 @@ import { SettingsService } from "./SettingsService.js";
 import { ChatDataService } from "./ChatDataService.js";
 import { WorkoutsService } from "./WorkoutsService.js";
 import { DashboardService } from "./DashboardService.js";
+import { InsightsService } from "./InsightsService.js";
+import { AIInsightsService } from "./AIInsightsService.js";
 import { WeeklyRecapService } from "./WeeklyRecapService.js";
 import { MedicationsService } from "./MedicationsService.js";
 import { RecentActivityService } from "./RecentActivityService.js";
 import { ChatSuggestionsService } from "./ChatSuggestionsService.js";
-import { InsightsService } from "./InsightsService.js";
-import { RecapsService } from "./RecapsService.js";
 import { RecapsAndDetailsService } from "./RecapsAndDetailsService.js";
 
 const authService = new AuthService(db);
@@ -37,6 +38,7 @@ const insightsService = new InsightsService(db);
 const workoutsService = new WorkoutsService(db);
 const settingsService = new SettingsService(db);
 const dashboardService = new DashboardService(db);
+const aiInsightsService = new AIInsightsService(db);
 const weeklyRecapService = new WeeklyRecapService(db);
 const medicationsService = new MedicationsService(db);
 const recentActivityService = new RecentActivityService(db);
@@ -59,6 +61,7 @@ const allServices = {
 	settings: settingsService,
 	workouts: workoutsService,
 	dashboard: dashboardService,
+	aiInsights: aiInsightsService,
 	weeklyRecap: weeklyRecapService,
 	medications: medicationsService,
 	recentActivity: recentActivityService,
@@ -75,6 +78,7 @@ export {
 	recentActivityService,
 	medicationsService,
 	weeklyRecapService,
+	aiInsightsService,
 	dashboardService,
 	insightsService,
 	workoutsService,

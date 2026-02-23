@@ -80,8 +80,8 @@ app.use("*", async (ctx: Context, next: Next) => {
 });
 
 app.route("user", allRoutes.user);
-app.route("auth", allRoutes.auth);
 app.route("chat", allRoutes.chat);
+app.route("auth", allRoutes.auth);
 app.route("stats", allRoutes.stats);
 app.route("recaps", allRoutes.recaps);
 app.route("habits", allRoutes.habits);
@@ -93,6 +93,7 @@ app.route("recap", allRoutes.weeklyRecap);
 app.route("settings", allRoutes.settings);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);
+app.route("aiInsights", allRoutes.aiInsights);
 app.route("medications", allRoutes.medications);
 app.route("recentActivity", allRoutes.recentActivity);
 

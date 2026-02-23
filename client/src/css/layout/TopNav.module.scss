@@ -66,6 +66,12 @@
 		width: 100%;
 		height: 10%;
 		padding: 1rem 1rem;
+
+		&_version {
+			font-size: 1.2rem;
+			color: $text3;
+			text-align: right;
+		}
 	}
 
 	&_main {

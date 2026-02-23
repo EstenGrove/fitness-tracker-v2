@@ -12,3 +12,14 @@
 		color: var(--cardioAccent);
 	}
 }
+.Info {
+	width: 100%;
+	@include rowCenter();
+	height: 15rem;
+	text-align: left;
+	font-size: 1.6rem;
+	color: $text3;
+	& > b {
+		color: var(--cardioAccent);
+	}
+}
