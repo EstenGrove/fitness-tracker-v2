@@ -240,24 +240,13 @@ const LoggingOptions = ({ date, time, onChange }: OptionProps) => {
 
 const getInitialOptions = () => {
 	const date = new Date();
-	// const time = formatTime(date, "db");
-	const time = formatTime(date, "mil");
+	const time = formatTime(date, "db");
 
 	return {
 		date,
 		time,
 	};
 };
-
-// const getLoggedTimestamp = (date: Date | string, time: string) => {
-// 	const loggedAt = new Date(date);
-// 	const parsedTime = parseAnyTime(time) as Date;
-// 	const withTime = set(loggedAt, {
-// 		hours: parsedTime.getHours(),
-// 		minutes: parsedTime.getMinutes(),
-// 	});
-// 	return withTime.toISOString();
-// };
 
 const getLoggedTimestamp = (date: Date | string, time: string) => {
 	const baseDate = new Date(date);
@@ -268,6 +257,7 @@ const getLoggedTimestamp = (date: Date | string, time: string) => {
 		baseDate.getDate()
 	);
 	const parsedTime = parseAnyTime(time) as Date;
+
 	const withTime = set(dateAtMidnight, {
 		hours: parsedTime.getHours(),
 		minutes: parsedTime.getMinutes(),
@@ -297,15 +287,15 @@ const QuickLogHabit = ({ habit }: Props) => {
 
 	const handleOptionChange = (name: string, value: Date | string) => {
 		if (name === "mins") {
-			return setOptionValues({
-				...optionValues,
+			return setOptionValues((prev) => ({
+				...prev,
 				time: value as string,
-			});
+			}));
 		}
-		setOptionValues({
-			...optionValues,
+		return setOptionValues((prev) => ({
+			...prev,
 			[name]: value,
-		});
+		}));
 	};
 
 	const handleManualEdit = (value: number) => {
