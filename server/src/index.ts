@@ -111,5 +111,5 @@ serve({
 testDatabaseConnection().catch(console.error);
 
 console.log(
-	`\n✅ - Server is running on ${ORIGIN.prefix}${SERVER.host}:${SERVER.port}`
+	`\n✅ Server is running on ${ORIGIN.prefix}${SERVER.host}:${SERVER.port}`
 );
