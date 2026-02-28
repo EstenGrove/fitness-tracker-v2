@@ -56,7 +56,7 @@ export interface HabitHistorySummaryParams {
 export const habitsApi = createApi({
 	reducerPath: "habitsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: currentEnv.base }),
-	tagTypes: ["HabitCards", "HabitDetails", "HabitLogs"],
+	tagTypes: ["HabitCards", "HabitDetails", "HabitLogs", "HabitCalendar"],
 	endpoints: (builder) => ({
 		createHabit: builder.mutation<HabitCard, NewHabitParams>({
 			queryFn: async (params) => {
@@ -135,7 +135,12 @@ export const habitsApi = createApi({
 				const data = response.Data as { newLogs: HabitLog[] };
 				return { data: data.newLogs };
 			},
-			invalidatesTags: ["HabitCards", "HabitLogs", "HabitDetails"],
+			invalidatesTags: [
+				"HabitCards",
+				"HabitLogs",
+				"HabitDetails",
+				"HabitCalendar",
+			],
 		}),
 		getHabitHistory: builder.query<HabitHistory, HabitHistoryParams>({
 			queryFn: async (params) => {
@@ -149,6 +154,7 @@ export const habitsApi = createApi({
 
 				return { data };
 			},
+			providesTags: () => [{ type: "HabitCalendar" }],
 		}),
 		getHabitHistorySummary: builder.query<
 			HabitYearSummary,
@@ -165,6 +171,7 @@ export const habitsApi = createApi({
 
 				return { data };
 			},
+			providesTags: () => [{ type: "HabitCalendar" }],
 		}),
 		getHabitHistoryForRange: builder.query<
 			HabitHistoryByRange,

@@ -1,6 +1,15 @@
 import { TStatus } from "../types";
 
 export type TzPreference = "UTC" | "Local";
+// | "America/New_York"
+// | "America/Los_Angeles"
+// | "America/Chicago"
+// | "America/Denver"
+// | "America/New_York"
+// | "America/Los_Angeles"
+// | "America/Chicago"
+// | "America/Denver"
+// | "America/Phoenix";
 
 export type LanguagePreference = "en" | "es" | "fr" | "de" | "it" | "pt" | "ru";
 

@@ -21,26 +21,29 @@ const useOutsideClick = (
 ): boolean => {
 	const [isOutside, setIsOutside] = useState<boolean>(false);
 
-	const handleOutsideClick = (e: MouseEvent): void => {
-		// check if ref is set first
-		if (!nodeRef || !nodeRef?.current) return;
-
-		// if click target is within 'nodeRef.current' then it's inside
-		if (nodeRef?.current.contains(e.target as HTMLElement)) {
-			setIsOutside(false);
-		} else {
-			// check for optional callback
-			if (onOutsideClick) {
-				onOutsideClick();
-			}
-			setIsOutside(true);
-		}
-	};
-
 	useEffect(() => {
+		let isMounted = true;
+		if (!isMounted) return;
+
+		const handleOutsideClick = (e: MouseEvent): void => {
+			// check if ref is set first
+			if (!nodeRef || !nodeRef?.current) return;
+
+			// if click target is within 'nodeRef.current' then it's inside
+			if (nodeRef?.current.contains(e.target as HTMLElement)) {
+				setIsOutside(false);
+			} else {
+				// check for optional callback
+				if (onOutsideClick) {
+					onOutsideClick();
+				}
+				setIsOutside(true);
+			}
+		};
 		document.addEventListener("mousedown", handleOutsideClick as () => void);
 
 		return () => {
+			isMounted = false;
 			document.removeEventListener(
 				"mousedown",
 				handleOutsideClick as () => void

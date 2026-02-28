@@ -1,3 +1,4 @@
+import { JWTAccessPayload } from "../features/auth/types";
 import { AsyncResponse } from "../features/types";
 import { CurrentSession, CurrentUser } from "../features/user/types";
 import { authApis, currentEnv } from "./utils_env";
@@ -46,4 +47,38 @@ const signupWithGoogle = async (token: string) => {
 	}
 };
 
-export { loginWithGoogle, signupWithGoogle };
+// Parses token payload into readable JWTAccessPayload interface
+const getTokenPayload = (token: string): JWTAccessPayload | null => {
+	if (!token) return null;
+	try {
+		const payload = JSON.parse(atob(token.split(".")[1])) as JWTAccessPayload;
+		return payload;
+	} catch {
+		return null;
+	}
+};
+
+const getTokenExpiry = (token: string): number | null => {
+	if (!token) return null;
+
+	try {
+		const payload = getTokenPayload(token) as JWTAccessPayload;
+		return payload.exp * 1000; // convert to ms
+	} catch {
+		return null;
+	}
+};
+
+const isTokenExpired = (token: string): boolean => {
+	const expiry = getTokenExpiry(token);
+	if (!expiry) return true;
+	return Date.now() >= expiry;
+};
+
+export {
+	loginWithGoogle,
+	signupWithGoogle,
+	getTokenExpiry,
+	isTokenExpired,
+	getTokenPayload,
+};

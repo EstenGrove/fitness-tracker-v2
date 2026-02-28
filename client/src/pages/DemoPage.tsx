@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
 import styles from "../css/pages/DemoPage.module.scss";
 import AchievementBadge from "../components/achievements/AchievementBadge";
 import AchievementMedal from "../components/achievements/AchievementMedal";
@@ -23,6 +23,11 @@ import TrendItem from "../components/recaps-shared/TrendItem";
 import LayeredAreaChart from "../components/ui/LayeredAreaChart";
 import DottedBarChart from "../components/ui/DottedBarChart";
 import WorkoutCalendarViz from "../components/ui/WorkoutCalendarViz";
+import { getAIInsights } from "../utils/utils_aiInsights";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../features/user/userSlice";
+import { startOfMonth, endOfMonth } from "date-fns";
+import { formatDate } from "../utils/utils_dates";
 
 const colorVariants = {
 	Pink: [
@@ -1293,6 +1298,7 @@ const getMinMaxValues = (data: number[]) => {
 };
 
 const DemoPage = () => {
+	const currentUser = useSelector(selectCurrentUser);
 	const repsPerSet = [26, 22, 18, 20, 24];
 	const { min, max } = getMinMaxValues(repsPerSet);
 	const primary = ringVariants.Red;
@@ -1308,6 +1314,24 @@ const DemoPage = () => {
 		newColors.Slate[4],
 		newColors.Indigo[4],
 	];
+
+	useEffect(() => {
+		const getAIData = async () => {
+			if (!currentUser?.userID) return;
+			const startDate = startOfMonth(new Date());
+			const endDate = endOfMonth(new Date());
+
+			const response = await getAIInsights({
+				userID: currentUser?.userID,
+				activityType: "Strength",
+				startDate: formatDate(startDate, "db"),
+				endDate: formatDate(endDate, "db"),
+			});
+			console.log(response);
+		};
+
+		getAIData();
+	}, []);
 
 	return (
 		<PageContainer>

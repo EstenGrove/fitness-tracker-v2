@@ -13,12 +13,14 @@ import summaryRoutes from "./summaryRoutes.js";
 import settingsRoutes from "./settingsRoutes.js";
 import weeklyRecap from "./weeklyRecapRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
+import aiInsightRoutes from "./aiInsightRoutes.js";
 import medicationRoutes from "./medicationRoutes.js";
 import recentActivityRoutes from "./recentActivityRoutes.js";
 
 const allRoutes = {
 	recentActivity: recentActivityRoutes,
 	medications: medicationRoutes,
+	aiInsights: aiInsightRoutes,
 	dashboard: dashboardRoutes,
 	settings: settingsRoutes,
 	weeklyRecap: weeklyRecap,
