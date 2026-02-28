@@ -89,18 +89,27 @@ const AddWalkDetails = ({ values, onChange }: DetailsProps) => {
 	);
 };
 
-const getBaseSets = (sets: WorkoutSet[]) => {
-	if (!sets || !sets?.length) {
-		return 2;
-	} else {
-		return sets.length;
+// Default reps and sets for each activity type
+const getBaseRepsAndSets = (sets: WorkoutSet[], activityType: Activity) => {
+	switch (activityType) {
+		case "Strength":
+			return { baseReps: 20, baseSets: 4 };
+		case "Cardio":
+			return { baseReps: 20, baseSets: 4 };
+		case "Stretch":
+			return { baseReps: 4, baseSets: 2 };
+		case "Timed":
+			return { baseReps: 10, baseSets: 2 };
+		case "Other":
+			return { baseReps: 10, baseSets: 2 };
+		default:
+			return { baseReps: 10, baseSets: sets?.length ?? 2 };
 	}
 };
 
 // Cardio, Stretch, Timed, Other
 const AddExerciseDetails = ({ workout, sets, onSetChange }: DetailsProps) => {
-	const baseReps = 10;
-	const baseSets = getBaseSets(sets);
+	const { baseReps, baseSets } = getBaseRepsAndSets(sets, workout.activityType);
 	return (
 		<div className={styles.AddExerciseDetails}>
 			<div className={styles.AddExerciseDetails}>
