@@ -68,20 +68,19 @@ const WorkoutHistoryCalendarDay = ({
 
 	return (
 		<div
+			onClick={onSelect}
 			className={styles.WorkoutHistoryCalendarDay}
 			style={{
 				...css.main,
 				borderColor: isSelected ? "var(--accent-blue)" : "var(--text1_5)",
 			}}
 		>
-			<div onClick={onSelect} className={styles.WorkoutHistoryCalendarDay}>
-				<div className={styles.WorkoutHistoryCalendarDay_day}>{day}</div>
-				<div className={styles.WorkoutHistoryCalendarDay_container}>
-					<div
-						className={styles.WorkoutHistoryCalendarDay_container_fill}
-						style={css.fill}
-					></div>
-				</div>
+			<div className={styles.WorkoutHistoryCalendarDay_day}>{day}</div>
+			<div className={styles.WorkoutHistoryCalendarDay_container}>
+				<div
+					className={styles.WorkoutHistoryCalendarDay_container_fill}
+					style={css.fill}
+				></div>
 			</div>
 		</div>
 	);

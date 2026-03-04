@@ -3,7 +3,7 @@ import styles from "../../css/workouts/MarkAsDone.module.scss";
 import { MarkAsDoneValues } from "../../features/workouts/todaysWorkoutsApi";
 import { TodaysWorkout } from "../../features/workouts/types";
 import { formatDate, formatTime, parseAnyTime } from "../../utils/utils_dates";
-import { WorkoutSet } from "../../utils/utils_workouts";
+import { getBaseRepsAndSets, WorkoutSet } from "../../utils/utils_workouts";
 import { subMinutes } from "date-fns";
 import { Activity } from "../../features/shared/types";
 import { milesToPace, milesToSteps } from "../../utils/utils_steps";
@@ -86,6 +86,7 @@ const ActivityDetails = ({
 }: ActivityDetailsProps) => {
 	const isStrength = showStrengthSetsUI(activityType);
 	const isExercise = showExerciseSetsUI(activityType);
+	const { baseReps, baseSets } = getBaseRepsAndSets(values.sets, activityType);
 
 	const handleWalkChange = (name: string, value: string | number) => {
 		const newValues = { ...values, [name]: value };
@@ -106,11 +107,7 @@ const ActivityDetails = ({
 		<div className={styles.ActivityDetails}>
 			{activityType === "Walk" && (
 				<div className={styles.ActivityDetails_walk}>
-					<EditWalkInfo
-						miles={values.miles}
-						duration={values.duration}
-						onChange={handleWalkChange}
-					/>
+					<EditWalkInfo miles={values.miles} onChange={handleWalkChange} />
 				</div>
 			)}
 			{enableSets && (
@@ -119,8 +116,8 @@ const ActivityDetails = ({
 					{isExercise && (
 						<div className={styles.MarkAsDone_details_sets}>
 							<EditWorkoutSets
-								sets={4}
-								reps={10} // Placeholder, can be adjusted
+								sets={baseSets}
+								reps={baseReps} // Placeholder, can be adjusted
 								onChange={onSetChange}
 								exercise={values.exercise ?? ""}
 							/>
@@ -140,8 +137,8 @@ const ActivityDetails = ({
 								Workout Sets:
 							</label>
 							<EditStrengthSets
-								sets={4}
-								reps={20} // Placeholder, can be adjusted
+								sets={baseSets}
+								reps={baseReps} // Placeholder, can be adjusted
 								weight={20} // Placeholder, can be adjusted
 								onChange={onSetChange}
 							/>
@@ -150,6 +147,105 @@ const ActivityDetails = ({
 				</>
 			)}
 			{/*  */}
+		</div>
+	);
+};
+
+type MainFormProps = {
+	values: MarkAsDoneValues;
+	onChange: (name: string, value: string | number) => void;
+};
+
+const MainForm = ({ values, onChange }: MainFormProps) => {
+	return (
+		<div className={styles.MarkAsDone_details}>
+			<div className={styles.MarkAsDone_details_effort}>
+				<label htmlFor="effort">Effort:</label>
+				<Select
+					id="effort"
+					name="effort"
+					value={values.effort}
+					onChange={onChange}
+					options={effortOptions}
+					style={{ width: "100%" }}
+				/>
+			</div>
+			<div className={styles.MarkAsDone_details_time}>
+				<div className={styles.MarkAsDone_details_time_start}>
+					<label htmlFor="startTime">Started:</label>
+					<TimePicker
+						value={values.startTime}
+						name="startTime"
+						id="startTime"
+						onChange={onChange}
+					/>
+				</div>
+				<div className={styles.MarkAsDone_details_time_end}>
+					<label htmlFor="endTime">Ended:</label>
+					<TimePicker
+						value={values.endTime}
+						name="endTime"
+						id="endTime"
+						onChange={onChange}
+					/>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+type MoreDetailsFormProps = {
+	values: MarkAsDoneValues;
+	onChange: (name: string, value: string | number) => void;
+	onSelect: (name: string, value: string | Date) => void;
+	onSetChange: (sets: WorkoutSet[]) => void;
+	onWalkChange: (walkVals: {
+		steps: number;
+		miles: number;
+		pace: number;
+	}) => void;
+	activityType: Activity;
+};
+const MoreDetailsForm = ({
+	values,
+	onChange,
+	onSelect,
+	onSetChange,
+	onWalkChange,
+	activityType,
+}: MoreDetailsFormProps) => {
+	return (
+		<div className={styles.MarkAsDone_details}>
+			<div className={styles.MarkAsDone_details_mins}>
+				<label htmlFor="workoutDate">When:</label>
+				<DatePicker
+					value={values.workoutDate}
+					name="workoutDate"
+					id="workoutDate"
+					onChange={onChange}
+					onSelect={onSelect}
+				/>
+			</div>
+
+			<div className={styles.MarkAsDone_mins}>
+				<label
+					htmlFor="duration"
+					style={{ display: "block", marginBottom: ".5rem" }}
+				>
+					Workout Length:
+				</label>
+				<MinutesSelector
+					name="duration"
+					onSelect={onChange}
+					minutes={values.duration}
+				/>
+			</div>
+			<ActivityDetails
+				values={values}
+				onSetChange={onSetChange}
+				onWalkChange={onWalkChange}
+				activityType={activityType}
+			/>
 		</div>
 	);
 };
@@ -199,75 +295,19 @@ const MarkAsDone = ({ workout, onConfirm, onClose }: Props) => {
 				<h2>Mark as Done</h2>
 			</div>
 
-			<div className={styles.MarkAsDone_details}>
-				<div className={styles.MarkAsDone_details_effort}>
-					<label htmlFor="effort">Effort:</label>
-					<Select
-						id="effort"
-						name="effort"
-						value={values.effort}
-						onChange={onChange}
-						options={effortOptions}
-						style={{ width: "100%" }}
-					/>
-				</div>
-				<div className={styles.MarkAsDone_details_time}>
-					<div className={styles.MarkAsDone_details_time_start}>
-						<label htmlFor="startTime">Started:</label>
-						<TimePicker
-							value={values.startTime}
-							name="startTime"
-							id="startTime"
-							onChange={onChange}
-						/>
-					</div>
-					<div className={styles.MarkAsDone_details_time_end}>
-						<label htmlFor="endTime">Ended:</label>
-						<TimePicker
-							value={values.endTime}
-							name="endTime"
-							id="endTime"
-							onChange={onChange}
-						/>
-					</div>
-				</div>
-			</div>
+			<MainForm values={values} onChange={onChange} />
 			<div className={styles.MarkAsDone_toggle} onClick={toggleMoreDetails}>
 				{showMoreDetails ? "Hide" : "Show"} more details
 			</div>
 			{showMoreDetails && (
-				<div className={styles.MarkAsDone_details}>
-					<div className={styles.MarkAsDone_details_mins}>
-						<label htmlFor="workoutDate">When:</label>
-						<DatePicker
-							value={values.workoutDate}
-							name="workoutDate"
-							id="workoutDate"
-							onChange={onChange}
-							onSelect={onSelect}
-						/>
-					</div>
-
-					<div className={styles.MarkAsDone_mins}>
-						<label
-							htmlFor="duration"
-							style={{ display: "block", marginBottom: ".5rem" }}
-						>
-							Workout Length:
-						</label>
-						<MinutesSelector
-							name="duration"
-							onSelect={onChange}
-							minutes={values.duration}
-						/>
-					</div>
-					<ActivityDetails
-						values={values}
-						onSetChange={onSetChange}
-						onWalkChange={onWalkChange}
-						activityType={workout.activityType}
-					/>
-				</div>
+				<MoreDetailsForm
+					values={values}
+					onChange={onChange}
+					onSelect={onSelect}
+					onSetChange={onSetChange}
+					onWalkChange={onWalkChange}
+					activityType={workout.activityType}
+				/>
 			)}
 			<div className={styles.MarkAsDone_actions}>
 				<button className={styles.MarkAsDone_actions_cancel} onClick={onClose}>

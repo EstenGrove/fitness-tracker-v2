@@ -5,7 +5,8 @@ $radius: 1rem;
 	width: 100%;
 	height: 4rem;
 	border-radius: $radius;
-	border: 1px solid $text3;
+	// border: 1px solid $text3;
+	border: $borderLight;
 	z-index: 5;
 
 	&_day {
@@ -14,6 +15,7 @@ $radius: 1rem;
 		@include rowCenter();
 		font-size: 1.3rem;
 		font-weight: 800;
+		border-radius: $radius;
 		z-index: 10;
 	}
 	&_container {

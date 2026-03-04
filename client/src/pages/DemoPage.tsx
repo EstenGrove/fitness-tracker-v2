@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import styles from "../css/pages/DemoPage.module.scss";
 import AchievementBadge from "../components/achievements/AchievementBadge";
 import AchievementMedal from "../components/achievements/AchievementMedal";
@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { formatDate } from "../utils/utils_dates";
+import { useHaptic } from "../hooks/useHaptic";
 
 const colorVariants = {
 	Pink: [
@@ -1308,6 +1309,13 @@ const DemoPage = () => {
 	const maxRepsData = getDataFor(strengthData, "maxReps");
 	const maxVolData = getDataFor(strengthData, "maxVolume");
 
+	// Haptic
+	const { triggerHaptic } = useHaptic();
+
+	const onHapticClick = () => {
+		triggerHaptic("heavy");
+	};
+
 	const set1 = [
 		newColors.Blue[4],
 		newColors.Cyan[4],
@@ -1337,6 +1345,10 @@ const DemoPage = () => {
 		<PageContainer>
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
+				<div className={css.DemoPage_item}>
+					<button onClick={onHapticClick}>Haptic</button>
+				</div>
+
 				<div className={css.DemoPage_item}>
 					<WorkoutCalendarViz lastXDays={30} />
 				</div>

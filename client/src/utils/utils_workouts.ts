@@ -1345,6 +1345,24 @@ const resumeActiveWorkout = (cacheKey: string = TIMER_KEY) => {
 	cache.set(cacheKey, newCache as unknown as JsonValue<ActiveWorkoutCache>);
 };
 
+// Default reps and sets for each activity type
+const getBaseRepsAndSets = (sets: WorkoutSet[], activityType: Activity) => {
+	switch (activityType) {
+		case "Strength":
+			return { baseReps: 20, baseSets: 4, weight: 20 };
+		case "Cardio":
+			return { baseReps: 20, baseSets: 4 };
+		case "Stretch":
+			return { baseReps: 4, baseSets: 2 };
+		case "Timed":
+			return { baseReps: 10, baseSets: 2 };
+		case "Other":
+			return { baseReps: 10, baseSets: 2 };
+		default:
+			return { baseReps: 10, baseSets: sets?.length ?? 2 };
+	}
+};
+
 export {
 	logWorkout,
 	skipWorkout,
@@ -1388,6 +1406,7 @@ export {
 	formatElapsedTime,
 	getElapsedWorkoutTime,
 	sortByCompleted,
+	getBaseRepsAndSets,
 	// Time/Duration Formatting
 	minsToTimer,
 	minsToTimerWithMs,

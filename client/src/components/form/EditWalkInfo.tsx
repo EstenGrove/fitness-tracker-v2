@@ -27,9 +27,6 @@ const EditWalkInfo = ({ miles, onChange }: Props) => {
 					style={{ width: "15rem" }}
 					inputMode="decimal"
 				/>
-				{/* <div className={styles.EditWalkInfo_pace}>
-					Pace: {paceFromMiles.toFixed(2)}'/sec
-				</div> */}
 			</div>
 		</div>
 	);
