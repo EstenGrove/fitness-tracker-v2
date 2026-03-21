@@ -61,8 +61,6 @@ const getCalendarDates = (lastXDays: number = 30): Date[] => {
 const WorkoutCalendarViz = ({ lastXDays = 30 }: Props) => {
 	const calendarDates: Date[] = getCalendarDates(lastXDays);
 
-	console.log("calendarDates", calendarDates);
-
 	return (
 		<div className={styles.WorkoutCalendarViz}>
 			<div className={styles.WorkoutCalendarViz_labels}>

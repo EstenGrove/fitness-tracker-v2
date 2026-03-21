@@ -28,7 +28,9 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { formatDate } from "../utils/utils_dates";
-import { useHaptic } from "../hooks/useHaptic";
+import { useHaptics } from "../hooks/useHapticsHook";
+import { useWebHaptics } from "web-haptics/react";
+import { useOsc } from "../hooks/useOsc";
 
 const colorVariants = {
 	Pink: [
@@ -1298,6 +1300,70 @@ const getMinMaxValues = (data: number[]) => {
 	};
 };
 
+const SOUNDS: Record<string, OscSound> = {
+	click: {
+		type: "triangle",
+		frequency: 200,
+		duration: 0.02,
+		volume: 0.2,
+	},
+	softPop: {
+		type: "sine",
+		frequency: 300,
+		duration: 0.05,
+		volume: 0.15,
+	},
+	bell: {
+		type: "triangle",
+		frequency: 600,
+		duration: 0.15,
+		volume: 0.1,
+		frequencySlide: [600, 800], // optional ramp
+	},
+	bounce: {
+		type: "sine",
+		frequency: 400,
+		duration: 0.08,
+		volume: 0.18,
+	},
+	softDing: {
+		type: "sine",
+		frequency: 500,
+		duration: 0.1,
+		volume: 0.12,
+		chord: [500, 600], // optional extra frequency layer
+	},
+	swish: {
+		type: "sawtooth",
+		frequency: 250,
+		duration: 0.04,
+		volume: 0.15,
+	},
+	ascendingTick: {
+		type: "triangle",
+		frequency: 250,
+		duration: 0.04,
+		volume: 0.15,
+		frequencySlide: [250, 400],
+	},
+	// Low bump sound
+	bump: {
+		type: "sawtooth",
+		frequency: 20,
+		duration: 0.1,
+		volume: 0.4,
+	},
+};
+
+interface OscSound {
+	type: OscillatorType;
+	frequency: number;
+	duration: number;
+	volume?: number;
+	frequencySlide?: [number, number];
+	chord?: [number, number];
+}
+
 const DemoPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const repsPerSet = [26, 22, 18, 20, 24];
@@ -1310,10 +1376,38 @@ const DemoPage = () => {
 	const maxVolData = getDataFor(strengthData, "maxVolume");
 
 	// Haptic
-	const { triggerHaptic } = useHaptic();
+	// const { trigger: triggerHaptic } = useWebHaptics();
+	// const haptics = useHaptics();
+	const { init, play } = useOsc();
 
-	const onHapticClick = () => {
-		triggerHaptic("heavy");
+	const triggerOsc = async () => {
+		const audioCtx = init();
+		// Resume if suspended - must be done synchronously on iOS
+		if (audioCtx.state === "suspended") {
+			await audioCtx.resume();
+		}
+		play({ ...SOUNDS.bump });
+		// playOsc(SOUNDS.softPop);
+		// playOsc(SOUNDS.bell);
+		// playOsc(SOUNDS.bounce);
+		// playOsc(SOUNDS.softDing);
+		// playOsc(SOUNDS.swish);
+		// playOsc(SOUNDS.ascendingTick);
+	};
+
+	const triggerHaptic = async (intensity: "light" | "medium" | "heavy") => {
+		// CRITICAL: Initialize context synchronously within user gesture (required for iOS)
+		const audioCtx = init();
+
+		// Resume if suspended - must be done synchronously on iOS
+		if (audioCtx.state === "suspended") {
+			await audioCtx.resume();
+		}
+
+		// // Play haptic-like buzz/vibration
+		// playHaptic({ intensity, duration: 50 }).catch((err) => {
+		// 	console.error("Haptic playback error:", err);
+		// });
 	};
 
 	const set1 = [
@@ -1346,7 +1440,67 @@ const DemoPage = () => {
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
 				<div className={css.DemoPage_item}>
-					<button onClick={onHapticClick}>Haptic</button>
+					<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+						<button
+							type="button"
+							onClick={() => triggerOsc()}
+							style={{
+								padding: "1rem 2rem",
+								backgroundColor: "var(--walkAccent)",
+								color: "white",
+								border: "none",
+								borderRadius: "0.5rem",
+								cursor: "pointer",
+								opacity: 0.7,
+							}}
+						>
+							Play Osc Sound
+						</button>
+						<button
+							type="button"
+							onClick={() => triggerHaptic("light")}
+							style={{
+								padding: "1rem 2rem",
+								backgroundColor: "var(--walkAccent)",
+								color: "white",
+								border: "none",
+								borderRadius: "0.5rem",
+								cursor: "pointer",
+								opacity: 0.7,
+							}}
+						>
+							Haptic Light
+						</button>
+						<button
+							type="button"
+							onClick={() => triggerHaptic("medium")}
+							style={{
+								padding: "1rem 2rem",
+								backgroundColor: "var(--walkAccent)",
+								color: "white",
+								border: "none",
+								borderRadius: "0.5rem",
+								cursor: "pointer",
+							}}
+						>
+							Haptic Medium
+						</button>
+						<button
+							type="button"
+							onClick={() => triggerHaptic("heavy")}
+							style={{
+								padding: "1rem 2rem",
+								backgroundColor: "var(--walkAccent)",
+								color: "white",
+								border: "none",
+								borderRadius: "0.5rem",
+								cursor: "pointer",
+								opacity: 1.2,
+							}}
+						>
+							Haptic Heavy
+						</button>
+					</div>
 				</div>
 
 				<div className={css.DemoPage_item}>

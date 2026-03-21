@@ -1,6 +1,7 @@
 .StepsSummary {
 	width: 100%;
 	min-width: 100%;
+	min-height: 18.2rem;
 	height: auto;
 	background-color: var(--todayStyles);
 
@@ -23,5 +24,11 @@
 				text-decoration: none;
 			}
 		}
+	}
+
+	&_card {
+		width: 100%;
+		height: 100%;
+		min-height: 18rem;
 	}
 }

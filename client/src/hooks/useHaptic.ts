@@ -1,69 +1,46 @@
-import { useCallback, useRef } from "react";
+import { RefObject, useCallback, useRef } from "react";
 
-type Intensity = "light" | "medium" | "heavy";
+type HapticLevel = "light" | "medium" | "heavy";
 
-const VIBRATION_MAP: Record<Intensity, number | number[]> = {
+const VIBRATION: Record<HapticLevel, number | number[]> = {
 	light: 10,
 	medium: 20,
 	heavy: [20, 30, 20],
 };
 
-const AUDIO_MAP: Record<Intensity, { duration: number; frequency: number }> = {
-	light: { duration: 0.01, frequency: 120 },
-	medium: { duration: 0.015, frequency: 90 },
-	heavy: { duration: 0.02, frequency: 70 },
+// Tuned specifically for iPhone speaker feel
+const AUDIO: Record<
+	HapticLevel,
+	{ duration: number; frequency: number; gain: number }
+> = {
+	light: { duration: 0.012, frequency: 130, gain: 0.6 },
+	medium: { duration: 0.018, frequency: 95, gain: 0.9 },
+	heavy: { duration: 0.025, frequency: 70, gain: 1.2 },
+};
+
+const createContext = (
+	audioRef: RefObject<AudioContext | null>,
+	newContext?: AudioContext
+) => {
+	if (newContext) {
+		audioRef.current = newContext;
+	} else {
+		audioRef.current = new AudioContext({
+			latencyHint: "interactive",
+		});
+	}
 };
 
 const useHaptic = () => {
-	const audioCtxRef = useRef<AudioContext | null>(null);
+	const audioCtx = useRef<AudioContext | null>(null);
+	const gainNode = useRef<GainNode | null>(null);
+	const oscillatorNode = useRef<OscillatorNode | null>(null);
 
-	const supportsVibrate =
-		typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
-
-	const triggerAudioHaptic = useCallback((intensity: Intensity) => {
-		if (typeof window === "undefined") return;
-
-		if (!audioCtxRef.current) {
-			audioCtxRef.current = new (window.AudioContext ||
-				(window as any).webkitAudioContext)();
+	const createAudioNodes = (audioRef: RefObject<AudioContext | null>) => {
+		if (!audioRef.current) {
+			createContext(audioRef);
 		}
-
-		const ctx = audioCtxRef.current;
-
-		if (ctx.state === "suspended") {
-			ctx.resume();
-		}
-
-		const { duration, frequency } = AUDIO_MAP[intensity];
-
-		const oscillator = ctx.createOscillator();
-		const gain = ctx.createGain();
-
-		oscillator.type = "sine";
-		oscillator.frequency.value = frequency;
-
-		gain.gain.setValueAtTime(1, ctx.currentTime);
-		gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-		oscillator.connect(gain);
-		gain.connect(ctx.destination);
-
-		oscillator.start();
-		oscillator.stop(ctx.currentTime + duration);
-	}, []);
-
-	const triggerHaptic = useCallback(
-		(intensity: Intensity = "light") => {
-			if (supportsVibrate) {
-				navigator.vibrate(VIBRATION_MAP[intensity]);
-			} else {
-				triggerAudioHaptic(intensity);
-			}
-		},
-		[supportsVibrate, triggerAudioHaptic]
-	);
-
-	return { triggerHaptic };
+	};
 };
 
 export { useHaptic };

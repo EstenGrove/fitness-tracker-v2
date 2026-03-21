@@ -18,7 +18,8 @@
 
 @mixin cardBase() {
 	width: 100%;
-	height: max-content;
+	// height: max-content;
+	height: 100%;
 	border-radius: 1rem;
 	border: 1px solid var(--cardBorder);
 	padding: 1rem;
