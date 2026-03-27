@@ -4,10 +4,10 @@ import { currentEnv, awardsApis } from "./utils_env";
 
 const fetchWorkoutAwards = async (
 	userID: string,
-	baseDate: string = formatDate(new Date(), "db"),
+	targetDate: string = formatDate(new Date(), "db"),
 ) => {
 	let url = currentEnv.base + awardsApis.getWorkoutAwards;
-	url += "?" + new URLSearchParams({ userID, baseDate });
+	url += "?" + new URLSearchParams({ userID, targetDate });
 
 	try {
 		const request = await fetchWithAuth(url);
@@ -19,10 +19,10 @@ const fetchWorkoutAwards = async (
 };
 const fetchWorkoutAwardsAndStreaks = async (
 	userID: string,
-	baseDate: string = formatDate(new Date(), "db"),
+	targetDate: string = formatDate(new Date(), "db"),
 ) => {
 	let url = currentEnv.base + awardsApis.getWorkoutAwardsAndStreaks;
-	url += "?" + new URLSearchParams({ userID, baseDate });
+	url += "?" + new URLSearchParams({ userID, targetDate });
 
 	try {
 		const request = await fetchWithAuth(url);
