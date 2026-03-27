@@ -31,6 +31,7 @@ import { formatDate } from "../utils/utils_dates";
 import { useHaptics } from "../hooks/useHapticsHook";
 import { useWebHaptics } from "web-haptics/react";
 import { useOsc } from "../hooks/useOsc";
+import { useHaptic } from "../hooks/useHaptic";
 
 const colorVariants = {
 	Pink: [
@@ -1376,7 +1377,7 @@ const DemoPage = () => {
 	const maxVolData = getDataFor(strengthData, "maxVolume");
 
 	// Haptic
-	// const { trigger: triggerHaptic } = useWebHaptics();
+	const { triggerPreset, trigger } = useHaptic();
 	// const haptics = useHaptics();
 	const { init, play } = useOsc();
 
@@ -1443,7 +1444,7 @@ const DemoPage = () => {
 					<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
 						<button
 							type="button"
-							onClick={() => triggerOsc()}
+							onClick={() => triggerPreset("nudge")}
 							style={{
 								padding: "1rem 2rem",
 								backgroundColor: "var(--walkAccent)",

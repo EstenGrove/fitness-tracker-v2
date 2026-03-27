@@ -7,6 +7,7 @@ import { HabitsService } from "./HabitsService.js";
 import { ExportService } from "./ExportService.js";
 import { TrendsService } from "./TrendsService.js";
 import { RecapsService } from "./RecapsService.js";
+import { AwardsService } from "./AwardsService.js";
 import { StreaksService } from "./StreaksService.js";
 import { SummaryService } from "./SummaryService.js";
 import { HistoryService } from "./HistoryService.js";
@@ -26,6 +27,7 @@ const authService = new AuthService(db);
 const userService = new UserService(db);
 const jobsService = new JobsService(db);
 const statsService = new StatsService(db);
+const awardsService = new AwardsService(db);
 const chatService = new ChatDataService(db);
 const habitsService = new HabitsService(db);
 const trendsService = new TrendsService(db);
@@ -51,6 +53,7 @@ const allServices = {
 	chat: chatService,
 	jobs: jobsService,
 	stats: statsService,
+	awards: awardsService,
 	recaps: recapsService,
 	habits: habitsService,
 	streaks: streaksService,
@@ -88,6 +91,7 @@ export {
 	exportsService,
 	streaksService,
 	habitsService,
+	awardsService,
 	recapsService,
 	trendsService,
 	statsService,

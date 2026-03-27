@@ -10,7 +10,7 @@
 .StreakItem {
 	flex: 1;
 	border-radius: 1rem;
-	border: $borderLight;
+	border: 1px solid var(--border-color);
 	@include flex_col(flex-start, center);
 	gap: 0 1rem;
 	padding: 0.5rem 1rem 1rem 1rem;
@@ -31,7 +31,7 @@
 			// color: var(--blueGrey400);
 			font-weight: 600;
 			font-size: 1.6rem;
-			color: #fff;
+			color: $text1;
 
 			& > b {
 				font-size: 1.8rem;
@@ -57,4 +57,19 @@
 	.StreakItem {
 		align-self: center;
 	}
+}
+
+.rainbow {
+	background: linear-gradient(
+		90deg,
+		red,
+		orange,
+		yellow,
+		green,
+		blue,
+		indigo,
+		violet
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }

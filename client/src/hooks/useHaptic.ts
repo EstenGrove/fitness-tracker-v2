@@ -1,46 +1,45 @@
-import { RefObject, useCallback, useRef } from "react";
+import { HapticInput } from "web-haptics";
+import { useWebHaptics } from "web-haptics/react";
 
-type HapticLevel = "light" | "medium" | "heavy";
-
-const VIBRATION: Record<HapticLevel, number | number[]> = {
-	light: 10,
-	medium: 20,
-	heavy: [20, 30, 20],
-};
-
-// Tuned specifically for iPhone speaker feel
-const AUDIO: Record<
-	HapticLevel,
-	{ duration: number; frequency: number; gain: number }
-> = {
-	light: { duration: 0.012, frequency: 130, gain: 0.6 },
-	medium: { duration: 0.018, frequency: 95, gain: 0.9 },
-	heavy: { duration: 0.025, frequency: 70, gain: 1.2 },
-};
-
-const createContext = (
-	audioRef: RefObject<AudioContext | null>,
-	newContext?: AudioContext
-) => {
-	if (newContext) {
-		audioRef.current = newContext;
-	} else {
-		audioRef.current = new AudioContext({
-			latencyHint: "interactive",
-		});
-	}
+const HAPTIC_PRESETS = {
+	success: [{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }],
+	error: [
+		{ duration: 40, intensity: 0.7 },
+		{ delay: 40, duration: 40, intensity: 0.7 },
+		{ delay: 40, duration: 40, intensity: 0.9 },
+		{ delay: 40, duration: 50, intensity: 0.6 },
+	],
+	warning: [
+		{ duration: 40, intensity: 0.8 },
+		{ delay: 100, duration: 40, intensity: 0.6 },
+	],
+	info: [{ duration: 30 }, { delay: 60, duration: 40, intensity: 1 }],
+	light: [{ duration: 15 }, { intensity: 0.4 }],
+	medium: [{ duration: 25 }, { intensity: 0.7 }],
+	heavy: [{ duration: 35 }, { intensity: 1 }],
+	nudge: [
+		{ duration: 80, intensity: 0.8 },
+		{ delay: 80, duration: 50, intensity: 0.3 },
+	],
+	buzz: [{ duration: 1000, intensity: 0.5 }],
 };
 
 const useHaptic = () => {
-	const audioCtx = useRef<AudioContext | null>(null);
-	const gainNode = useRef<GainNode | null>(null);
-	const oscillatorNode = useRef<OscillatorNode | null>(null);
+	const haptics = useWebHaptics();
 
-	const createAudioNodes = (audioRef: RefObject<AudioContext | null>) => {
-		if (!audioRef.current) {
-			createContext(audioRef);
-		}
+	// Triggers custom/built-in patterns
+	const triggerPreset = async (
+		preset: keyof typeof HAPTIC_PRESETS = "success",
+	) => {
+		await haptics.trigger(HAPTIC_PRESETS[preset] as HapticInput);
 	};
+
+	// Supports custom patterns
+	const triggerHaptic = async (input: HapticInput) => {
+		await haptics.trigger(input);
+	};
+
+	return { trigger: triggerHaptic, triggerPreset };
 };
 
 export { useHaptic };

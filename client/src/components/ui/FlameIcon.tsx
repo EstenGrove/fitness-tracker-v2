@@ -14,7 +14,7 @@ const getSize = (size: IconSize) => {
 		XSM: "1.8rem",
 		SM: "3rem",
 		MD: "6.5rem",
-		LG: "8rem",
+		LG: "10rem",
 		XLG: "15rem",
 		XXLG: "25rem",
 	};

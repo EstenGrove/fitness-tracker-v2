@@ -66,7 +66,7 @@ app.use(
 			return "";
 		},
 		credentials: true,
-	})
+	}),
 );
 app.use("*", async (ctx: Context, next: Next) => {
 	if (!ENABLE_MIDDLEWARE) return await next();
@@ -85,6 +85,7 @@ app.route("auth", allRoutes.auth);
 app.route("stats", allRoutes.stats);
 app.route("recaps", allRoutes.recaps);
 app.route("habits", allRoutes.habits);
+app.route("awards", allRoutes.awards);
 app.route("streaks", allRoutes.streaks);
 app.route("exports", allRoutes.exports);
 app.route("history", allRoutes.history);
@@ -111,5 +112,5 @@ serve({
 testDatabaseConnection().catch(console.error);
 
 console.log(
-	`\n✅ Server is running on ${ORIGIN.prefix}${SERVER.host}:${SERVER.port}`
+	`\n✅ Server is running on ${ORIGIN.prefix}${SERVER.host}:${SERVER.port}`,
 );

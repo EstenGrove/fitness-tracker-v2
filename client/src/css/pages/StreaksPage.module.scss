@@ -1,0 +1,10 @@
+.StreaksPage {
+	width: 100%;
+
+	&_awards {
+		width: 100%;
+		@include flex_row(flex-start, flex-start, wrap);
+		gap: 1rem 0.5rem;
+		margin-bottom: 4rem;
+	}
+}
