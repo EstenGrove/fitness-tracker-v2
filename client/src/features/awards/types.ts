@@ -13,16 +13,18 @@ export interface StreakAward {
 	iconColor: string;
 }
 
+export type WorkoutAwards = {
+	nth: Array<object>;
+	record: Array<object>;
+	pattern: Array<object>;
+};
+
+export type WorkoutStreakAwards = {
+	details: WorkoutStreakDetails;
+	achieved: StreakAward[];
+};
+
 export interface WorkoutAwardsAndStreaks {
-	awards: {
-		nth: Array<object>;
-		record: Array<object>;
-		pattern: Array<object>;
-	};
-	streaks: {
-		// Current & Longest
-		details: WorkoutStreakDetails;
-		// All achieved streaks (eg. 3, 7, 14, 30 days etc.)
-		achieved: StreakAward[];
-	};
+	awards: WorkoutAwards;
+	streaks: WorkoutStreakAwards;
 }

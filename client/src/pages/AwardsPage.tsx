@@ -1,15 +1,19 @@
+import { ReactNode } from "react";
+import { useNavigate } from "react-router";
+import { formatDate } from "../utils/utils_dates";
 import sprite from "../assets/icons/calendar.svg";
 import styles from "../css/pages/AwardsPage.module.scss";
 import { WorkoutStreakDetails } from "../features/streaks/types";
-import { formatDate } from "../utils/utils_dates";
-import { ReactNode } from "react";
+import { useWorkoutStreaksAndAwards } from "../hooks/useWorkoutStreaksAndAwards";
+import {
+	WorkoutAwards,
+	WorkoutAwardsAndStreaks,
+} from "../features/awards/types";
 import Loader from "../components/layout/Loader";
 import PageHeader from "../components/layout/PageHeader";
 import PageContainer from "../components/layout/PageContainer";
 import StreaksSummary from "../components/awards/StreaksSummary";
-import { useWorkoutStreaksAndAwards } from "../hooks/useWorkoutStreaksAndAwards";
-import { WorkoutAwardsAndStreaks } from "../features/awards/types";
-import { useNavigate } from "react-router";
+import AwardsSummary from "../components/awards/AwardsSummary";
 
 const Section = ({
 	title,
@@ -45,11 +49,16 @@ const AwardsPage = () => {
 	const { data: awardsData, isLoading } = useWorkoutStreaksAndAwards(date);
 	const awards = awardsData as WorkoutAwardsAndStreaks;
 	const streaks = awards?.streaks?.details;
+	const workoutAwards = awards?.awards;
 
 	console.log(awards);
 
 	const goToStreaks = () => {
 		navigate("/awards/streaks");
+	};
+
+	const goToAwards = () => {
+		navigate("/awards/all");
 	};
 
 	return (
@@ -60,6 +69,12 @@ const AwardsPage = () => {
 				{!!streaks && (
 					<Section title="Streaks" goTo={goToStreaks}>
 						<StreaksSummary streaks={streaks as WorkoutStreakDetails} />
+					</Section>
+				)}
+				<br />
+				{!!awards && (
+					<Section title="Awards" goTo={goToAwards}>
+						<AwardsSummary awards={workoutAwards as WorkoutAwards} />
 					</Section>
 				)}
 			</div>

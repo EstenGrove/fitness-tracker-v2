@@ -55,6 +55,7 @@ const SettingsOption = lazy(() => import("../pages/SettingsOptionPage"));
 // Awards & Streaks' Pages
 const Awards = lazy(() => import("../pages/AwardsPage"));
 const Streaks = lazy(() => import("../pages/StreaksPage"));
+const AwardsList = lazy(() => import("../pages/AwardsListPage"));
 const StreakDetails = lazy(() => import("../pages/StreakDetailsPage"));
 
 // Demo Page
@@ -86,6 +87,7 @@ export const router = createBrowserRouter([
 			{ path: "awards/*", element: load(<Awards />) },
 			{ path: "awards/streaks", element: load(<Streaks />) },
 			{ path: "awards/streaks/:id", element: load(<StreakDetails />) },
+			{ path: "awards/all", element: load(<AwardsList />) },
 
 			/* STATS */
 			{

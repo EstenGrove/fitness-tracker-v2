@@ -238,29 +238,29 @@ const FLAME_STREAK_MAP: Record<
 	},
 
 	starter: {
-		variant: "green",
-		glow: "soft",
-	},
-
-	consistent: {
 		variant: "blue",
 		glow: "soft",
 	},
 
+	consistent: {
+		variant: "green",
+		glow: "soft",
+	},
+
 	hot: {
-		variant: "fire",
+		variant: "gold",
 		glow: "soft",
 		pulse: true,
 	},
 
 	elite: {
-		variant: "purpleNeon",
+		variant: "crimson",
 		glow: "neon",
 		pulse: true,
 	},
 
 	legendary: {
-		variant: "goldNeon",
+		variant: "purpleNeon",
 		glow: "neon",
 		pulse: true,
 	},
