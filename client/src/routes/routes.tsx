@@ -84,7 +84,7 @@ export const router = createBrowserRouter([
 			{ path: "ai/*", element: load(<AIChatPage />) },
 
 			/* AWARDS */
-			{ path: "awards/*", element: load(<Awards />) },
+			{ path: "awards", element: load(<Awards />) },
 			{ path: "awards/streaks", element: load(<Streaks />) },
 			{ path: "awards/streaks/:id", element: load(<StreakDetails />) },
 			{ path: "awards/all", element: load(<AwardsList />) },
