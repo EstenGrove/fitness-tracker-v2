@@ -1,0 +1,61 @@
+.StreakDetails {
+	width: 100%;
+
+	&_main {
+		width: 100%;
+		@include colCenter();
+		gap: 0 1rem;
+
+		&_details {
+			font-size: 1.6rem;
+			color: $text3;
+			text-align: center;
+			margin-top: 1rem;
+
+			& > b {
+				color: $accentBlue;
+			}
+		}
+	}
+}
+
+.StreakProgress {
+	width: 100%;
+	@include colCenter();
+	margin-top: 1rem;
+
+	&_outOf {
+		font-size: 1.6rem;
+		color: $text3;
+		text-align: center;
+		margin-top: 1rem;
+	}
+}
+
+.AchievedDate {
+	font-size: 1.6rem;
+	color: $text3;
+	text-align: center;
+	@include colCenter();
+	gap: 0.5rem 0;
+
+	& > b {
+		color: $accentBlue;
+	}
+}
+
+.NotAchieved {
+	font-size: 1.6rem;
+	color: var(--accent-red);
+	text-align: center;
+	margin-top: 1rem;
+	@include colCenter();
+	gap: 0.5rem 0;
+}
+
+.StreakInfo {
+	font-size: 1.6rem;
+	color: $text3;
+	text-align: center;
+	margin-top: 2rem;
+}

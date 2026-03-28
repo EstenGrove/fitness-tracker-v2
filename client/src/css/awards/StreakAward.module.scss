@@ -1,0 +1,46 @@
+.StreakAward {
+	width: max-content;
+	flex: 1;
+	border-radius: 1rem;
+	@include flex_col(flex-start, center);
+	gap: 0 1rem;
+	padding: 1rem 0;
+
+	&_flame {
+		height: 100%;
+		@include flex_row(center, center);
+	}
+
+	&_details {
+		width: 100%;
+		@include colCenter();
+
+		&_label {
+			color: $text2;
+			font-size: 1.4rem;
+		}
+		&_streak {
+			font-weight: 600;
+			font-size: 1.6rem;
+			color: $text1;
+
+			& > b {
+				font-size: 1.8rem;
+				font-size: 2rem;
+				font-weight: 800;
+			}
+		}
+		&_achieved_on {
+			height: 1.7rem;
+			font-size: 1.3rem;
+			color: $text3;
+			margin-top: 0.8rem;
+		}
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.StreakAward {
+		align-self: center;
+	}
+}

@@ -1,5 +1,5 @@
 const isRemote = Boolean(
-	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE
+	import.meta.env.IS_REMOTE || import.meta.env.VITE_IS_REMOTE,
 );
 
 export const BASE_URL: string = !isRemote
@@ -240,6 +240,11 @@ const API_ENDPOINTS = {
 	aiInsights: {
 		getAIInsights: "/aiInsights/getAIInsights",
 	},
+	awards: {
+		getWorkoutAwardsAndStreaks: "/awards/getWorkoutAwardsAndStreaks",
+		getWorkoutAwards: "/awards/getWorkoutAwards",
+		getHabitAwards: "/awards/getHabitAwards",
+	},
 };
 
 export const {
@@ -248,6 +253,7 @@ export const {
 	chat: chatApis,
 	stats: statsApis,
 	jobs: jobsApis,
+	awards: awardsApis,
 	exports: exportApis,
 	activity: activityApis,
 	workouts: workoutApis,

@@ -23,7 +23,7 @@ const MedicationDetails = lazy(() => import("../pages/MedicationDetailsPage"));
 const Habits = lazy(() => import("../pages/HabitsPage"));
 const HabitTracker = lazy(() => import("../pages/HabitTrackerPage"));
 const RecentHabitHistory = lazy(
-	() => import("../pages/RecentHabitHistoryPage")
+	() => import("../pages/RecentHabitHistoryPage"),
 );
 const HabitHistory = lazy(() => import("../pages/HabitHistoryPage"));
 // Stats Pages
@@ -34,7 +34,7 @@ const WorkoutsStats = lazy(() => import("../components/stats/WorkoutsStats"));
 const ActivityStats = lazy(() => import("../components/stats/ActivityStats"));
 
 const DashboardLayout = lazy(
-	() => import("../components/layout/DashboardLayout")
+	() => import("../components/layout/DashboardLayout"),
 );
 // Workouts Pages
 const ActiveWorkout = lazy(() => import("../pages/ActiveWorkoutPage"));
@@ -54,6 +54,9 @@ const SettingsOption = lazy(() => import("../pages/SettingsOptionPage"));
 
 // Awards & Streaks' Pages
 const Awards = lazy(() => import("../pages/AwardsPage"));
+const Streaks = lazy(() => import("../pages/StreaksPage"));
+const AwardsList = lazy(() => import("../pages/AwardsListPage"));
+const StreakDetails = lazy(() => import("../pages/StreakDetailsPage"));
 
 // Demo Page
 const Demo = lazy(() => import("../pages/DemoPage"));
@@ -81,7 +84,10 @@ export const router = createBrowserRouter([
 			{ path: "ai/*", element: load(<AIChatPage />) },
 
 			/* AWARDS */
-			{ path: "awards/*", element: load(<Awards />) },
+			{ path: "awards", element: load(<Awards />) },
+			{ path: "awards/streaks", element: load(<Streaks />) },
+			{ path: "awards/streaks/:id", element: load(<StreakDetails />) },
+			{ path: "awards/all", element: load(<AwardsList />) },
 
 			/* STATS */
 			{

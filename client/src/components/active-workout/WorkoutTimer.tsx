@@ -14,6 +14,7 @@ import {
 	getElapsedWorkoutTime,
 } from "../../utils/utils_workouts";
 import { formatDateTime } from "../../utils/utils_dates";
+import { useHaptic } from "../../hooks/useHaptic";
 
 type Props = {
 	duration: number;
@@ -80,10 +81,13 @@ const TimerControls = ({
 };
 
 const StartButton = ({ onClick, isDisabled = false }: ButtonProps) => {
+	const handleClick = async () => {
+		onClick();
+	};
 	return (
 		<button
 			type="button"
-			onClick={onClick}
+			onClick={handleClick}
 			disabled={isDisabled}
 			className={styles.StartButton}
 		>
@@ -185,6 +189,7 @@ const TimerDisplay = ({ status, time }: DisplayProps) => {
 };
 
 const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
+	const { triggerPreset } = useHaptic();
 	const { workoutTimer: timer, setDuration } = useWorkoutContext();
 	const timerStatus: TimerStatus = timer.status;
 	// Converts to seconds to '00:00' format
@@ -199,6 +204,7 @@ const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 
 	const start = () => {
 		timer.start();
+		triggerPreset("nudge");
 	};
 	const end = () => {
 		const info = getPersistedInfo() as TimeInfo;
@@ -223,9 +229,11 @@ const WorkoutTimer = ({ duration, onEnd, onSkip, onReset }: Props) => {
 	};
 	const pause = () => {
 		timer.pause();
+		triggerPreset("warning");
 	};
 	const resume = () => {
 		timer.resume();
+		triggerPreset("nudge");
 	};
 	const skip = () => {
 		return onSkip && onSkip();

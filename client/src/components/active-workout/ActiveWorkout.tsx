@@ -10,6 +10,7 @@ import {
 import { formattedTime } from "../../utils/utils_formatter";
 import {
 	EndedWorkoutValues,
+	getBaseRepsAndSets,
 	prepareEndedWorkout,
 	SkipWorkoutBody,
 	WorkoutSet,
@@ -21,6 +22,7 @@ import WorkoutTimer from "./WorkoutTimer";
 import AddWorkoutDetails from "./AddWorkoutDetails";
 import SkipWorkout from "../workouts/SkipWorkout";
 import ModalSM from "../shared/ModalSM";
+import { Activity } from "../../features/shared/types";
 
 type Props = {
 	currentUser: CurrentUser;
@@ -74,6 +76,32 @@ interface TotalInfo {
 
 type EndWorkoutVals = Omit<EndedWorkoutValues, "sets" | "exercise">;
 
+const getDefaultSets = (
+	sets: WorkoutSet[],
+	activityType: Activity
+): WorkoutSet[] => {
+	const { baseSets, baseReps, weight } = getBaseRepsAndSets(sets, activityType);
+
+	if (activityType === "Strength") {
+		const strengthSets = Array.from({ length: baseSets }, (_, index) => ({
+			id: index + 1,
+			reps: baseReps,
+			weight: weight,
+			sets: baseSets,
+		}));
+		return strengthSets as WorkoutSet[];
+	}
+
+	// Exercise sets
+	const newSets = Array.from({ length: baseSets }, (_, index) => ({
+		id: index + 1,
+		reps: baseReps,
+		sets: baseSets,
+		exercise: activityType,
+	}));
+	return newSets as WorkoutSet[];
+};
+
 const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 	const [logWorkout] = useLogWorkoutMutation();
 	const [skipWorkout] = useSkipWorkoutMutation();
@@ -83,7 +111,9 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 	const [showAddDetails, setShowAddDetails] = useState<boolean>(false);
 	const [showSkipModal, setShowSkipModal] = useState<boolean>(false);
 	// Details values
-	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>([]);
+	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>(
+		getDefaultSets([] as WorkoutSet[], workout.activityType)
+	);
 	const [workoutValues, setWorkoutValues] = useState<EndWorkoutVals>({
 		workoutID: workout.workoutID,
 		activityType: workout.activityType,

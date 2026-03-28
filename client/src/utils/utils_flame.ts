@@ -201,6 +201,128 @@ export const FLAME_GRADIENTS = {
 			{ offset: "100%", color: "#fb7185" },
 		],
 	},
+
+	// ADDITIONAL PALETTES (extra hue variety) //
+	lime: {
+		outer: [
+			{ offset: "0%", color: "#d9f99d" },
+			{ offset: "100%", color: "#4d7c0f" },
+		],
+		inner: [
+			{ offset: "0%", color: "#f7fee7" },
+			{ offset: "100%", color: "#84cc16" },
+		],
+	},
+
+	coralSunset: {
+		outer: [
+			{ offset: "0%", color: "#fecdd3" },
+			{ offset: "100%", color: "#ea580c" },
+		],
+		inner: [
+			{ offset: "0%", color: "#fff7ed" },
+			{ offset: "100%", color: "#fb923c" },
+		],
+	},
+
+	ocean: {
+		outer: [
+			{ offset: "0%", color: "#a5f3fc" },
+			{ offset: "100%", color: "#0284c7" },
+		],
+		inner: [
+			{ offset: "0%", color: "#ecfeff" },
+			{ offset: "100%", color: "#22d3ee" },
+		],
+	},
+
+	violetNeon: {
+		outer: [
+			{ offset: "0%", color: "#e879f9" },
+			{ offset: "100%", color: "#6b21a8" },
+		],
+		inner: [
+			{ offset: "0%", color: "#fdf4ff" },
+			{ offset: "100%", color: "#c026d3" },
+		],
+	},
+
+	honeyGold: {
+		outer: [
+			{ offset: "0%", color: "#fef9c3" },
+			{ offset: "100%", color: "#ca8a04" },
+		],
+		inner: [
+			{ offset: "0%", color: "#fefce8" },
+			{ offset: "100%", color: "#facc15" },
+		],
+	},
+
+	jade: {
+		outer: [
+			{ offset: "0%", color: "#5eead4" },
+			{ offset: "100%", color: "#0f766e" },
+		],
+		inner: [
+			{ offset: "0%", color: "#f0fdfa" },
+			{ offset: "100%", color: "#2dd4bf" },
+		],
+	},
+
+	limeNeon: {
+		outer: [
+			{ offset: "0%", color: "#d9f99d" },
+			{ offset: "100%", color: "#65a30d" },
+		],
+		inner: [
+			{ offset: "0%", color: "#f7fee7" },
+			{ offset: "100%", color: "#a3e635" },
+		],
+	},
+
+	coralNeon: {
+		outer: [
+			{ offset: "0%", color: "#fda4af" },
+			{ offset: "100%", color: "#c2410c" },
+		],
+		inner: [
+			{ offset: "0%", color: "#fff7ed" },
+			{ offset: "100%", color: "#fb7185" },
+		],
+	},
+
+	oceanNeon: {
+		outer: [
+			{ offset: "0%", color: "#67e8f9" },
+			{ offset: "100%", color: "#0369a1" },
+		],
+		inner: [
+			{ offset: "0%", color: "#f0fdff" },
+			{ offset: "100%", color: "#38bdf8" },
+		],
+	},
+
+	honeyNeon: {
+		outer: [
+			{ offset: "0%", color: "#fef08a" },
+			{ offset: "100%", color: "#a16207" },
+		],
+		inner: [
+			{ offset: "0%", color: "#fffbeb" },
+			{ offset: "100%", color: "#fde047" },
+		],
+	},
+
+	jadeNeon: {
+		outer: [
+			{ offset: "0%", color: "#99f6e4" },
+			{ offset: "100%", color: "#0d9488" },
+		],
+		inner: [
+			{ offset: "0%", color: "#ecfdf5" },
+			{ offset: "100%", color: "#2dd4bf" },
+		],
+	},
 } as const;
 
 export type FlameColorKey = keyof typeof FLAME_GRADIENTS;
@@ -209,19 +331,33 @@ export type FlameStreakTier =
 	| "inactive"
 	| "starter"
 	| "consistent"
+	| "week"
 	| "hot"
 	| "elite"
 	| "legendary"
-	| "mythic";
+	| "grand"
+	| "milestone90"
+	| "century"
+	| "endurance"
+	| "ultra"
+	| "astral"
+	| "year";
 
 export enum FlameStreakTierName {
 	INACTIVE = "inactive",
 	STARTER = "starter",
 	CONSISTENT = "consistent",
+	WEEK = "week",
 	HOT = "hot",
 	ELITE = "elite",
 	LEGENDARY = "legendary",
-	MYTHIC = "mythic",
+	GRAND = "grand",
+	MILESTONE_90 = "milestone90",
+	CENTURY = "century",
+	ENDURANCE = "endurance",
+	ULTRA = "ultra",
+	ASTRAL = "astral",
+	YEAR = "year",
 }
 
 const FLAME_STREAK_MAP: Record<
@@ -238,34 +374,75 @@ const FLAME_STREAK_MAP: Record<
 	},
 
 	starter: {
-		variant: "green",
+		variant: "ocean",
 		glow: "soft",
 	},
 
 	consistent: {
-		variant: "blue",
+		variant: "jade",
+		glow: "soft",
+	},
+
+	week: {
+		variant: "coralSunset",
 		glow: "soft",
 	},
 
 	hot: {
-		variant: "fire",
+		variant: "honeyGold",
 		glow: "soft",
 		pulse: true,
 	},
 
 	elite: {
-		variant: "purpleNeon",
+		variant: "limeNeon",
 		glow: "neon",
 		pulse: true,
 	},
 
 	legendary: {
-		variant: "goldNeon",
+		variant: "violetNeon",
 		glow: "neon",
 		pulse: true,
 	},
 
-	mythic: {
+	grand: {
+		variant: "obsidian",
+		glow: "soft",
+		pulse: true,
+	},
+
+	milestone90: {
+		variant: "greenNeon",
+		glow: "neon",
+		pulse: true,
+	},
+
+	century: {
+		variant: "honeyNeon",
+		glow: "neon",
+		pulse: true,
+	},
+
+	endurance: {
+		variant: "crimsonNeon",
+		glow: "neon",
+		pulse: true,
+	},
+
+	ultra: {
+		variant: "pinkNeon",
+		glow: "neon",
+		pulse: true,
+	},
+
+	astral: {
+		variant: "blueNeon",
+		glow: "neon",
+		pulse: true,
+	},
+
+	year: {
 		variant: "prismatic",
 		glow: "neon",
 		pulse: true,
@@ -275,11 +452,18 @@ const FLAME_STREAK_MAP: Record<
 const getFlameStreakTier = (streak: number): FlameStreakTier => {
 	if (streak <= 0) return FlameStreakTierName.INACTIVE;
 	if (streak <= 3) return FlameStreakTierName.STARTER;
-	if (streak <= 7) return FlameStreakTierName.CONSISTENT;
+	if (streak <= 5) return FlameStreakTierName.CONSISTENT;
+	if (streak <= 7) return FlameStreakTierName.WEEK;
 	if (streak <= 14) return FlameStreakTierName.HOT;
 	if (streak <= 30) return FlameStreakTierName.ELITE;
 	if (streak <= 60) return FlameStreakTierName.LEGENDARY;
-	return FlameStreakTierName.MYTHIC;
+	if (streak < 90) return FlameStreakTierName.GRAND;
+	if (streak < 100) return FlameStreakTierName.MILESTONE_90;
+	if (streak < 150) return FlameStreakTierName.CENTURY;
+	if (streak < 200) return FlameStreakTierName.ENDURANCE;
+	if (streak < 250) return FlameStreakTierName.ULTRA;
+	if (streak < 365) return FlameStreakTierName.ASTRAL;
+	return FlameStreakTierName.YEAR;
 };
 
 export { FLAME_STREAK_MAP, getFlameStreakTier };
