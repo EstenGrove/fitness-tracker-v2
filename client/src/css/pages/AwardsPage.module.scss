@@ -11,11 +11,13 @@
 
 	&_header {
 		width: 100%;
-		@include flex_row(space-between, flex-start);
+		@include flex_row(space-between, flex-end);
 
 		&_title {
-			font-size: 1.8rem;
+			font-size: 2rem;
 			font-weight: 700;
+			@include flex_row(flex-start, baseline);
+			gap: 0 0.5rem;
 		}
 		&_goTo {
 			width: 3rem;

@@ -50,7 +50,8 @@ const useGoogleAuth = (options: HookOptions) => {
 		return () => {
 			isMounted = false;
 		};
-	}, [onSuccess]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return {
 		signin,

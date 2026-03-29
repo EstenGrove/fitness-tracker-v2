@@ -1,0 +1,24 @@
+.CountBadge {
+	width: max-content;
+	height: auto;
+	border-radius: 5rem;
+	background-color: var(--countColor);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0 0.2rem;
+	padding: 0.4rem 0.8rem;
+	font-size: 1.15rem;
+	font-weight: 600;
+	color: #ffffff;
+
+	&_count {
+		color: rgba(0, 226, 189, 0.8);
+	}
+	&_separator {
+		color: $text2;
+	}
+	&_outOf {
+		color: $text3;
+	}
+}

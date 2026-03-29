@@ -8,19 +8,22 @@ import { useWorkoutStreaksAndAwards } from "../hooks/useWorkoutStreaksAndAwards"
 import {
 	WorkoutAwards,
 	WorkoutAwardsAndStreaks,
+	WorkoutAward,
+	StreakAward,
 } from "../features/awards/types";
 import Loader from "../components/layout/Loader";
 import PageHeader from "../components/layout/PageHeader";
 import PageContainer from "../components/layout/PageContainer";
 import StreaksSummary from "../components/awards/StreaksSummary";
 import AwardsSummary from "../components/awards/AwardsSummary";
+import CountBadge from "../components/awards/CountBadge";
 
 const Section = ({
 	title,
 	children,
 	goTo,
 }: {
-	title: string;
+	title: ReactNode | string;
 	children?: ReactNode;
 	goTo?: () => void;
 }) => {
@@ -43,6 +46,15 @@ const Section = ({
 	);
 };
 
+const getAchievedCounts = (list: StreakAward[] | WorkoutAward[]) => {
+	const earned = list.filter((item) => item.wasAchieved);
+	const total = list.length;
+	return {
+		earned: earned.length,
+		total,
+	};
+};
+
 const AwardsPage = () => {
 	const navigate = useNavigate();
 	const date = formatDate(new Date(), "db");
@@ -50,8 +62,24 @@ const AwardsPage = () => {
 	const awards = awardsData as WorkoutAwardsAndStreaks;
 	const streaks = awards?.streaks?.details;
 	const workoutAwards = awards?.awards;
+	const streaksCounts = getAchievedCounts(awards?.streaks?.achieved ?? []);
+	const awardsCounts = getAchievedCounts(awards?.awards?.achieved ?? []);
 
 	console.log(awards);
+
+	const streaksTitle = (
+		<>
+			<span>Streaks</span>
+			<CountBadge count={streaksCounts.earned} outOf={streaksCounts.total} />
+		</>
+	);
+
+	const awardsTitle = (
+		<>
+			<span>Awards</span>
+			<CountBadge count={awardsCounts.earned} outOf={awardsCounts.total} />
+		</>
+	);
 
 	const goToStreaks = () => {
 		navigate("/awards/streaks");
@@ -67,13 +95,13 @@ const AwardsPage = () => {
 			<div className={styles.AwardsPage}>
 				{isLoading && <Loader />}
 				{!!streaks && (
-					<Section title="Streaks" goTo={goToStreaks}>
+					<Section title={streaksTitle} goTo={goToStreaks}>
 						<StreaksSummary streaks={streaks as WorkoutStreakDetails} />
 					</Section>
 				)}
 				<br />
 				{!!awards && (
-					<Section title="Awards" goTo={goToAwards}>
+					<Section title={awardsTitle} goTo={goToAwards}>
 						<AwardsSummary awards={workoutAwards as WorkoutAwards} />
 					</Section>
 				)}

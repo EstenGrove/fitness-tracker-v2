@@ -1,28 +1,42 @@
-import sprite from "../../assets/icons/habits.svg";
 import styles from "../../css/achievements/AchievementBadge.module.scss";
-import { awardIcons } from "../../utils/utils_achievements";
+import { StreakColor, StreakSize } from "../../utils/utils_streaks";
+import { addEllipsis } from "../../utils/utils_misc";
 
-const badgeIcons = awardIcons.badges;
+type Size = StreakSize;
+type Color = StreakColor;
+type Variant = "inferno" | "mythic" | "ascended";
 
 type Props = {
-	icon: keyof typeof badgeIcons;
-	color?: string;
-	text?: string;
+	size?: Size;
+	color?: Color;
+	variant?: Variant;
+	title: string;
+	label?: string;
 };
 
 const AchievementBadge = ({
-	icon,
-	color = "var(--accent-orange)",
-	text,
+	size = "MD",
+	color = "gold",
+	title = "Award",
+	label = "Achieved",
+	variant,
 }: Props) => {
-	const css = { fill: color };
-	const iconName = badgeIcons[icon];
+	const classes = [
+		styles.AchievementBadge,
+		styles[size],
+		styles[color],
+		variant ? styles[variant] : null,
+	]
+		.filter(Boolean)
+		.join(" ");
+
+	const cleanTitle = addEllipsis(title, 5);
 	return (
-		<div className={styles.AchievementBadge}>
-			<svg className={styles.AchievementBadge_icon} style={css}>
-				<use xlinkHref={`${sprite}#icon-${iconName}`}></use>
-				{!!text && <span>{text}</span>}
-			</svg>
+		<div className={classes}>
+			<div className={styles.AchievementBadge_inner}>
+				<span className={styles.AchievementBadge_count}>{cleanTitle}</span>
+				<span className={styles.AchievementBadge_label}>{label}</span>
+			</div>
 		</div>
 	);
 };

@@ -1,0 +1,31 @@
+.AwardsSummary {
+	width: 100%;
+	@include flex_row(center, flex-start, wrap);
+	gap: 1rem 0.5rem;
+	flex-basis: auto;
+
+	&_nth {
+		@include flex_row(center, flex-start, wrap);
+		gap: 1rem 0.5rem;
+		flex-basis: auto;
+	}
+
+	&_record {
+		@include flex_row(center, flex-start, wrap);
+		gap: 1rem 0.5rem;
+		flex-basis: auto;
+	}
+
+	&_pattern {
+		@include flex_row(center, flex-start, wrap);
+		gap: 1rem 0.5rem;
+		flex-basis: auto;
+	}
+}
+
+.AwardItem {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}

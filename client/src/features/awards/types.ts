@@ -1,4 +1,5 @@
 import { WorkoutStreakDetails } from "../streaks/types";
+import { Activity } from "../shared/types";
 
 export interface StreakAward {
 	streakID: number;
@@ -13,10 +14,38 @@ export interface StreakAward {
 	iconColor: string;
 }
 
+export enum AwardCategory {
+	NTH = "NTH",
+	RECORD = "RECORD",
+	PATTERN = "PATTERN",
+}
+
+export enum AwardMetric {
+	WORKOUT = "WORKOUT",
+	MINUTES = "MINUTES",
+	MILES = "MILES",
+	STEPS = "STEPS",
+	REPS = "REPS",
+	SETS = "SETS",
+	VOLUME = "VOLUME",
+	EFFORT = "EFFORT",
+}
+export interface WorkoutAward {
+	awardID: number;
+	awardName: string;
+	awardDesc: string;
+	awardCategory: AwardCategory;
+	awardMetric: AwardMetric;
+	awardThreshold: number;
+	activityType: Activity | null;
+	wasAchieved: boolean;
+	achievedOn: string;
+	awardValue: number;
+	awardYear: number;
+}
+
 export type WorkoutAwards = {
-	nth: Array<object>;
-	record: Array<object>;
-	pattern: Array<object>;
+	achieved: WorkoutAward[];
 };
 
 export type WorkoutStreakAwards = {
