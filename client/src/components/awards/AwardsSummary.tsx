@@ -2,7 +2,6 @@ import styles from "../../css/awards/AwardsSummary.module.scss";
 import { WorkoutAwards, WorkoutAward } from "../../features/awards/types";
 import { groupBy, TRecord } from "../../utils/utils_misc";
 import AchievementBadge from "../achievements/AchievementBadge";
-import AchievementMedal from "../achievements/AchievementMedal";
 
 type Props = {
 	awards: WorkoutAwards;
@@ -18,7 +17,7 @@ const AwardItem = ({ label, value }: AwardItemProps) => {
 		<div className={styles.AwardItem}>
 			<AchievementBadge
 				title={label}
-				label={value.toString()}
+				label={value?.toString()}
 				size="SM"
 				color="gold"
 			/>
@@ -35,27 +34,7 @@ const AwardsSummary = ({ awards }: Props) => {
 	} = grouped as TRecord<WorkoutAward>;
 
 	console.log({ nths, records, patterns });
-	const nthAwardsList = nths.map((award) => (
-		<AwardItem
-			key={award.awardID}
-			label={award.awardName}
-			value={award.awardValue}
-		/>
-	));
-	const recordAwardsList = records.map((award) => (
-		<AwardItem
-			key={award.awardID}
-			label={award.awardName}
-			value={award.awardValue}
-		/>
-	));
-	const patternAwardsList = patterns.map((award) => (
-		<AwardItem
-			key={award.awardID}
-			label={award.awardName}
-			value={award.awardValue}
-		/>
-	));
+
 	return (
 		<div className={styles.AwardsSummary}>
 			<div
@@ -63,9 +42,9 @@ const AwardsSummary = ({ awards }: Props) => {
 			>
 				Coming Soon...
 			</div>
-			{/* <div className={styles.AwardsSummary_nth}>{nthAwardsList}</div> */}
-			{/* <div className={styles.AwardsSummary_record}>{recordAwardsList}</div>
-			<div className={styles.AwardsSummary_pattern}>{patternAwardsList}</div> */}
+			{/*  */}
+			{/*  */}
+			{/*  */}
 		</div>
 	);
 };

@@ -1509,7 +1509,7 @@ const DemoPage = () => {
 						title="2nd Workout"
 						label="Award"
 						color="pink"
-						size="SM"
+						size="XLG"
 					/>
 				</div>
 

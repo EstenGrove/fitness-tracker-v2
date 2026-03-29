@@ -1,6 +1,5 @@
 import styles from "../../css/achievements/AchievementBadge.module.scss";
 import { StreakColor, StreakSize } from "../../utils/utils_streaks";
-import { addEllipsis } from "../../utils/utils_misc";
 
 type Size = StreakSize;
 type Color = StreakColor;
@@ -21,7 +20,7 @@ const AchievementBadge = ({
 	label = "Achieved",
 	variant,
 }: Props) => {
-	const classes = [
+	const innerClasses = [
 		styles.AchievementBadge,
 		styles[size],
 		styles[color],
@@ -30,12 +29,17 @@ const AchievementBadge = ({
 		.filter(Boolean)
 		.join(" ");
 
-	const cleanTitle = addEllipsis(title, 5);
+	const glowClass =
+		(styles[`glow_${color}` as keyof typeof styles] as string | undefined) ??
+		styles.glow_gold;
+
 	return (
-		<div className={classes}>
-			<div className={styles.AchievementBadge_inner}>
-				<span className={styles.AchievementBadge_count}>{cleanTitle}</span>
-				<span className={styles.AchievementBadge_label}>{label}</span>
+		<div className={`${styles.AchievementBadge_glow} ${glowClass}`}>
+			<div className={innerClasses}>
+				<div className={styles.AchievementBadge_inner}>
+					<span className={styles.AchievementBadge_count}>{title}</span>
+					<span className={styles.AchievementBadge_label}>{label}</span>
+				</div>
 			</div>
 		</div>
 	);

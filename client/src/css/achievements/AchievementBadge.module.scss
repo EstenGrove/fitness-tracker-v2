@@ -5,19 +5,57 @@
 $countSize: 2.5rem;
 $labelSize: 0.8rem;
 
-$hexClip: polygon(
-	25% 6.7%,
-	75% 6.7%,
-	100% 50%,
-	75% 93.3%,
-	25% 93.3%,
-	0% 50%
-);
+$hexClip: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
 
 /* Glow intensity tokens */
 $softGlow: 0.25;
 $mediumGlow: 0.35;
 $hardGlow: 0.5;
+
+/* ─────────────────────────────
+   Outer glow wrapper
+   (clip-path on the badge clips box-shadow; drop-shadow follows the hex silhouette)
+───────────────────────────── */
+
+.AchievementBadge_glow {
+	--badge-glow-rgb: 128, 128, 128;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	/* Room for halo + negative margin so layout footprint stays ~unchanged */
+	padding: 22px;
+	margin: -22px;
+
+	filter:
+		drop-shadow(0 0 14px rgba(var(--badge-glow-rgb), 0.55))
+		drop-shadow(0 0 32px rgba(var(--badge-glow-rgb), 0.28))
+		drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3));
+}
+
+.glow_blue {
+	--badge-glow-rgb: 0, 124, 255;
+}
+
+.glow_green {
+	--badge-glow-rgb: 52, 211, 153;
+}
+
+.glow_gold {
+	--badge-glow-rgb: 245, 158, 11;
+}
+
+.glow_fire {
+	--badge-glow-rgb: 255, 77, 77;
+}
+
+.glow_purple {
+	--badge-glow-rgb: 139, 92, 246;
+}
+
+.glow_pink {
+	--badge-glow-rgb: 236, 72, 153;
+}
 
 /* ─────────────────────────────
    Base AchievementBadge
@@ -42,7 +80,8 @@ $hardGlow: 0.5;
 
 	clip-path: $hexClip;
 
-	box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25),
+	box-shadow:
+		0 12px 25px rgba(0, 0, 0, 0.25),
 		inset 0 3px 6px rgba(255, 255, 255, 0.4);
 
 	position: relative;
@@ -92,28 +131,72 @@ $hardGlow: 0.5;
 ───────────────────────────── */
 
 .XSM {
-	width: 60px;
-	min-width: 60px;
+	width: 50px;
+	min-width: 50px;
+
+	.AchievementBadge_count {
+		font-size: 1rem;
+	}
+
+	.AchievementBadge_label {
+		font-size: 0.7rem;
+	}
 }
 
 .SM {
-	width: 90px;
-	min-width: 90px;
+	width: 60px;
+	min-width: 60px;
+
+	.AchievementBadge_count {
+		font-size: 1rem;
+	}
+
+	.AchievementBadge_label {
+		font-size: 0.7rem;
+	}
 }
 
 .MD {
-	width: 140px;
-	min-width: 140px;
+	width: 90px;
+	min-width: 90px;
+
+	.AchievementBadge_count {
+		font-size: 1.5rem;
+	}
+
+	.AchievementBadge_label {
+		font-size: 1rem;
+	}
 }
 
 .LG {
-	width: 200px;
-	min-width: 200px;
+	width: 130px;
+	min-width: 130px;
+
+	.AchievementBadge_count {
+		font-size: 1.8rem;
+		font-weight: 800;
+		font-style: bold;
+	}
+
+	.AchievementBadge_label {
+		font-size: 1.2rem;
+	}
 }
 
 .XLG {
-	width: 260px;
-	min-width: 260px;
+	width: 190px;
+	min-width: 190px;
+
+	.AchievementBadge_count {
+		font-size: 2rem;
+		font-weight: 800;
+		font-style: bold;
+	}
+
+	.AchievementBadge_label {
+		font-size: 1.4rem;
+	}
 }
 
 /* ─────────────────────────────
@@ -228,33 +311,39 @@ $hardGlow: 0.5;
 
 @keyframes glowSoftAchievement {
 	0% {
-		box-shadow: 0 12px 25px rgba(0, 0, 0, $softGlow),
+		box-shadow:
+			0 12px 25px rgba(0, 0, 0, $softGlow),
 			inset 0 3px 6px rgba(255, 255, 255, 0.35);
 	}
 	100% {
-		box-shadow: 0 14px 30px rgba(0, 0, 0, $softGlow + 0.05),
+		box-shadow:
+			0 14px 30px rgba(0, 0, 0, $softGlow + 0.05),
 			inset 0 4px 8px rgba(255, 255, 255, 0.45);
 	}
 }
 
 @keyframes glowMediumAchievement {
 	0% {
-		box-shadow: 0 14px 30px rgba(0, 0, 0, $mediumGlow),
+		box-shadow:
+			0 14px 30px rgba(0, 0, 0, $mediumGlow),
 			inset 0 4px 8px rgba(255, 255, 255, 0.45);
 	}
 	100% {
-		box-shadow: 0 16px 36px rgba(0, 0, 0, $mediumGlow + 0.05),
+		box-shadow:
+			0 16px 36px rgba(0, 0, 0, $mediumGlow + 0.05),
 			inset 0 6px 10px rgba(255, 255, 255, 0.55);
 	}
 }
 
 @keyframes glowHardAchievement {
 	0% {
-		box-shadow: 0 16px 35px rgba(255, 69, 0, $hardGlow),
+		box-shadow:
+			0 16px 35px rgba(0, 0, 0, $hardGlow),
 			inset 0 4px 8px rgba(255, 180, 180, 0.5);
 	}
 	100% {
-		box-shadow: 0 18px 42px rgba(255, 140, 0, $hardGlow + 0.05),
+		box-shadow:
+			0 18px 42px rgba(0, 0, 0, $hardGlow + 0.05),
 			inset 0 6px 12px rgba(255, 150, 150, 0.6);
 	}
 }
