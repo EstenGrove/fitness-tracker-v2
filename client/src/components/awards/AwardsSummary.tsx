@@ -1,5 +1,7 @@
 import styles from "../../css/awards/AwardsSummary.module.scss";
-import { WorkoutAwards } from "../../features/awards/types";
+import { WorkoutAwards, WorkoutAward } from "../../features/awards/types";
+import { groupBy, TRecord } from "../../utils/utils_misc";
+import AchievementBadge from "../achievements/AchievementBadge";
 
 type Props = {
 	awards: WorkoutAwards;
@@ -13,26 +15,36 @@ type AwardItemProps = {
 const AwardItem = ({ label, value }: AwardItemProps) => {
 	return (
 		<div className={styles.AwardItem}>
-			<div className={styles.AwardItem_flame}>
-				{/*  */}
-				{/*  */}
-			</div>
-			<div className={styles.AwardItem_details}>
-				<div className={styles.AwardItem_details_label}>{label}</div>
-				<div className={styles.AwardItem_details_streak}>
-					<b>{value}</b> days
-				</div>
-			</div>
+			<AchievementBadge
+				title={label}
+				label={value?.toString()}
+				size="SM"
+				color="gold"
+			/>
 		</div>
 	);
 };
 
 const AwardsSummary = ({ awards }: Props) => {
+	const grouped = groupBy("awardCategory", awards.achieved);
+	const {
+		NTH: nths,
+		RECORD: records,
+		PATTERN: patterns,
+	} = grouped as TRecord<WorkoutAward>;
+
+	console.log({ nths, records, patterns });
+
 	return (
 		<div className={styles.AwardsSummary}>
-			{/* Nth Awards */}
-			{/* Record Awards */}
-			{/* Pattern Awards */}
+			<div
+				style={{ fontSize: "1.6rem", fontWeight: "600", color: "var(--text2)" }}
+			>
+				Coming Soon...
+			</div>
+			{/*  */}
+			{/*  */}
+			{/*  */}
 		</div>
 	);
 };

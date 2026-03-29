@@ -61,6 +61,10 @@
 	--timedFill: rgba(185, 0, 52, 0.6);
 	--otherFill: var(--blueGrey800);
 
+	--black: #000000;
+	--white: #ffffff;
+	--countColor: var(--black);
+
 	/* background-image: */
 	--blueGradient: linear-gradient(
 		to right top,
@@ -397,7 +401,10 @@ body {
 	height: 100%;
 }
 
+/* MARK: LIGHT */
 :root[data-theme="light"] {
+	--black: #000000;
+	--white: #ffffff;
 	--bg-body: #eaecef;
 	--bg-foreground: var(--bg-foreground-light);
 	color: var(--blueGrey800);
@@ -407,6 +414,7 @@ body {
 	--text1: var(--blueGrey800);
 	--text2: var(--blueGrey400);
 	--text1_5: var(--blueGrey400);
+	--countColor: var(--blueGrey200);
 
 	--tabBtns: var(--accent-blue);
 	--tabText: #fff;
@@ -431,7 +439,10 @@ body {
 	--sendBtn: var(--bg-body);
 }
 
+/* MARK: DARK */
 :root[data-theme="dark"] {
+	--black: #000000;
+	--white: #ffffff;
 	--bg-body: #0d1115;
 	--bg-foreground: var(--bg-foreground-dark);
 	color: var(--blueGrey300);
@@ -448,7 +459,7 @@ body {
 	--blockBG: var(--blueGrey800);
 	--inputBG: var(--bg200);
 	--textColor: var(--blueGrey100);
-
+	--countColor: var(--black);
 	--cardBorder: var(--blueGrey800);
 	--cardGoToIcon: var(--blueGrey800);
 

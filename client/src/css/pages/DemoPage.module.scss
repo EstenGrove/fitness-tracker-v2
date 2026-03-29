@@ -6,7 +6,9 @@
 
 .DemoPage {
 	width: 100%;
-	overflow: hidden;
+	/* Allow badge halos (filter drop-shadow) to paint outside the content box */
+	overflow-x: hidden;
+	overflow-y: visible;
 
 	&_item {
 		width: 100%;

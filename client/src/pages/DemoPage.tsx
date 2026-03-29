@@ -1505,6 +1505,15 @@ const DemoPage = () => {
 				</div>
 
 				<div className={css.DemoPage_item}>
+					<AchievementBadge
+						title="2nd Workout"
+						label="Award"
+						color="pink"
+						size="XLG"
+					/>
+				</div>
+
+				<div className={css.DemoPage_item}>
 					<WorkoutCalendarViz lastXDays={30} />
 				</div>
 				<div className={css.DemoPage_item}>

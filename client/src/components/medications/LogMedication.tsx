@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import sprite from "../../assets/icons/main.svg";
 import styles from "../../css/medications/LogMedication.module.scss";
 import { useSelector } from "react-redux";
+import { useHaptic } from "../../hooks/useHaptic";
 import { CurrentUser } from "../../features/user/types";
 import { PillSummary } from "../../features/medications/types";
 import { formatDate, formatTime } from "../../utils/utils_dates";
@@ -234,6 +235,7 @@ const LogMedication = ({
 	selectedDate,
 }: Props) => {
 	const { name } = medication;
+	const { trigger } = useHaptic();
 	const [values, setValues] = useState({
 		dose: 0.25,
 		loggedAt: formatTime(new Date(), "long"),
@@ -241,7 +243,6 @@ const LogMedication = ({
 	});
 	const { logMed, isSubmitting } = useLogMedication();
 	const currentUser: CurrentUser = useSelector(selectCurrentUser);
-
 	const handleTime = (name: string, value: string) => {
 		setValues({
 			...values,
@@ -262,6 +263,7 @@ const LogMedication = ({
 			...values,
 			[name]: value,
 		});
+		trigger("success");
 	};
 
 	const takeMed = async () => {
@@ -278,6 +280,7 @@ const LogMedication = ({
 		});
 
 		await logMed(medLog);
+		trigger("success");
 		return onSave && onSave();
 	};
 
@@ -296,6 +299,7 @@ const LogMedication = ({
 
 		console.log("[SKIPPED]:", medLog);
 		await logMed(medLog);
+		trigger("success");
 		return onSave && onSave();
 	};
 

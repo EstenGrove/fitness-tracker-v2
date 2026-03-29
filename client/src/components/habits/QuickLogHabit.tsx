@@ -25,6 +25,7 @@ import { selectCurrentUser } from "../../features/user/userSlice";
 import DatePicker from "../shared/DatePicker";
 import TimePicker from "../shared/TimePicker";
 import { set } from "date-fns";
+import { useHaptic } from "../../hooks/useHaptic";
 
 type Props = {
 	habit: HabitCard;
@@ -33,7 +34,7 @@ type Props = {
 const prepareHabitLog = (
 	value: number,
 	habit: HabitCard,
-	loggedTime?: Date | string
+	loggedTime?: Date | string,
 ) => {
 	const loggedAt = loggedTime
 		? prepareTimestamp(loggedTime)
@@ -254,7 +255,7 @@ const getLoggedTimestamp = (date: Date | string, time: string) => {
 	const dateAtMidnight = new Date(
 		baseDate.getFullYear(),
 		baseDate.getMonth(),
-		baseDate.getDate()
+		baseDate.getDate(),
 	);
 	const parsedTime = parseAnyTime(time) as Date;
 
@@ -267,17 +268,18 @@ const getLoggedTimestamp = (date: Date | string, time: string) => {
 
 const QuickLogHabit = ({ habit }: Props) => {
 	useLockBodyScroll();
+	const { trigger } = useHaptic();
 	const currentUser = useSelector(selectCurrentUser);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [optionValues, setOptionValues] = useState<OptionValues>({
 		...getInitialOptions(),
 	});
 	const [todaysValue, setTodaysValue] = useState<number>(
-		habit.habitsLogged || 0
+		habit.habitsLogged || 0,
 	);
 	const { queueLog } = useBatchedHabitLogger(
 		650,
-		logHabitsBatched as DeferredFetch<HabitLogValues>
+		logHabitsBatched as DeferredFetch<HabitLogValues>,
 	);
 	const [logManual] = useLogHabitOverrideMutation();
 
@@ -310,7 +312,7 @@ const QuickLogHabit = ({ habit }: Props) => {
 				...habit,
 				userID: currentUser.userID,
 			},
-			loggedAt
+			loggedAt,
 		);
 
 		await logManual(newLog);
@@ -323,6 +325,7 @@ const QuickLogHabit = ({ habit }: Props) => {
 
 		const newLog = prepareHabitLog(habitStep, habit, loggedAt);
 		queueLog(newLog);
+		trigger("success");
 	};
 	const minus = () => {
 		const loggedAt = getLoggedTimestamp(optionValues.date, optionValues.time);
@@ -332,6 +335,7 @@ const QuickLogHabit = ({ habit }: Props) => {
 
 		const newLog = prepareHabitLog(-habitStep, habit, loggedAt);
 		queueLog(newLog);
+		trigger("success");
 	};
 
 	return (
