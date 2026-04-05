@@ -78,7 +78,7 @@ type EndWorkoutVals = Omit<EndedWorkoutValues, "sets" | "exercise">;
 
 const getDefaultSets = (
 	sets: WorkoutSet[],
-	activityType: Activity
+	activityType: Activity,
 ): WorkoutSet[] => {
 	const { baseSets, baseReps, weight } = getBaseRepsAndSets(sets, activityType);
 
@@ -112,8 +112,10 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 	const [showSkipModal, setShowSkipModal] = useState<boolean>(false);
 	// Details values
 	const [workoutSets, setWorkoutSets] = useState<WorkoutSet[]>(
-		getDefaultSets([] as WorkoutSet[], workout.activityType)
+		getDefaultSets([] as WorkoutSet[], workout.activityType),
 	);
+
+	console.log("[WORKOUT SETS]", workoutSets);
 	const [workoutValues, setWorkoutValues] = useState<EndWorkoutVals>({
 		workoutID: workout.workoutID,
 		activityType: workout.activityType,
@@ -195,7 +197,6 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 		const { userID } = currentUser;
 
 		if (workoutInfo) {
-			// const mins = secondsToMinutes(workoutInfo.totalSecs);
 			const mins = workoutInfo.totalSecs / 60;
 			const preparedWorkout = prepareEndedWorkout(userID, {
 				...workoutValues,
@@ -205,6 +206,8 @@ const ActiveWorkout = ({ workout, currentUser, goBack }: Props) => {
 				duration: mins,
 				exercise: workoutValues.activityType,
 			});
+
+			console.log("[PREPARED WORKOUT]", preparedWorkout);
 
 			await logWorkout({
 				userID: userID,

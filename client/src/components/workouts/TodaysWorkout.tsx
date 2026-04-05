@@ -25,7 +25,7 @@ import {
 	SkipWorkoutBody,
 } from "../../utils/utils_workouts";
 import { MarkAsDoneParams } from "../../features/types";
-import { isValid, subDays } from "date-fns";
+import { isValid } from "date-fns";
 import MenuDropdown from "../shared/MenuDropdown";
 import ViewWorkout from "./ViewWorkout";
 import ModalLG from "../shared/ModalLG";

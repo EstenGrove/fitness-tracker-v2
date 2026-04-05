@@ -35,10 +35,10 @@ const StreaksPage = () => {
 				{isLoading && <Loader />}
 				<div className={styles.StreaksPage_awards}>
 					{streakAwards &&
-						streakAwards.map((award, idx) => {
+						streakAwards.map((award) => {
 							return (
 								<StreakAward
-									key={idx + "streak"}
+									key={award.streakID + "-streak"}
 									label={award.streakName}
 									value={award.targetDays}
 									hasAchieved={award.wasAchieved}

@@ -44,6 +44,7 @@ export interface EditWorkoutValues {
 	desc: string;
 	duration: number;
 	// GOALS
+	// NOTE: Workout Sets are stored separately in a state variable!!
 	// sets: number;
 	// reps: number;
 	// weight: number;
@@ -173,7 +174,7 @@ export type ScheduledWorkoutsByDateResp =
 
 const logWorkout = async (
 	userID: string,
-	details: LogWorkoutBody
+	details: LogWorkoutBody,
 ): LoggedWorkoutResp => {
 	let url = currentEnv.base + workoutApis.logWorkout;
 	url += "?" + new URLSearchParams({ userID });
@@ -192,7 +193,7 @@ const logWorkout = async (
 
 const fetchTodaysWorkouts = async (
 	userID: string,
-	targetDate: string
+	targetDate: string,
 ): TodaysWorkoutsResp => {
 	let url = currentEnv.base + workoutApis.getTodaysWorkouts;
 	url += "?" + new URLSearchParams({ userID, targetDate });
@@ -208,7 +209,7 @@ const fetchTodaysWorkouts = async (
 };
 const fetchTodaysUnscheduledWorkouts = async (
 	userID: string,
-	targetDate: string
+	targetDate: string,
 ): TodaysWorkoutsResp => {
 	let url = currentEnv.base + workoutApis.getTodaysUnscheduled;
 	url += "?" + new URLSearchParams({ userID, targetDate });
@@ -239,7 +240,7 @@ const fetchAllUserWorkouts = async (userID: string): AllUserWorkoutsResp => {
 const fetchWorkoutDetails = async (
 	userID: string,
 	workoutID: number,
-	activityType: Activity
+	activityType: Activity,
 ): WorkoutDetailsResp => {
 	let url = currentEnv.base + workoutApis.getWorkoutDetails;
 	url +=
@@ -259,7 +260,7 @@ const fetchWorkoutDetails = async (
 const fetchAllWorkoutDetails = async (
 	userID: string,
 	workoutID: number,
-	activityType: Activity
+	activityType: Activity,
 ): WorkoutDetailsResp => {
 	let url = currentEnv.base + workoutApis.getAllWorkoutDetails;
 	url += "?" + new URLSearchParams({ userID });
@@ -313,7 +314,7 @@ const fetchAllWorkouts = async (userID: string): AllWorkoutsResp => {
 
 const fetchSkippedWorkouts = async (
 	userID: string,
-	targetDate: string
+	targetDate: string,
 ): SkippedWorkoutsResp => {
 	let url = currentEnv.base + workoutApis.getSkippedWorkouts;
 	url += "?" + new URLSearchParams({ userID, targetDate });
@@ -330,7 +331,7 @@ const fetchSkippedWorkouts = async (
 
 const fetchScheduledWorkouts = async (
 	userID: string,
-	dateRange: RangeParams
+	dateRange: RangeParams,
 ): ScheduledWorkoutsResp => {
 	const { startDate, endDate } = dateRange;
 
@@ -348,7 +349,7 @@ const fetchScheduledWorkouts = async (
 };
 const fetchScheduledWorkoutsByDate = async (
 	userID: string,
-	dateRange: RangeParams
+	dateRange: RangeParams,
 ): ScheduledWorkoutsByDateResp => {
 	const { startDate, endDate } = dateRange;
 
@@ -367,7 +368,7 @@ const fetchScheduledWorkoutsByDate = async (
 
 const skipWorkout = async (
 	userID: string,
-	details: SkipWorkoutBody
+	details: SkipWorkoutBody,
 ): SkippedWorkoutResp => {
 	let url = currentEnv.base + workoutApis.skipWorkout;
 	url += "?" + new URLSearchParams({ userID });
@@ -385,7 +386,7 @@ const skipWorkout = async (
 };
 
 const deleteWorkoutDate = async (
-	params: DeleteWorkoutDateParams
+	params: DeleteWorkoutDateParams,
 ): DeletedWorkoutDateResp => {
 	let url = currentEnv.base + workoutApis.deleteWorkoutDate;
 	url += "?" + new URLSearchParams({ userID: params.userID });
@@ -420,7 +421,7 @@ const getLastWorkout = async (params: LastSessionParams) => {
 
 const createNewWorkout = async (
 	userID: string,
-	params: CreateWorkoutParams
+	params: CreateWorkoutParams,
 ): CreatedWorkoutResp => {
 	let url = currentEnv.base + workoutApis.createNewWorkout;
 	url += "?" + new URLSearchParams({ userID });
@@ -459,7 +460,7 @@ const editWorkout = async (userID: string, data: EditWorkoutValues) => {
 };
 const getRecurringWorkoutData = async (
 	userID: string,
-	params: { workoutID: number; activityType: Activity }
+	params: { workoutID: number; activityType: Activity },
 ) => {
 	const { workoutID, activityType } = params;
 	let url = currentEnv.base + workoutApis.getRecurringWorkoutData;
@@ -482,7 +483,7 @@ const getRepsFromValues = (workoutSets: WorkoutSet[] | ExerciseSet[]) => {
 	if (!workoutSets || !workoutSets.length) return 0;
 	const sets = workoutSets.length;
 	const reps = Math.round(
-		workoutSets.reduce((perSet, entry) => (perSet += entry.reps), 0) / sets
+		workoutSets.reduce((perSet, entry) => (perSet += entry.reps), 0) / sets,
 	);
 
 	return reps || 0;
@@ -501,7 +502,7 @@ export interface CreateWorkoutPrepareValues {
 
 const prepareNewWorkout = (
 	userID: string,
-	values: CreateWorkoutPrepareValues
+	values: CreateWorkoutPrepareValues,
 ) => {
 	const { workoutSets, workoutInfo } = values;
 	const prepared = prepareNewWorkoutValues(workoutInfo, workoutSets);
@@ -655,7 +656,7 @@ const prepareNewWorkoutSchedule = (values: CreateWorkoutValues) => {
 
 const prepareNewWorkoutValues = (
 	values: CreateWorkoutValues,
-	workoutSets: WorkoutSet[]
+	workoutSets: WorkoutSet[],
 ) => {
 	const { activityType } = values;
 	const type = activityType as Activity;
@@ -759,7 +760,7 @@ const prepareNewStrengthSets = (values: PrepareSets<StrengthSet>) => {
 };
 const prepareNewExerciseSets = (
 	activityType: Activity,
-	values: PrepareSets<ExerciseSet>
+	values: PrepareSets<ExerciseSet>,
 ) => {
 	const { workoutSets, equipment } = values;
 	const reps = getRepsFromValues(workoutSets);
@@ -792,7 +793,7 @@ const prepareNewWalk = (values: {
 
 const getWorkoutsByStatus = (
 	status: WorkoutStatus,
-	workouts: TodaysWorkout[]
+	workouts: TodaysWorkout[],
 ) => {
 	if (!workouts || !workouts.length) return [];
 
@@ -972,7 +973,7 @@ export interface FinalWorkoutVals extends LogWorkoutValues {
 
 const calculateDurationFromTimestamps = (
 	startTime: string,
-	endTime: string
+	endTime: string,
 ) => {
 	const diffInSecs = differenceInSeconds(endTime, startTime);
 	const mins = secondsToMinutes(diffInSecs);
@@ -993,13 +994,13 @@ const calculateDurationFromEndedTimes = (start: string, end: string) => {
 
 const prepareEndedWorkout = (
 	userID: string,
-	values: EndedWorkoutValues
+	values: EndedWorkoutValues,
 ): LogWorkoutBody => {
 	const type = values.activityType as Activity;
 	// Returns mins as a numeric decimal (eg 0.25 => 15seconds) 1.25 => 1m 15s
 	const length = calculateDurationFromEndedTimes(
 		values.startTime,
-		values.endTime
+		values.endTime,
 	);
 	console.log("length", length);
 
@@ -1074,7 +1075,7 @@ const prepareEndedWorkout = (
 };
 
 const getElapsedWorkoutTime = (
-	cacheKey: string = "TIMER_KEY"
+	cacheKey: string = "TIMER_KEY",
 ): { mins: number; secs: number } => {
 	const cache = new LocalStorage<ActiveWorkoutCache>();
 	const timer = cache.get(cacheKey) as ActiveWorkoutCache;
@@ -1230,7 +1231,7 @@ const TIMER_KEY = "TIMER_KEY";
 
 // Checks local storage for an 'in-progress' workout (eg active workout)
 const checkForActiveWorkout = (
-	workoutKey: string = ACTIVE_KEY
+	workoutKey: string = ACTIVE_KEY,
 ): TodaysWorkout | null => {
 	const storage = new LocalStorage<TodaysWorkout>();
 	const workout = storage.get(workoutKey) || null;
@@ -1267,7 +1268,7 @@ const checkForActiveWorkoutInfo = (): ActiveWorkoutInfo | null => {
 
 const setActiveWorkout = (
 	activeWorkout: TodaysWorkout,
-	workoutKey: string = ACTIVE_KEY
+	workoutKey: string = ACTIVE_KEY,
 ) => {
 	if (!activeWorkout) return;
 	const storage = new LocalStorage<TodaysWorkout>();
