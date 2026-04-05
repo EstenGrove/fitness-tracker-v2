@@ -1,5 +1,5 @@
 import styles from "../../css/workouts/EditWorkout.module.scss";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { addDays, isBefore } from "date-fns";
 import { EditWorkoutValues, WorkoutSet } from "../../utils/utils_workouts";
 import { RecurringValues } from "../../utils/utils_recurring";
@@ -15,6 +15,7 @@ import {
 	parseAnyDate,
 	parseAnyTime,
 } from "../../utils/utils_dates";
+import { useGetRecurringWorkoutData } from "../../hooks/useGetRecurringWorkoutData";
 import WeeklyRecurrenceOptions from "../form/WeeklyRecurrenceOptions";
 import EditWorkoutGoals from "../form/EditWorkoutGoals";
 import CustomCheckbox from "../shared/CustomCheckbox";
@@ -23,7 +24,6 @@ import DatePicker from "../shared/DatePicker";
 import TimePicker from "../shared/TimePicker";
 import TextInput from "../shared/TextInput";
 import TextArea from "../shared/TextArea";
-import { useGetRecurringWorkoutData } from "../../hooks/useGetRecurringWorkoutData";
 import Loader from "../layout/Loader";
 
 type Props = {
@@ -310,6 +310,7 @@ const EditWorkoutContent = ({
 			{activeTab === EActiveSection.GOALS && (
 				<EditWorkoutGoals
 					values={values}
+					sets={workoutSets}
 					onChange={onChange}
 					onSetChange={onSetChange}
 				/>
@@ -333,7 +334,7 @@ const EditWorkoutContent = ({
 
 const getInitialValues = (
 	workout: TodaysWorkout,
-	recurringData: RecurringWorkoutData
+	recurringData: RecurringWorkoutData,
 ) => {
 	const { activityType, isRecurring, duration, workoutName } = workout;
 	const workoutInfo: ActiveWorkout = recurringData?.workout;
@@ -398,7 +399,7 @@ const EditWorkout = ({ workout, onClose }: Props) => {
 		activityType,
 	});
 	const [activeTab, setActiveTab] = useState<EActiveSection>(
-		EActiveSection.INFO
+		EActiveSection.INFO,
 	);
 
 	const onTabChange = (tab: EActiveSection) => {
