@@ -1,5 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import styles from "../css/pages/DemoPage.module.scss";
+import AchievementAward from "../components/achievements/AchievementAward";
 import AchievementBadge from "../components/achievements/AchievementBadge";
 import AchievementMedal from "../components/achievements/AchievementMedal";
 import PageContainer from "../components/layout/PageContainer";
@@ -1511,6 +1512,46 @@ const DemoPage = () => {
 						color="pink"
 						size="XLG"
 					/>
+				</div>
+
+				<div className={css.DemoPage_item}>
+					<div
+						style={{
+							display: "flex",
+							flexWrap: "wrap",
+							gap: "2rem",
+							alignItems: "flex-end",
+							justifyContent: "center",
+						}}
+					>
+						<div style={{ textAlign: "center" }}>
+							<AchievementAward
+								shape="circle"
+								title="100"
+								label="Sessions"
+								color="slate"
+								size="LG"
+							/>
+						</div>
+						<div style={{ textAlign: "center" }}>
+							<AchievementAward
+								shape="medallion"
+								title="Marathon"
+								label="Finisher"
+								color="green"
+								size="LG"
+							/>
+						</div>
+						<div style={{ textAlign: "center" }}>
+							<AchievementAward
+								shape="medallion"
+								title="1st"
+								label="Place"
+								color="purple"
+								size="LG"
+							/>
+						</div>
+					</div>
 				</div>
 
 				<div className={css.DemoPage_item}>
