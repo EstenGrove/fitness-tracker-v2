@@ -15,3 +15,11 @@ export interface WorkoutCalendarDay {
 	totalMinsScheduled: number;
 	totalMinsByActivity: TotalMinsByActivity;
 }
+
+// DAILY PROGRESS REPORT SUMMARY
+export interface YesterdaysMetrics {
+	scheduledWorkouts: number;
+	completedWorkouts: number;
+	completedMins: number;
+	completedMinsByActivity: TotalMinsByActivity;
+}
