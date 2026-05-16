@@ -22,6 +22,7 @@ import { MedicationsService } from "./MedicationsService.js";
 import { RecentActivityService } from "./RecentActivityService.js";
 import { ChatSuggestionsService } from "./ChatSuggestionsService.js";
 import { RecapsAndDetailsService } from "./RecapsAndDetailsService.js";
+import { MetricsService } from "./MetricsService.js";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);
@@ -36,6 +37,7 @@ const exportsService = new ExportService(db);
 const streaksService = new StreaksService(db);
 const historyService = new HistoryService(db);
 const summaryService = new SummaryService(db);
+const metricsService = new MetricsService(db);
 const insightsService = new InsightsService(db);
 const workoutsService = new WorkoutsService(db);
 const settingsService = new SettingsService(db);
@@ -60,6 +62,7 @@ const allServices = {
 	exports: exportsService,
 	history: historyService,
 	summary: summaryService,
+	metrics: metricsService,
 	insights: insightsService,
 	settings: settingsService,
 	workouts: workoutsService,
@@ -83,6 +86,7 @@ export {
 	weeklyRecapService,
 	aiInsightsService,
 	dashboardService,
+	metricsService,
 	insightsService,
 	workoutsService,
 	settingsService,

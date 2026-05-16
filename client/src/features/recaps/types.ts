@@ -71,6 +71,7 @@ export type WeeklyRecaps = {
 
 // Progress bar - data viz shape
 export interface RecapBar {
+	whenLabel?: string; // Effective override for 'when' label
 	when: string; // 'Last Week' or '2 weeks ago' etc
 	what: string; // '7.2 mi' or '1h 38m' etc
 	value: number;
@@ -95,7 +96,7 @@ export interface ActivityRecapCard<A extends Activity> {
 
 // Builder type for narrowing the recap data & cards by activity type
 export type ActivityRecapCardBuilder<A extends Activity> = (
-	data: ActivityRecapDataMap[A]
+	data: ActivityRecapDataMap[A],
 ) => ActivityRecapCard<A>[];
 
 export type ActivityRecapCardFactories = {

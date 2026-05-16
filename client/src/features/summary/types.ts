@@ -20,6 +20,23 @@ export interface WorkoutCalendarDay {
 export interface YesterdaysMetrics {
 	scheduledWorkouts: number;
 	completedWorkouts: number;
+	scheduledMins: number;
+	completedMins: number;
+	completedMinsByActivity: TotalMinsByActivity;
+}
+
+export interface TodaysMetrics {
+	scheduledWorkouts: number;
+	completedWorkouts: number;
+	scheduledMins: number;
+	completedMins: number;
+	completedMinsByActivity: TotalMinsByActivity;
+}
+
+export interface WeeksMetrics {
+	scheduledWorkouts: number;
+	completedWorkouts: number;
+	scheduledMins: number;
 	completedMins: number;
 	completedMinsByActivity: TotalMinsByActivity;
 }

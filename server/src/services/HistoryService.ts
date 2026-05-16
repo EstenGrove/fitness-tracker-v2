@@ -35,7 +35,7 @@ class HistoryService {
 	async getHistoryDetails(
 		userID: string,
 		historyID: number,
-		activityType: string
+		activityType: string,
 	) {
 		try {
 			const query = `SELECT * FROM get_history_details(
@@ -115,7 +115,7 @@ class HistoryService {
 	async getHistoryForRangeAndActivity(
 		userID: string,
 		activityType: Activity,
-		range: DateRange
+		range: DateRange,
 	): HistoryResp {
 		const { startDate, endDate } = range;
 		try {
@@ -153,7 +153,7 @@ class HistoryService {
 	async deleteWorkoutSession(
 		userID: string,
 		historyID: number,
-		activityType: Activity
+		activityType: Activity,
 	) {
 		try {
 			const query = `SELECT * FROM delete_workout_session($1, $2, $3)`;

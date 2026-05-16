@@ -8,6 +8,7 @@ import awardsRoutes from "./awardsRoutes.js";
 import trendsRoutes from "./trendsRoutes.js";
 import streakRoutes from "./streakRoutes.js";
 import exportRoutes from "./exportRoutes.js";
+import metricsRoutes from "./metricsRoutes.js";
 import historyRoutes from "./historyRoutes.js";
 import workoutRoutes from "./workoutRoutes.js";
 import summaryRoutes from "./summaryRoutes.js";
@@ -25,6 +26,7 @@ const allRoutes = {
 	dashboard: dashboardRoutes,
 	settings: settingsRoutes,
 	weeklyRecap: weeklyRecap,
+	metrics: metricsRoutes,
 	workouts: workoutRoutes,
 	summary: summaryRoutes,
 	history: historyRoutes,

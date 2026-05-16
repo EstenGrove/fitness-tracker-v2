@@ -14,8 +14,12 @@ import FadeIn from "../ui/FadeIn";
 import RecapCardTop from "./RecapCardTop";
 import RecapTitleCard from "./RecapTitleCard";
 import RecapStepsCard from "./RecapStepsCard";
+import RecapTimedCard from "./RecapTimedCard";
+import RecapOtherCard from "./RecapOtherCard";
+import RecapCardioCard from "./RecapCardioCard";
 import RecapCardLayout from "./RecapCardLayout";
 import RecapStreakCard from "./RecapStreakCard";
+import RecapStretchCard from "./RecapStretchCard";
 import RecapStrengthCard from "./RecapStrengthCard";
 import RecapCompletedCard from "./RecapCompletedCard";
 import RecapCardIndicators from "./RecapCardIndicators";
@@ -45,7 +49,28 @@ const defaultRange = {
 	endDate: formatDate(baseDate, "db"),
 };
 
+const getTopCards = (data: WeeklyRecaps) => {
+	if (!data) return [];
+	const recap = data?.currentWeek?.recap;
+	const { topActivities } = recap;
+	const [first, second] = topActivities;
+
+	const firstCard = {
+		id: 3,
+		type: first.activityType,
+		data: data,
+	};
+	const secondCard = {
+		id: 4,
+		type: second.activityType,
+		data: data,
+	};
+	return [firstCard, secondCard];
+};
+
 const getCards = (data: WeeklyRecaps) => {
+	const topCards = getTopCards(data);
+	console.log("topCards", topCards);
 	const titleCard = {
 		id: 0,
 		type: "Title",
@@ -61,30 +86,33 @@ const getCards = (data: WeeklyRecaps) => {
 		type: "Streak",
 		data: data,
 	};
-	const stepsCard = {
-		id: 3,
-		type: "Steps",
-		data: data,
-	};
-	const strengthCard = {
-		id: 4,
-		type: "Strength",
-		data: data,
-	};
+	// const stepsCard = {
+	// 	id: 3,
+	// 	type: "Steps",
+	// 	data: data,
+	// };
+	// const strengthCard = {
+	// 	id: 4,
+	// 	type: "Strength",
+	// 	data: data,
+	// };
 	const activityCard = {
 		id: 5,
 		type: "Activity",
 		data: data,
 	};
 
-	return [
+	const recapCards = [
 		titleCard,
 		completedCard,
 		streakCard,
-		stepsCard,
-		strengthCard,
+		...topCards,
+		// stepsCard,
+		// strengthCard,
 		activityCard,
 	];
+
+	return recapCards;
 };
 
 const getTitle = (currentUser: CurrentUser) => {
@@ -97,6 +125,10 @@ type CardType =
 	| "Streak"
 	| "Steps"
 	| "Strength"
+	| "Cardio"
+	| "Stretch"
+	| "Timed"
+	| "Other"
 	| "Top"
 	| "Activity"
 	| "Standard";
@@ -109,6 +141,10 @@ const cardsMap: CardsMap = {
 	Standard: RecapCardLayout,
 	Steps: RecapStepsCard,
 	Strength: RecapStrengthCard,
+	Stretch: RecapStretchCard,
+	Cardio: RecapCardioCard,
+	Timed: RecapTimedCard,
+	Other: RecapOtherCard,
 	Top: RecapTopActivitiesCard,
 	Activity: RecapActivitiesCard,
 };
@@ -235,6 +271,7 @@ const WeeklyRecap = ({ dateRange = defaultRange, onClose }: Props) => {
 				{cards?.length > 0 &&
 					cards.map((card, idx) => {
 						const Card = cardsMap[card.type as keyof CardsMap];
+						console.log("card", card);
 						return (
 							<div key={idx + "-" + card.id} className={styles.slide}>
 								<FadeIn duration={650}>

@@ -23,13 +23,14 @@ import FadeSlideIn from "../components/ui/FadeSlideIn";
 import HistoryDetails from "../components/details/HistoryDetails";
 import EditHistory from "../components/history/EditHistory";
 import DeleteHistorySession from "../components/history/DeleteHistorySession";
+import HistoryMetrics from "../components/metrics/HistoryMetrics";
 
 type GroupedHistory = TRecord<WorkoutHistory>;
 
 const groupHistoryByDate = (allLogs: WorkoutHistory[]): GroupedHistory => {
 	if (!history || !history.length) return {};
 	const grouped = groupByFn<WorkoutHistory>(allLogs, (x) =>
-		formatDate(x.startTime, "db")
+		formatDate(x.startTime, "db"),
 	);
 
 	return grouped;
@@ -94,11 +95,11 @@ const AllHistory = () => {
 	const { startDate, endDate } = useSelector(selectHistoryRange);
 	const [modalType, setModalType] = useState<MenuAction | null>(null);
 	const [selectedEntry, setSelectedEntry] = useState<HistoryOfType | null>(
-		null
+		null,
 	);
 	const { data: allHistory, isLoading } = useHistoryForRange(
 		startDate,
-		endDate
+		endDate,
 	);
 	const all: WorkoutHistory[] = allHistory?.all || [];
 	const grouped: GroupedHistory = groupHistoryByDate(all);
@@ -171,6 +172,17 @@ const AllHistory = () => {
 				<ModalLG onClose={closeActionModal}>
 					<EditHistory historyEntry={selectedEntry} />
 				</ModalLG>
+			)}
+			{/* METRICS MODAL */}
+			{selectedEntry && modalType === EMenuAction.METRICS && (
+				<HistoryMetrics
+					onClose={closeActionModal}
+					history={selectedEntry as HistoryOfType}
+					dateRange={{
+						startDate: startDate.toString(),
+						endDate: endDate.toString(),
+					}}
+				/>
 			)}
 
 			{/* DELETE MODAL */}

@@ -97,6 +97,9 @@ const AllHistoryEntry = ({ entry, onMenuAction, children }: Props) => {
 					{showMenu && (
 						<MenuDropdown closeMenu={closeMoreOpts}>
 							<li onClick={() => handleMenu(EMenuAction.VIEW, entry)}>View</li>
+							<li onClick={() => handleMenu(EMenuAction.METRICS, entry)}>
+								Metrics
+							</li>
 							<li onClick={() => handleMenu(EMenuAction.EDIT, entry)}>Edit</li>
 							<li onClick={() => handleMenu(EMenuAction.DELETE, entry)}>
 								Delete

@@ -79,7 +79,7 @@ const RecapBarItem = ({ data, color, value, isPrimary = false }: BarProps) => {
 	const { when, what, mins = 0 } = data;
 	const totalMins = durationTo(mins, "h&m");
 	const baseCss = getStyles(isPrimary, color);
-	const whenLabel = getWhen(when);
+	const whenLabel = data?.whenLabel ?? getWhen(when);
 	const css = {
 		...baseCss,
 		width: isMounted ? `${value}%` : "0%",

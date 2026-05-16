@@ -245,6 +245,9 @@ const API_ENDPOINTS = {
 		getWorkoutAwards: "/awards/getWorkoutAwards",
 		getHabitAwards: "/awards/getHabitAwards",
 	},
+	metrics: {
+		getActivityMetricsAfterWorkout: "/metrics/getActivityMetricsAfterWorkout",
+	},
 };
 
 export const {
@@ -266,6 +269,7 @@ export const {
 	recentActivity: recentActivityApis,
 	summary: summaryApis,
 	streaks: streakApis,
+	metrics: metricsApis,
 	recaps: recapApis,
 	trends: trendsApis,
 	insights: insightsApis,

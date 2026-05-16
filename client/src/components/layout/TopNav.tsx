@@ -107,11 +107,23 @@ const SidePanel = ({ closePanel, onSelect }: SidePanelProps) => {
 	);
 };
 
-const getDateRange = (lastXDays: number = 7) => {
-	const today = new Date();
-	const baseDate = subDays(today, 1);
-	const start = subDays(baseDate, lastXDays);
-	const end = baseDate;
+// REAL VERSION TO USE; UN-COMMENT WHEN DONE DEBUGGING
+// const getDateRange = (lastXDays: number = 7) => {
+// 	const today = new Date();
+// 	const baseDate = subDays(today, 1);
+// 	const start = subDays(baseDate, lastXDays);
+// 	const end = baseDate;
+
+// 	const startDate = formatDate(start, "db");
+// 	const endDate = formatDate(end, "db");
+// 	return {
+// 		startDate,
+// 		endDate,
+// 	};
+// };
+const getDateRange = () => {
+	const start = new Date("2025-11-16");
+	const end = new Date("2025-11-22");
 
 	const startDate = formatDate(start, "db");
 	const endDate = formatDate(end, "db");

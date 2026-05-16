@@ -8,22 +8,55 @@ import {
 import RecapCard from "./RecapCard";
 import { Activity } from "../../features/shared/types";
 import RecapProgressBars from "./RecapProgressBars";
+import { differenceInWeeks } from "date-fns";
 
 type Props = {
 	isActive: boolean;
 	data: WeeklyRecaps;
 };
 
+const getRecapProgressBar = (
+	activityType: Activity,
+	data: WeeklyRecaps,
+): RecapBar => {
+	if (!data) return { when: "", what: "", value: 0, mins: 0 };
+	const thisWeek: WeeklyRecap = data?.currentWeek;
+	const activities: WeeklyRecapActivities = thisWeek?.activities;
+	const dataForActivity =
+		activities[activityType as keyof WeeklyRecapActivities];
+	const { totalWorkouts, totalMins } = dataForActivity;
+	const newBar: RecapBar = {
+		what: totalWorkouts.toString(),
+		when: activityType,
+		value: totalWorkouts,
+		mins: totalMins,
+	};
+	return newBar;
+};
+
+const getWhenLabel = (data: WeeklyRecaps): string => {
+	const thisWeek: WeeklyRecap = data?.currentWeek;
+	const whenLabel = thisWeek?.dateRange.startDate;
+	const dist = differenceInWeeks(new Date(), whenLabel);
+	if (dist === 1) {
+		return "one week ago";
+	}
+	const label = " weeks ago";
+	return dist + label;
+};
+
 const getRecapProgressBars = (data: WeeklyRecaps): RecapBar[] => {
 	if (!data) return [];
 	const recapBars: RecapBar[] = [];
-	const thisWeek: WeeklyRecap = data.currentWeek;
-	const activities: WeeklyRecapActivities = thisWeek.activities;
+	const thisWeek: WeeklyRecap = data?.currentWeek;
+	const activities: WeeklyRecapActivities = thisWeek?.activities;
+	const whenLabel = getWhenLabel(data);
 
 	for (const activity in activities) {
 		const dataForActivity = activities[activity as keyof WeeklyRecapActivities];
 		const { activityType, totalWorkouts, totalMins } = dataForActivity;
 		const newBar: RecapBar = {
+			whenLabel: whenLabel,
 			what: `${totalWorkouts} workouts`,
 			when: activityType,
 			value: totalWorkouts,
@@ -44,11 +77,14 @@ const getSortedRecapProgressBars = (data: WeeklyRecaps): RecapBar[] => {
 	return sorted;
 };
 
-const getTopTwoActivities = (recapBars: RecapBar[]): RecapBar[] => {
-	// We read from the 'when' since that's being used for 'activity type'
-	const two = recapBars.slice(0, 2);
+const getTopTwoActivities = (data: WeeklyRecaps): RecapBar[] => {
+	// We grab the 'topActivities' list, then convert each to 'RecapBar' type
+	const topActivities = data.currentWeek.recap.topActivities;
+	const recapBars: RecapBar[] = topActivities.map((activity) =>
+		getRecapProgressBar(activity.activityType, data),
+	);
 
-	return two;
+	return recapBars;
 };
 
 const getActivityName = (type: Activity) => {
@@ -79,7 +115,7 @@ const getActivityName = (type: Activity) => {
 
 const RecapActivitiesCard = ({ isActive = false, data }: Props) => {
 	const recapBars: RecapBar[] = getSortedRecapProgressBars(data);
-	const [one, two] = getTopTwoActivities(recapBars);
+	const [one, two] = getTopTwoActivities(data);
 
 	const header = (
 		<>
