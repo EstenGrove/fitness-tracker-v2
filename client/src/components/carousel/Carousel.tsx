@@ -1,36 +1,42 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import { useLockBodyScroll } from "../../hooks/useLockBodyScroll";
 import styles from "../../css/carousel/Carousel.module.scss";
+import type {
+	CarouselCard,
+	CarouselSlide,
+	MappedCarouselCard,
+} from "../../utils/utils_carousel";
 import FadeIn from "../ui/FadeIn";
 import CarouselTop from "./CarouselTop";
 import CardsCarousel from "./CardsCarousel";
 import CarouselCardIndicators from "./CarouselCardIndicators";
 
-interface CardProps {
-	[key: string]: unknown;
-	isActive: boolean;
-}
-
-export interface CarouselCard {
-	id: number;
-	data: Record<string, unknown>;
-	render: React.ComponentType<CardProps>;
-}
-
-type Props = {
+type BaseProps = {
 	title: string;
 	subtitle?: string;
-	cards: CarouselCard[];
 	onClose: () => void;
 };
 
-const Carousel = ({
+type HomogeneousProps<TData> = BaseProps & {
+	cards: CarouselCard<TData>[];
+};
+
+type MappedProps<TDataMap extends Record<string, unknown>> = BaseProps & {
+	cards: MappedCarouselCard<TDataMap>[];
+};
+
+function Carousel<TData>(props: HomogeneousProps<TData>): ReactElement;
+function Carousel<TDataMap extends Record<string, unknown>>(
+	props: MappedProps<TDataMap>,
+): ReactElement;
+function Carousel({
 	title = "Carousel",
 	subtitle = "January 1 - 31, 2026",
 	cards = [],
 	onClose,
-}: Props) => {
+}: HomogeneousProps<unknown> | MappedProps<Record<string, unknown>>) {
+	const slides = cards as CarouselSlide[];
 	useLockBodyScroll();
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const [currentStep, setCurrentStep] = useState(0);
@@ -43,7 +49,7 @@ const Carousel = ({
 		const carousel = carouselRef.current as HTMLDivElement;
 
 		const width = carousel.clientWidth;
-		const clamped = Math.max(0, Math.min(card, cards.length - 1));
+		const clamped = Math.max(0, Math.min(card, slides.length - 1));
 
 		carousel.scrollTo({
 			left: clamped * width,
@@ -59,7 +65,7 @@ const Carousel = ({
 	// tap to go forward
 	const onTapNext = () => {
 		const next = currentStep + 1;
-		const card = Math.min(cards.length, next);
+		const card = Math.min(slides.length, next);
 		goToCard(card);
 	};
 	// When user scrolls/swipes between cards (eg. horizontal scroll)
@@ -79,7 +85,7 @@ const Carousel = ({
 			<CarouselTop title={title} onClose={onClose} dates={subtitle}>
 				<CarouselCardIndicators
 					current={currentStep}
-					total={cards.length}
+					total={slides.length}
 					onSelect={goToCard}
 				/>
 			</CarouselTop>
@@ -89,8 +95,8 @@ const Carousel = ({
 				onPrev={onTapPrev}
 				onNext={onTapNext}
 			>
-				{cards.map((card, idx) => {
-					const Card = card.render as React.ComponentType<CardProps>;
+				{slides.map((card, idx) => {
+					const Card = card.render;
 					return (
 						<div key={idx + "-" + card.id} className={styles.slide}>
 							<FadeIn>
@@ -103,6 +109,6 @@ const Carousel = ({
 		</div>,
 		document.body,
 	);
-};
+}
 
 export default Carousel;

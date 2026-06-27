@@ -1,0 +1,111 @@
+@keyframes barHeight {
+	0% {
+		-webkit-transform: scaleY(0.4);
+		transform: scaleY(0.4);
+		-webkit-transform-origin: 0% 100%;
+		transform-origin: 0% 100%;
+	}
+	100% {
+		-webkit-transform: scaleY(1);
+		transform: scaleY(1);
+		-webkit-transform-origin: 0% 100%;
+		transform-origin: 0% 100%;
+	}
+}
+
+.DataPoint {
+	width: 0.5rem;
+	height: auto;
+	animation: barHeight 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.BusyBarChart {
+	width: 100%;
+	height: 20rem;
+	@include flex_row(flex-start, flex-end);
+
+	&_container {
+		width: max-content;
+		height: 100%;
+		@include flex_col(flex-start, flex-end);
+		gap: 0 1rem;
+		// border: 1px solid red;
+
+		&_graph {
+			width: 100%;
+			height: 100%;
+			@include flex_row(flex-start, flex-end);
+			gap: 0 0.2rem;
+		}
+	}
+
+	&_yAxisLabel {
+		width: max-content;
+		height: 100%;
+		text-align: right;
+		font-size: 1.2rem;
+		color: $text3;
+		border-right: 1px solid var(--blueGrey800);
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-end;
+
+		&_label {
+			transform: rotate(-90deg);
+			transform-origin: right bottom;
+		}
+
+		&_max {
+			transform: rotate(-90deg);
+			transform-origin: right bottom;
+		}
+	}
+
+	&_xAxisLabel {
+		width: 100%;
+		text-align: left;
+		font-size: 1.2rem;
+		color: $text3;
+		border-top: 1px solid var(--blueGrey800);
+	}
+}
+
+.YAxisLabels {
+	width: max-content;
+	height: 100%;
+	text-align: right;
+	font-size: 1.2rem;
+	color: $text3;
+	border-right: 1px solid var(--blueGrey800);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	&_min {
+		transform: rotate(-90deg);
+		transform-origin: right bottom;
+	}
+	&_max {
+		transform: rotate(-90deg);
+		transform-origin: right bottom;
+	}
+}
+
+.XAxisLabels {
+	width: 100%;
+	text-align: left;
+	font-size: 1.2rem;
+	color: $text3;
+	border-top: 1px solid var(--blueGrey800);
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: space-between;
+	&_min {
+		color: $text3;
+	}
+	&_max {
+		color: $text3;
+	}
+}

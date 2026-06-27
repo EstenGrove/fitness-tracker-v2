@@ -82,6 +82,15 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState<ErrorInfo>({
+		error: null,
+		key: 0,
+	});
+	const [values, setValues] = useState<LoginValues>({
+		username: "",
+		password: "",
+		rememberMe: false,
+	});
 
 	const { signin: googleSignIn } = useGoogleAuth({
 		onSuccess: async (token) => {
@@ -103,16 +112,6 @@ const LoginPage = () => {
 				key: error.key + 1,
 			});
 		},
-	});
-
-	const [error, setError] = useState<ErrorInfo>({
-		error: null,
-		key: 0,
-	});
-	const [values, setValues] = useState<LoginValues>({
-		username: "",
-		password: "",
-		rememberMe: false,
 	});
 
 	const onChange = (name: string, value: string) => {
@@ -143,7 +142,7 @@ const LoginPage = () => {
 		const { username, password } = values;
 		const userResp = (await fetchUserExists(
 			username,
-			password
+			password,
 		)) as AwaitedResponse<UserExistsResponse>;
 		const data = userResp.Data as UserExistsResponse;
 		const userCheckFailed = hasError(data);
@@ -192,6 +191,7 @@ const LoginPage = () => {
 		<div className={styles.LoginPage}>
 			<div className={styles.LoginPage_header}>
 				<h2>💪 Fitness Tracker (v2)</h2>
+				<h5>Fitness & Habit Tracker</h5>
 			</div>
 			<div className={styles.LoginPage_form}>
 				<div className={styles.LoginPage_form_err}>

@@ -27,12 +27,13 @@ import WorkoutCalendarViz from "../components/ui/WorkoutCalendarViz";
 import { getAIInsights } from "../utils/utils_aiInsights";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../features/user/userSlice";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { startOfMonth, endOfMonth, subMonths, addDays, format } from "date-fns";
 import { formatDate } from "../utils/utils_dates";
 import { useHaptics } from "../hooks/useHapticsHook";
 import { useWebHaptics } from "web-haptics/react";
 import { useOsc } from "../hooks/useOsc";
 import { useHaptic } from "../hooks/useHaptic";
+import BusyBarChart from "../components/ui/BusyBarChart";
 
 const colorVariants = {
 	Pink: [
@@ -1366,6 +1367,67 @@ interface OscSound {
 	chord?: [number, number];
 }
 
+const generateBusyBarData = () => {
+	const endDate = new Date(2026, 4, 16);
+	const startDate = subMonths(endDate, 6);
+	const valuePattern = [
+		12, 28, 45, 18, 62, 35, 8, 51, 22, 74, 15, 40, 33, 57, 9, 48, 25, 66, 19,
+		38, 55, 14, 70, 30, 44, 21, 63, 11, 52, 36,
+	];
+	const data: {
+		id: number;
+		date: string;
+		value: number;
+		height: number;
+		label?: string;
+		color?: string;
+	}[] = [];
+
+	let id = 1;
+	let cursor = startDate;
+
+	while (cursor <= endDate) {
+		const daysSinceStart = Math.floor(
+			(cursor.getTime() - startDate.getTime()) / 86_400_000,
+		);
+		const hasWorkout =
+			daysSinceStart % 2 === 0 ||
+			daysSinceStart % 7 === 3 ||
+			daysSinceStart % 11 === 5;
+
+		if (hasWorkout) {
+			const base = valuePattern[daysSinceStart % valuePattern.length];
+			const seasonal = Math.round(Math.sin(daysSinceStart / 28) * 12);
+			const jitter = (daysSinceStart * 7) % 9;
+			const value = Math.max(5, Math.min(90, base + seasonal + jitter));
+
+			data.push({
+				id: id++,
+				date: format(cursor, "yyyy-MM-dd"),
+				value,
+				height: value,
+				label: String(value),
+				color: "var(--blueGrey800)",
+			});
+		}
+
+		cursor = addDays(cursor, 1);
+	}
+
+	return data;
+};
+
+const rawBusyBarData = generateBusyBarData();
+const busyBarData = rawBusyBarData.map((item) => {
+	if (item.value >= 70) {
+		return {
+			...item,
+			color: "var(--walkFill)",
+		};
+	}
+	return item;
+});
+
 const DemoPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const repsPerSet = [26, 22, 18, 20, 24];
@@ -1441,6 +1503,16 @@ const DemoPage = () => {
 		<PageContainer>
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
+				<div className={css.DemoPage_item}>
+					<h4 style={{ paddingLeft: "3rem", fontSize: "1.6rem" }}>
+						Workout Volume
+					</h4>
+					<BusyBarChart
+						data={busyBarData}
+						xAxisLabel={{ min: "Last 6 months", max: "Today" }}
+						// yAxisLabel={{ min: "0", max: "100" }}
+					/>
+				</div>
 				<div className={css.DemoPage_item}>
 					<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
 						<button
@@ -1611,7 +1683,7 @@ const DemoPage = () => {
 						gap={1}
 						columns={8}
 						// colors={["#bbf7d0", "#4ade80", "#16a34a"]}
-						noDataColor="var(--blueGrey900)"
+						noDataColor="var(--blueGrey800)"
 					/>
 				</div>
 				<div className={css.DemoPage_item}>

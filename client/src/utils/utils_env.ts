@@ -247,6 +247,7 @@ const API_ENDPOINTS = {
 	},
 	metrics: {
 		getActivityMetricsAfterWorkout: "/metrics/getActivityMetricsAfterWorkout",
+		getActivityMetricsData: "/metrics/getActivityMetricsData",
 	},
 };
 

@@ -10,7 +10,15 @@ import {
 } from "../../utils/utils_dates";
 import { isToday } from "date-fns";
 import { addEllipsis } from "../../utils/utils_misc";
-import Carousel, { CarouselCard } from "../carousel/Carousel";
+import type { MappedCarouselCard } from "../../utils/utils_carousel";
+import {
+	ActivityMetrics,
+	ActivityMetricsCardDataMap,
+} from "../../features/metrics/types";
+import { useHistoryDetails } from "../../hooks/useHistoryDetails";
+import { getActivityMetricsCards } from "../../utils/utils_metrics";
+import Carousel from "../carousel/Carousel";
+import MetricsTitleCard from "../carousel-cards/MetricsTitleCard";
 
 type Props = {
 	history: HistoryOfType;
@@ -56,39 +64,60 @@ const getDatesSubtitle = (dateRange: RangeParams) => {
 	return `${start} - ${end}`;
 };
 
-const dummyCards: CarouselCard[] = [
+type DummyCardDataMap = {
+	Title: { title: string; desc: string };
+	Placeholder: { title: string };
+};
+
+const dummyCards: MappedCarouselCard<DummyCardDataMap>[] = [
+	{
+		id: 0,
+		kind: "Title",
+		data: {
+			title: "How does this session compare to previous sessions?",
+			desc: "Your comparison against the last 60 days.",
+		},
+		render: MetricsTitleCard,
+	},
 	{
 		id: 1,
+		kind: "Placeholder",
 		data: { title: "Card 1" },
-		render: () => <div>Card 1</div>,
+		render: ({ data }) => <div>{data.title}</div>,
 	},
 	{
 		id: 2,
+		kind: "Placeholder",
 		data: { title: "Card 2" },
-		render: () => <div>Card 2</div>,
+		render: ({ data }) => <div>{data.title}</div>,
 	},
 	{
 		id: 3,
+		kind: "Placeholder",
 		data: { title: "Card 3" },
-		render: () => <div>Card 3</div>,
+		render: ({ data }) => <div>{data.title}</div>,
 	},
 	{
 		id: 4,
+		kind: "Placeholder",
 		data: { title: "Card 4" },
-		render: () => <div>Card 4</div>,
+		render: ({ data }) => <div>{data.title}</div>,
 	},
 	{
 		id: 5,
+		kind: "Placeholder",
 		data: { title: "Card 5" },
-		render: () => <div>Card 5</div>,
+		render: ({ data }) => <div>{data.title}</div>,
 	},
 ];
 
 const HistoryMetrics = ({ history, dateRange, onClose }: Props) => {
-	const cards = useMemo(() => {
-		return dummyCards;
-	}, []);
 	const subtitle = getDatesSubtitle(dateRange);
+	const { data: historyDetails } = useHistoryDetails({
+		userID: history.userID,
+		historyID: history.historyID,
+		activityType: history.activityType,
+	});
 	const { data, isLoading, refetch } = useActivityMetricsAfterWorkout({
 		userID: history.userID,
 		activityType: history.activityType,
@@ -96,7 +125,16 @@ const HistoryMetrics = ({ history, dateRange, onClose }: Props) => {
 		historyID: history.historyID,
 		range: dateRange,
 	});
+	const metrics = data as ActivityMetrics;
+	const cards = useMemo(() => {
+		if (!metrics || !history.activityType) return dummyCards;
+		return getActivityMetricsCards(
+			history.activityType,
+			metrics,
+		) as MappedCarouselCard<ActivityMetricsCardDataMap>[];
+	}, [history.activityType, metrics]);
 
+	console.log("Metrics & Data:", { metrics, history, historyDetails });
 	return (
 		<div className={styles.HistoryMetrics}>
 			<Carousel

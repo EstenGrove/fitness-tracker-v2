@@ -33,6 +33,7 @@ export interface StrengthSessionMetrics {
 
 export interface StrengthMetricsComparison {
 	deltaReps: number;
+	deltaSets: number;
 	deltaWeight: number;
 	deltaDuration: number;
 	deltaCalories: number;
@@ -137,3 +138,111 @@ export interface StrengthMetrics {
 }
 
 export type ActivityMetrics = ExerciseMetrics | StrengthMetrics | WalkMetrics;
+
+// CHART DATA FOR METRICS //
+export interface ActivityMetricsDataEntry {
+	date: string;
+	sets?: number;
+	reps?: number;
+	duration?: number;
+	volume?: number;
+	pace?: number;
+	miles?: number;
+	steps?: number;
+}
+
+export interface StrengthMetricsData {
+	sets: ActivityMetricsDataEntry[];
+	reps: ActivityMetricsDataEntry[];
+	volume: ActivityMetricsDataEntry[];
+	duration: ActivityMetricsDataEntry[];
+}
+
+export interface StrengthMetricsAndData {
+	data: StrengthMetricsData;
+	compare: StrengthMetrics;
+}
+
+export interface ExerciseMetricsData {
+	sets: ActivityMetricsDataEntry[];
+	reps: ActivityMetricsDataEntry[];
+	volume: ActivityMetricsDataEntry[];
+	duration: ActivityMetricsDataEntry[];
+}
+
+export interface ExerciseMetricsAndData {
+	data: ExerciseMetricsData;
+	compare: ExerciseMetrics;
+}
+
+export interface WalkMetricsData {
+	pace: ActivityMetricsDataEntry[];
+	miles: ActivityMetricsDataEntry[];
+	steps: ActivityMetricsDataEntry[];
+	duration: ActivityMetricsDataEntry[];
+}
+
+export interface WalkMetricsAndData {
+	data: WalkMetricsData;
+	compare: WalkMetrics;
+}
+
+export type ActivityMetricsData =
+	| StrengthMetricsData
+	| ExerciseMetricsData
+	| WalkMetricsData;
+
+export type StrengthMetricsCardDataMap = {
+	Summary: StrengthMetrics;
+	Sets: StrengthMetrics; // chart cards, if needed
+	Reps: StrengthMetrics;
+	Volume: StrengthMetrics;
+	Duration: StrengthMetrics;
+};
+
+export type WalkMetricsCardDataMap = {
+	Summary: WalkMetrics;
+	Pace: WalkMetrics;
+	Miles: WalkMetrics;
+	Steps: WalkMetrics;
+	Duration: WalkMetrics;
+};
+
+export type CardioMetricsCardDataMap = {
+	Summary: ExerciseMetrics;
+	Duration: ExerciseMetrics;
+	Distance: ExerciseMetrics;
+	Calories: ExerciseMetrics;
+};
+
+export type StretchMetricsCardDataMap = {
+	Summary: ExerciseMetrics;
+	Duration: ExerciseMetrics;
+	Distance: ExerciseMetrics;
+	Calories: ExerciseMetrics;
+};
+
+export type TimedMetricsCardDataMap = {
+	Summary: ExerciseMetrics;
+	Duration: ExerciseMetrics;
+	Distance: ExerciseMetrics;
+	Calories: ExerciseMetrics;
+};
+
+export type OtherMetricsCardDataMap = {
+	Summary: ExerciseMetrics;
+	Duration: ExerciseMetrics;
+	Distance: ExerciseMetrics;
+	Calories: ExerciseMetrics;
+};
+
+export type ActivityMetricsCardDataMap = {
+	Summary: ActivityMetrics;
+	Sets: ActivityMetrics;
+	Reps: ActivityMetrics;
+	Volume: ActivityMetrics;
+	Pace: ActivityMetrics;
+	Miles: ActivityMetrics;
+	Steps: ActivityMetrics;
+	Duration: ActivityMetrics;
+};

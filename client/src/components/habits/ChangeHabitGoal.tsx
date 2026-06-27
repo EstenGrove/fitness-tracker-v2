@@ -15,15 +15,21 @@ type Props = {
 type FooterProps = {
 	onCancel: () => void;
 	onSave: () => void;
+	isSaving: boolean;
 };
-const Footer = ({ onCancel, onSave }: FooterProps) => {
+const Footer = ({ onCancel, onSave, isSaving = false }: FooterProps) => {
 	return (
 		<div className={styles.Footer}>
 			<button type="button" onClick={onCancel} className={styles.Footer_cancel}>
 				Cancel
 			</button>
-			<button type="button" onClick={onSave} className={styles.Footer_save}>
-				Update
+			<button
+				type="button"
+				onClick={onSave}
+				className={styles.Footer_save}
+				disabled={isSaving}
+			>
+				{isSaving ? "Saving..." : "Update"}
 			</button>
 		</div>
 	);
@@ -31,7 +37,8 @@ const Footer = ({ onCancel, onSave }: FooterProps) => {
 
 const ChangeHabitGoal = ({ habit, onClose }: Props) => {
 	const currentUser = useSelector(selectCurrentUser);
-	const [changeHabitGoal] = useChangeHabitGoalMutation();
+	const [changeHabitGoal, { isLoading: isSaving }] =
+		useChangeHabitGoalMutation();
 	const { values, hasChanges, onChange } = useForm({
 		habitTarget: habit.habitTarget ?? 0,
 		habitUnit: habit.habitUnit ?? "",
@@ -88,7 +95,11 @@ const ChangeHabitGoal = ({ habit, onClose }: Props) => {
 				</div>
 			</div>
 			<div className={styles.ChangeHabitGoal_footer}>
-				<Footer onCancel={cancelChanges} onSave={confirmChanges} />
+				<Footer
+					onCancel={cancelChanges}
+					onSave={confirmChanges}
+					isSaving={isSaving}
+				/>
 			</div>
 		</div>
 	);

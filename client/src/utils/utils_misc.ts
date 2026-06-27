@@ -22,6 +22,7 @@ const isEmptyStr = (str: string) => {
 };
 
 const formatThousand = (num: number) => {
+	if(!num) return num
 	if (num >= 1000) {
 		return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
 	}
@@ -29,6 +30,7 @@ const formatThousand = (num: number) => {
 };
 
 const formatLargeNumber = (num: number) => {
+	if(!num) return num
 	const short = new Intl.NumberFormat("en-us", {
 		notation: "compact",
 		compactDisplay: "short",
