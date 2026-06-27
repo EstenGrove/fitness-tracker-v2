@@ -42,6 +42,7 @@ export interface UserRangeActivityParams extends UserRangeParams {
 }
 
 export enum EMenuAction {
+	METRICS = "METRICS",
 	EDIT = "EDIT",
 	VIEW = "VIEW",
 	COMPLETE = "COMPLETE",

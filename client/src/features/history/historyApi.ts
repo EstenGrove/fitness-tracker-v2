@@ -49,7 +49,7 @@ export const historyApi = createApi({
 					{
 						startDate,
 						endDate,
-					}
+					},
 				)) as AwaitedResponse<{ history: HistoryOfType[] }>;
 				const data = response.Data;
 				return { data: data.history };
@@ -62,7 +62,7 @@ export const historyApi = createApi({
 				const response = (await fetchHistoryDetails(
 					userID,
 					historyID,
-					activityType
+					activityType,
 				)) as AwaitedResponse<HistoryDetails>;
 				const data = response.Data as HistoryDetails;
 				return { data };
@@ -78,7 +78,7 @@ export const historyApi = createApi({
 				const response = (await deleteWorkoutSession(
 					userID,
 					historyID,
-					activityType
+					activityType,
 				)) as AwaitedResponse<DeletedSessionData>;
 				const data = response.Data as DeletedSessionData;
 				return { data };

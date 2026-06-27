@@ -1,0 +1,23 @@
+.MetricsTitleCard {
+	width: 100%;
+	height: auto;
+	min-height: 15rem;
+	max-height: auto;
+	padding: 1rem 2rem;
+	@include flex_col(center, flex-start);
+}
+
+.Title {
+	@include recapTitle();
+	margin-top: 0.5rem;
+
+	& > b {
+		color: var(--cardioAccent);
+	}
+}
+.Desc {
+	@include recapDesc();
+	& > b {
+		color: var(--cardioAccent);
+	}
+}

@@ -22,8 +22,12 @@ import { addEllipsis, formatThousand } from "../../utils/utils_misc";
 import { Activity } from "../../features/shared/types";
 import { isExerciseType } from "../../utils/utils_activity";
 import { durationTo } from "../../utils/utils_workouts";
-import DetailsBlock from "./DetailsBlock";
 import { isToday } from "date-fns";
+import DetailsBlock from "./DetailsBlock";
+
+// ⚠️⚠️ TODO ⚠️⚠️
+// - Add some sort of comparison with the past month's workout-specific data and how this session stacks up!
+// ...maybe a unique bar chart of data viz of some sort!
 
 type ExerciseHistory =
 	| StretchHistory
@@ -125,6 +129,7 @@ const HistoryDetails = ({ history }: Props) => {
 		historyID: history?.historyID,
 		activityType: history?.activityType,
 	});
+
 	const when = getWhen(history);
 	const date = getRecordedDate(history.workoutDate);
 	const details = data as IHistoryDetails;

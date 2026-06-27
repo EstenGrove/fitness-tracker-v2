@@ -57,6 +57,34 @@ $hardGlow: 0.5;
 	--badge-glow-rgb: 236, 72, 153;
 }
 
+.glow_teal {
+	--badge-glow-rgb: 20, 184, 166;
+}
+
+.glow_orange {
+	--badge-glow-rgb: 249, 115, 22;
+}
+
+.glow_cyan {
+	--badge-glow-rgb: 6, 182, 212;
+}
+
+.glow_indigo {
+	--badge-glow-rgb: 99, 102, 241;
+}
+
+.glow_rose {
+	--badge-glow-rgb: 244, 63, 94;
+}
+
+.glow_bronze {
+	--badge-glow-rgb: 180, 83, 9;
+}
+
+.glow_slate {
+	--badge-glow-rgb: 100, 116, 139;
+}
+
 /* ─────────────────────────────
    Base AchievementBadge
    (width + aspect-ratio only — fixed height + width mismatch clipped the hex)

@@ -11,6 +11,11 @@
 		font-weight: 800;
 		color: $text1;
 		@include colCenter();
+
+		& > h5 {
+			color: $text2;
+			font-weight: 400;
+		}
 	}
 
 	&_form {

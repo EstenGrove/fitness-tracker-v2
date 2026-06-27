@@ -1,0 +1,5 @@
+.StrengthMetricsSummary {
+	width: 100%;
+	@include flex_row(center, center);
+	gap: 0 1rem;
+}

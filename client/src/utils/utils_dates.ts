@@ -1,4 +1,8 @@
 import {
+	differenceInDays,
+	differenceInWeeks,
+	differenceInMonths,
+	differenceInYears,
 	endOfMonth,
 	endOfWeek,
 	endOfYear,
@@ -177,7 +181,7 @@ const {
 
 const formatDate = (
 	date: Date | string,
-	formatToken: keyof DateFormats["date"] = "long"
+	formatToken: keyof DateFormats["date"] = "long",
 ): string => {
 	if (!date) return "";
 	const base = new Date(date);
@@ -189,7 +193,7 @@ const formatDate = (
 
 const formatTime = (
 	date: Date | string,
-	formatToken: keyof DateFormats["time"] = "long"
+	formatToken: keyof DateFormats["time"] = "long",
 ) => {
 	if (!date) return "";
 	const token = TIME_TOKENS[formatToken];
@@ -200,7 +204,7 @@ const formatTime = (
 
 const formatTimestamp = (
 	timestamp: string | number,
-	formatToken: keyof DateFormats["time"] = "long"
+	formatToken: keyof DateFormats["time"] = "long",
 ) => {
 	if (!timestamp) return "";
 	const token = TIME_TOKENS[formatToken];
@@ -211,7 +215,7 @@ const formatTimestamp = (
 
 const formatDateTime = (
 	date: Date | string,
-	formatToken: keyof DateFormats["datetime"] = "db"
+	formatToken: keyof DateFormats["datetime"] = "db",
 ) => {
 	if (!date) return "";
 	const token = DATETIME_TOKENS[formatToken];
@@ -222,7 +226,7 @@ const formatDateTime = (
 
 const formatCustomDate = (
 	date: Date | string,
-	formatToken: keyof DateFormats["custom"] = "monthAndDay"
+	formatToken: keyof DateFormats["custom"] = "monthAndDay",
 ) => {
 	if (!date) return "";
 	const token = CUSTOM_TOKENS[formatToken];
@@ -233,7 +237,7 @@ const formatCustomDate = (
 // Converts a date (eg '2024-12-18T03:42:000') to the day of week (eg. 'Monday' etc)
 const formatDateAsWeekDay = (
 	date: Date | string,
-	weekdayToken: keyof DateFormats["weekday"] = "full"
+	weekdayToken: keyof DateFormats["weekday"] = "full",
 ): string => {
 	const token: string = WEEKDAY_TOKENS[weekdayToken as keyof object];
 	const weekday = format(date, token);
@@ -243,7 +247,7 @@ const formatDateAsWeekDay = (
 
 const parseDate = (
 	dateStr: string,
-	formatToken: keyof DateFormats["date"] = "db"
+	formatToken: keyof DateFormats["date"] = "db",
 ) => {
 	const token = DATE_TOKENS[formatToken];
 	const parsed = parse(dateStr, token, new Date());
@@ -297,7 +301,7 @@ const parseDateStr = (dateStr: string) => {
 // Parses => '2024-11-22' & converts to a real date w/ a given format
 const parseDateTime = (
 	dateStr: string,
-	formatToken: keyof DateFormats["datetime"] = "db"
+	formatToken: keyof DateFormats["datetime"] = "db",
 ) => {
 	const token = DATETIME_TOKENS[formatToken];
 	const parsedDate = parse(dateStr, token, new Date());
@@ -307,7 +311,7 @@ const parseDateTime = (
 
 const parseTime = (
 	timeStr: string,
-	formatToken: keyof DateFormats["time"] = "long"
+	formatToken: keyof DateFormats["time"] = "long",
 ): Date => {
 	const baseDate: Date = new Date();
 	const token = TIME_TOKENS[formatToken as keyof object] || "hh:mm a";
@@ -417,6 +421,36 @@ const toBackendFormat = (date: Date | string) => {
 	return newStr;
 };
 
+const getDistanceBetweenDates = (
+	unit: "days" | "weeks" | "months" | "years",
+	dates: {
+		startDate: Date | string;
+		endDate: Date | string;
+	},
+) => {
+	const { startDate, endDate } = dates;
+	const start = new Date(startDate);
+	const end = new Date(endDate);
+
+	switch (unit) {
+		case "days": {
+			return differenceInDays(end, start);
+		}
+		case "weeks": {
+			return differenceInWeeks(end, start);
+		}
+		case "months": {
+			return differenceInMonths(end, start);
+		}
+		case "years": {
+			return differenceInYears(end, start);
+		}
+		default: {
+			return differenceInDays(end, start);
+		}
+	}
+};
+
 export {
 	// STATIC VARIABLES
 	WEEK_DAYS,
@@ -447,6 +481,7 @@ export {
 	getYearStartAndEnd,
 	getLastXMonthsRange,
 	getLastXDaysRange,
+	getDistanceBetweenDates,
 	// APPLY TIME TO DATE
 	applyTimeStrToDate,
 	prepareTimestamp,

@@ -1,3 +1,10 @@
+import {
+	AchievementDisplay,
+	AchievementDisplayTier,
+	AwardCategory,
+	WorkoutAward,
+} from "../features/awards/types";
+
 const achievementIcons = {
 	trophy: "trophy",
 	trophy2: "trophy-2",
@@ -77,6 +84,122 @@ const awardIcons = {
 	streaks: streakIcons,
 };
 
+const getAchievementDisplayTier = (
+	award: WorkoutAward,
+): AchievementDisplayTier => {
+	const threshold = award.awardThreshold;
+	// Non-positive thresholds: safe default (adjust if your API never sends these)
+	if (!(threshold > 0) || threshold < 3) {
+		return { color: "slate" };
+	}
+	// Low target → calmer color, no variant
+	if (threshold < 25) {
+		return { color: "blue" };
+	}
+	if (threshold < 50) {
+		return { color: "teal" };
+	}
+	if (threshold < 75) {
+		return { color: "green" };
+	}
+	if (threshold < 100) {
+		return { color: "gold", variant: "inferno" };
+	}
+	if (threshold < 150) {
+		return { color: "purple", variant: "mythic" };
+	}
+	// High target → strongest pairing
+	return { color: "fire", variant: "ascended" };
+};
+
+const getAchievementNthDisplay = (award: WorkoutAward): AchievementDisplay => {
+	const { awardName, awardDesc, achievedOn, wasAchieved } = award;
+	const tier = getAchievementDisplayTier(award);
+	return {
+		title: awardName,
+		label: awardDesc,
+		shape: "circle",
+		color: tier.color,
+		variant: tier?.variant,
+		category: AwardCategory.NTH,
+		achievedOn: achievedOn,
+		wasAchieved: wasAchieved,
+	};
+};
+
+const getAchievementPatternDisplay = (
+	award: WorkoutAward,
+): AchievementDisplay => {
+	const { awardName, awardDesc, achievedOn, wasAchieved } = award;
+	const tier = getAchievementDisplayTier(award);
+	return {
+		title: awardName,
+		label: awardDesc,
+		shape: "circle",
+		color: tier.color,
+		variant: tier?.variant,
+		category: AwardCategory.PATTERN,
+		achievedOn: achievedOn,
+		wasAchieved: wasAchieved,
+	};
+};
+
+const getAchievementRecordDisplay = (
+	award: WorkoutAward,
+): AchievementDisplay => {
+	const { awardName, awardDesc, achievedOn, wasAchieved } = award;
+	const tier = getAchievementDisplayTier(award);
+	return {
+		title: awardName,
+		label: awardDesc,
+		shape: "circle",
+		color: tier.color,
+		variant: tier?.variant,
+		category: AwardCategory.RECORD,
+		achievedOn: achievedOn,
+		wasAchieved: wasAchieved,
+	};
+};
+
+const getAchievementOtherDisplay = (
+	award: WorkoutAward,
+): AchievementDisplay => {
+	const { awardName, awardDesc, achievedOn, wasAchieved } = award;
+	const tier = getAchievementDisplayTier(award);
+	return {
+		title: awardName,
+		label: awardDesc,
+		shape: "circle",
+		color: tier.color,
+		variant: tier?.variant,
+		category: AwardCategory.OTHER,
+		achievedOn: achievedOn,
+		wasAchieved: wasAchieved,
+	};
+};
+
+// STREAK, NTH, PATTERN, RECORD
+const getAchievementDisplay = (award: WorkoutAward): AchievementDisplay => {
+	switch (award.awardCategory) {
+		case AwardCategory.NTH: {
+			const display = getAchievementNthDisplay(award);
+			return display;
+		}
+		case AwardCategory.PATTERN: {
+			const display = getAchievementPatternDisplay(award);
+			return display;
+		}
+		case AwardCategory.RECORD: {
+			const display = getAchievementRecordDisplay(award);
+			return display;
+		}
+		default: {
+			const display = getAchievementOtherDisplay(award);
+			return display;
+		}
+	}
+};
+
 export {
 	achievementIcons,
 	badgeIcons,
@@ -84,4 +207,6 @@ export {
 	trophyIcons,
 	streakIcons,
 	awardIcons,
+	getAchievementDisplay,
+	getAchievementDisplayTier,
 };

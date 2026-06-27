@@ -54,15 +54,15 @@ const getAreaPath = (points: Point[], deps: AreaDeps) => {
 		const linePath = buildSmoothPath(points);
 		const areaPath = `
 			${linePath}
-			L ${points[points.length - 1].x} ${height}
-			L ${points[0].x} ${height}
+			L ${points[points.length - 1]?.x} ${height}
+			L ${points[0]?.x} ${height}
 			Z
 		`;
 		return areaPath;
 	} else {
 		const areaPath = `
     	M 0 ${height}
-    	L ${points.map((p) => `${p.x} ${p.y}`).join(" L ")}
+    	L ${points.map((p) => `${p?.x} ${p?.y}`).join(" L ")}
     	L ${width} ${height}
     	Z
   	`;

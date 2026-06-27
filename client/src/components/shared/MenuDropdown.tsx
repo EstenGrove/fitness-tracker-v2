@@ -14,7 +14,13 @@ type IconProps = {
 	openMenu: () => void;
 };
 
-export type MenuAction = "EDIT" | "VIEW" | "DELETE" | "COMPLETE" | "CANCEL";
+export type MenuAction =
+	| "EDIT"
+	| "VIEW"
+	| "DELETE"
+	| "COMPLETE"
+	| "CANCEL"
+	| "METRICS";
 
 const MenuIcon = ({ openMenu }: IconProps) => {
 	return (
@@ -72,7 +78,7 @@ const MenuDropdown = ({
 			>
 				<ul className={styles.MenuDropdown_list}>{children}</ul>
 			</div>,
-			document.body // Specify the container element
+			document.body, // Specify the container element
 		);
 	}
 	return (

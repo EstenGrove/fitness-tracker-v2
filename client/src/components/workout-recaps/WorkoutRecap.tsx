@@ -173,8 +173,6 @@ const WorkoutRecap = ({
 
 	const hasCards = cards && cards?.length > 0;
 
-	console.log("data", data);
-	console.log("cards", cards);
 	// Card indicator buttons & tap-zones
 	// - When we scrollTo a card's position the 'onScroll' fires thus syncing to currentStep
 	const goToCard = (card: number) => {
@@ -244,7 +242,7 @@ const WorkoutRecap = ({
 					})}
 			</RecapsCarousel>
 		</div>,
-		document.body
+		document.body,
 	);
 };
 

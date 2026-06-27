@@ -90,6 +90,7 @@ app.route("streaks", allRoutes.streaks);
 app.route("exports", allRoutes.exports);
 app.route("history", allRoutes.history);
 app.route("summary", allRoutes.summary);
+app.route("metrics", allRoutes.metrics);
 app.route("recap", allRoutes.weeklyRecap);
 app.route("settings", allRoutes.settings);
 app.route("workouts", allRoutes.workouts);

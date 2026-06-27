@@ -1,5 +1,10 @@
 import { WorkoutStreakDetails } from "../streaks/types";
 import { Activity } from "../shared/types";
+import {
+	AchievementAwardColor,
+	AchievementAwardShape,
+	AchievementVariant,
+} from "../../components/achievements/AchievementAward";
 
 export interface StreakAward {
 	streakID: number;
@@ -18,6 +23,7 @@ export enum AwardCategory {
 	NTH = "NTH",
 	RECORD = "RECORD",
 	PATTERN = "PATTERN",
+	OTHER = "OTHER",
 }
 
 export enum AwardMetric {
@@ -57,3 +63,20 @@ export interface WorkoutAwardsAndStreaks {
 	awards: WorkoutAwards;
 	streaks: WorkoutStreakAwards;
 }
+
+export interface AchievementDisplay {
+	title: string;
+	label?: string;
+	shape: AchievementAwardShape;
+	color: AchievementAwardColor;
+	variant?: AchievementVariant;
+	category: AwardCategory;
+	achievedOn: string;
+	wasAchieved: boolean;
+}
+
+// Returns the color & optional variant based off the tier the award falls in
+export type AchievementDisplayTier = {
+	color: AchievementAwardColor;
+	variant?: AchievementVariant;
+};
