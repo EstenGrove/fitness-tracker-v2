@@ -179,6 +179,7 @@ const {
 	custom: CUSTOM_TOKENS,
 } = FORMAT_TOKENS;
 
+// NOTE: Do NOT create dates using 'YYYY-MM-DD' format, use 'MM/DD/YYYY' format instead
 const formatDate = (
 	date: Date | string,
 	formatToken: keyof DateFormats["date"] = "long",
@@ -416,8 +417,9 @@ const getWeekToDate = (base: Date | string = new Date()) => {
 
 const toBackendFormat = (date: Date | string) => {
 	if (!date) return "";
-	const str = new Date(date).toISOString();
-	const newStr = formatDateTime(str, "db");
+	const dateObj = new Date(date);
+	if (isNaN(dateObj.getTime())) return "";
+	const newStr = formatDateTime(dateObj, "db");
 	return newStr;
 };
 
