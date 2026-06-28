@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getScaledHeight, getHighAndLowRanges } from "../../utils/utils_summary";
+import { getScaledHeight, getHighAndLowRanges } from "../../../utils/utils_summary";
 import type { MinMaxRange } from "../../components/summary/types";
 
 describe("getScaledHeight", () => {

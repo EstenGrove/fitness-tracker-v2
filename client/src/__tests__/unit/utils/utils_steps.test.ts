@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { milesToSteps, milesToPace, pacePerMile } from "../../utils/utils_steps";
+import { milesToSteps, milesToPace, pacePerMile } from "../../../utils/utils_steps";
 
 describe("milesToSteps", () => {
 	it("converts 1 mile with default stride (2.5 ft) to 2112 steps", () => {

@@ -5,7 +5,7 @@ import {
 	timerToMinsAndSecs,
 	extractHrsAndMins,
 	formattedTime,
-} from "../../utils/utils_formatter";
+} from "../../../utils/utils_formatter";
 
 describe("NumberFormatter", () => {
 	const fmt = new NumberFormatter("en-US");

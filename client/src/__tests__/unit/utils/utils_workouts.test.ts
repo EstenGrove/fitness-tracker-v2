@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
 	LogWorkoutValues,
 	prepareLogWorkout,
-} from "../../utils/utils_workouts";
+} from "../../../utils/utils_workouts";
 
 describe("prepareLogWorkout", () => {
 	it("returns a new log workout object", () => {

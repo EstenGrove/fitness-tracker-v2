@@ -5,7 +5,7 @@ import {
 	formatTrendDelta,
 	getTrendPercent,
 	getTrendSummary,
-} from "../../utils/utils_trends";
+} from "../../../utils/utils_trends";
 
 describe("getTrendDirection", () => {
 	it("returns 'up' for a positive value", () => {

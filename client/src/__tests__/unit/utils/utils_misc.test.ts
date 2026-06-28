@@ -11,7 +11,7 @@ import {
 	sortByNumberOrder,
 	sortByDate,
 	provideFallbackStr,
-} from "../../utils/utils_misc";
+} from "../../../utils/utils_misc";
 
 describe("isEmptyArray", () => {
 	it("returns true for an empty array", () => {

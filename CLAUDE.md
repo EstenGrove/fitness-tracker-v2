@@ -37,14 +37,14 @@ npm run test:run      # Single run and exit (CI)
 npm run test:ui       # Browser UI dashboard
 
 # Run a single file (partial name match works)
-npm run test:run src/tests/utils/utils_steps.test.ts
+npm run test:run src/__tests__/unit/utils/utils_steps.test.ts
 npm run test:run utils_steps
 
 # Filter to a specific describe block or test by name
 npm run test:run utils_steps -- -t "milesToSteps"
 ```
 
-Test files live in `client/src/tests/` organized by domain (e.g., `utils/`, `components/`). Runner is Vitest; config is `client/vitest.config.ts`.
+Test files live in `client/src/__tests__/` under `unit/`, `integration/`, or `e2e/`. Runner is Vitest; config is `client/vitest.config.ts`.
 
 ## Architecture
 

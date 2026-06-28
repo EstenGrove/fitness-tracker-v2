@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getStreakTier, STREAK_TIERS } from "../../utils/utils_streaks";
+import { getStreakTier, STREAK_TIERS } from "../../../utils/utils_streaks";
 
 describe("getStreakTier", () => {
 	it("returns 'spark' tier for 1 day (≤3)", () => {
