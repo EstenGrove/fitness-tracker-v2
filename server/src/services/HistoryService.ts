@@ -1,26 +1,16 @@
 import type { Pool } from "pg";
 import type { Activity, DateRange } from "../modules/types.js";
 import type { HistoryOfTypeDB } from "../modules/history/types.js";
-import type { WorkoutSet } from "../modules/workouts/types.js";
+import type {
+	UpdateHistoryData,
+	WorkoutSet,
+} from "../modules/workouts/types.js";
 
 interface LastSessionParams {
 	userID: string;
 	workoutID: number;
 	activityType: string;
 	targetDate: string;
-}
-
-export interface UpdateHistoryData {
-	userID: string;
-	historyID: number;
-	activityType: Activity;
-	startTime?: string;
-	endTime?: string;
-	duration?: number;
-	sets?: WorkoutSet[];
-	steps?: number;
-	miles?: number;
-	pace?: number;
 }
 
 export type HistoryResp = Promise<HistoryOfTypeDB[] | unknown>;

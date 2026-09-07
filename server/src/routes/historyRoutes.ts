@@ -19,7 +19,7 @@ import {
 	type LastSessionParams,
 } from "../modules/history/getLastWorkout.js";
 import { normalizeHistoryDetails } from "../modules/history/historyDetails.js";
-import type { UpdateHistoryData } from "../services/HistoryService.js";
+import type { UpdateHistoryData } from "../modules/workouts/types.js";
 import { editWorkoutHistory } from "../modules/history/editWorkoutHistory.js";
 import {
 	deleteWorkoutSession,
@@ -84,7 +84,7 @@ app.get("/getHistoryByRangeAndType", async (ctx: Context) => {
 		{
 			startDate,
 			endDate,
-		}
+		},
 	)) as HistoryOfTypeDB[];
 
 	if (records instanceof Error) {
@@ -109,7 +109,7 @@ app.get("/getHistoryDetails", async (ctx: Context) => {
 	const history = (await historyService.getHistoryDetails(
 		userID,
 		Number(historyID),
-		type
+		type,
 	)) as HistoryDetailsDB;
 
 	if (history instanceof Error) {
@@ -157,7 +157,7 @@ app.post("/deleteWorkoutSession", async (ctx: Context) => {
 	const result = (await deleteWorkoutSession(
 		userID,
 		historyID,
-		activityType
+		activityType,
 	)) as DeletedSessionDB;
 
 	if (result instanceof Error) {

@@ -146,6 +146,7 @@ const API_ENDPOINTS = {
 		getWalkByRange: "/history/getWalkHistoryByRange",
 		getTimedByRange: "/history/getTimedHistoryByRange",
 		getOtherByRange: "/history/getOtherHistoryByRange",
+		editWorkoutHistory: "/history/editWorkoutHistory",
 	},
 	meds: {
 		getMedsInfo: "/medications/getMedsInfo",

@@ -57,13 +57,22 @@ const OtherOption = ({
 // Default minutes options
 const defaultOptions = [5, 10, 15, 20, 25, 30];
 
+const getDerivedOtherOption = (minutes: number) => {
+	if (defaultOptions.includes(minutes)) {
+		return false;
+	}
+	return true;
+};
+
 const MinutesSelector = ({
 	name = "mins",
 	minutes,
 	onSelect,
 	options = defaultOptions,
 }: Props) => {
-	const [showOther, setShowOther] = useState<boolean>(false);
+	const [showOther, setShowOther] = useState<boolean>(
+		getDerivedOtherOption(minutes),
+	);
 
 	const toggleOther = () => {
 		setShowOther(!showOther);

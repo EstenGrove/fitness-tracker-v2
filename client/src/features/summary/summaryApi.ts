@@ -30,6 +30,7 @@ export const customSummaryApi = createApi({
 
 				return { data };
 			},
+			providesTags: () => [{ type: "HistoryCalendar" }],
 		}),
 	}),
 });
