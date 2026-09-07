@@ -273,6 +273,92 @@ export interface EditWorkoutParams {
 	endTime: string;
 }
 
+export type EditWorkoutPartial = Partial<EditWorkoutParams>;
+
+export interface EditStrengthPartial extends EditWorkoutPartial {
+	activityType: "Strength";
+}
+export interface EditCardioPartial extends EditWorkoutPartial {
+	activityType: "Cardio";
+}
+export interface EditStretchPartial extends EditWorkoutPartial {
+	activityType: "Stretch";
+}
+export interface EditWalkPartial extends EditWorkoutPartial {
+	activityType: "Walk";
+}
+export interface EditTimedPartial extends EditWorkoutPartial {
+	activityType: "Timed";
+}
+export interface EditOtherPartial extends EditWorkoutPartial {
+	activityType: "Other";
+}
+
+export interface EditStrengthHistoryPartial {
+	activityType: "Strength";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	workoutSets: StrengthSet[];
+}
+export interface EditCardioHistoryPartial {
+	activityType: "Cardio";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	workoutSets: WorkoutSet[];
+}
+export interface EditStretchHistoryPartial {
+	activityType: "Stretch";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	workoutSets: StrengthSet[];
+}
+export interface EditWalkHistoryPartial {
+	activityType: "Walk";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	steps: number;
+	miles: number;
+	pace: number;
+}
+export interface EditTimedHistoryPartial {
+	activityType: "Timed";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	workoutSets: WorkoutSet[];
+}
+export interface EditOtherHistoryPartial {
+	activityType: "Other";
+	historyID: number;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	workoutSets: WorkoutSet[];
+}
+
+export type EditWorkoutHistoryPartial =
+	| EditStrengthHistoryPartial
+	| EditCardioHistoryPartial
+	| EditStretchHistoryPartial
+	| EditWalkHistoryPartial
+	| EditTimedHistoryPartial
+	| EditOtherHistoryPartial;
+
 export interface WorkoutDateDB {
 	id: number;
 	dates: string[];
@@ -295,3 +381,29 @@ export interface WorkoutDetailsInfo {
 	schedule: WorkoutSchedule;
 	history: HistoryOfType[];
 }
+
+export interface UpdateHistoryData {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+	startTime?: string;
+	endTime?: string;
+	duration?: number;
+	effort?: Effort;
+	sets?: WorkoutSet[];
+	steps?: number;
+	miles?: number;
+	pace?: number;
+}
+
+// Covers ALL activity types EXCEPT 'Walk'
+export type UpdateExercisePartial = Omit<
+	UpdateHistoryData,
+	"steps" | "miles" | "pace"
+>;
+
+// Covers ONLY 'Walk' activity type
+export type UpdateWalkPartial = Omit<
+	UpdateHistoryData,
+	"sets" | "reps" | "weight" | "exercise"
+>;

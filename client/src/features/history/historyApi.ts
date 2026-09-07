@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { currentEnv } from "../../utils/utils_env";
-import { AllHistory, HistoryDetails, HistoryOfType } from "./types";
+import {
+	AllHistory,
+	HistoryDetails,
+	HistoryOfType,
+	UpdateHistoryData,
+} from "./types";
 import {
 	AwaitedResponse,
 	UserRangeActivityParams,
@@ -13,7 +18,10 @@ import {
 	fetchHistoryDetails,
 	HistoryDetailsParams,
 } from "../../utils/utils_history";
-import { deleteWorkoutSession } from "../../utils/utils_history";
+import {
+	deleteWorkoutSession,
+	editWorkoutHistory,
+} from "../../utils/utils_history";
 import { Activity } from "../shared/types";
 
 interface DeletedSessionParams {
@@ -21,6 +29,11 @@ interface DeletedSessionParams {
 	historyID: number;
 	activityType: Activity;
 }
+
+type UpdateHistoryParams = {
+	userID: string;
+	data: UpdateHistoryData;
+};
 
 export const historyApi = createApi({
 	reducerPath: "historyApi",
@@ -85,6 +98,18 @@ export const historyApi = createApi({
 			},
 			invalidatesTags: () => [{ type: "History" }],
 		}),
+		editWorkoutHistory: builder.mutation<HistoryOfType, UpdateHistoryParams>({
+			queryFn: async (params) => {
+				const { userID, data } = params;
+				const response = (await editWorkoutHistory(
+					userID,
+					data,
+				)) as AwaitedResponse<HistoryOfType>;
+				const newData = response.Data as HistoryOfType;
+				return { data: newData };
+			},
+			invalidatesTags: () => [{ type: "History" }],
+		}),
 	}),
 });
 
@@ -93,4 +118,5 @@ export const {
 	useGetHistoryByRangeAndTypeQuery,
 	useGetHistoryDetailsQuery,
 	useDeleteWorkoutSessionMutation,
+	useEditWorkoutHistoryMutation,
 } = historyApi;

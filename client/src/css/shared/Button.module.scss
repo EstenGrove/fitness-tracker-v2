@@ -1,0 +1,15 @@
+.Button {
+	width: max-content;
+	height: max-content;
+	padding: 0.5rem 1rem;
+	border-radius: 0.5rem;
+	border: 1px solid $borderLightColor;
+	background-color: $background;
+	color: $text1;
+	font-size: 1.6rem;
+	cursor: pointer;
+	&:hover {
+		border-color: $accentBlue;
+		color: $accentBlue;
+	}
+}

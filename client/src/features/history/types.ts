@@ -71,3 +71,17 @@ export interface HistoryDetails {
 	workout: WorkoutByType;
 	history: HistoryOfType;
 }
+
+export interface UpdateHistoryData {
+	userID: string;
+	historyID: number;
+	activityType: Activity;
+	startTime?: string;
+	endTime?: string;
+	duration?: number;
+	effort?: Effort;
+	sets?: WorkoutSet[];
+	steps?: number;
+	miles?: number;
+	pace?: number;
+}
