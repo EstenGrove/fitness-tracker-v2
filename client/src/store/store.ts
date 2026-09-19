@@ -15,6 +15,7 @@ import { customSummaryApi } from "../features/summary/summaryApi";
 import { medicationsApi } from "../features/medications/medicationsApi";
 import { todaysWorkoutsApi } from "../features/workouts/todaysWorkoutsApi";
 import { recentActivityApi } from "../features/recent-activity/recentActivityApi";
+import { cacheInvalidationMiddleware } from "./cacheInvalidation";
 
 // Reducers
 import userReducer from "../features/user/userSlice";
@@ -51,6 +52,7 @@ const store = configureStore({
 	},
 	middleware: (getDefaultMiddleware) => {
 		return getDefaultMiddleware()
+			.prepend(cacheInvalidationMiddleware.middleware)
 			.concat(todaysWorkoutsApi.middleware)
 			.concat(historyApi.middleware)
 			.concat(summaryApi.middleware)

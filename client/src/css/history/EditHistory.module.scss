@@ -1,6 +1,13 @@
 .EditHistory {
 	width: 100%;
-	padding: 2rem 3rem;
+	padding: 0 3rem 1rem 3rem;
+
+	&_header {
+		width: 100%;
+		font-size: 1.8rem;
+		margin-bottom: 4rem;
+		text-align: center;
+	}
 
 	& label {
 		display: block;
@@ -13,6 +20,7 @@
 	&_field {
 		width: max-content;
 		max-width: 100%;
+		margin-bottom: 2rem;
 	}
 }
 .DatetimeStep {

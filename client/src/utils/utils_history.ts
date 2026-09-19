@@ -4,8 +4,9 @@ import {
 	HistoryOfType,
 	WalkHistory,
 	WorkoutHistory,
+	UpdateHistoryData,
 } from "../features/history/types";
-import { Activity } from "../features/shared/types";
+import { Activity, Effort } from "../features/shared/types";
 import { AsyncResponse } from "../features/types";
 import { ExerciseSet, WalkWorkout, Workout } from "../features/workouts/types";
 import { currentEnv, historyApis } from "./utils_env";
@@ -15,6 +16,7 @@ import {
 	sortByNumberOrder,
 } from "./utils_misc";
 import { fetchWithAuth } from "./utils_requests";
+import { WorkoutSet } from "./utils_workouts";
 
 export type AllHistoryResp = AsyncResponse<AllHistory>;
 export type HistoryTypeResp = AsyncResponse<{ history: WorkoutHistory[] }>;
@@ -38,9 +40,27 @@ export interface DeletedSessionData {
 
 type DeletedSessionResp = AsyncResponse<DeletedSessionData>;
 
+const editWorkoutHistory = async (userID: string, data: UpdateHistoryData) => {
+	let url = currentEnv.base + historyApis.editWorkoutHistory;
+	url += "?" + new URLSearchParams({ userID });
+
+	try {
+		const request = await fetchWithAuth(url, {
+			method: "POST",
+			body: JSON.stringify({
+				newData: data,
+			}),
+		});
+		const response = await request.json();
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
+
 const fetchHistoryByRange = async (
 	userID: string,
-	range: DateRangeStr
+	range: DateRangeStr,
 ): AllHistoryResp => {
 	let url = currentEnv.base + historyApis.getByRange;
 	url += "?" + new URLSearchParams({ userID });
@@ -59,7 +79,7 @@ const fetchHistoryByRange = async (
 const fetchHistoryByRangeAndActivity = async (
 	userID: string,
 	activityType: Activity,
-	range: DateRangeStr
+	range: DateRangeStr,
 ): HistoryTypeResp => {
 	let url = currentEnv.base + historyApis.getByRangeAndActivity;
 	url += "?" + new URLSearchParams({ userID });
@@ -79,7 +99,7 @@ const fetchHistoryByRangeAndActivity = async (
 const fetchHistoryDetails = async (
 	userID: string,
 	historyID: number,
-	activityType: Activity
+	activityType: Activity,
 ): HistoryDetailsResp => {
 	let url = currentEnv.base + historyApis.getHistoryDetails;
 	url += "?" + new URLSearchParams({ userID });
@@ -98,7 +118,7 @@ const fetchHistoryDetails = async (
 const deleteWorkoutSession = async (
 	userID: string,
 	historyID: number,
-	activityType: Activity
+	activityType: Activity,
 ): DeletedSessionResp => {
 	let url = currentEnv.base + historyApis.deleteWorkoutSession;
 	url += "?" + new URLSearchParams({ userID });
@@ -181,7 +201,7 @@ const defaultSort: SortHistoryBy = {
 
 const sortHistoryBy = (
 	history: Array<WorkoutHistory | HistoryOfType>,
-	sort: SortHistoryBy = defaultSort
+	sort: SortHistoryBy = defaultSort,
 ) => {
 	const { by, order } = sort;
 	switch (by) {
@@ -202,7 +222,104 @@ const sortHistoryBy = (
 	}
 };
 
+export interface RawHistoryValues {
+	historyID: number;
+	activityType: Activity;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	effort: Effort;
+	sets?: WorkoutSet[];
+	steps: number;
+	miles: number;
+	pace: number;
+}
+
+const prepareUpdateHistoryData = (userID: string, values: RawHistoryValues) => {
+	switch (values.activityType) {
+		case "Strength": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				sets: values.sets,
+			};
+		}
+		case "Cardio": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				sets: values.sets,
+			};
+		}
+
+		case "Stretch": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				sets: values.sets,
+			};
+		}
+		case "Walk": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				steps: values.steps,
+				miles: values.miles,
+				pace: values.pace,
+			};
+		}
+		case "Timed": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				sets: values.sets,
+			};
+		}
+		case "Other": {
+			return {
+				userID,
+				historyID: values.historyID,
+				activityType: values.activityType,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				duration: values.duration,
+				effort: values.effort,
+				sets: values.sets,
+			};
+		}
+		default: {
+			throw new Error(`Invalid activity type: ${values.activityType}`);
+		}
+	}
+};
+
 export {
+	editWorkoutHistory,
 	fetchHistoryDetails,
 	fetchHistoryByRange,
 	fetchHistoryByRangeAndActivity,
@@ -215,4 +332,5 @@ export {
 	getTotalCalories,
 	getExerciseFromSets,
 	sortHistoryBy,
+	prepareUpdateHistoryData,
 };

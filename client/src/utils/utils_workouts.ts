@@ -458,6 +458,7 @@ const editWorkout = async (userID: string, data: EditWorkoutValues) => {
 		return error;
 	}
 };
+
 const getRecurringWorkoutData = async (
 	userID: string,
 	params: { workoutID: number; activityType: Activity },
