@@ -1,6 +1,7 @@
 import userRoutes from "./userRoutes.js";
 import authRoutes from "./authRoutes.js";
 import chatRoutes from "./chatRoutes.js";
+import aiTrendRoutes from "./aiTrends.js";
 import recapRoutes from "./recapRoutes.js";
 import habitRoutes from "./habitRoutes.js";
 import statsRoutes from "./statsRoutes.js";
@@ -27,6 +28,7 @@ const allRoutes = {
 	settings: settingsRoutes,
 	weeklyRecap: weeklyRecap,
 	metrics: metricsRoutes,
+	aiTrends: aiTrendRoutes,
 	workouts: workoutRoutes,
 	summary: summaryRoutes,
 	history: historyRoutes,

@@ -241,6 +241,9 @@ const API_ENDPOINTS = {
 	aiInsights: {
 		getAIInsights: "/aiInsights/getAIInsights",
 	},
+	aiTrends: {
+		getLatestTrendNotice: "/aiTrends/getLatestTrendNotice",
+	},
 	awards: {
 		getWorkoutAwardsAndStreaks: "/awards/getWorkoutAwardsAndStreaks",
 		getWorkoutAwards: "/awards/getWorkoutAwards",

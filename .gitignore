@@ -23,3 +23,5 @@
 
 cert.pem
 key.pem
+# Local DB dumps (contain prod data)
+db/dumps/

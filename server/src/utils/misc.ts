@@ -18,7 +18,7 @@ const groupBy = <T extends object>(key: TKey<T>, list: T[]) => {
 // Example fn: groupByFn([...someData], (x) => x.name);
 const groupByFn = <T extends object>(
 	list: T[],
-	fn: (item: T) => string | number
+	fn: (item: T) => string | number,
 ) => {
 	const grouped = {} as TRecord<T>;
 
@@ -35,7 +35,6 @@ const groupByFn = <T extends object>(
 
 	return grouped;
 };
-
 const sortByDate = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 	if (!list || !list.length) return [];
 
@@ -61,4 +60,19 @@ const sortByDateDesc = <T extends object>(key: TKey<T>, list: T[]): T[] => {
 	});
 };
 
-export { sortByDate, sortByDateDesc, groupBy, groupByFn };
+// Math, rounding, averaging utils //
+
+// Get the average of an array of numbers
+const average = (values: number[]): number => {
+	if (!values.length) return 0;
+	const total = values.reduce((sum, value) => sum + value, 0);
+	return total / values.length;
+};
+
+// Round a number to a specified number of decimal places
+const round = (value: number, decimals: number = 1): number => {
+	const factor = 10 ** decimals;
+	return Math.round(value * factor) / factor;
+};
+
+export { sortByDate, sortByDateDesc, groupBy, groupByFn, average, round };
