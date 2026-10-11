@@ -1,4 +1,3 @@
-import React from "react";
 import TrendArrowUpIcon, { TrendArrowGradient } from "./TrendArrowUpIcon";
 import TrendArrowDownIcon from "./TrendArrowDownIcon";
 
@@ -6,6 +5,7 @@ type Props = {
 	direction: "up" | "down";
 	gradient?: TrendArrowGradient;
 	size?: number;
+	customStyles?: React.CSSProperties;
 };
 
 const getContainerStyles = (size: number) => {
@@ -30,9 +30,17 @@ const getContainerStyles = (size: number) => {
 	};
 };
 
-const AnimatedTrendArrow = ({ direction, gradient, size = 20 }: Props) => {
+const AnimatedTrendArrow = ({
+	direction,
+	gradient,
+	size = 20,
+	customStyles = {},
+}: Props) => {
 	return (
-		<div style={getContainerStyles(size)} data-direction={direction}>
+		<div
+			style={{ ...getContainerStyles(size), ...customStyles }}
+			data-direction={direction}
+		>
 			{direction === "up" ? (
 				<TrendArrowUpIcon gradient={gradient} size={size} />
 			) : (

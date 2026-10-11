@@ -2,11 +2,11 @@ import { Hono, type Context } from "hono";
 import { getResponseError, getResponseOk } from "../utils/api.js";
 import { getLatestTrendNotice } from "../modules/trend-notices/getLatestTrendNotice.js";
 import { dismissTrendNotice } from "../modules/trend-notices/dismissTrendNotice.js";
-import type { AITrendNotice } from "../modules/trend-notices/types.js";
+import type { AILatestTrendNotice } from "../modules/trend-notices/types.js";
 
 const app = new Hono();
 
-type AITrendNoticeResult = AITrendNotice | null | Error;
+type AITrendNoticeResult = AILatestTrendNotice | null | Error;
 
 app.get("/getLatestTrendNotice", async (ctx: Context) => {
 	const { userID } = ctx.req.query();
@@ -28,8 +28,12 @@ app.get("/getLatestTrendNotice", async (ctx: Context) => {
 });
 
 app.post("/dismissTrendNotice", async (ctx: Context) => {
-	const body = await ctx.req.json<{ userID: string; noticeID: string }>();
-	const { userID, noticeID } = body;
+	const body = await ctx.req.json<{
+		userID: string;
+		noticeID: string;
+		dismissedAt: string;
+	}>();
+	const { userID, noticeID, dismissedAt } = body;
 
 	if (!userID || !noticeID) {
 		const errResp = getResponseError(
@@ -38,7 +42,7 @@ app.post("/dismissTrendNotice", async (ctx: Context) => {
 		return ctx.json(errResp);
 	}
 
-	const notice = await dismissTrendNotice(userID, noticeID);
+	const notice = await dismissTrendNotice(userID, noticeID, dismissedAt);
 
 	if (notice instanceof Error) {
 		const errResp = getResponseError(notice, { notice: null });

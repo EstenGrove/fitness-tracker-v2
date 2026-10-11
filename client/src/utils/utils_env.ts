@@ -243,6 +243,8 @@ const API_ENDPOINTS = {
 	},
 	aiTrends: {
 		getLatestTrendNotice: "/aiTrends/getLatestTrendNotice",
+		getAITrendsForRange: "/aiTrends/getAITrendsForRange",
+		dismissTrendNotice: "/aiTrends/dismissTrendNotice",
 	},
 	awards: {
 		getWorkoutAwardsAndStreaks: "/awards/getWorkoutAwardsAndStreaks",
@@ -281,6 +283,7 @@ export const {
 	workoutRecaps: workoutRecapApis,
 	preferences: preferencesApis,
 	aiInsights: aiInsightsApis,
+	aiTrends: aiTrendsApis,
 } = API_ENDPOINTS;
 
 export {

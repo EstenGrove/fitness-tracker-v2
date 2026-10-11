@@ -62,6 +62,11 @@ export interface AITrendNotice {
 	dismissedAt: Date | null;
 }
 
+// Returned by 'getLatestTrendNotice': the notice + the weekly totals it was based on (for charts)
+export interface AILatestTrendNotice extends AITrendNotice {
+	weeks: AIWeeklyTotal[];
+}
+
 export interface AINewTrendNotice extends DetectedAITrend, AINoticeContent {
 	userID: string;
 	weekStart: string;

@@ -37,6 +37,10 @@ import BusyBarChart from "../components/ui/BusyBarChart";
 import TrendArrowIcon from "../components/ui/TrendArrowIcon";
 import AnimatedTrendArrow from "../components/ui/AnimatedTrendArrow";
 import TrendArrowDownIcon from "../components/ui/TrendArrowDownIcon";
+import {
+	getAITrendsForRange,
+	getLatestTrendNotice,
+} from "../utils/utils_aiTrends";
 
 const colorVariants = {
 	Pink: [
@@ -1499,8 +1503,23 @@ const DemoPage = () => {
 			console.log(response);
 		};
 
-		getAIData();
+		// getAIData();
 	}, []);
+
+	useEffect(() => {
+		const getAITrendsData = async () => {
+			if (!currentUser?.userID) return;
+			const range = {
+				startDate: formatDate(startOfMonth(new Date()), "db"),
+				endDate: formatDate(endOfMonth(new Date()), "db"),
+			};
+
+			const response = await getLatestTrendNotice(currentUser?.userID);
+			console.log(response);
+		};
+
+		getAITrendsData();
+	}, [currentUser?.userID]);
 
 	return (
 		<PageContainer>

@@ -3,6 +3,8 @@ export type AINoticeDirection = "POSITIVE" | "NEGATIVE" | "MIXED";
 // Per-metric direction; STABLE = didn't pass the thresholds
 export type AIMetricDirection = "POSITIVE" | "NEGATIVE" | "STABLE";
 
+export type AITrendArrowDirection = "up" | "down";
+
 // Output of get_weekly_workout_totals()
 export interface AIWeeklyTotal {
 	weekStart: string; // YYYY-MM-DD (Sunday)
@@ -41,4 +43,15 @@ export interface AITrendNotice {
 	generatedBy: AINoticeGeneratedBy;
 	createdAt: Date;
 	dismissedAt: Date | null;
+}
+
+// Returned by 'getLatestTrendNotice': the notice + the weekly totals it was based on (for charts)
+export interface AILatestTrendNotice extends AITrendNotice {
+	weeks: AIWeeklyTotal[];
+}
+
+export interface DismissedTrendNotice {
+	noticeID: string;
+	userID: string;
+	dismissedAt: string;
 }

@@ -27,13 +27,25 @@ class TrendNoticesService {
 	}
 
 	// Weekly totals for the last 'weeks' completed weeks (week boundaries are decided by the DB)
+	// - Pass 'lastWeekStart' to replay the weeks as of a past notice (defaults to the current week)
 	async getWeeklyTotals(
 		userID: string,
 		weeks: number,
+		lastWeekStart: string | null = null,
 	): Promise<AIWeeklyTotalsData | Error> {
 		try {
-			const query = `SELECT * FROM get_weekly_workout_totals($1, CURRENT_DATE, $2) as data`;
-			const results = await this.#db.query(query, [userID, weeks]);
+			const query = `
+				SELECT * FROM get_weekly_workout_totals(
+					$1,
+					COALESCE($3::date + 7, CURRENT_DATE),
+					$2
+				) as data
+			`;
+			const results = await this.#db.query(query, [
+				userID,
+				weeks,
+				lastWeekStart,
+			]);
 			const rows = results?.rows?.[0]?.data;
 			return rows;
 		} catch (error) {
@@ -142,15 +154,17 @@ class TrendNoticesService {
 	async dismissNotice(
 		userID: string,
 		noticeID: string,
+		dismissedAt: string,
 	): Promise<AITrendNotice | null | Error> {
 		try {
 			const query = `
-				UPDATE workout_trend_notices
-				SET dismissed_at = COALESCE(dismissed_at, NOW())
-				WHERE notice_id = $1 AND user_id = $2
-				RETURNING ${NOTICE_COLUMNS}
+				SELECT * FROM dismiss_ai_trend_notice($1, $2, $3::date)
 			`;
-			const results = await this.#db.query(query, [noticeID, userID]);
+			const results = await this.#db.query(query, [
+				noticeID,
+				userID,
+				dismissedAt,
+			]);
 			return results?.rows?.[0] ?? null;
 		} catch (error) {
 			return error as Error;

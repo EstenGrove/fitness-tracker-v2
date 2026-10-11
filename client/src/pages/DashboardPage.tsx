@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
 import styles from "../css/pages/DashboardPage.module.scss";
 import { useRef } from "react";
+import { useNavigate } from "react-router";
 import { DashboardSummary } from "../features/dashboard/types";
 import { useDashboardSummary } from "../hooks/useDashboardSummary";
 import { selectCurrentUser } from "../features/user/userSlice";
 import { useWeekHeader } from "../hooks/useWeekHeader";
+import { useAITrendsNotice } from "../hooks/useAITrendsNotice";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import UserBadge from "../components/user/UserBadge";
@@ -17,6 +19,9 @@ import StepsSummary from "../components/summary/StepsSummary";
 import Loader from "../components/layout/Loader";
 import RecentHistoryTabs from "../components/dashboard/RecentHistoryTabs";
 import DashboardHabits from "../components/dashboard/DashboardHabits";
+import ModalLG from "../components/shared/ModalLG";
+import AITrendsNotice from "../components/ai-trends-notice/AITrendsNotice";
+import AITrendsNoticeButton from "../components/ai-trends-notice/AITrendsNoticeButton";
 
 const activityInfo = {
 	title: "Recent Activity",
@@ -26,6 +31,10 @@ const activityInfo = {
 const habitInfo = {
 	title: "Habit Progress",
 	path: "/habits",
+};
+
+const trendsInfo = {
+	path: "/trends",
 };
 
 const Spacer = ({
@@ -49,13 +58,29 @@ const DashboardPage = () => {
 	const currentUser = useSelector(selectCurrentUser);
 	const { data, isLoading } = useDashboardSummary(header.selectedDate);
 	const summary: DashboardSummary = data;
+	const navigate = useNavigate();
+	const trendsNotice = useAITrendsNotice();
+
+	const goToTrends = () => {
+		trendsNotice.closeNotice();
+		navigate(trendsInfo.path);
+	};
 
 	return (
 		<PageContainer padding="1rem 2rem">
 			<div className={styles.DashboardPage}>
 				<div className={styles.DashboardPage_header}>
 					<PageHeader title="Dashboard">
-						<UserBadge currentUser={currentUser} size="SM" />
+						<div className={styles.DashboardPage_header_actions}>
+							{/* {trendsNotice.notice && ( */}
+							{true && (
+								<AITrendsNoticeButton
+									notice={trendsNotice?.notice ?? null}
+									onClick={trendsNotice?.openNotice}
+								/>
+							)}
+							<UserBadge currentUser={currentUser} size="SM" />
+						</div>
 					</PageHeader>
 					<WeeklyHeader
 						onSelect={header.selectDate}
@@ -94,6 +119,17 @@ const DashboardPage = () => {
 					)}
 				</div>
 			</div>
+
+			{/* AI TRENDS NOTICE */}
+			{trendsNotice.isOpen && trendsNotice.notice && (
+				<ModalLG onClose={trendsNotice.closeNotice}>
+					<AITrendsNotice
+						notice={trendsNotice.notice}
+						onClose={trendsNotice.closeNotice}
+						onViewMore={goToTrends}
+					/>
+				</ModalLG>
+			)}
 		</PageContainer>
 	);
 };

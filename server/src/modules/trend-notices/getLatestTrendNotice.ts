@@ -2,7 +2,12 @@ import { trendNoticesService } from "../../services/index.js";
 import { TREND_NOTICES_CONFIG } from "./config.js";
 import { detectTrend } from "./detectTrend.js";
 import { generateTrendNotice } from "./generateTrendNotice.js";
-import type { AITrendNotice, AIWeeklyTotalsData } from "./types.js";
+import type {
+	AILatestTrendNotice,
+	AITrendNotice,
+	AIWeeklyTotal,
+	AIWeeklyTotalsData,
+} from "./types.js";
 
 const { WINDOW_WEEKS } = TREND_NOTICES_CONFIG;
 
@@ -13,31 +18,23 @@ const MAX_NOTICE_AGE_WEEKS = 2;
 // Only a notable change reaches the AI (at most once per user, per week).
 const createNoticeIfNotable = async (
 	userID: string,
-): Promise<string | Error> => {
-	const totals: AIWeeklyTotalsData | Error =
-		await trendNoticesService.getWeeklyTotals(userID, WINDOW_WEEKS * 2);
-	console.log("[TOTALS]:", totals);
-	if (totals instanceof Error) return totals;
-
+	totals: AIWeeklyTotalsData,
+): Promise<void | Error> => {
 	const { lastWeekStart } = totals;
 
-	const cached: AITrendNotice | Error | null =
-		await trendNoticesService.getNotice(userID, lastWeekStart);
-	console.log("[CACHED]:", cached);
+	const cached = await trendNoticesService.getNotice(userID, lastWeekStart);
 	if (cached instanceof Error) return cached;
-	if (cached) return lastWeekStart;
+	if (cached) return;
 
 	const priorNotices = await trendNoticesService.getRecentNotices(
 		userID,
 		lastWeekStart,
 		WINDOW_WEEKS,
 	);
-	console.log("[PRIOR NOTICES]:", priorNotices);
 	if (priorNotices instanceof Error) return priorNotices;
 
 	const trend = detectTrend(totals, priorNotices);
-	console.log("[TREND]:", trend);
-	if (!trend) return lastWeekStart;
+	if (!trend) return;
 
 	const content = await generateTrendNotice(trend);
 	// ON CONFLICT DO NOTHING: if a concurrent request already inserted it, that row wins
@@ -48,28 +45,51 @@ const createNoticeIfNotable = async (
 		...content,
 	});
 	if (inserted instanceof Error) return inserted;
+};
 
-	return lastWeekStart;
+// The weeks a notice was based on: reuse the current totals, unless the notice is from a prior week
+const getNoticeWeeks = async (
+	notice: AITrendNotice,
+	totals: AIWeeklyTotalsData,
+): Promise<AIWeeklyTotal[] | Error> => {
+	if (notice.weekStart === totals.lastWeekStart) return totals.weeks;
+
+	const noticeTotals = await trendNoticesService.getWeeklyTotals(
+		notice.userID,
+		WINDOW_WEEKS * 2,
+		notice.weekStart,
+	);
+	if (noticeTotals instanceof Error) return noticeTotals;
+
+	return noticeTotals.weeks;
 };
 
 const getLatestTrendNotice = async (
 	userID: string,
-): Promise<AITrendNotice | null | Error> => {
-	const lastWeekStart = await createNoticeIfNotable(userID);
-	if (lastWeekStart instanceof Error) return lastWeekStart;
+): Promise<AILatestTrendNotice | null | Error> => {
+	const totals = await trendNoticesService.getWeeklyTotals(
+		userID,
+		WINDOW_WEEKS * 2,
+	);
+	if (totals instanceof Error) return totals;
+
+	const created = await createNoticeIfNotable(userID, totals);
+	if (created instanceof Error) return created;
 
 	const latest = await trendNoticesService.getLatestNotice(
 		userID,
-		lastWeekStart,
+		totals.lastWeekStart,
 		MAX_NOTICE_AGE_WEEKS,
 	);
-	console.log("[LATEST]:", latest);
 	if (latest instanceof Error) return latest;
 
 	// A dismissed latest notice hides everything (don't fall back to an older one)
 	if (!latest || latest.dismissedAt) return null;
 
-	return latest;
+	const weeks = await getNoticeWeeks(latest, totals);
+	if (weeks instanceof Error) return weeks;
+
+	return { ...latest, weeks };
 };
 
 export { getLatestTrendNotice };
