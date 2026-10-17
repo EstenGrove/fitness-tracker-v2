@@ -66,6 +66,17 @@ export interface TrendCategoryData {
 	insights: TrendInsight[]; // max 3, in priority order
 }
 
+// The hub (/trends): one card per category, derived from its data (no separate queries)
+export interface TrendCategoryCard {
+	category: TrendCategoryKey;
+	kpi: TrendKpi; // the category's headline KPI
+	insight: TrendInsight | null; // its top insight
+}
+export interface TrendsOverview {
+	period: TrendPeriod;
+	cards: TrendCategoryCard[]; // in registry order; a category that failed to load is left out
+}
+
 /**
  * INSIGHT RULES
  * - Each category defines an ordered list of rules; the first few that return an insight are shown
@@ -132,6 +143,11 @@ export interface RawConsistency extends RawTrendBase<
 export interface RawWorkoutStreak {
 	days: number;
 	endDate: string | null;
+}
+// The streak + the DB's current date, so "is it still current?" uses the DB's calendar (not Node's)
+export interface RawWorkoutStreakStatus {
+	streak: RawWorkoutStreak | null;
+	today: string; // "YYYY-MM-DD"
 }
 
 // VOLUME

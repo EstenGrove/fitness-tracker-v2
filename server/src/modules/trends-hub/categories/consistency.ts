@@ -17,7 +17,7 @@ import type {
 	RawConsistency,
 	RawConsistencyTotals,
 	RawConsistencyWeek,
-	RawWorkoutStreak,
+	RawWorkoutStreakStatus,
 	TrendCategoryData,
 	TrendKpi,
 	TrendPeriodKey,
@@ -55,10 +55,8 @@ const TIME_OF_DAY_BUCKETS = [
 	{ key: "evening", label: "Evening", fromHour: 17, toHour: 24 },
 ];
 
-export interface ConsistencyExtras {
-	streak: RawWorkoutStreak | null;
-	today: string; // "YYYY-MM-DD"
-}
+// The streak + today's date (both from the DB), from 'TrendsHubService.getWorkoutStreakStatus'
+export type ConsistencyExtras = RawWorkoutStreakStatus;
 
 interface ConsistencyContext {
 	raw: RawConsistency;

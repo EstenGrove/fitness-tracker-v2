@@ -24,6 +24,7 @@ import { ChatSuggestionsService } from "./ChatSuggestionsService.js";
 import { RecapsAndDetailsService } from "./RecapsAndDetailsService.js";
 import { MetricsService } from "./MetricsService.js";
 import { TrendNoticesService } from "./TrendNoticesService.js";
+import { TrendsHubService } from "./TrendsHubService.js";
 
 const authService = new AuthService(db);
 const userService = new UserService(db);
@@ -50,6 +51,7 @@ const recentActivityService = new RecentActivityService(db);
 const chatSuggestionsService = new ChatSuggestionsService(db);
 const recapsAndDetailsService = new RecapsAndDetailsService(db);
 const trendNoticesService = new TrendNoticesService(db);
+const trendsHubService = new TrendsHubService(db);
 
 const allServices = {
 	user: userService,
@@ -76,6 +78,7 @@ const allServices = {
 	chatSuggestions: chatSuggestionsService,
 	recapsAndDetails: recapsAndDetailsService,
 	trendNotices: trendNoticesService,
+	trendsHub: trendsHubService,
 };
 
 export {
@@ -85,6 +88,7 @@ export {
 	recapsAndDetailsService,
 	chatSuggestionsService,
 	trendNoticesService,
+	trendsHubService,
 	recentActivityService,
 	medicationsService,
 	weeklyRecapService,

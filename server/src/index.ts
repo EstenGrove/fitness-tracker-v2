@@ -96,6 +96,7 @@ app.route("settings", allRoutes.settings);
 app.route("workouts", allRoutes.workouts);
 app.route("dashboard", allRoutes.dashboard);
 app.route("aiTrends", allRoutes.aiTrends);
+app.route("trendsHub", allRoutes.trendsHub);
 app.route("aiInsights", allRoutes.aiInsights);
 app.route("medications", allRoutes.medications);
 app.route("recentActivity", allRoutes.recentActivity);
