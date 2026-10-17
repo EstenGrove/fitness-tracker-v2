@@ -1,0 +1,79 @@
+.TrendsAccentPicker {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1.4rem;
+
+	&_desc {
+		font-size: 1.4rem;
+		color: $text3;
+	}
+	&_hint {
+		font-size: 1.3rem;
+		line-height: 1.5;
+		color: var(--accent-orange);
+	}
+	&_reset {
+		width: max-content;
+		padding: 0;
+		border: none;
+		background-color: transparent;
+		color: $text3;
+		font-size: 1.4rem;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+}
+
+.Swatches {
+	@include flex_row(flex-start, center, wrap);
+	gap: 1.2rem;
+}
+
+.Swatch {
+	width: 3.6rem;
+	height: 3.6rem;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+	cursor: pointer;
+
+	&[data-selected="true"] {
+		outline-color: $text1;
+	}
+
+	// Custom: a dashed ring around the native color input
+	&_custom {
+		@extend .Swatch;
+		position: relative;
+		border: 2px dashed $borderLightColor;
+		@include flex_row(center, center);
+	}
+	&_input {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+	}
+	&_customLabel {
+		font-size: 1rem;
+		color: $text3;
+		pointer-events: none;
+	}
+}
+
+.Preview {
+	width: 100%;
+	max-width: 24rem;
+	height: 6rem;
+	@include flex_row(space-between, flex-end);
+	gap: 0.4rem;
+
+	&_bar {
+		flex: 1;
+		border-radius: 0.3rem 0.3rem 0 0;
+	}
+}

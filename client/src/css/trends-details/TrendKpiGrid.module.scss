@@ -1,0 +1,27 @@
+.TrendKpiGrid {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.KpiTile {
+	padding: 1.2rem;
+	border-radius: 1rem;
+	background-color: $foreground;
+	border: $borderLight;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.6rem;
+
+	&_label {
+		font-size: 1.3rem;
+		color: $text3;
+	}
+	&_value {
+		font-size: 2.2rem;
+		font-weight: 600;
+		color: $text1;
+	}
+}

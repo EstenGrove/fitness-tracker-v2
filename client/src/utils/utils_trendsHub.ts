@@ -1,0 +1,255 @@
+import { CSSProperties } from "react";
+import { format, parseISO } from "date-fns";
+import { AsyncResponse } from "../features/types";
+import { currentEnv, trendsHubApis } from "./utils_env";
+import { fetchWithAuth } from "./utils_requests";
+import {
+	TrendCategoryData,
+	TrendCategoryKey,
+	TrendKpi,
+	TrendKpiUnit,
+	TrendPeriod,
+	TrendPeriodKey,
+	TrendTone,
+	TrendsOverview,
+} from "../features/trends-hub/types";
+
+export type TrendsOverviewResp = AsyncResponse<{ overview: TrendsOverview }>;
+export type TrendCategoryResp = AsyncResponse<{
+	categoryData: TrendCategoryData;
+}>;
+
+// REQUESTS
+
+const getTrendsOverview = async (
+	userID: string,
+	period: TrendPeriodKey,
+): TrendsOverviewResp => {
+	let url = currentEnv.base + trendsHubApis.getOverview;
+	url += "?" + new URLSearchParams({ userID, period });
+
+	try {
+		const response = await fetchWithAuth(url);
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		return error;
+	}
+};
+
+const getTrendCategory = async (
+	userID: string,
+	category: TrendCategoryKey,
+	period: TrendPeriodKey,
+): TrendCategoryResp => {
+	let url = currentEnv.base + trendsHubApis.getCategory;
+	url += "?" + new URLSearchParams({ userID, category, period });
+
+	try {
+		const response = await fetchWithAuth(url);
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error(error);
+		return error;
+	}
+};
+
+// PERIODS
+
+// Order = order in the period selector
+const TREND_PERIODS: { key: TrendPeriodKey; label: string }[] = [
+	{ key: "4W", label: "4W" },
+	{ key: "12W", label: "12W" },
+	{ key: "6M", label: "6M" },
+	{ key: "1Y", label: "1Y" },
+];
+
+const DEFAULT_TREND_PERIOD: TrendPeriodKey = "12W";
+
+const isTrendPeriodKey = (value: unknown): value is TrendPeriodKey => {
+	return TREND_PERIODS.some((period) => period.key === value);
+};
+
+// CATEGORIES
+
+const TREND_CATEGORY_KEYS: TrendCategoryKey[] = [
+	"consistency",
+	"volume",
+	"adherence",
+];
+
+// eg. validates the ':category' route param
+const isTrendCategoryKey = (value: unknown): value is TrendCategoryKey => {
+	return TREND_CATEGORY_KEYS.some((key) => key === value);
+};
+
+// FORMATTING (KPIs & breakdowns)
+
+const UNIT_SUFFIXES: Record<TrendKpiUnit, string> = {
+	mins: " min",
+	pct: "%",
+	count: "",
+	days: " days",
+};
+
+// eg. 98.2 mins => "98 min", 94 pct => "94%", 1.5 count => "1.5", 34 days => "34 days"
+const formatTrendValue = (value: number, unit: TrendKpiUnit): string => {
+	const isWhole = unit === "mins" || unit === "pct" || unit === "days";
+	const rounded = isWhole ? Math.round(value) : Math.round(value * 10) / 10;
+	return `${rounded.toLocaleString()}${UNIT_SUFFIXES[unit]}`;
+};
+
+// eg. relative -42.3 => "−42%", points on a pct KPI 6 => "+6 pts", points on a count KPI 13 => "+13"
+// - null when there's no comparison (no prior period)
+const formatKpiChange = (kpi: TrendKpi): string | null => {
+	const { change, changeType, unit } = kpi;
+	if (change === null) return null;
+
+	const sign = change > 0 ? "+" : change < 0 ? "−" : "";
+	const amount = Math.abs(Math.round(change));
+	if (changeType === "relative") return `${sign}${amount}%`;
+	return unit === "pct" ? `${sign}${amount} pts` : `${sign}${amount}`;
+};
+
+// COLORS
+// - All trends colors live here, so restyling is a one-line change
+// - NEGATIVE is amber, never red: declines need attention, not alarm
+
+// Tinted background from a color (works in light & dark themes, no extra theme vars)
+const tint = (color: string, pct: number) => {
+	return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+};
+
+const TONE_STYLES: Record<TrendTone, { color: string; bgColor: string }> = {
+	POSITIVE: { color: "var(--accent-green)", bgColor: "var(--greenBG)" },
+	// Amber, not red: a decline needs attention, but shouldn't feel like a scolding
+	NEGATIVE: {
+		color: "var(--accent-orange)",
+		bgColor: tint("var(--accent-orange)", 18),
+	},
+	// Plain gray, so "steady" is easy to tell apart from both tones in either theme
+	NEUTRAL: { color: "var(--text1_5)", bgColor: tint("var(--text1_5)", 15) },
+};
+
+// Exposes a tone's colors to SCSS as '--tone-color' & '--tone-bg'
+const getToneStyles = (tone: TrendTone): CSSProperties => {
+	const { color, bgColor } = TONE_STYLES[tone];
+	return { "--tone-color": color, "--tone-bg": bgColor } as CSSProperties;
+};
+
+// The user's trends accent (Settings > Theme); defaults to --accent-blue (index.css)
+const DEFAULT_SERIES_COLOR = "var(--trends-accent-primary)";
+
+// Series without an entry use 'DEFAULT_SERIES_COLOR'
+const SERIES_COLORS: Record<string, string> = {
+	"scheduled-by-week": "var(--blueGrey800)",
+	"completed-by-week": DEFAULT_SERIES_COLOR,
+	"mins-by-week-strength": "var(--strengthAccent)",
+	"mins-by-week-stretch": "var(--stretchAccent)",
+	"mins-by-week-cardio": "var(--cardioAccent)",
+	"mins-by-week-walk": "var(--walkAccent)",
+	"mins-by-week-timed": "var(--timedAccent)",
+	"mins-by-week-other": "var(--otherAccent)",
+};
+
+const getSeriesColor = (seriesKey: string): string => {
+	return SERIES_COLORS[seriesKey] ?? DEFAULT_SERIES_COLOR;
+};
+
+// TRENDS ACCENT (Settings > Theme)
+
+export interface TrendsAccentPreset {
+	label: string;
+	color: string; // hex, so it can also seed the custom color input
+}
+
+// Curated from the app's accents (index.css). Green & orange are left out: they're the tone colors.
+const TRENDS_ACCENT_PRESETS: TrendsAccentPreset[] = [
+	{ label: "Blue", color: "#007cff" }, // default (--accent-blue)
+	{ label: "Purple", color: "#7c3aed" },
+	{ label: "Pink", color: "#ff0066" },
+	{ label: "Yellow", color: "#f9f871" },
+];
+
+const DEFAULT_TRENDS_ACCENT = TRENDS_ACCENT_PRESETS[0].color;
+
+// Hex values of the tone colors (keep in sync with --accent-green & --accent-orange in index.css)
+const TONE_HEX_COLORS: { tone: TrendTone; color: string }[] = [
+	{ tone: "POSITIVE", color: "#00e2bd" },
+	{ tone: "NEGATIVE", color: "#ff7700" },
+];
+
+// How close (0-441, RGB distance) an accent can get to a tone color before we show a hint
+const TONE_CONFLICT_DISTANCE = 100;
+
+const hexToRgb = (hex: string): [number, number, number] | null => {
+	const match = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+	if (!match) return null;
+	return [
+		parseInt(match[1], 16),
+		parseInt(match[2], 16),
+		parseInt(match[3], 16),
+	];
+};
+
+// The tone an accent could be mistaken for (eg. a teal accent vs the green "improvement" tone)
+const getAccentToneConflict = (hex: string): TrendTone | null => {
+	const rgb = hexToRgb(hex);
+	if (!rgb) return null;
+
+	const conflict = TONE_HEX_COLORS.find(({ color }) => {
+		const toneRgb = hexToRgb(color);
+		if (!toneRgb) return false;
+		const distance = Math.hypot(
+			rgb[0] - toneRgb[0],
+			rgb[1] - toneRgb[1],
+			rgb[2] - toneRgb[2],
+		);
+		return distance < TONE_CONFLICT_DISTANCE;
+	});
+	return conflict?.tone ?? null;
+};
+
+// DATES
+
+const isISODate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+
+// Chart x labels: "2026-07-06" => "Jul 6"; anything else (eg. "Mon") is shown as-is
+const formatSeriesLabel = (x: string): string => {
+	return isISODate(x) ? format(parseISO(x), "MMM d") : x;
+};
+
+// eg. "Jul 6 – Sep 26"
+const formatPeriodRange = (period: TrendPeriod): string => {
+	const start = format(parseISO(period.startDate), "MMM d");
+	const end = format(parseISO(period.endDate), "MMM d");
+	return `${start} – ${end}`;
+};
+
+export {
+	// Requests
+	getTrendsOverview,
+	getTrendCategory,
+	// Periods
+	TREND_PERIODS,
+	DEFAULT_TREND_PERIOD,
+	isTrendPeriodKey,
+	// Categories
+	TREND_CATEGORY_KEYS,
+	isTrendCategoryKey,
+	// Formatting
+	formatTrendValue,
+	formatKpiChange,
+	// Colors
+	getToneStyles,
+	getSeriesColor,
+	// Trends accent
+	TRENDS_ACCENT_PRESETS,
+	DEFAULT_TRENDS_ACCENT,
+	getAccentToneConflict,
+	// Dates
+	formatSeriesLabel,
+	formatPeriodRange,
+};

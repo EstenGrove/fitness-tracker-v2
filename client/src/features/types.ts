@@ -58,6 +58,10 @@ export interface RangeParams {
 	startDate: string;
 	endDate: string;
 }
+export interface DateRangeParams {
+	startDate: string;
+	endDate: string;
+}
 
 export interface MarkAsDoneParams {
 	userID: string;

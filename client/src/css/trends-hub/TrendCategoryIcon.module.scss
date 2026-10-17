@@ -1,0 +1,16 @@
+// Colors come from 'getToneStyles' (utils_trendsHub.ts) via '--tone-color' & '--tone-bg'
+
+.TrendCategoryIcon {
+	width: 3.6rem;
+	height: 3.6rem;
+	min-width: 3.6rem;
+	border-radius: 1rem;
+	background-color: var(--tone-bg);
+	@include flex_row(center, center);
+
+	&_icon {
+		width: 2rem;
+		height: 2rem;
+		fill: var(--tone-color);
+	}
+}

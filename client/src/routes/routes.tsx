@@ -12,6 +12,7 @@ const AIChatPage = lazy(() => import("../pages/AIChatPage"));
 const User = lazy(() => import("../pages/UserPage"));
 const Goals = lazy(() => import("../pages/GoalsPage"));
 const Trends = lazy(() => import("../pages/TrendsPage"));
+const TrendCategory = lazy(() => import("../pages/TrendCategoryPage"));
 const History = lazy(() => import("../pages/HistoryPage"));
 const Workouts = lazy(() => import("../pages/WorkoutsPage"));
 const Settings = lazy(() => import("../pages/SettingsPage"));
@@ -144,6 +145,7 @@ export const router = createBrowserRouter([
 			/* GOALS */
 			{ path: "goals", element: load(<Goals />) },
 			{ path: "trends", element: load(<Trends />) },
+			{ path: "trends/:category", element: load(<TrendCategory />) },
 
 			/* ACTIVITY */
 			{ path: "activity", element: load(<RecentActivity />) },

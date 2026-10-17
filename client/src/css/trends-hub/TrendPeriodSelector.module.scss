@@ -1,0 +1,26 @@
+.TrendPeriodSelector {
+	width: 100%;
+	padding: 0.3rem;
+	border-radius: 5rem;
+	background-color: $foreground;
+	border: $borderLight;
+	@include flex_row(space-between, center);
+
+	&_option {
+		flex: 1;
+		padding: 0.6rem 0;
+		border: 1px solid transparent;
+		border-radius: 5rem;
+		background-color: transparent;
+		color: $text3;
+		font-size: 1.4rem;
+		cursor: pointer;
+
+		&[data-selected="true"] {
+			border-color: $borderLightColor;
+			background-color: $background;
+			color: $text1;
+			font-weight: 600;
+		}
+	}
+}

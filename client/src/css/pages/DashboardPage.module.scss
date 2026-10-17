@@ -7,6 +7,11 @@
 		top: 0;
 		background-color: $background;
 		z-index: 999;
+
+		&_actions {
+			@include flex_row(flex-end, center);
+			gap: 1rem;
+		}
 	}
 
 	&_body {

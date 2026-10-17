@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const ollamaModel = createOllama({ baseURL: "http://localhost:11434/api" });
-const googleModel = google("gemini-2.0-flash");
+const googleModel = google("gemini-3.8-flash");
+// const googleModel = google("gemini-2.0-flash"); // DEPRECATED???
 // const googleModel = new GoogleGenerativeAI(
 // 	process.env.GOOGLE_GENERATIVE_AI_API_KEY as string
 // );

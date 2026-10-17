@@ -4,6 +4,15 @@
 	border-radius: 50%;
 }
 
+.TrendArrow_container {
+	width: 7rem;
+	height: 7rem;
+	border-radius: 1rem;
+	background-color: var(--bg-foreground-dark);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 .DemoPage {
 	width: 100%;
 	/* Allow badge halos (filter drop-shadow) to paint outside the content box */

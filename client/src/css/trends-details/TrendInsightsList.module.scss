@@ -1,0 +1,37 @@
+// Dot colors come from 'getToneStyles' (utils_trendsHub.ts) via '--tone-color'
+
+.TrendInsightsList {
+	width: 100%;
+
+	&_title {
+		font-size: 1.6rem;
+		font-weight: 600;
+		color: $text1;
+		margin-bottom: 1rem;
+	}
+	&_list {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+}
+
+.Insight {
+	@include flex_row(flex-start, flex-start);
+	gap: 1rem;
+
+	&_dot {
+		width: 0.8rem;
+		height: 0.8rem;
+		min-width: 0.8rem;
+		margin-top: 0.7rem;
+		border-radius: 50%;
+		background-color: var(--tone-color);
+	}
+	&_text {
+		font-size: 1.5rem;
+		line-height: 1.5;
+		color: $text1;
+	}
+}

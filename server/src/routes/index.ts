@@ -1,11 +1,13 @@
 import userRoutes from "./userRoutes.js";
 import authRoutes from "./authRoutes.js";
 import chatRoutes from "./chatRoutes.js";
+import aiTrendRoutes from "./aiTrends.js";
 import recapRoutes from "./recapRoutes.js";
 import habitRoutes from "./habitRoutes.js";
 import statsRoutes from "./statsRoutes.js";
 import awardsRoutes from "./awardsRoutes.js";
 import trendsRoutes from "./trendsRoutes.js";
+import trendsHubRoutes from "./trendsHubRoutes.js";
 import streakRoutes from "./streakRoutes.js";
 import exportRoutes from "./exportRoutes.js";
 import metricsRoutes from "./metricsRoutes.js";
@@ -27,6 +29,7 @@ const allRoutes = {
 	settings: settingsRoutes,
 	weeklyRecap: weeklyRecap,
 	metrics: metricsRoutes,
+	aiTrends: aiTrendRoutes,
 	workouts: workoutRoutes,
 	summary: summaryRoutes,
 	history: historyRoutes,
@@ -37,6 +40,7 @@ const allRoutes = {
 	recaps: recapRoutes,
 	stats: statsRoutes,
 	trends: trendsRoutes,
+	trendsHub: trendsHubRoutes,
 	chat: chatRoutes,
 	auth: authRoutes,
 	user: userRoutes,

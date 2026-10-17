@@ -34,6 +34,13 @@ import { useWebHaptics } from "web-haptics/react";
 import { useOsc } from "../hooks/useOsc";
 import { useHaptic } from "../hooks/useHaptic";
 import BusyBarChart from "../components/ui/BusyBarChart";
+import TrendArrowIcon from "../components/ui/TrendArrowIcon";
+import AnimatedTrendArrow from "../components/ui/AnimatedTrendArrow";
+import TrendArrowDownIcon from "../components/ui/TrendArrowDownIcon";
+import {
+	getAITrendsForRange,
+	getLatestTrendNotice,
+} from "../utils/utils_aiTrends";
 
 const colorVariants = {
 	Pink: [
@@ -1496,13 +1503,35 @@ const DemoPage = () => {
 			console.log(response);
 		};
 
-		getAIData();
+		// getAIData();
 	}, []);
+
+	useEffect(() => {
+		const getAITrendsData = async () => {
+			if (!currentUser?.userID) return;
+			const range = {
+				startDate: formatDate(startOfMonth(new Date()), "db"),
+				endDate: formatDate(endOfMonth(new Date()), "db"),
+			};
+
+			const response = await getLatestTrendNotice(currentUser?.userID);
+			console.log(response);
+		};
+
+		getAITrendsData();
+	}, [currentUser?.userID]);
 
 	return (
 		<PageContainer>
 			<PageHeader title="Demo Page" />
 			<div className={css.DemoPage}>
+				<div className={css.DemoPage_item}>
+					<AnimatedTrendArrow size={25} gradient="amethyst" direction="up" />
+				</div>
+				<div className={css.DemoPage_item}>
+					{/* <TrendArrowDownIcon size={50} gradient="lime" /> */}
+				</div>
+
 				<div className={css.DemoPage_item}>
 					<h4 style={{ paddingLeft: "3rem", fontSize: "1.6rem" }}>
 						Workout Volume
