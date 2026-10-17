@@ -8,6 +8,7 @@ import { metricsApi } from "../features/metrics/api";
 import { statsApi } from "../features/stats/statsApi";
 import { settingsApi } from "../features/settings/api";
 import { aiTrendsApi } from "../features/ai-trends/api";
+import { trendsHubApi } from "../features/trends-hub/api";
 import { habitsApi } from "../features/habits/habitsApi";
 import { historyApi } from "../features/history/historyApi";
 import { summaryApi } from "../features/dashboard/summaryApi";
@@ -46,6 +47,7 @@ const store = configureStore({
 		[summaryApi.reducerPath]: summaryApi.reducer,
 		[settingsApi.reducerPath]: settingsApi.reducer,
 		[aiTrendsApi.reducerPath]: aiTrendsApi.reducer,
+		[trendsHubApi.reducerPath]: trendsHubApi.reducer,
 		[medicationsApi.reducerPath]: medicationsApi.reducer,
 		[todaysWorkoutsApi.reducerPath]: todaysWorkoutsApi.reducer,
 		[recentActivityApi.reducerPath]: recentActivityApi.reducer,
@@ -69,7 +71,8 @@ const store = configureStore({
 			.concat(recapsApi.middleware)
 			.concat(workoutRecapsApi.middleware)
 			.concat(metricsApi.middleware)
-			.concat(aiTrendsApi.middleware);
+			.concat(aiTrendsApi.middleware)
+			.concat(trendsHubApi.middleware);
 	},
 });
 

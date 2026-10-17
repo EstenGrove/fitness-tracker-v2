@@ -246,6 +246,10 @@ const API_ENDPOINTS = {
 		getAITrendsForRange: "/aiTrends/getAITrendsForRange",
 		dismissTrendNotice: "/aiTrends/dismissTrendNotice",
 	},
+	trendsHub: {
+		getOverview: "/trendsHub/getOverview",
+		getCategory: "/trendsHub/getCategory",
+	},
 	awards: {
 		getWorkoutAwardsAndStreaks: "/awards/getWorkoutAwardsAndStreaks",
 		getWorkoutAwards: "/awards/getWorkoutAwards",
@@ -284,6 +288,7 @@ export const {
 	preferences: preferencesApis,
 	aiInsights: aiInsightsApis,
 	aiTrends: aiTrendsApis,
+	trendsHub: trendsHubApis,
 } = API_ENDPOINTS;
 
 export {

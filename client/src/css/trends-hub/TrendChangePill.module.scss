@@ -1,0 +1,12 @@
+// Colors come from 'getToneStyles' (utils_trendsHub.ts) via '--tone-color' & '--tone-bg'
+
+.TrendChangePill {
+	width: max-content;
+	padding: 0.2rem 0.9rem;
+	border-radius: 5rem;
+	font-size: 1.2rem;
+	font-weight: 600;
+	white-space: nowrap;
+	color: var(--tone-color);
+	background-color: var(--tone-bg);
+}
