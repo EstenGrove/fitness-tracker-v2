@@ -53,13 +53,16 @@ const Spacer = ({
 
 const DashboardPage = () => {
 	const baseDate = new Date();
+	const navigate = useNavigate();
 	const cardsRef = useRef<HTMLDivElement>(null);
 	const header = useWeekHeader(baseDate.toString());
 	const currentUser = useSelector(selectCurrentUser);
+
+	const trendsNotice = useAITrendsNotice();
 	const { data, isLoading } = useDashboardSummary(header.selectedDate);
 	const summary: DashboardSummary = data;
-	const navigate = useNavigate();
-	const trendsNotice = useAITrendsNotice();
+
+	console.log(trendsNotice);
 
 	const goToTrends = () => {
 		trendsNotice.closeNotice();
@@ -72,8 +75,7 @@ const DashboardPage = () => {
 				<div className={styles.DashboardPage_header}>
 					<PageHeader title="Dashboard">
 						<div className={styles.DashboardPage_header_actions}>
-							{/* {trendsNotice.notice && ( */}
-							{true && (
+							{trendsNotice.notice && (
 								<AITrendsNoticeButton
 									notice={trendsNotice?.notice ?? null}
 									onClick={trendsNotice?.openNotice}

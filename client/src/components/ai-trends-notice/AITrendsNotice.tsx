@@ -31,8 +31,12 @@ const getVariantStyles = (
 	} as CSSProperties;
 };
 
+const getWeekOfDate = (date: string): string => {
+	return format(parseISO(date), "MMM do");
+};
+
 const Header = ({ weekStart }: { weekStart: string }) => {
-	const weekOf = format(parseISO(weekStart), "MMM do");
+	const weekOf = getWeekOfDate(weekStart);
 	return (
 		<div className={styles.Header}>
 			<span className={styles.Header_label}>Your weekly trends</span>
