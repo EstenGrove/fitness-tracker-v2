@@ -1,4 +1,4 @@
-import type { UpdateHistoryData } from "../../services/HistoryService.js";
+import type { UpdateHistoryData } from "../workouts/types.js";
 import { historyService } from "../../services/index.js";
 
 const editWorkoutHistory = async (data: UpdateHistoryData) => {

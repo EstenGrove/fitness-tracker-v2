@@ -10,7 +10,9 @@ import type {
 } from "./types.js";
 
 const editStrengthWorkout = async (data: EditStrengthPartial) => {
-	const { startTime, endTime, duration, effort, workoutSets } = data;
+	// ##TODO: not implemented yet. 'EditStrengthPartial' needs 'effort' & 'workoutSets' added to its
+	// type before they can be read here (destructuring them broke the server build).
+	const { startTime, endTime } = data;
 };
 
 const editCardioWorkout = async (data: EditCardioPartial) => {

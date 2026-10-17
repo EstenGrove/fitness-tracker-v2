@@ -1,4 +1,5 @@
-BEGIN;
+-- AI insights: per-activity insight data (current vs previous period)
+-- - Safe to re-run (CREATE OR REPLACE); no BEGIN/COMMIT (db/scripts/migrate.sh wraps each file)
 
   -- STRENGTH
   CREATE OR REPLACE FUNCTION get_ai_insights_data_for_strength (
@@ -395,5 +396,3 @@ BEGIN;
 
   END;
   $$;
-
-COMMIT;

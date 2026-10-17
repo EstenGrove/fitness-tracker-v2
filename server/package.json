@@ -7,7 +7,9 @@
 		"start": "node --env-file=.env dist/index.js",
 		"local": "tsx watch --env-file=.env.local src/index.ts",
 		"prod": "tsx watch --env-file=.env.production src/index.ts",
-		"db:sync-prod": "../db/scripts/sync-prod-data.sh"
+		"db:sync-prod": "../db/scripts/sync-prod-data.sh",
+		"db:migrate": "../db/scripts/migrate.sh",
+		"db:migrate:status": "../db/scripts/migrate.sh --status"
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^2.0.46",

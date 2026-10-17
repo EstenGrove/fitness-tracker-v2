@@ -161,8 +161,8 @@ class TrendNoticesService {
 				SELECT * FROM dismiss_ai_trend_notice($1, $2, $3::date)
 			`;
 			const results = await this.#db.query(query, [
-				noticeID,
 				userID,
+				noticeID,
 				dismissedAt,
 			]);
 			return results?.rows?.[0] ?? null;

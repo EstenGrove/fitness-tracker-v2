@@ -1,9 +1,9 @@
 -- Trends Hub (/trends): Phase 1 categories (consistency, volume, adherence)
 -- - Periods are whole, COMPLETED Sunday-Saturday weeks (same convention as 'get_weekly_workout_totals')
 -- - Every category returns the current period + the equal-length period before it, for comparisons
--- - Depends on: week_start_sunday(), v_workout_history
+-- - Depends on: week_start_sunday() (000), v_workout_history
+-- - Safe to re-run (CREATE OR REPLACE); no BEGIN/COMMIT (db/scripts/migrate.sh wraps each file)
 
-BEGIN;
 
   -- HELPERS
 
@@ -487,5 +487,3 @@ BEGIN;
     )
     FROM bounds b;
   $$;
-
-COMMIT;
