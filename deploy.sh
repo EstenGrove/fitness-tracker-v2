@@ -13,11 +13,32 @@ TARGET_PATH='/var/www/app.sgore.dev/html'
 LOCAL_PATH=$(pwd)
 DB_BACKUP_PATH="./backup.dump"
 
-# Check if '--restore-db' is passed & set 'RESTORE_DB' accordingly
+# Flags:
+#   --restore-db        replace the PROD database with ./backup.dump (destructive!)
+#   --migrate           apply pending db/migrations/*.sql to PROD before deploying (backs up first)
+#   --skip-migrations   deploy even if PROD has pending migrations
 RESTORE_DB=false
+RUN_MIGRATIONS=false
+SKIP_MIGRATIONS=false
 for arg in "$@"; do
   [[ "$arg" == "--restore-db" ]] && RESTORE_DB=true
+  [[ "$arg" == "--migrate" ]] && RUN_MIGRATIONS=true
+  [[ "$arg" == "--skip-migrations" ]] && SKIP_MIGRATIONS=true
 done
+
+# Migrations run BEFORE the new code is deployed: they only add things, so the running
+# (old) code is unaffected, and the new code never starts against a missing table/function.
+MIGRATE_SCRIPT="${LOCAL_PATH}/db/scripts/migrate.sh"
+if $SKIP_MIGRATIONS; then
+  printf "${RED}⚠️  Skipping the DB migration check${NC}\n"
+elif $RUN_MIGRATIONS; then
+  printf "${BLUE}🗄  Applying DB migrations to PROD${NC}\n"
+  "$MIGRATE_SCRIPT" --prod
+elif ! "$MIGRATE_SCRIPT" --prod --check; then
+  printf "${RED}✋ PROD has pending DB migrations. The new code may depend on them.${NC}\n"
+  printf "   Re-run with ${GREEN}--migrate${NC} to apply them first (or --skip-migrations to deploy anyway).\n"
+  exit 1
+fi
 
 printf "${GREEN}📦 Syncing project to ${REMOTE_HOST}${NC}\n"
 
