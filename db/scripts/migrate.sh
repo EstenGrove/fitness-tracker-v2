@@ -84,7 +84,7 @@ fi
 
 # Runs a command inside the prod db container (stdin is forwarded). Uses the container's own POSTGRES_* env.
 prod_exec() {
-	ssh "$PROD_SSH" "C=\$(docker ps -qf label=com.docker.compose.service=db | head -n1); [ -n \"\$C\" ] || { echo 'No prod db container found' >&2; exit 1; }; docker exec -i \"\$C\" sh -c '$1'"
+	ssh "$PROD_SSH" "C=\$(docker ps -qf label=com.docker.compose.service=db | head -n1); [ -n \"\$C\" ] || { echo 'No running prod db container found. If the stack is down, start the db with: ssh $PROD_SSH \"cd /var/www/app.sgore.dev/html && docker compose up -d db\"' >&2; exit 1; }; docker exec -i \"\$C\" sh -c '$1'"
 }
 
 # Runs SQL from stdin on the target; extra psql args (eg. -At) are passed through
@@ -194,7 +194,7 @@ fi
 if $PROD && $BACKUP && [[ "$MODE" == "apply" ]]; then
 	BACKUP_FILE="$PROD_BACKUP_DIR/pre-migrate-$STAMP.dump"
 	printf "${BLUE}→ Backing up prod to ${BACKUP_FILE} (on the server)…${NC}\n"
-	ssh "$PROD_SSH" "set -e; mkdir -p $PROD_BACKUP_DIR; C=\$(docker ps -qf label=com.docker.compose.service=db | head -n1); [ -n \"\$C\" ] || { echo 'No prod db container found' >&2; exit 1; }; docker exec \"\$C\" sh -c 'pg_dump -U \"\$POSTGRES_USER\" -d \"\$POSTGRES_DB\" -Fc' > $BACKUP_FILE; echo \"  saved (\$(du -h $BACKUP_FILE | cut -f1))\""
+	ssh "$PROD_SSH" "set -e; mkdir -p $PROD_BACKUP_DIR; C=\$(docker ps -qf label=com.docker.compose.service=db | head -n1); [ -n \"\$C\" ] || { echo 'No running prod db container found. If the stack is down, start the db with: ssh $PROD_SSH \"cd /var/www/app.sgore.dev/html && docker compose up -d db\"' >&2; exit 1; }; docker exec \"\$C\" sh -c 'pg_dump -U \"\$POSTGRES_USER\" -d \"\$POSTGRES_DB\" -Fc' > $BACKUP_FILE; echo \"  saved (\$(du -h $BACKUP_FILE | cut -f1))\""
 fi
 
 # ----------------------

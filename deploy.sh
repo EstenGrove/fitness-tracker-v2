@@ -29,6 +29,14 @@ done
 # Migrations run BEFORE the new code is deployed: they only add things, so the running
 # (old) code is unaffected, and the new code never starts against a missing table/function.
 MIGRATE_SCRIPT="${LOCAL_PATH}/db/scripts/migrate.sh"
+
+# The migration step needs the db container running (eg. after a failed deploy left the stack down).
+# 'up -d db' is a no-op if it's already running, & only starts the db (data is in the 'postgres_data' volume).
+if ! $SKIP_MIGRATIONS; then
+  printf "${BLUE}🗄  Making sure the PROD db container is running${NC}\n"
+  ssh "${REMOTE_USER}@${REMOTE_HOST}" "cd ${TARGET_PATH} && docker compose up -d db"
+fi
+
 if $SKIP_MIGRATIONS; then
   printf "${RED}⚠️  Skipping the DB migration check${NC}\n"
 elif $RUN_MIGRATIONS; then
@@ -69,11 +77,13 @@ ssh "${REMOTE_USER}@${REMOTE_HOST}" << 'EOF'
   set -e
   cd /var/www/app.sgore.dev/html
 
-  echo "🛑 Stopping containers..."
-  docker compose down
-
+  # Build BEFORE stopping anything: if the build fails, 'set -e' exits here & the
+  # current containers keep serving the site (no downtime from a broken build)
   echo "🔨 Building images (no cache)..."
   docker compose build --no-cache client server
+
+  echo "🛑 Stopping containers..."
+  docker compose down
 
   echo "🔍 Verifying SSL certificates exist..."
   if [ ! -f /etc/letsencrypt/live/app.sgore.dev/fullchain.pem ]; then
