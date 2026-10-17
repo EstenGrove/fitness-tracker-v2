@@ -17,7 +17,7 @@ export interface TrendKpi {
 	changeType: TrendChangeType;
 	unit: TrendKpiUnit;
 	betterWhen: TrendBetterWhen;
-	tone: TrendTone; // computed server-side; NEGATIVE shows as calm blue, never red
+	tone: TrendTone; // computed server-side; NEGATIVE shows as amber, never red
 }
 export interface TrendSeriesPoint {
 	x: string; // weekStart ("YYYY-MM-DD"), weekday ("Mon") or heat map bucket ("dayOfWeek:hour")

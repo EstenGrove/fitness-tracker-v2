@@ -100,9 +100,9 @@ const TrendCategoryPage = () => {
 				<div className={styles.TrendCategoryPage_nav}>
 					<NavArrows onBack={goToHub} />
 					{categoryData && (
-						<span className={styles.TrendCategoryPage_range}>
+						<div className={styles.TrendCategoryPage_range}>
 							{formatPeriodRange(categoryData.period)}
-						</span>
+						</div>
 					)}
 				</div>
 				<div className={styles.TrendCategoryPage_header}>

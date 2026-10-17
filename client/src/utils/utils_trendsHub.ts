@@ -115,12 +115,22 @@ const formatKpiChange = (kpi: TrendKpi): string | null => {
 
 // COLORS
 // - All trends colors live here, so restyling is a one-line change
-// - NEGATIVE is calm blue, never red (same rule as the AI trend notice)
+// - NEGATIVE is amber, never red: declines need attention, not alarm
+
+// Tinted background from a color (works in light & dark themes, no extra theme vars)
+const tint = (color: string, pct: number) => {
+	return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+};
 
 const TONE_STYLES: Record<TrendTone, { color: string; bgColor: string }> = {
 	POSITIVE: { color: "var(--accent-green)", bgColor: "var(--greenBG)" },
-	NEGATIVE: { color: "var(--accent-blue)", bgColor: "var(--blueBG)" },
-	NEUTRAL: { color: "var(--text1_5)", bgColor: "var(--blueGrey800)" },
+	// Amber, not red: a decline needs attention, but shouldn't feel like a scolding
+	NEGATIVE: {
+		color: "var(--accent-orange)",
+		bgColor: tint("var(--accent-orange)", 18),
+	},
+	// Plain gray, so "steady" is easy to tell apart from both tones in either theme
+	NEUTRAL: { color: "var(--text1_5)", bgColor: tint("var(--text1_5)", 15) },
 };
 
 // Exposes a tone's colors to SCSS as '--tone-color' & '--tone-bg'
@@ -129,12 +139,13 @@ const getToneStyles = (tone: TrendTone): CSSProperties => {
 	return { "--tone-color": color, "--tone-bg": bgColor } as CSSProperties;
 };
 
-const DEFAULT_SERIES_COLOR = "var(--accent-blue)";
+// The user's trends accent (Settings > Theme); defaults to --accent-blue (index.css)
+const DEFAULT_SERIES_COLOR = "var(--trends-accent-primary)";
 
 // Series without an entry use 'DEFAULT_SERIES_COLOR'
 const SERIES_COLORS: Record<string, string> = {
 	"scheduled-by-week": "var(--blueGrey800)",
-	"completed-by-week": "var(--accent-blue)",
+	"completed-by-week": DEFAULT_SERIES_COLOR,
 	"mins-by-week-strength": "var(--strengthAccent)",
 	"mins-by-week-stretch": "var(--stretchAccent)",
 	"mins-by-week-cardio": "var(--cardioAccent)",
@@ -145,6 +156,60 @@ const SERIES_COLORS: Record<string, string> = {
 
 const getSeriesColor = (seriesKey: string): string => {
 	return SERIES_COLORS[seriesKey] ?? DEFAULT_SERIES_COLOR;
+};
+
+// TRENDS ACCENT (Settings > Theme)
+
+export interface TrendsAccentPreset {
+	label: string;
+	color: string; // hex, so it can also seed the custom color input
+}
+
+// Curated from the app's accents (index.css). Green & orange are left out: they're the tone colors.
+const TRENDS_ACCENT_PRESETS: TrendsAccentPreset[] = [
+	{ label: "Blue", color: "#007cff" }, // default (--accent-blue)
+	{ label: "Purple", color: "#7c3aed" },
+	{ label: "Pink", color: "#ff0066" },
+	{ label: "Yellow", color: "#f9f871" },
+];
+
+const DEFAULT_TRENDS_ACCENT = TRENDS_ACCENT_PRESETS[0].color;
+
+// Hex values of the tone colors (keep in sync with --accent-green & --accent-orange in index.css)
+const TONE_HEX_COLORS: { tone: TrendTone; color: string }[] = [
+	{ tone: "POSITIVE", color: "#00e2bd" },
+	{ tone: "NEGATIVE", color: "#ff7700" },
+];
+
+// How close (0-441, RGB distance) an accent can get to a tone color before we show a hint
+const TONE_CONFLICT_DISTANCE = 100;
+
+const hexToRgb = (hex: string): [number, number, number] | null => {
+	const match = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+	if (!match) return null;
+	return [
+		parseInt(match[1], 16),
+		parseInt(match[2], 16),
+		parseInt(match[3], 16),
+	];
+};
+
+// The tone an accent could be mistaken for (eg. a teal accent vs the green "improvement" tone)
+const getAccentToneConflict = (hex: string): TrendTone | null => {
+	const rgb = hexToRgb(hex);
+	if (!rgb) return null;
+
+	const conflict = TONE_HEX_COLORS.find(({ color }) => {
+		const toneRgb = hexToRgb(color);
+		if (!toneRgb) return false;
+		const distance = Math.hypot(
+			rgb[0] - toneRgb[0],
+			rgb[1] - toneRgb[1],
+			rgb[2] - toneRgb[2],
+		);
+		return distance < TONE_CONFLICT_DISTANCE;
+	});
+	return conflict?.tone ?? null;
 };
 
 // DATES
@@ -180,6 +245,10 @@ export {
 	// Colors
 	getToneStyles,
 	getSeriesColor,
+	// Trends accent
+	TRENDS_ACCENT_PRESETS,
+	DEFAULT_TRENDS_ACCENT,
+	getAccentToneConflict,
 	// Dates
 	formatSeriesLabel,
 	formatPeriodRange,

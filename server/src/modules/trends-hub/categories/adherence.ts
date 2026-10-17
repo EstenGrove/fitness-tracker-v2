@@ -25,7 +25,7 @@ import type {
  * ADHERENCE: how well the user sticks to their plan (scheduled workouts).
  * - Owns: completion rate, completed/skipped/missed, perfect weeks, the most-missed workout
  * - Only scheduled workouts count here; unscheduled sessions belong to Consistency & Volume
- * - Tone is honest (a drop is NEGATIVE); the client shows NEGATIVE in calm blue, never red
+ * - Tone is honest (a drop is NEGATIVE); the client shows NEGATIVE in amber, never red
  */
 
 const ADHERENCE_CONFIG = {

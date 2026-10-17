@@ -23,6 +23,8 @@
 	--accent-grey: var(--blueGrey900);
 	--accent-red-alt: #ff005b;
 	--accent-orange: #ff7700;
+	/* Trends hub data color (charts & bars); user-overridable via Settings > Theme (see utils_theme.ts) */
+	--trends-accent-primary: var(--accent-blue);
 	/* --accent-orange: #F9A620; */
 
 	/* accent backgrounds */

@@ -22,7 +22,7 @@ export interface TrendKpi {
 	changeType: TrendChangeType;
 	unit: TrendKpiUnit;
 	betterWhen: TrendBetterWhen; // pace = lower
-	tone: TrendTone; // computed server-side; the client only maps it to a color (NEGATIVE = calm blue)
+	tone: TrendTone; // computed server-side; the client only maps it to a color (NEGATIVE = amber)
 }
 export interface TrendSeriesPoint {
 	x: string;
