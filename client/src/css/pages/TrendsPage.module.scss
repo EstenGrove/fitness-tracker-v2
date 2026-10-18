@@ -12,6 +12,8 @@
 		@include flex_row(space-between, center);
 	}
 	&_range {
+		width: 15rem;
+		@include flex_row(flex-end, center);
 		font-size: 1.3rem;
 		color: $text3;
 	}
