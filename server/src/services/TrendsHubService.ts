@@ -1,14 +1,22 @@
 import type { Pool } from "pg";
 import type {
 	RawAdherence,
+	RawCardioWalking,
 	RawConsistency,
+	RawEffort,
+	RawStrength,
 	RawVolume,
 	RawWorkoutStreakStatus,
 } from "../modules/trends-hub/types.js";
 
 // The 'get_trends_*' SQL functions (db/migrations/003_trends_hub.sql); fixed names, never user input
 type TrendsFunctionName =
-	"get_trends_consistency" | "get_trends_volume" | "get_trends_adherence";
+	| "get_trends_consistency"
+	| "get_trends_volume"
+	| "get_trends_adherence"
+	| "get_trends_strength"
+	| "get_trends_effort"
+	| "get_trends_cardio_walking";
 
 class TrendsHubService {
 	#db: Pool;
@@ -48,6 +56,24 @@ class TrendsHubService {
 		weeks: number,
 	): Promise<RawAdherence | Error> {
 		return this.#getTrendsData("get_trends_adherence", userID, weeks);
+	}
+
+	async getStrength(
+		userID: string,
+		weeks: number,
+	): Promise<RawStrength | Error> {
+		return this.#getTrendsData("get_trends_strength", userID, weeks);
+	}
+
+	async getEffort(userID: string, weeks: number): Promise<RawEffort | Error> {
+		return this.#getTrendsData("get_trends_effort", userID, weeks);
+	}
+
+	async getCardioWalking(
+		userID: string,
+		weeks: number,
+	): Promise<RawCardioWalking | Error> {
+		return this.#getTrendsData("get_trends_cardio_walking", userID, weeks);
 	}
 
 	// Same fn as StreaksService, but dates come back as "YYYY-MM-DD" text (pg would parse them into

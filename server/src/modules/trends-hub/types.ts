@@ -1,9 +1,27 @@
 import type { Activity } from "../types.js";
 
 export type TrendPeriodKey = "4W" | "12W" | "6M" | "1Y";
-export type TrendCategoryKey = "consistency" | "volume" | "adherence"; // Phase 2-3 add more
+export type TrendCategoryKey =
+	| "consistency"
+	| "volume"
+	| "adherence"
+	| "strength"
+	| "cardio"
+	| "walking"
+	| "effort";
 
-export type TrendKpiUnit = "mins" | "pct" | "count" | "days";
+export type TrendKpiUnit =
+	| "mins"
+	| "pct"
+	| "count"
+	| "days"
+	| "lb" // weight & volume (weight x reps)
+	| "reps"
+	| "steps"
+	| "miles"
+	| "pace" // minutes per mile (shown as mm:ss/mi)
+	| "kcal"
+	| "score"; // effort, 1 (Easy) - 5 (All Out)
 export type TrendBetterWhen = "higher" | "lower" | "none"; // none = neither good nor bad (eg. time vs target)
 export type TrendChangeType = "relative" | "points"; // points: for rates, eg. 94% -> 100% = +6 pts
 export type TrendTone = "POSITIVE" | "NEGATIVE" | "NEUTRAL";
@@ -206,4 +224,136 @@ export interface RawAdherence extends RawTrendBase<
 > {
 	firstScheduledDate: string | null;
 	byWorkout: RawAdherenceWorkout[]; // sorted by (skipped + missed), desc
+}
+
+// STRENGTH (get_trends_strength)
+export interface RawStrengthTotals {
+	sessions: number;
+	volume: number; // lb (weight x reps)
+	bestE1rm: number | null;
+}
+export interface RawStrengthWeek {
+	weekStart: string;
+	volume: number;
+	sessions: number;
+}
+export interface RawStrengthWorkout {
+	workoutID: number;
+	workoutName: string | null;
+	currentSessions: number;
+	currentVolume: number;
+	priorSessions: number;
+	priorVolume: number;
+	// The current period's best set (estimated 1-rep max) & the session that first reached it
+	bestE1rm: number | null;
+	bestWeight: number | null;
+	bestReps: number | null;
+	bestDate: string | null;
+	previousBestE1rm: number | null; // best from ALL history before the current period
+	sessionsSinceBest: number;
+	lastSessionDate: string | null;
+}
+export interface RawStrength extends RawTrendBase<
+	RawStrengthTotals,
+	RawStrengthWeek
+> {
+	firstWorkoutDate: string | null;
+	weeksByWorkout: { weekStart: string; workoutID: number; volume: number }[]; // sparse
+	byWorkout: RawStrengthWorkout[]; // sorted by current volume, desc
+}
+
+// EFFORT (get_trends_effort)
+export interface RawEffortTotals {
+	sessions: number;
+	ratedSessions: number; // effort logged (not 'None')
+	hardSessions: number; // Hard, Strenuous or All Out
+	avgScore: number | null; // 1-5
+	hardDays: number;
+	backToBackHardDays: number; // hard days whose previous day was also hard
+	calories: number; // ESTIMATED
+	totalMins: number;
+}
+export interface RawEffortWeek {
+	weekStart: string;
+	easy: number;
+	moderate: number;
+	hard: number;
+	strenuous: number;
+	allOut: number;
+	unrated: number;
+	calories: number;
+}
+export interface RawEffortActivity {
+	activityType: Activity;
+	currentSessions: number;
+	currentAvgScore: number | null;
+	priorAvgScore: number | null;
+}
+export interface RawEffort extends RawTrendBase<
+	RawEffortTotals,
+	RawEffortWeek
+> {
+	firstWorkoutDate: string | null;
+	byActivity: RawEffortActivity[]; // sorted by current sessions, desc
+}
+
+// CARDIO & WALKING (get_trends_cardio_walking: one query, read by the 'cardio' & 'walking' categories)
+export interface RawCardioTotals {
+	sessions: number;
+	reps: number;
+	bestSessionReps: number | null;
+}
+export interface RawWalkTotals {
+	walks: number;
+	miles: number;
+	steps: number;
+	mins: number;
+	pace: number | null; // min per mile (total mins / total miles)
+}
+export interface RawCardioWalkingWeek {
+	weekStart: string;
+	cardioReps: number;
+	cardioSessions: number;
+	walkMiles: number;
+	walkSteps: number;
+	walks: number;
+}
+export interface RawCardioWalking {
+	period: RawTrendPeriod;
+	priorPeriod: RawTrendPriorPeriod;
+	firstCardioDate: string | null;
+	firstWalkDate: string | null;
+	cardio: {
+		current: RawCardioTotals;
+		prior: RawCardioTotals;
+		bestSession: {
+			date: string;
+			reps: number;
+			workoutName: string | null;
+		} | null;
+		byWorkout: {
+			workoutID: number;
+			workoutName: string | null;
+			currentSessions: number;
+			currentReps: number;
+			priorReps: number;
+		}[];
+	};
+	walking: {
+		current: RawWalkTotals;
+		prior: RawWalkTotals;
+		longestWalk: {
+			date: string;
+			miles: number;
+			workoutName: string | null;
+		} | null;
+		byWorkout: {
+			workoutID: number;
+			workoutName: string | null;
+			currentWalks: number;
+			currentMiles: number;
+			priorMiles: number;
+		}[];
+	};
+	weeks: RawCardioWalkingWeek[]; // current period only, oldest -> newest, zero-filled
 }

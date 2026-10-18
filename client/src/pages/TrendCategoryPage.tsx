@@ -5,7 +5,7 @@ import {
 	TREND_CATEGORIES,
 	TrendCategoryConfig,
 } from "../features/trends-hub/categories";
-import { TrendCategoryData } from "../features/trends-hub/types";
+import { TrendCategoryData, TrendSeries } from "../features/trends-hub/types";
 import { useTrendPeriod } from "../hooks/useTrendPeriod";
 import { useTrendCategory } from "../hooks/useTrendCategory";
 import {
@@ -20,6 +20,7 @@ import TrendPeriodSelector from "../components/trends-hub/TrendPeriodSelector";
 import TrendCategoryIcon from "../components/trends-hub/TrendCategoryIcon";
 import TrendKpiGrid from "../components/trends-details/TrendKpiGrid";
 import TrendChart from "../components/trends-details/TrendChart";
+import TrendHeatMap from "../components/trends-details/TrendHeatMap";
 import TrendInsightsList from "../components/trends-details/TrendInsightsList";
 import TrendBreakdownList from "../components/trends-details/TrendBreakdownList";
 
@@ -32,18 +33,39 @@ type DetailsProps = {
 	onViewHistory: () => void;
 };
 
+// Each configured chart with its series, in the order its series appear in the response
+// (the server puts the main series first), skipping charts with no data
+const getCharts = (config: TrendCategoryConfig, data: TrendCategoryData) => {
+	const getPosition = (series: TrendSeries[]) =>
+		Math.min(...series.map((entry) => data.series.indexOf(entry)));
+
+	return config.charts
+		.map((chart) => ({ ...chart, series: chart.select(data.series) }))
+		.filter((chart) => chart.series.length > 0)
+		.sort((a, b) => getPosition(a.series) - getPosition(b.series));
+};
+
 const CategoryDetails = ({ data, config, onViewHistory }: DetailsProps) => {
 	return (
 		<>
 			<TrendKpiGrid kpis={data.kpis} />
-			{config.charts.map((chart) => (
-				<TrendChart
-					key={chart.key}
-					title={chart.title}
-					kind={chart.kind}
-					series={chart.select(data.series)}
-				/>
-			))}
+			{getCharts(config, data).map((chart) =>
+				chart.kind === "heatmap" ? (
+					// Keyed by period, so the selected cell resets when the period changes
+					<TrendHeatMap
+						key={`${chart.key}-${data.period.key}`}
+						title={chart.title}
+						series={chart.series}
+					/>
+				) : (
+					<TrendChart
+						key={chart.key}
+						title={chart.title}
+						kind={chart.kind}
+						series={chart.series}
+					/>
+				),
+			)}
 			<TrendInsightsList insights={data.insights} />
 			{data.breakdowns.map((breakdown) => (
 				<TrendBreakdownList key={breakdown.key} breakdown={breakdown} />
@@ -125,6 +147,9 @@ const TrendCategoryPage = () => {
 							icon="empty"
 							msg="Unable to load this category right now."
 						/>
+					)}
+					{!isLoading && !isError && !categoryData && (
+						<NoData icon="empty" msg="No workouts in this period yet." />
 					)}
 					{categoryData && (
 						<CategoryDetails

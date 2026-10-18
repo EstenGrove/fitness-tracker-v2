@@ -1,9 +1,27 @@
 // Mirrors the server's API shapes (server/src/modules/trends-hub/types.ts)
 
 export type TrendPeriodKey = "4W" | "12W" | "6M" | "1Y";
-export type TrendCategoryKey = "consistency" | "volume" | "adherence";
+export type TrendCategoryKey =
+	| "consistency"
+	| "volume"
+	| "adherence"
+	| "strength"
+	| "cardio"
+	| "walking"
+	| "effort";
 
-export type TrendKpiUnit = "mins" | "pct" | "count" | "days";
+export type TrendKpiUnit =
+	| "mins"
+	| "pct"
+	| "count"
+	| "days"
+	| "lb" // weight & volume (weight x reps)
+	| "reps"
+	| "steps"
+	| "miles"
+	| "pace" // minutes per mile (shown as mm:ss/mi)
+	| "kcal"
+	| "score"; // effort, 1 (Easy) - 5 (All Out)
 export type TrendBetterWhen = "higher" | "lower" | "none";
 export type TrendChangeType = "relative" | "points"; // points: plain difference (eg. 94% -> 100% = +6 pts)
 export type TrendTone = "POSITIVE" | "NEGATIVE" | "NEUTRAL";

@@ -248,7 +248,10 @@ const INSIGHT_RULES: InsightRule<AdherenceContext>[] = [
 const buildAdherenceData = (
 	raw: RawAdherence,
 	periodKey: TrendPeriodKey,
-): TrendCategoryData => {
+): TrendCategoryData | null => {
+	// No workouts scheduled in either period: nothing to show (hidden on the hub)
+	if (!raw.current.scheduled && !raw.prior.scheduled) return null;
+
 	// History is based on the first *scheduled* date: the plan didn't exist before then
 	const hasPrior =
 		hasFullPriorPeriod(raw.firstScheduledDate, raw.priorPeriod) &&

@@ -8,7 +8,8 @@ import { TrendCategoryKey, TrendSeries } from "./types";
  */
 
 // bars: one series | stacked: several series stacked per week | overlay: [background, foreground]
-export type TrendChartKind = "bars" | "stacked" | "overlay";
+// heatmap: one sparse series with "dayOfWeek:hour" x values (rendered by 'TrendHeatMap')
+export type TrendChartKind = "bars" | "stacked" | "overlay" | "heatmap";
 
 export interface TrendChartConfig {
 	key: string;
@@ -52,6 +53,12 @@ const TREND_CATEGORIES: Record<TrendCategoryKey, TrendCategoryConfig> = {
 				kind: "bars",
 				select: pickSeries("workouts-by-weekday"),
 			},
+			{
+				key: "day-hour",
+				title: "When you work out",
+				kind: "heatmap",
+				select: pickSeries("workouts-by-day-hour"),
+			},
 		],
 		history: { path: "/history", label: "View workout history" },
 	},
@@ -84,6 +91,76 @@ const TREND_CATEGORIES: Record<TrendCategoryKey, TrendCategoryConfig> = {
 			},
 		],
 		history: { path: "/workouts", label: "View your workouts" },
+	},
+	strength: {
+		title: "Strength",
+		icon: "fitness_center",
+		headlineCaption: "per week",
+		charts: [
+			{
+				key: "volume",
+				title: "Volume per week",
+				kind: "bars",
+				select: pickSeries("volume-by-week"),
+			},
+		],
+		history: { path: "/history/strength", label: "View strength history" },
+	},
+	cardio: {
+		title: "Cardio",
+		icon: "heart-with-pulse",
+		headlineCaption: "per week",
+		charts: [
+			{
+				key: "reps",
+				title: "Reps per week",
+				kind: "bars",
+				select: pickSeries("reps-by-week"),
+			},
+		],
+		history: { path: "/history/cardio", label: "View cardio history" },
+	},
+	walking: {
+		title: "Walking",
+		icon: "directions_walk",
+		headlineCaption: "per week",
+		charts: [
+			{
+				key: "miles",
+				title: "Miles per week",
+				kind: "bars",
+				select: pickSeries("miles-by-week"),
+			},
+			{
+				key: "steps",
+				title: "Steps per week",
+				kind: "bars",
+				select: pickSeries("steps-by-week"),
+			},
+		],
+		history: { path: "/history/walk", label: "View walk history" },
+	},
+	effort: {
+		title: "Effort",
+		icon: "bolt",
+		headlineCaption: "hard or harder",
+		charts: [
+			{
+				key: "effort-mix",
+				title: "Effort per week",
+				kind: "stacked",
+				// Easy -> All Out, colored as shades of the trends accent
+				select: (series) =>
+					series.filter((entry) => entry.key.startsWith("effort-")),
+			},
+			{
+				key: "calories",
+				title: "Est. calories per week",
+				kind: "bars",
+				select: pickSeries("calories-by-week"),
+			},
+		],
+		history: { path: "/history", label: "View workout history" },
 	},
 };
 

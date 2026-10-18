@@ -16,7 +16,7 @@ const toCategoryCard = (data: TrendCategoryData): TrendCategoryCard => {
 	};
 };
 
-// The hub (/trends): every category in parallel. A category that fails is left out (& logged),
+// The hub (/trends): every category in parallel. A category that fails (or has no data) is left out,
 // so one bad query doesn't break the whole page. Only errors if every category fails.
 const getTrendsOverview = async (
 	userID: string,
@@ -31,18 +31,21 @@ const getTrendsOverview = async (
 	);
 
 	const loaded: TrendCategoryData[] = [];
+	let failed = 0;
 	results.forEach((result, idx) => {
 		if (result instanceof Error) {
+			failed++;
 			console.error(
 				`[TRENDS HUB]: '${TREND_CATEGORY_KEYS[idx]}' failed`,
 				result,
 			);
 			return;
 		}
-		loaded.push(result);
+		// null = no data in either period: no card
+		if (result) loaded.push(result);
 	});
 
-	if (!loaded.length) {
+	if (failed === results.length || !loaded.length) {
 		return new Error("Unable to load any trend categories");
 	}
 

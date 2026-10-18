@@ -42,17 +42,22 @@ export const trendsHubApi = createApi({
 				{ type: "TrendsOverview", id: period },
 			],
 		}),
-		getTrendCategory: builder.query<TrendCategoryData, TrendCategoryParams>({
+		// null = the category has no data in either period (eg. no strength workouts): not an error
+		getTrendCategory: builder.query<
+			TrendCategoryData | null,
+			TrendCategoryParams
+		>({
 			queryFn: async ({ userID, category, period }) => {
 				const response = (await getTrendCategory(
 					userID,
 					category,
 					period,
 				)) as AwaitedResponse<CategoryData>;
-				const { categoryData } = (response?.Data ?? {}) as CategoryData;
-				if (!categoryData) return toError(response);
+				const failed = !response?.Data || Boolean(response.ErrorMsg);
+				if (failed) return toError(response);
 
-				return { data: categoryData };
+				const { categoryData } = response.Data as CategoryData;
+				return { data: categoryData ?? null };
 			},
 			providesTags: (_result, _error, { category, period }) => [
 				{ type: "TrendCategory", id: `${category}-${period}` },
