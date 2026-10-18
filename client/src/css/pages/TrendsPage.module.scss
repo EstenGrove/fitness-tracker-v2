@@ -35,21 +35,3 @@
 		}
 	}
 }
-
-.ComingSoonCard {
-	width: 100%;
-	padding: 1.2rem 1.4rem;
-	border-radius: 1.2rem;
-	border: 1px dashed $borderLightColor;
-	font-size: 1.3rem;
-	color: $text3;
-	@include flex_row(flex-start, center);
-	gap: 1rem;
-
-	&_icon {
-		width: 2rem;
-		height: 2rem;
-		min-width: 2rem;
-		fill: $text3;
-	}
-}

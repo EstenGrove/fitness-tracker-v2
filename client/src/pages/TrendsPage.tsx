@@ -1,4 +1,3 @@
-import sprite from "../assets/icons/main.svg";
 import styles from "../css/pages/TrendsPage.module.scss";
 import { useNavigate } from "react-router";
 import { TrendCategoryKey } from "../features/trends-hub/types";
@@ -13,17 +12,6 @@ import TrendPeriodSelector from "../components/trends-hub/TrendPeriodSelector";
 import TrendCategoryCard from "../components/trends-hub/TrendCategoryCard";
 
 // Trends hub: one card per category (headline KPI + top insight); each opens its detail page
-
-const ComingSoonCard = () => {
-	return (
-		<div className={styles.ComingSoonCard}>
-			<svg className={styles.ComingSoonCard_icon} aria-hidden="true">
-				<use xlinkHref={`${sprite}#icon-barbell`}></use>
-			</svg>
-			<span>Strength, cardio and effort trends are coming soon</span>
-		</div>
-	);
-};
 
 const TrendsPage = () => {
 	const navigate = useNavigate();
@@ -62,18 +50,14 @@ const TrendsPage = () => {
 					{isError && !overview && (
 						<NoData icon="empty" msg="Unable to load your trends right now." />
 					)}
-					{overview && (
-						<>
-							{overview.cards.map((card) => (
-								<TrendCategoryCard
-									key={card.category}
-									card={card}
-									onClick={() => goToCategory(card.category)}
-								/>
-							))}
-							<ComingSoonCard />
-						</>
-					)}
+					{overview &&
+						overview.cards.map((card) => (
+							<TrendCategoryCard
+								key={card.category}
+								card={card}
+								onClick={() => goToCategory(card.category)}
+							/>
+						))}
 				</div>
 			</div>
 		</PageContainer>

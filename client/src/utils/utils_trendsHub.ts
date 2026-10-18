@@ -10,6 +10,7 @@ import {
 	TrendKpiUnit,
 	TrendPeriod,
 	TrendPeriodKey,
+	TrendSeriesPoint,
 	TrendTone,
 	TrendsOverview,
 } from "../features/trends-hub/types";
@@ -78,6 +79,10 @@ const TREND_CATEGORY_KEYS: TrendCategoryKey[] = [
 	"consistency",
 	"volume",
 	"adherence",
+	"strength",
+	"cardio",
+	"walking",
+	"effort",
 ];
 
 // eg. validates the ':category' route param
@@ -87,18 +92,35 @@ const isTrendCategoryKey = (value: unknown): value is TrendCategoryKey => {
 
 // FORMATTING (KPIs & breakdowns)
 
-const UNIT_SUFFIXES: Record<TrendKpiUnit, string> = {
-	mins: " min",
-	pct: "%",
-	count: "",
-	days: " days",
+// eg. 36.54 (min/mile) => "36:32"
+const formatPace = (minsPerMile: number): string => {
+	const totalSeconds = Math.round(minsPerMile * 60);
+	const mins = Math.floor(totalSeconds / 60);
+	const secs = totalSeconds % 60;
+	return `${mins}:${String(secs).padStart(2, "0")}`;
 };
 
-// eg. 98.2 mins => "98 min", 94 pct => "94%", 1.5 count => "1.5", 34 days => "34 days"
+const formatWhole = (value: number) => Math.round(value).toLocaleString();
+const formatOneDecimal = (value: number) =>
+	(Math.round(value * 10) / 10).toLocaleString();
+
+// How each unit is shown, eg. 98.2 mins => "98 min", 1980 lb => "1,980 lb", 36.54 pace => "36:32/mi"
+const UNIT_FORMATS: Record<TrendKpiUnit, (value: number) => string> = {
+	mins: (value) => `${formatWhole(value)} min`,
+	pct: (value) => `${formatWhole(value)}%`,
+	count: (value) => formatOneDecimal(value),
+	days: (value) => `${formatWhole(value)} days`,
+	lb: (value) => `${formatWhole(value)} lb`,
+	reps: (value) => `${formatWhole(value)} reps`,
+	steps: (value) => `${formatWhole(value)} steps`,
+	miles: (value) => `${formatOneDecimal(value)} mi`,
+	pace: (value) => `${formatPace(value)}/mi`,
+	kcal: (value) => `${formatWhole(value)} kcal`,
+	score: (value) => `${formatOneDecimal(value)} / 5`,
+};
+
 const formatTrendValue = (value: number, unit: TrendKpiUnit): string => {
-	const isWhole = unit === "mins" || unit === "pct" || unit === "days";
-	const rounded = isWhole ? Math.round(value) : Math.round(value * 10) / 10;
-	return `${rounded.toLocaleString()}${UNIT_SUFFIXES[unit]}`;
+	return UNIT_FORMATS[unit](value);
 };
 
 // eg. relative -42.3 => "−42%", points on a pct KPI 6 => "+6 pts", points on a count KPI 13 => "+13"
@@ -154,8 +176,30 @@ const SERIES_COLORS: Record<string, string> = {
 	"mins-by-week-other": "var(--otherAccent)",
 };
 
+// Effort levels, lightest -> hardest: shades of the trends accent (never the green/amber tones)
+const EFFORT_SERIES_LEVELS = [
+	"effort-easy",
+	"effort-moderate",
+	"effort-hard",
+	"effort-strenuous",
+	"effort-allOut",
+];
+
 const getSeriesColor = (seriesKey: string): string => {
+	const effortLevel = EFFORT_SERIES_LEVELS.indexOf(seriesKey);
+	if (effortLevel >= 0) {
+		return getAccentShade(effortLevel + 1, EFFORT_SERIES_LEVELS.length);
+	}
 	return SERIES_COLORS[seriesKey] ?? DEFAULT_SERIES_COLOR;
+};
+
+// Shade 'level' (1..levels) of the trends accent, lightest -> full color (eg. heat map cells, effort levels)
+// - Shades of one color, so they never clash with the green/amber tone colors
+const getAccentShade = (level: number, levels: number): string => {
+	const minPct = 25;
+	const pct =
+		levels <= 1 ? 100 : minPct + ((100 - minPct) * (level - 1)) / (levels - 1);
+	return tint(DEFAULT_SERIES_COLOR, Math.round(pct));
 };
 
 // TRENDS ACCENT (Settings > Theme)
@@ -212,6 +256,103 @@ const getAccentToneConflict = (hex: string): TrendTone | null => {
 	return conflict?.tone ?? null;
 };
 
+// HEAT MAP (consistency: workouts by day & hour)
+
+const HEATMAP_CONFIG = {
+	LEVELS: 4, // shades of the accent (each = a quarter of the busiest cell)
+	MIN_START_HOUR: 6, // the hour range always covers at least 6am-8pm...
+	MIN_END_HOUR: 20,
+	PADDING_HOURS: 1, // ...plus an hour either side of the earliest/latest workout
+	MIN_WORKOUTS: 5, // fewer timed workouts than this: show an empty state instead
+};
+
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAY_LABELS_LONG = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+];
+
+export interface HeatMapCell {
+	dayOfWeek: number; // 0 = Sunday
+	hour: number; // 0-23
+	value: number;
+	level: number; // 0 = empty, 1..LEVELS
+}
+export interface HeatMapGrid {
+	hours: number[]; // the columns, in order
+	rows: { dayOfWeek: number; label: string; cells: HeatMapCell[] }[];
+	total: number;
+	peak: HeatMapCell | null; // the busiest cell (earliest day/hour on ties)
+}
+
+// eg. 9 => "9am", 12 => "12pm", 20 => "8pm"; short: "9a", "12p", "8p"
+const formatHour = (hour: number, short: boolean = false): string => {
+	const suffix = hour < 12 ? "am" : "pm";
+	const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+	return `${hour12}${short ? suffix[0] : suffix}`;
+};
+
+// eg. "Mon 9am · 13 workouts"
+const formatHeatMapCell = (cell: HeatMapCell): string => {
+	const workouts = cell.value === 1 ? "workout" : "workouts";
+	return `${DAY_LABELS[cell.dayOfWeek]} ${formatHour(cell.hour)} · ${cell.value} ${workouts}`;
+};
+
+// eg. "Mondays at 9am"
+const formatHeatMapPeak = (cell: HeatMapCell): string => {
+	return `${DAY_LABELS_LONG[cell.dayOfWeek]}s at ${formatHour(cell.hour)}`;
+};
+
+// Sparse "dayOfWeek:hour" points => a full grid (7 day rows x trimmed hour columns)
+const toHeatMapGrid = (points: TrendSeriesPoint[]): HeatMapGrid => {
+	const { LEVELS, MIN_START_HOUR, MIN_END_HOUR, PADDING_HOURS } =
+		HEATMAP_CONFIG;
+	const values = new Map<string, number>();
+	let total = 0;
+
+	points.forEach(({ x, y }) => {
+		values.set(x, y);
+		total += y;
+	});
+
+	const activeHours = points.map(({ x }) => Number(x.split(":")[1]));
+	const startHour = Math.max(
+		0,
+		Math.min(
+			MIN_START_HOUR,
+			...activeHours.map((hour) => hour - PADDING_HOURS),
+		),
+	);
+	const endHour = Math.min(
+		23,
+		Math.max(MIN_END_HOUR, ...activeHours.map((hour) => hour + PADDING_HOURS)),
+	);
+	const hours = Array.from(
+		{ length: endHour - startHour + 1 },
+		(_, idx) => startHour + idx,
+	);
+	const maxValue = Math.max(...points.map(({ y }) => y), 1);
+
+	let peak: HeatMapCell | null = null;
+	const rows = DAY_LABELS.map((label, dayOfWeek) => {
+		const cells = hours.map((hour) => {
+			const value = values.get(`${dayOfWeek}:${hour}`) ?? 0;
+			const level = value ? Math.ceil((value / maxValue) * LEVELS) : 0;
+			const cell: HeatMapCell = { dayOfWeek, hour, value, level };
+			if (value && (!peak || value > peak.value)) peak = cell;
+			return cell;
+		});
+		return { dayOfWeek, label, cells };
+	});
+
+	return { hours, rows, total, peak };
+};
+
 // DATES
 
 const isISODate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -245,6 +386,13 @@ export {
 	// Colors
 	getToneStyles,
 	getSeriesColor,
+	getAccentShade,
+	// Heat map
+	HEATMAP_CONFIG,
+	toHeatMapGrid,
+	formatHour,
+	formatHeatMapCell,
+	formatHeatMapPeak,
 	// Trends accent
 	TRENDS_ACCENT_PRESETS,
 	DEFAULT_TRENDS_ACCENT,

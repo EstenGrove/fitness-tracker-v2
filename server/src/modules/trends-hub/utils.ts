@@ -1,3 +1,4 @@
+import { format, parseISO } from "date-fns";
 import { round } from "../../utils/misc.js";
 import { PERIOD_LABELS, PERIOD_WEEKS, TRENDS_HUB_CONFIG } from "./config.js";
 import type {
@@ -88,9 +89,10 @@ const toPercent = (part: number, whole: number): number | null => {
 	return round((part / whole) * 100, 1);
 };
 
+// Not rounded: 'buildKpi' computes changes from exact values & rounds only what it returns
 const perWeek = (total: number, weeks: number): number => {
 	if (!weeks) return 0;
-	return round(total / weeks, 1);
+	return total / weeks;
 };
 
 // Percent change from 'prior' to 'value'; null when there's no usable baseline
@@ -159,9 +161,10 @@ const buildKpi = ({
 	changeType = "relative",
 	neutralAbove,
 }: BuildKpiParams): TrendKpi => {
-	const current = round(value ?? 0, 1);
-	const priorValue = prior === null ? null : round(prior, 1);
-	const change = getChange(current, priorValue, changeType);
+	// The change comes from the exact values: rounding first distorts small values
+	// (eg. 0.48 vs 0.12 miles/week would become 0.5 vs 0.1: +400% instead of +300%)
+	const current = value ?? 0;
+	const change = getChange(current, prior, changeType);
 
 	const tone = getChangeTone(change, { betterWhen, changeType });
 	const isHighLevel = neutralAbove !== undefined && current >= neutralAbove;
@@ -169,8 +172,8 @@ const buildKpi = ({
 	return {
 		key,
 		label,
-		value: current,
-		prior: priorValue,
+		value: round(current, 1),
+		prior: prior === null ? null : round(prior, 1),
 		change,
 		changeType,
 		unit,
@@ -278,6 +281,36 @@ const buildMomentumInsight = <TWeek>({
 	};
 };
 
+// INSIGHT TEXT
+
+// eg. 12198 => "12,198"
+const formatCount = (value: number): string => {
+	return Math.round(value).toLocaleString("en-US");
+};
+
+// eg. 36.54 (min/mile) => "36:32"
+const formatPace = (minsPerMile: number): string => {
+	const totalSeconds = Math.round(minsPerMile * 60);
+	const mins = Math.floor(totalSeconds / 60);
+	const secs = totalSeconds % 60;
+	return `${mins}:${String(secs).padStart(2, "0")}`;
+};
+
+// eg. "2026-07-13" => "Jul 13"
+const formatShortDate = (date: string): string => {
+	return format(parseISO(date.slice(0, 10)), "MMM d");
+};
+
+// eg. ["A"] => "A", ["A", "B"] => "A and B", ["A", "B", "C", "D"] => "A, B and 2 others"
+const formatNameList = (names: string[], maxNames: number = 2): string => {
+	if (names.length <= 1) return names[0] ?? "";
+	if (names.length <= maxNames) {
+		return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+	}
+	const others = names.length - maxNames;
+	return `${names.slice(0, maxNames).join(", ")} and ${others} other${others === 1 ? "" : "s"}`;
+};
+
 export {
 	// Periods & history
 	isTrendPeriodKey,
@@ -300,4 +333,9 @@ export {
 	// Insights
 	pickInsights,
 	buildMomentumInsight,
+	// Insight text
+	formatCount,
+	formatPace,
+	formatShortDate,
+	formatNameList,
 };
